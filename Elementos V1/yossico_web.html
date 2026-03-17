@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOSSICO — Informes Médicos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gray: #8a8a8a;
+    --gray-light: #c8c8c8;
+    --gray-bg: #e8e6e2;
+    --gray-mid: #6e6e6e;
+    --white: #ffffff;
+    --black: #111111;
+    --off-white: #f5f4f1;
+    --border: #dddbd7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CURSOR PERSONALIZADO */
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--black);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--black);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 60px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s ease;
+  }
+  nav.scrolled { border-bottom-color: var(--border); }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 8px;
+    color: var(--black);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 48px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 9px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    color: var(--gray-mid);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 0.5px;
+    background: var(--black);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--black); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* HERO */
+  #hero {
+    height: 100vh;
+    background: var(--gray-bg);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 60px 80px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 5px;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(72px, 8vw, 110px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -1px;
+    color: var(--black);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gray-mid);
+  }
+
+  .hero-desc {
+    font-size: 11px;
+    font-weight: 200;
+    line-height: 2;
+    color: var(--gray-mid);
+    max-width: 340px;
+    margin-bottom: 56px;
+    letter-spacing: 0.5px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.7s forwards;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 16px 40px;
+    background: var(--black);
+    color: var(--white);
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  .btn-primary:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    display: inline-block;
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.3s ease;
+  }
+  .btn-ghost::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 0.5px;
+    background: var(--gray-mid);
+    transition: background 0.3s ease;
+  }
+  .btn-ghost:hover { color: var(--black); }
+  .btn-ghost:hover::after { background: var(--black); }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-image-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #d4d0ca 0%, #c8c4be 50%, #bab6b0 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .hero-image-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+  }
+
+  /* Línea vertical decorativa */
+  .hero-vline {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1px;
+    height: 0;
+    background: var(--black);
+    animation: lineGrow 1.2s ease 1.1s forwards;
+  }
+
+  /* Número de colección hero */
+  .hero-collection {
+    position: absolute;
+    bottom: 50px;
+    right: 60px;
+    writing-mode: vertical-rl;
+    font-size: 8px;
+    font-weight: 200;
+    letter-spacing: 4px;
+    color: var(--gray);
+    opacity: 0;
+    animation: fadeUp 1s ease 1.3s forwards;
+  }
+
+  /* TICKER */
+  .ticker {
+    background: var(--black);
+    padding: 14px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-flex;
+    animation: ticker 20s linear infinite;
+  }
+  .ticker-item {
+    font-size: 8px;
+    font-weight: 200;
+    letter-spacing: 5px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    padding: 0 60px;
+  }
+  .ticker-dot {
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* SECCIÓN GENÉRICA */
+  section {
+    padding: 120px 80px;
+  }
+
+  .section-label {
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 5px;
+    color: var(--gray-light);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::before {
+    content: '';
+    width: 32px; height: 0.5px;
+    background: var(--gray-light);
+  }
+
+  /* CATÁLOGO */
+  #catalogo {
+    background: var(--off-white);
+  }
+
+  .catalogo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 72px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 5vw, 68px);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.5px;
+    color: var(--black);
+  }
+
+  .section-title em { font-style: italic; color: var(--gray-mid); }
+
+  .catalogo-filter {
+    display: flex;
+    gap: 32px;
+  }
+  .filter-btn {
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    background: none;
+    border: none;
+    cursor: none;
+    transition: color 0.3s ease;
+    padding-bottom: 6px;
+    position: relative;
+  }
+  .filter-btn.active, .filter-btn:hover { color: var(--black); }
+  .filter-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 0.5px;
+    background: var(--black);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .product-card {
+    background: var(--white);
+    overflow: hidden;
+    cursor: none;
+    position: relative;
+    group: true;
+  }
+
+  .product-img {
+    height: 460px;
+    background: var(--gray-bg);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-img-inner {
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, #dedad4 0%, #ccc8c2 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.6s ease;
+  }
+  .product-card:hover .product-img-inner {
+    transform: scale(1.03);
+  }
+
+  .product-img-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .product-tag {
+    position: absolute;
+    top: 20px; left: 20px;
+    font-size: 7px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: var(--white);
+    color: var(--black);
+    padding: 6px 12px;
+  }
+
+  .product-info {
+    padding: 24px 28px 32px;
+  }
+
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+
+  .product-sub {
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 2px;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .product-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--black);
+  }
+
+  .product-cta {
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: var(--gray);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .product-cta:hover { color: var(--black); }
+  .product-cta::after {
+    content: '→';
+    transition: transform 0.3s ease;
+  }
+  .product-cta:hover::after { transform: translateX(4px); }
+
+  /* HISTORIA */
+  #historia {
+    background: var(--white);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 0;
+  }
+
+  .historia-visual {
+    background: var(--black);
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .historia-bg-text {
+    position: absolute;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 200px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.03);
+    bottom: -20px;
+    left: -10px;
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -5px;
+  }
+
+  .acronym-list {
+    list-style: none;
+    position: relative;
+    z-index: 2;
+  }
+  .acronym-item {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .acronym-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .acronym-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.9);
+    min-width: 28px;
+    line-height: 1;
+  }
+  .acronym-text {
+    font-size: 10px;
+    font-weight: 200;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.6;
+  }
+  .acronym-text strong {
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    display: block;
+    letter-spacing: 2px;
+    font-size: 9px;
+    text-transform: uppercase;
+  }
+
+  .historia-content {
+    padding: 100px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .historia-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--black);
+    margin-bottom: 40px;
+    position: relative;
+    padding-left: 28px;
+  }
+  .historia-quote::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 2px; height: calc(100% - 16px);
+    background: var(--gray-bg);
+  }
+
+  .historia-body {
+    font-size: 11px;
+    font-weight: 200;
+    line-height: 2.2;
+    color: var(--gray-mid);
+    margin-bottom: 48px;
+    letter-spacing: 0.3px;
+  }
+
+  .historia-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--gray);
+    text-transform: uppercase;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* SOBRE NOSOTROS */
+  #nosotros {
+    background: var(--gray-bg);
+    text-align: center;
+    padding: 120px 80px;
+  }
+
+  .nosotros-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 72px;
+  }
+
+  .nosotros-card {
+    background: var(--white);
+    padding: 56px 44px;
+    text-align: left;
+  }
+
+  .nosotros-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    color: var(--gray-bg);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .nosotros-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--black);
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  .nosotros-text {
+    font-size: 10px;
+    font-weight: 200;
+    line-height: 2;
+    color: var(--gray-mid);
+    letter-spacing: 0.3px;
+  }
+
+  /* CONTACTO / CTA FINAL */
+  #contacto {
+    background: var(--black);
+    text-align: center;
+    padding: 120px 80px;
+  }
+
+  .contacto-label {
+    font-size: 8px;
+    font-weight: 200;
+    letter-spacing: 6px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .contacto-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 6vw, 88px);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.0;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+  }
+
+  .contacto-title em {
+    font-style: italic;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .contacto-sub {
+    font-size: 10px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 64px;
+    line-height: 2;
+  }
+
+  .contacto-btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 44px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--white);
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .btn-wa:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  .btn-ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 44px;
+    background: var(--white);
+    color: var(--black);
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+  .btn-ig:hover { background: #f0eeea; }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    border-top: 1px solid #1a1a1a;
+    padding: 48px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .footer-copy {
+    font-size: 8px;
+    font-weight: 200;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    font-style: italic;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 1px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes lineGrow {
+    from { height: 0; }
+    to { height: 80px; }
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Separador decorativo */
+  .deco-line {
+    width: 40px;
+    height: 0.5px;
+    background: var(--gray-light);
+    margin: 24px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">YOSSICO</a>
+  <ul class="nav-links">
+    <li><a href="#catalogo">Colección</a></li>
+    <li><a href="#historia">Historia</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Informes Médicos · Colombia</p>
+    <h1 class="hero-title">
+      Vestidos<br>para <em>sanar.</em>
+    </h1>
+    <p class="hero-desc">
+      Uniformes médicos de alto nivel diseñados para quienes hacen el trabajo más importante del mundo. Precisión, identidad y excelencia en cada hilo.
+    </p>
+    <div class="hero-ctas">
+      <a href="#catalogo" class="btn-primary">Ver Colección</a>
+      <a href="#historia" class="btn-ghost">Nuestra historia</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-placeholder">
+      <p class="hero-image-text">Colección 2025</p>
+      <p class="hero-image-text" style="font-size:9px; opacity:0.5; letter-spacing:2px;">[ Imagen del uniforme ]</p>
+    </div>
+  </div>
+  <div class="hero-vline"></div>
+  <p class="hero-collection">Colección 01 — 2025</p>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Uniformes Médicos</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Scrubs Premium</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Gorros Quirúrgicos</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Colombia</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Diseñados para perdurar</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Uniformes Médicos</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Scrubs Premium</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Gorros Quirúrgicos</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Colombia</span><span class="ticker-dot">·</span>
+    <span class="ticker-item">Diseñados para perdurar</span><span class="ticker-dot">·</span>
+  </div>
+</div>
+
+<!-- CATÁLOGO -->
+<section id="catalogo">
+  <div class="catalogo-header">
+    <div>
+      <div class="section-label reveal">Colección</div>
+      <h2 class="section-title reveal">La <em>colección</em><br>esencial.</h2>
+    </div>
+    <div class="catalogo-filter reveal">
+      <button class="filter-btn active">Todo</button>
+      <button class="filter-btn">Scrubs</button>
+      <button class="filter-btn">Gorros</button>
+      <button class="filter-btn">Sets</button>
+    </div>
+  </div>
+
+  <div class="products-grid">
+    <!-- Producto 1 -->
+    <div class="product-card reveal">
+      <div class="product-img">
+        <div class="product-img-inner">
+          <span class="product-img-label">Scrub Top</span>
+        </div>
+        <span class="product-tag">Nuevo</span>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Top Clínico I</h3>
+        <p class="product-sub">Scrub · Unisex</p>
+        <div class="product-footer">
+          <span class="product-price">$189.000</span>
+          <a href="#contacto" class="product-cta">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Producto 2 -->
+    <div class="product-card reveal">
+      <div class="product-img">
+        <div class="product-img-inner" style="background: linear-gradient(180deg, #c8c4be 0%, #b8b4ae 100%);">
+          <span class="product-img-label">Scrub Pants</span>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Pantalón Clínico I</h3>
+        <p class="product-sub">Scrub · Unisex</p>
+        <div class="product-footer">
+          <span class="product-price">$169.000</span>
+          <a href="#contacto" class="product-cta">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Producto 3 -->
+    <div class="product-card reveal">
+      <div class="product-img">
+        <div class="product-img-inner" style="background: linear-gradient(180deg, #d0ccc6 0%, #c4c0ba 100%);">
+          <span class="product-img-label">Gorro</span>
+        </div>
+        <span class="product-tag">Edición limitada</span>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Gorro Quirúrgico I</h3>
+        <p class="product-sub">Accesorio · Quirúrgico</p>
+        <div class="product-footer">
+          <span class="product-price">$65.000</span>
+          <a href="#contacto" class="product-cta">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Producto 4 -->
+    <div class="product-card reveal">
+      <div class="product-img">
+        <div class="product-img-inner" style="background: linear-gradient(180deg, #cac6c0 0%, #b4b0aa 100%);">
+          <span class="product-img-label">Set Completo</span>
+        </div>
+        <span class="product-tag">Más vendido</span>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Set Yossico I</h3>
+        <p class="product-sub">Top + Pantalón · Unisex</p>
+        <div class="product-footer">
+          <span class="product-price">$329.000</span>
+          <a href="#contacto" class="product-cta">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Producto 5 -->
+    <div class="product-card reveal">
+      <div class="product-img">
+        <div class="product-img-inner" style="background: linear-gradient(180deg, #d6d2cc 0%, #c8c4be 100%);">
+          <span class="product-img-label">Scrub Top</span>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Top Clínico II</h3>
+        <p class="product-sub">Scrub · Mujer</p>
+        <div class="product-footer">
+          <span class="product-price">$199.000</span>
+          <a href="#contacto" class="product-cta">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Producto 6 -->
+    <div class="product-card reveal">
+      <div class="product-img">
+        <div class="product-img-inner" style="background: linear-gradient(180deg, #c0bcb6 0%, #b0aca6 100%);">
+          <span class="product-img-label">Gorro</span>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Gorro Scrub I</h3>
+        <p class="product-sub">Accesorio · Unisex</p>
+        <div class="product-footer">
+          <span class="product-price">$55.000</span>
+          <a href="#contacto" class="product-cta">Pedir</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORIA -->
+<section id="historia">
+  <div class="historia-visual">
+    <div class="historia-bg-text">Y</div>
+    <ul class="acronym-list">
+      <li class="acronym-item">
+        <span class="acronym-letter">Y</span>
+        <span class="acronym-text"><strong>Your Standard</strong>Tu nivel de excelencia.</span>
+      </li>
+      <li class="acronym-item">
+        <span class="acronym-letter">O</span>
+        <span class="acronym-text"><strong>Origen</strong>La vocación que no se elige, se siente.</span>
+      </li>
+      <li class="acronym-item">
+        <span class="acronym-letter">S</span>
+        <span class="acronym-text"><strong>Salud</strong>La razón de existir.</span>
+      </li>
+      <li class="acronym-item">
+        <span class="acronym-letter">S</span>
+        <span class="acronym-text"><strong>Servicio</strong>Cada turno, cada paciente, cada detalle.</span>
+      </li>
+      <li class="acronym-item">
+        <span class="acronym-letter">I</span>
+        <span class="acronym-text"><strong>Identidad</strong>Un uniforme que te reconoce.</span>
+      </li>
+      <li class="acronym-item">
+        <span class="acronym-letter">C</span>
+        <span class="acronym-text"><strong>Calidad</strong>Sin negociación.</span>
+      </li>
+      <li class="acronym-item">
+        <span class="acronym-letter">O</span>
+        <span class="acronym-text"><strong>Orgullo</strong>De quién eres y lo que haces.</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="historia-content">
+    <div class="section-label reveal">Historia</div>
+    <blockquote class="historia-quote reveal">
+      "Era la madrugada de un turno de urgencias en Bogotá cuando la idea nació."
+    </blockquote>
+    <p class="historia-body reveal">
+      Una profesional de la salud miró su uniforme y pensó: trabajo en el lugar más importante del mundo y mi uniforme no lo refleja.<br><br>
+      Buscó un nombre que sonara a identidad propia, a algo que ninguna otra marca en Colombia tuviera. Tomó sus iniciales, su historia, su linaje — y lo fundió con la única palabra que define lo que hace: Co. Colectivo. Colombia. Compañía.<br><br>
+      YOSSICO no es solo una marca de uniformes médicos. Es el reconocimiento de que quien cuida a otros merece verse y sentirse extraordinario.
+    </p>
+    <div class="deco-line reveal"></div>
+    <p class="historia-tagline reveal">
+      Vestidos para sanar. Diseñados para perdurar.
+    </p>
+  </div>
+</section>
+
+<!-- SOBRE NOSOTROS -->
+<section id="nosotros">
+  <div class="section-label reveal" style="justify-content:center;">Sobre Nosotros</div>
+  <h2 class="section-title reveal" style="text-align:center;">Por qué <em>YOSSICO</em><br>es diferente.</h2>
+
+  <div class="nosotros-grid">
+    <div class="nosotros-card reveal">
+      <div class="nosotros-number">01</div>
+      <h3 class="nosotros-title">Telas de alto desempeño</h3>
+      <p class="nosotros-text">Seleccionamos materiales que resisten turnos de 12 horas, múltiples lavados industriales y los estándares más exigentes de higiene médica. Comodidad sin renunciar a la estructura.</p>
+    </div>
+    <div class="nosotros-card reveal">
+      <div class="nosotros-number">02</div>
+      <h3 class="nosotros-title">Identidad en cada detalle</h3>
+      <p class="nosotros-text">Desde el corte hasta el bordado, cada pieza refleja quién la lleva. YOSSICO entiende que un uniforme no es solo ropa — es la primera impresión que un paciente tiene de su cuidador.</p>
+    </div>
+    <div class="nosotros-card reveal">
+      <div class="nosotros-number">03</div>
+      <h3 class="nosotros-title">Hecho en Colombia</h3>
+      <p class="nosotros-text">Producción local con estándares internacionales. Apoyamos la industria textil colombiana mientras llevamos a los profesionales de salud del país al nivel que merecen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <p class="contacto-label reveal">Contáctanos</p>
+  <h2 class="contacto-title reveal">¿Listo para<br><em>elevar</em> tu imagen?</h2>
+  <p class="contacto-sub reveal">
+    Cotiza tu pedido personalizado directamente.<br>
+    Atendemos instituciones, clínicas y profesionales independientes.
+  </p>
+  <div class="contacto-btns reveal">
+    <a href="https://wa.me/573000000000?text=Hola,%20quiero%20información%20sobre%20YOSSICO" class="btn-wa" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+    <a href="https://instagram.com/yossico" class="btn-ig" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      Instagram
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">YOSSICO</span>
+  <span class="footer-tagline">"Vestidos para sanar. Diseñados para perdurar."</span>
+  <span class="footer-copy">© 2025 YOSSICO · Colombia</span>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // NAV SCROLL
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // SCROLL REVEAL
+  const revealEls = document.querySelectorAll('.reveal');
+  const acronymItems = document.querySelectorAll('.acronym-item');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  revealEls.forEach(el => observer.observe(el));
+
+  // Acrónimo con stagger
+  const acronymObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        acronymItems.forEach((item, i) => {
+          setTimeout(() => item.classList.add('visible'), i * 120);
+        });
+        acronymObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  if (acronymItems.length) acronymObserver.observe(acronymItems[0].closest('ul'));
+
+  // FILTER BUTTONS
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="La historia de YOSSICO — La marca de uniformes médicos premium nacida en un turno de urgencias en Bogotá, Colombia.">
+    <title>Historia — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Historia page styles */
+        .historia-page {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 80px 60px 120px;
+        }
+
+        .historia-page__quote {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-weight: 300;
+            font-size: clamp(28px, 4vw, 40px);
+            line-height: 1.4;
+            letter-spacing: -0.5px;
+            color: var(--black);
+            border-left: 2px solid var(--gray-light);
+            padding-left: 32px;
+            margin: 56px 0;
+        }
+
+        .historia-page__body {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 14px;
+            line-height: 2.2;
+            color: var(--gray-mid);
+            margin-bottom: 32px;
+        }
+
+        .historia-page__body strong {
+            color: var(--black);
+            font-weight: 300;
+        }
+
+        .historia-page__divider {
+            width: 100%;
+            height: 1px;
+            background: var(--border);
+            margin: 60px 0;
+        }
+
+        .historia-page__tagline {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-weight: 300;
+            font-size: 24px;
+            color: var(--gray);
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Acronym full page */
+        .acronym-section {
+            background: var(--black);
+            padding: 120px 60px;
+        }
+
+        .acronym-section__title {
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: clamp(36px, 4vw, 54px);
+            color: var(--white);
+            letter-spacing: -0.5px;
+            margin-bottom: 64px;
+        }
+
+        .acronym-full {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            max-width: 900px;
+        }
+
+        .acronym-full__item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 32px 40px 32px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .acronym-full__item:nth-child(even) {
+            padding-left: 40px;
+            padding-right: 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .acronym-full__letter {
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: 48px;
+            color: var(--white);
+            line-height: 1;
+            min-width: 36px;
+        }
+
+        .acronym-full__content {
+            flex: 1;
+        }
+
+        .acronym-full__word {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-weight: 300;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .acronym-full__meaning {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 700px) {
+            .historia-page {
+                padding: 60px 24px;
+            }
+
+            .acronym-section {
+                padding: 80px 24px;
+            }
+
+            .acronym-full {
+                grid-template-columns: 1fr;
+            }
+
+            .acronym-full__item:nth-child(even) {
+                padding-left: 0;
+                border-left: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111"
+                    stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111"
+                    stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li><a href="coleccion.html">Colección</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="contacto.html" class="nav__cta">Contactar</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="label page-header__label reveal">Historia de Marca</div>
+        <h1 class="page-header__title reveal" data-delay="2">
+            La idea que nació<br>en un <em>turno de urgencias.</em>
+        </h1>
+    </div>
+
+    <!-- Story Content -->
+    <article class="historia-page">
+        <div class="label reveal" style="margin-bottom: 8px;">El origen</div>
+
+        <blockquote class="historia-page__quote reveal" data-delay="2">
+            "Era la madrugada de un turno de urgencias en Bogotá cuando la idea nació."
+        </blockquote>
+
+        <p class="historia-page__body reveal" data-delay="3">
+            Una profesional de la salud miró su uniforme y pensó: <strong>"Trabajo en el lugar más importante del mundo
+                y mi uniforme no lo refleja."</strong>
+        </p>
+
+        <p class="historia-page__body reveal" data-delay="4">
+            Buscó un nombre que sonara a identidad propia, a algo que ninguna otra marca en Colombia tuviera. Tomó sus
+            iniciales, su historia, su linaje — y lo fundió con la única palabra que define lo que hace:
+            <strong>Co.</strong> Colectivo. Colombia. Compañía.
+        </p>
+
+        <div class="historia-page__divider reveal"></div>
+
+        <div class="label reveal" style="margin-bottom: 24px;">La promesa</div>
+
+        <p class="historia-page__body reveal" data-delay="2">
+            <strong>YOSSICO no es solo una marca de uniformes médicos.</strong> Es el reconocimiento de que quien cuida
+            a otros merece verse y sentirse extraordinario.
+        </p>
+
+        <p class="historia-page__body reveal" data-delay="3">
+            Cada uniforme YOSSICO está diseñado para los que dan todo en cada turno: los médicos que operan de noche,
+            las enfermeras que corren pasillos, los odontólogos que sonríen detrás de su bata, los cirujanos que
+            sostienen vidas con sus manos.
+        </p>
+
+        <p class="historia-page__body reveal" data-delay="4">
+            La escritura <strong>Yossi.Co</strong> funciona como nombre de marca <em>y</em> como dominio web nativo —
+            algo único y moderno en el mercado colombiano.
+        </p>
+
+        <div class="historia-page__divider reveal"></div>
+
+        <p class="historia-page__tagline reveal">
+            "Vestidos para sanar. Diseñados para perdurar."
+        </p>
+    </article>
+
+    <!-- Acronym full section -->
+    <section class="acronym-section">
+        <div class="label reveal" style="color:rgba(255,255,255,0.3); margin-bottom:20px;">El nombre</div>
+        <h2 class="acronym-section__title reveal" data-delay="2">Lo que significa <em
+                style="font-style:italic; color:rgba(255,255,255,0.5)">YOSSICO</em></h2>
+
+        <div class="acronym-full">
+            <div class="acronym-full__item reveal" data-delay="1">
+                <span class="acronym-full__letter">Y</span>
+                <div class="acronym-full__content">
+                    <span class="acronym-full__word">Your Standard</span>
+                    <span class="acronym-full__meaning">Tu nivel de excelencia.</span>
+                </div>
+            </div>
+            <div class="acronym-full__item reveal" data-delay="2">
+                <span class="acronym-full__letter">O</span>
+                <div class="acronym-full__content">
+                    <span class="acronym-full__word">Origen</span>
+                    <span class="acronym-full__meaning">La vocación que no se elige, se siente.</span>
+                </div>
+            </div>
+            <div class="acronym-full__item reveal" data-delay="3">
+                <span class="acronym-full__letter">S</span>
+                <div class="acronym-full__content">
+                    <span class="acronym-full__word">Salud</span>
+                    <span class="acronym-full__meaning">La razón de existir.</span>
+                </div>
+            </div>
+            <div class="acronym-full__item reveal" data-delay="4">
+                <span class="acronym-full__letter">S</span>
+                <div class="acronym-full__content">
+                    <span class="acronym-full__word">Servicio</span>
+                    <span class="acronym-full__meaning">Cada turno, cada paciente, cada detalle.</span>
+                </div>
+            </div>
+            <div class="acronym-full__item reveal" data-delay="5">
+                <span class="acronym-full__letter">I</span>
+                <div class="acronym-full__content">
+                    <span class="acronym-full__word">Identidad</span>
+                    <span class="acronym-full__meaning">Un uniforme que te reconoce.</span>
+                </div>
+            </div>
+            <div class="acronym-full__item reveal" data-delay="6">
+                <span class="acronym-full__letter">C</span>
+                <div class="acronym-full__content">
+                    <span class="acronym-full__word">Calidad</span>
+                    <span class="acronym-full__meaning">Sin negociación.</span>
+                </div>
+            </div>
+            <div class="acronym-full__item reveal" data-delay="1" style="border-bottom:none;">
+                <span class="acronym-full__letter">O</span>
+                <div class="acronym-full__content">
+                    <span class="acronym-full__word">Orgullo</span>
+                    <span class="acronym-full__meaning">De quién eres y lo que haces.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="rgba(255,255,255,0.4)"
+                    stroke-width="1" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </div>
+        <p class="footer__tagline">"Vestidos para sanar. Diseñados para perdurar."</p>
+        <p class="footer__copy">© 2024 YOSSICO · Colombia</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
