@@ -59,6 +59,142 @@
             display: none;
         }
 
+        /* ── Image Gallery ── */
+        .gallery {
+            position: relative;
+            height: 520px;
+            overflow: hidden;
+        }
+
+        .gallery__track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .gallery__slide {
+            min-width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .gallery__slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+        }
+
+        .gallery__btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.88);
+            border: none;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none;
+            opacity: 0;
+            transition: opacity 0.25s;
+            z-index: 3;
+            backdrop-filter: blur(6px);
+        }
+
+        .gallery:hover .gallery__btn {
+            opacity: 1;
+        }
+
+        .gallery__btn--prev {
+            left: 12px;
+        }
+
+        .gallery__btn--next {
+            right: 12px;
+        }
+
+        .gallery__btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: #111;
+            stroke-width: 1.8;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .gallery__dots {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 7px;
+            z-index: 3;
+        }
+
+        .gallery__dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.45);
+            border: none;
+            cursor: none;
+            padding: 0;
+            transition: background 0.25s, transform 0.25s;
+        }
+
+        .gallery__dot.active {
+            background: #fff;
+            transform: scale(1.5);
+        }
+
+        /* ── Size Selector ── */
+        .size-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 12px 0 0;
+        }
+
+        .size-label {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-right: 2px;
+        }
+
+        .size-btn {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--black);
+            background: none;
+            border: 1px solid var(--border);
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none;
+            transition: all 0.2s;
+        }
+
+        .size-btn:hover,
+        .size-btn.selected {
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
         @media (max-width: 1000px) {
             .coleccion {
                 padding: 40px 24px;
@@ -125,14 +261,44 @@
 
             <!-- OSLO -->
             <div class="product-card reveal" data-delay="1" data-line="essentials">
-                <div class="product-card__image" style="height: 520px; overflow: hidden; position: relative;">
-                    <img src="img/oslo.png" alt="Set OSLO — Scrub Femenino YOSSICO"
-                        style="width:100%; height:100%; object-fit:cover; object-position: top; display:block;">
+                <div class="gallery" id="gallery-oslo">
+                    <div class="gallery__track">
+                        <div class="gallery__slide">
+                            <img src="img/oslo.png" alt="Set OSLO — Vista frontal">
+                        </div>
+                        <div class="gallery__slide">
+                            <img src="img/oslo-2.png" alt="Set OSLO — Detalle top">
+                        </div>
+                        <div class="gallery__slide">
+                            <img src="img/oslo-3.png" alt="Set OSLO — Vista lateral">
+                        </div>
+                    </div>
+                    <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <button class="gallery__btn gallery__btn--next" aria-label="Siguiente">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+                    <div class="gallery__dots">
+                        <button class="gallery__dot active" aria-label="Imagen 1"></button>
+                        <button class="gallery__dot" aria-label="Imagen 2"></button>
+                        <button class="gallery__dot" aria-label="Imagen 3"></button>
+                    </div>
                     <span class="product-card__tag">Essentials</span>
                 </div>
                 <div class="product-card__info">
                     <span class="product-card__name">OSLO</span>
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
+                    <div class="size-selector">
+                        <span class="size-label">Talla</span>
+                        <button class="size-btn" data-size="S">S</button>
+                        <button class="size-btn" data-size="M">M</button>
+                        <button class="size-btn" data-size="L">L</button>
+                    </div>
                     <span class="product-card__price">$269.900 COP</span>
                     <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20OSLO%20de%20YOSSICO"
                         class="arrow-cta product-card__cta" target="_blank" rel="noopener">
@@ -143,14 +309,44 @@
 
             <!-- MILAN -->
             <div class="product-card reveal" data-delay="2" data-line="signature">
-                <div class="product-card__image" style="height: 520px; overflow: hidden; position: relative;">
-                    <img src="img/milan.png" alt="Set MILAN — Scrub Femenino YOSSICO"
-                        style="width:100%; height:100%; object-fit:cover; object-position: top; display:block;">
+                <div class="gallery" id="gallery-milan">
+                    <div class="gallery__track">
+                        <div class="gallery__slide">
+                            <img src="img/milan.png" alt="Set MILAN — Vista frontal">
+                        </div>
+                        <div class="gallery__slide">
+                            <img src="img/milan-2.png" alt="Set MILAN — Vista trasera">
+                        </div>
+                        <div class="gallery__slide">
+                            <img src="img/milan-3.png" alt="Set MILAN — Vista lateral">
+                        </div>
+                    </div>
+                    <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <button class="gallery__btn gallery__btn--next" aria-label="Siguiente">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+                    <div class="gallery__dots">
+                        <button class="gallery__dot active" aria-label="Imagen 1"></button>
+                        <button class="gallery__dot" aria-label="Imagen 2"></button>
+                        <button class="gallery__dot" aria-label="Imagen 3"></button>
+                    </div>
                     <span class="product-card__tag">Signature</span>
                 </div>
                 <div class="product-card__info">
                     <span class="product-card__name">MILAN</span>
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
+                    <div class="size-selector">
+                        <span class="size-label">Talla</span>
+                        <button class="size-btn" data-size="S">S</button>
+                        <button class="size-btn" data-size="M">M</button>
+                        <button class="size-btn" data-size="L">L</button>
+                    </div>
                     <span class="product-card__price">$269.900 COP</span>
                     <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20MILAN%20de%20YOSSICO"
                         class="arrow-cta product-card__cta" target="_blank" rel="noopener">
@@ -161,14 +357,44 @@
 
             <!-- KYOTO -->
             <div class="product-card reveal" data-delay="3" data-line="signature">
-                <div class="product-card__image" style="height: 520px; overflow: hidden; position: relative;">
-                    <img src="img/kyoto.png" alt="Set KYOTO — Scrub Femenino YOSSICO"
-                        style="width:100%; height:100%; object-fit:cover; object-position: top; display:block;">
+                <div class="gallery" id="gallery-kyoto">
+                    <div class="gallery__track">
+                        <div class="gallery__slide">
+                            <img src="img/kyoto.png" alt="Set KYOTO — Vista frontal">
+                        </div>
+                        <div class="gallery__slide">
+                            <img src="img/kyoto-2.png" alt="Set KYOTO — Detalle cuello">
+                        </div>
+                        <div class="gallery__slide">
+                            <img src="img/kyoto-3.png" alt="Set KYOTO — Vista lateral">
+                        </div>
+                    </div>
+                    <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <button class="gallery__btn gallery__btn--next" aria-label="Siguiente">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+                    <div class="gallery__dots">
+                        <button class="gallery__dot active" aria-label="Imagen 1"></button>
+                        <button class="gallery__dot" aria-label="Imagen 2"></button>
+                        <button class="gallery__dot" aria-label="Imagen 3"></button>
+                    </div>
                     <span class="product-card__tag">Signature</span>
                 </div>
                 <div class="product-card__info">
                     <span class="product-card__name">KYOTO</span>
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
+                    <div class="size-selector">
+                        <span class="size-label">Talla</span>
+                        <button class="size-btn" data-size="S">S</button>
+                        <button class="size-btn" data-size="M">M</button>
+                        <button class="size-btn" data-size="L">L</button>
+                    </div>
                     <span class="product-card__price">$269.900 COP</span>
                     <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO"
                         class="arrow-cta product-card__cta" target="_blank" rel="noopener">
@@ -179,14 +405,44 @@
 
             <!-- RIO -->
             <div class="product-card reveal" data-delay="4" data-line="essentials">
-                <div class="product-card__image" style="height: 520px; overflow: hidden; position: relative;">
-                    <img src="img/rio.png" alt="Set RIO — Scrub Femenino YOSSICO"
-                        style="width:100%; height:100%; object-fit:cover; object-position: top; display:block;">
+                <div class="gallery" id="gallery-rio">
+                    <div class="gallery__track">
+                        <div class="gallery__slide">
+                            <img src="img/rio.png" alt="Set RIO — Vista frontal">
+                        </div>
+                        <div class="gallery__slide">
+                            <img src="img/rio-2.png" alt="Set RIO — Vista lateral en movimiento">
+                        </div>
+                        <div class="gallery__slide">
+                            <img src="img/rio-3.png" alt="Set RIO — Detalle pantalón">
+                        </div>
+                    </div>
+                    <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <button class="gallery__btn gallery__btn--next" aria-label="Siguiente">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+                    <div class="gallery__dots">
+                        <button class="gallery__dot active" aria-label="Imagen 1"></button>
+                        <button class="gallery__dot" aria-label="Imagen 2"></button>
+                        <button class="gallery__dot" aria-label="Imagen 3"></button>
+                    </div>
                     <span class="product-card__tag">Essentials</span>
                 </div>
                 <div class="product-card__info">
                     <span class="product-card__name">RIO</span>
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
+                    <div class="size-selector">
+                        <span class="size-label">Talla</span>
+                        <button class="size-btn" data-size="S">S</button>
+                        <button class="size-btn" data-size="M">M</button>
+                        <button class="size-btn" data-size="L">L</button>
+                    </div>
                     <span class="product-card__price">$269.900 COP</span>
                     <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20RIO%20de%20YOSSICO"
                         class="arrow-cta product-card__cta" target="_blank" rel="noopener">
@@ -237,7 +493,7 @@
 
     <script src="script.js"></script>
     <script>
-        // Filter logic
+        // ── Filter logic ──
         const filterBtns = document.querySelectorAll('.filter-btn');
         const cards = document.querySelectorAll('.product-card[data-line]');
 
@@ -252,6 +508,44 @@
                     } else {
                         card.classList.add('hidden');
                     }
+                });
+            });
+        });
+
+        // ── Gallery slider logic ──
+        document.querySelectorAll('.gallery').forEach(gallery => {
+            const track = gallery.querySelector('.gallery__track');
+            const dots = gallery.querySelectorAll('.gallery__dot');
+            const prevBtn = gallery.querySelector('.gallery__btn--prev');
+            const nextBtn = gallery.querySelector('.gallery__btn--next');
+            const total = gallery.querySelectorAll('.gallery__slide').length;
+            let current = 0;
+
+            function goTo(index) {
+                current = (index + total) % total;
+                track.style.transform = `translateX(-${current * 100}%)`;
+                dots.forEach((d, i) => d.classList.toggle('active', i === current));
+            }
+
+            prevBtn.addEventListener('click', () => goTo(current - 1));
+            nextBtn.addEventListener('click', () => goTo(current + 1));
+            dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+            // Touch/swipe support
+            let startX = 0;
+            gallery.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+            gallery.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+            });
+        });
+
+        // ── Size selector logic ──
+        document.querySelectorAll('.size-selector').forEach(selector => {
+            selector.querySelectorAll('.size-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selector.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
                 });
             });
         });
