@@ -14,6 +14,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* ── Layout ── */
         .coleccion {
             background: var(--off-white);
             padding: 60px;
@@ -59,11 +60,12 @@
             display: none;
         }
 
-        /* ── Image Gallery ── */
+        /* ── Gallery (card) ── */
         .gallery {
             position: relative;
             height: 520px;
             overflow: hidden;
+            cursor: none;
         }
 
         .gallery__track {
@@ -82,8 +84,48 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: top;
+            object-position: center;
             display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery:hover .gallery__slide img {
+            transform: scale(1.03);
+        }
+
+        /* Expand hint overlay */
+        .gallery__expand-hint {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background 0.3s;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery:hover .gallery__expand-hint {
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .gallery__expand-hint span {
+            font-family: var(--font-body);
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.55);
+            padding: 8px 18px;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.3s, transform 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        .gallery:hover .gallery__expand-hint span {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .gallery__btn {
@@ -195,6 +237,388 @@
             border-color: var(--black);
         }
 
+        /* ───────────────────────────────
+           PRODUCT DETAIL MODAL
+        ─────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.72);
+            backdrop-filter: blur(10px);
+            z-index: 9000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: #fff;
+            max-width: 980px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            transform: translateY(20px);
+            transition: transform 0.35s ease;
+            scrollbar-width: none;
+        }
+
+        .modal-overlay.open .modal {
+            transform: translateY(0);
+        }
+
+        .modal::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Modal — left: image gallery */
+        .modal__gallery {
+            position: relative;
+            min-height: 560px;
+            background: #f5f5f3;
+            overflow: hidden;
+        }
+
+        .modal__track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .modal__slide {
+            min-width: 100%;
+            height: 100%;
+            min-height: 560px;
+            flex-shrink: 0;
+        }
+
+        .modal__slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        .modal__gallery-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none;
+            z-index: 2;
+            transition: background 0.2s;
+        }
+
+        .modal__gallery-btn:hover {
+            background: #fff;
+        }
+
+        .modal__gallery-btn--prev {
+            left: 16px;
+        }
+
+        .modal__gallery-btn--next {
+            right: 16px;
+        }
+
+        .modal__gallery-btn svg {
+            width: 15px;
+            height: 15px;
+            stroke: #111;
+            stroke-width: 1.8;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .modal__gallery-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .modal__gallery-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: none;
+            padding: 0;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .modal__gallery-dot.active {
+            background: #111;
+            transform: scale(1.4);
+        }
+
+        /* Thumbnail strip */
+        .modal__thumbs {
+            position: absolute;
+            bottom: 48px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 16px;
+            z-index: 2;
+        }
+
+        .modal__thumb {
+            width: 58px;
+            height: 58px;
+            border: 2px solid transparent;
+            overflow: hidden;
+            cursor: none;
+            transition: border-color 0.2s;
+            flex-shrink: 0;
+            background: #eee;
+        }
+
+        .modal__thumb.active {
+            border-color: #111;
+        }
+
+        .modal__thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        /* Modal — right: product info */
+        .modal__info {
+            padding: 52px 48px 48px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: none;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.4;
+            transition: opacity 0.2s;
+        }
+
+        .modal__close:hover {
+            opacity: 1;
+        }
+
+        .modal__close svg {
+            width: 18px;
+            height: 18px;
+            stroke: #111;
+            stroke-width: 1.5;
+            fill: none;
+            stroke-linecap: round;
+        }
+
+        .modal__tag {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .modal__name {
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: clamp(36px, 3.5vw, 52px);
+            letter-spacing: -0.5px;
+            line-height: 1;
+            color: var(--black);
+            margin: 0 0 8px;
+        }
+
+        .modal__sub {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 24px;
+        }
+
+        .modal__divider {
+            width: 32px;
+            height: 1px;
+            background: var(--border);
+            margin-bottom: 28px;
+        }
+
+        .modal__desc {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 13px;
+            line-height: 1.85;
+            color: #444;
+            margin-bottom: 32px;
+            flex: 1;
+        }
+
+        .modal__features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 32px;
+        }
+
+        .modal__features li {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal__features li::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--black);
+            flex-shrink: 0;
+        }
+
+        .modal__size-label {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .modal__sizes {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .modal__size-btn {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--black);
+            background: none;
+            border: 1px solid var(--border);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none;
+            transition: all 0.2s;
+        }
+
+        .modal__size-btn:hover,
+        .modal__size-btn.selected {
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .modal__price {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 300;
+            color: var(--black);
+            margin-bottom: 24px;
+        }
+
+        .modal__cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 18px 32px;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        .modal__cta:hover {
+            background: #1a1a1a;
+        }
+
+        .modal__cta svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* Mobile modal */
+        @media (max-width: 720px) {
+            .modal {
+                grid-template-columns: 1fr;
+                max-height: 95vh;
+            }
+
+            .modal__gallery {
+                min-height: 320px;
+            }
+
+            .modal__info {
+                padding: 36px 28px 36px;
+            }
+        }
+
+        /* Media */
         @media (max-width: 1000px) {
             .coleccion {
                 padding: 40px 24px;
@@ -261,18 +685,17 @@
 
             <!-- OSLO -->
             <div class="product-card reveal" data-delay="1" data-line="essentials">
-                <div class="gallery" id="gallery-oslo">
+                <div class="gallery" id="gallery-oslo" data-product="oslo" data-name="OSLO" data-line-name="Essentials"
+                    data-sub="Set · Scrub Femenino · Top + Pantalón" data-price="$269.900 COP"
+                    data-desc="Inspirado en la serenidad escandinava, el Set OSLO combina líneas limpias y una paleta verde salvia con una confección estructurada. Pensado para la profesional que valora el confort sin sacrificar la elegancia."
+                    data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20OSLO%20de%20YOSSICO"
+                    data-imgs="img/oslo.png,img/oslo-2.png,img/oslo-3.png">
                     <div class="gallery__track">
-                        <div class="gallery__slide">
-                            <img src="img/oslo.png" alt="Set OSLO — Vista frontal">
-                        </div>
-                        <div class="gallery__slide">
-                            <img src="img/oslo-2.png" alt="Set OSLO — Detalle top">
-                        </div>
-                        <div class="gallery__slide">
-                            <img src="img/oslo-3.png" alt="Set OSLO — Vista lateral">
-                        </div>
+                        <div class="gallery__slide"><img src="img/oslo.png" alt="Set OSLO — Vista frontal"></div>
+                        <div class="gallery__slide"><img src="img/oslo-2.png" alt="Set OSLO — Detalle top"></div>
+                        <div class="gallery__slide"><img src="img/oslo-3.png" alt="Set OSLO — Vista lifestyle"></div>
                     </div>
+                    <div class="gallery__expand-hint"><span>Ver detalle</span></div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
                         <svg viewBox="0 0 24 24">
                             <polyline points="15 18 9 12 15 6" />
@@ -284,9 +707,9 @@
                         </svg>
                     </button>
                     <div class="gallery__dots">
-                        <button class="gallery__dot active" aria-label="Imagen 1"></button>
-                        <button class="gallery__dot" aria-label="Imagen 2"></button>
-                        <button class="gallery__dot" aria-label="Imagen 3"></button>
+                        <button class="gallery__dot active"></button>
+                        <button class="gallery__dot"></button>
+                        <button class="gallery__dot"></button>
                     </div>
                     <span class="product-card__tag">Essentials</span>
                 </div>
@@ -295,9 +718,9 @@
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
-                        <button class="size-btn" data-size="S">S</button>
-                        <button class="size-btn" data-size="M">M</button>
-                        <button class="size-btn" data-size="L">L</button>
+                        <button class="size-btn">S</button>
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
                     </div>
                     <span class="product-card__price">$269.900 COP</span>
                     <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20OSLO%20de%20YOSSICO"
@@ -309,18 +732,18 @@
 
             <!-- MILAN -->
             <div class="product-card reveal" data-delay="2" data-line="signature">
-                <div class="gallery" id="gallery-milan">
+                <div class="gallery" id="gallery-milan" data-product="milan" data-name="MILAN"
+                    data-line-name="Signature" data-sub="Set · Scrub Femenino · Top + Pantalón"
+                    data-price="$269.900 COP"
+                    data-desc="El Set MILAN captura la elegancia italiana con un top de cuello mao, corte entallado y pantalón recto de alta precisión. En navy profundo, proyecta autoridad y sofisticación en cada turno."
+                    data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20MILAN%20de%20YOSSICO"
+                    data-imgs="img/milan.png,img/milan-2.png,img/milan-3.png">
                     <div class="gallery__track">
-                        <div class="gallery__slide">
-                            <img src="img/milan.png" alt="Set MILAN — Vista frontal">
-                        </div>
-                        <div class="gallery__slide">
-                            <img src="img/milan-2.png" alt="Set MILAN — Vista trasera">
-                        </div>
-                        <div class="gallery__slide">
-                            <img src="img/milan-3.png" alt="Set MILAN — Vista lateral">
-                        </div>
+                        <div class="gallery__slide"><img src="img/milan.png" alt="Set MILAN — Vista frontal"></div>
+                        <div class="gallery__slide"><img src="img/milan-2.png" alt="Set MILAN — Vista trasera"></div>
+                        <div class="gallery__slide"><img src="img/milan-3.png" alt="Set MILAN — Vista lateral"></div>
                     </div>
+                    <div class="gallery__expand-hint"><span>Ver detalle</span></div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
                         <svg viewBox="0 0 24 24">
                             <polyline points="15 18 9 12 15 6" />
@@ -332,9 +755,9 @@
                         </svg>
                     </button>
                     <div class="gallery__dots">
-                        <button class="gallery__dot active" aria-label="Imagen 1"></button>
-                        <button class="gallery__dot" aria-label="Imagen 2"></button>
-                        <button class="gallery__dot" aria-label="Imagen 3"></button>
+                        <button class="gallery__dot active"></button>
+                        <button class="gallery__dot"></button>
+                        <button class="gallery__dot"></button>
                     </div>
                     <span class="product-card__tag">Signature</span>
                 </div>
@@ -343,9 +766,9 @@
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
-                        <button class="size-btn" data-size="S">S</button>
-                        <button class="size-btn" data-size="M">M</button>
-                        <button class="size-btn" data-size="L">L</button>
+                        <button class="size-btn">S</button>
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
                     </div>
                     <span class="product-card__price">$269.900 COP</span>
                     <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20MILAN%20de%20YOSSICO"
@@ -357,18 +780,18 @@
 
             <!-- KYOTO -->
             <div class="product-card reveal" data-delay="3" data-line="signature">
-                <div class="gallery" id="gallery-kyoto">
+                <div class="gallery" id="gallery-kyoto" data-product="kyoto" data-name="KYOTO"
+                    data-line-name="Signature" data-sub="Set · Scrub Femenino · Top + Pantalón"
+                    data-price="$269.900 COP"
+                    data-desc="KYOTO encarna la filosofía zen japonesa: un top cruzado en marfil suave con pantalón palazzo de caída impecable. Para la profesional que busca fluidez, calma y presencia."
+                    data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO"
+                    data-imgs="img/kyoto.png,img/kyoto-2.png,img/kyoto-3.png">
                     <div class="gallery__track">
-                        <div class="gallery__slide">
-                            <img src="img/kyoto.png" alt="Set KYOTO — Vista frontal">
-                        </div>
-                        <div class="gallery__slide">
-                            <img src="img/kyoto-2.png" alt="Set KYOTO — Detalle cuello">
-                        </div>
-                        <div class="gallery__slide">
-                            <img src="img/kyoto-3.png" alt="Set KYOTO — Vista lateral">
-                        </div>
+                        <div class="gallery__slide"><img src="img/kyoto.png" alt="Set KYOTO — Vista frontal"></div>
+                        <div class="gallery__slide"><img src="img/kyoto-2.png" alt="Set KYOTO — Detalle cuello"></div>
+                        <div class="gallery__slide"><img src="img/kyoto-3.png" alt="Set KYOTO — Vista lateral"></div>
                     </div>
+                    <div class="gallery__expand-hint"><span>Ver detalle</span></div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
                         <svg viewBox="0 0 24 24">
                             <polyline points="15 18 9 12 15 6" />
@@ -380,9 +803,9 @@
                         </svg>
                     </button>
                     <div class="gallery__dots">
-                        <button class="gallery__dot active" aria-label="Imagen 1"></button>
-                        <button class="gallery__dot" aria-label="Imagen 2"></button>
-                        <button class="gallery__dot" aria-label="Imagen 3"></button>
+                        <button class="gallery__dot active"></button>
+                        <button class="gallery__dot"></button>
+                        <button class="gallery__dot"></button>
                     </div>
                     <span class="product-card__tag">Signature</span>
                 </div>
@@ -391,9 +814,9 @@
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
-                        <button class="size-btn" data-size="S">S</button>
-                        <button class="size-btn" data-size="M">M</button>
-                        <button class="size-btn" data-size="L">L</button>
+                        <button class="size-btn">S</button>
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
                     </div>
                     <span class="product-card__price">$269.900 COP</span>
                     <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO"
@@ -405,18 +828,17 @@
 
             <!-- RIO -->
             <div class="product-card reveal" data-delay="4" data-line="essentials">
-                <div class="gallery" id="gallery-rio">
+                <div class="gallery" id="gallery-rio" data-product="rio" data-name="RIO" data-line-name="Essentials"
+                    data-sub="Set · Scrub Femenino · Top + Pantalón" data-price="$269.900 COP"
+                    data-desc="RIO trae la energía vibrante latinoamericana al uniforme médico: top tipo V con bolsillos funcionales y pantalón jogger con cargo pocket en terracota cálida. Dinamismo y comodidad al máximo nivel."
+                    data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20RIO%20de%20YOSSICO"
+                    data-imgs="img/rio.png,img/rio-2.png,img/rio-3.png">
                     <div class="gallery__track">
-                        <div class="gallery__slide">
-                            <img src="img/rio.png" alt="Set RIO — Vista frontal">
-                        </div>
-                        <div class="gallery__slide">
-                            <img src="img/rio-2.png" alt="Set RIO — Vista lateral en movimiento">
-                        </div>
-                        <div class="gallery__slide">
-                            <img src="img/rio-3.png" alt="Set RIO — Detalle pantalón">
-                        </div>
+                        <div class="gallery__slide"><img src="img/rio.png" alt="Set RIO — Vista frontal"></div>
+                        <div class="gallery__slide"><img src="img/rio-2.png" alt="Set RIO — Vista lateral"></div>
+                        <div class="gallery__slide"><img src="img/rio-3.png" alt="Set RIO — Detalle pantalón"></div>
                     </div>
+                    <div class="gallery__expand-hint"><span>Ver detalle</span></div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
                         <svg viewBox="0 0 24 24">
                             <polyline points="15 18 9 12 15 6" />
@@ -428,9 +850,9 @@
                         </svg>
                     </button>
                     <div class="gallery__dots">
-                        <button class="gallery__dot active" aria-label="Imagen 1"></button>
-                        <button class="gallery__dot" aria-label="Imagen 2"></button>
-                        <button class="gallery__dot" aria-label="Imagen 3"></button>
+                        <button class="gallery__dot active"></button>
+                        <button class="gallery__dot"></button>
+                        <button class="gallery__dot"></button>
                     </div>
                     <span class="product-card__tag">Essentials</span>
                 </div>
@@ -439,9 +861,9 @@
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
-                        <button class="size-btn" data-size="S">S</button>
-                        <button class="size-btn" data-size="M">M</button>
-                        <button class="size-btn" data-size="L">L</button>
+                        <button class="size-btn">S</button>
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
                     </div>
                     <span class="product-card__price">$269.900 COP</span>
                     <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20RIO%20de%20YOSSICO"
@@ -467,7 +889,7 @@
         <div class="reveal" data-delay="3">
             <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20los%20uniformes%20YOSSICO"
                 class="btn btn--outline-white" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path
                         d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                 </svg>
@@ -491,63 +913,235 @@
         <p class="footer__copy">© 2024 YOSSICO · Colombia</p>
     </footer>
 
+    <!-- ═══════════════════════════════════════
+         PRODUCT DETAIL MODAL
+    ════════════════════════════════════════ -->
+    <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Detalle de producto">
+        <div class="modal" id="modal">
+
+            <!-- Left: image gallery -->
+            <div class="modal__gallery">
+                <div class="modal__track" id="modal-track"></div>
+
+                <button class="modal__gallery-btn modal__gallery-btn--prev" id="modal-prev"
+                    aria-label="Imagen anterior">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                </button>
+                <button class="modal__gallery-btn modal__gallery-btn--next" id="modal-next"
+                    aria-label="Imagen siguiente">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </button>
+
+                <div class="modal__thumbs" id="modal-thumbs"></div>
+                <div class="modal__gallery-dots" id="modal-dots"></div>
+            </div>
+
+            <!-- Right: info -->
+            <div class="modal__info">
+                <button class="modal__close" id="modal-close" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+
+                <span class="modal__tag" id="modal-tag"></span>
+                <h2 class="modal__name" id="modal-name"></h2>
+                <p class="modal__sub" id="modal-sub"></p>
+                <div class="modal__divider"></div>
+                <p class="modal__desc" id="modal-desc"></p>
+
+                <ul class="modal__features">
+                    <li>Tela técnica de alto rendimiento</li>
+                    <li>Bolsillos funcionales estratégicamente ubicados</li>
+                    <li>Costuras reforzadas para mayor durabilidad</li>
+                    <li>Lavado a máquina — resistente a decoloración</li>
+                </ul>
+
+                <span class="modal__size-label">Selecciona tu talla</span>
+                <div class="modal__sizes" id="modal-sizes">
+                    <button class="modal__size-btn">S</button>
+                    <button class="modal__size-btn">M</button>
+                    <button class="modal__size-btn">L</button>
+                </div>
+
+                <p class="modal__price" id="modal-price"></p>
+
+                <a href="#" class="modal__cta" id="modal-cta" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    Pedir por WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script>
-        // ── Filter logic ──
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const cards = document.querySelectorAll('.product-card[data-line]');
-
-        filterBtns.forEach(btn => {
+        /* ── Filter ── */
+        document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const filter = btn.dataset.filter;
-                cards.forEach(card => {
-                    if (filter === 'all' || card.dataset.line === filter) {
-                        card.classList.remove('hidden');
-                    } else {
-                        card.classList.add('hidden');
-                    }
+                document.querySelectorAll('.product-card[data-line]').forEach(card => {
+                    card.classList.toggle('hidden', filter !== 'all' && card.dataset.line !== filter);
                 });
             });
         });
 
-        // ── Gallery slider logic ──
+        /* ── Card gallery slider ── */
         document.querySelectorAll('.gallery').forEach(gallery => {
             const track = gallery.querySelector('.gallery__track');
             const dots = gallery.querySelectorAll('.gallery__dot');
-            const prevBtn = gallery.querySelector('.gallery__btn--prev');
-            const nextBtn = gallery.querySelector('.gallery__btn--next');
+            const prev = gallery.querySelector('.gallery__btn--prev');
+            const next = gallery.querySelector('.gallery__btn--next');
             const total = gallery.querySelectorAll('.gallery__slide').length;
-            let current = 0;
+            let cur = 0;
 
-            function goTo(index) {
-                current = (index + total) % total;
-                track.style.transform = `translateX(-${current * 100}%)`;
-                dots.forEach((d, i) => d.classList.toggle('active', i === current));
+            function goTo(i) {
+                cur = (i + total) % total;
+                track.style.transform = `translateX(-${cur * 100}%)`;
+                dots.forEach((d, idx) => d.classList.toggle('active', idx === cur));
             }
 
-            prevBtn.addEventListener('click', () => goTo(current - 1));
-            nextBtn.addEventListener('click', () => goTo(current + 1));
-            dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+            prev.addEventListener('click', e => { e.stopPropagation(); goTo(cur - 1); });
+            next.addEventListener('click', e => { e.stopPropagation(); goTo(cur + 1); });
+            dots.forEach((d, i) => d.addEventListener('click', e => { e.stopPropagation(); goTo(i); }));
 
-            // Touch/swipe support
-            let startX = 0;
-            gallery.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+            let tx = 0;
+            gallery.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
             gallery.addEventListener('touchend', e => {
-                const diff = startX - e.changedTouches[0].clientX;
-                if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+                const diff = tx - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 40) goTo(diff > 0 ? cur + 1 : cur - 1);
             });
         });
 
-        // ── Size selector logic ──
-        document.querySelectorAll('.size-selector').forEach(selector => {
-            selector.querySelectorAll('.size-btn').forEach(btn => {
+        /* ── Card size selector ── */
+        document.querySelectorAll('.size-selector').forEach(sel => {
+            sel.querySelectorAll('.size-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    selector.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+                    sel.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                 });
             });
+        });
+
+        /* ── Product Detail Modal ── */
+        const overlay = document.getElementById('modal-overlay');
+        const modalTrack = document.getElementById('modal-track');
+        const modalDots = document.getElementById('modal-dots');
+        const modalThumbs = document.getElementById('modal-thumbs');
+        const modalPrev = document.getElementById('modal-prev');
+        const modalNext = document.getElementById('modal-next');
+        const modalSizes = document.getElementById('modal-sizes');
+        let mCur = 0, mTotal = 0;
+
+        function modalGoTo(i) {
+            mCur = (i + mTotal) % mTotal;
+            modalTrack.style.transform = `translateX(-${mCur * 100}%)`;
+            modalDots.querySelectorAll('.modal__gallery-dot').forEach((d, idx) =>
+                d.classList.toggle('active', idx === mCur));
+            modalThumbs.querySelectorAll('.modal__thumb').forEach((t, idx) =>
+                t.classList.toggle('active', idx === mCur));
+        }
+
+        function openModal(gallery) {
+            const imgs = gallery.dataset.imgs.split(',');
+            mTotal = imgs.length;
+            mCur = 0;
+
+            /* Build slides */
+            modalTrack.innerHTML = '';
+            modalTrack.style.transform = 'translateX(0)';
+            imgs.forEach(src => {
+                const slide = document.createElement('div');
+                slide.className = 'modal__slide';
+                const img = document.createElement('img');
+                img.src = src.trim();
+                img.alt = gallery.dataset.name;
+                slide.appendChild(img);
+                modalTrack.appendChild(slide);
+            });
+
+            /* Build dots */
+            modalDots.innerHTML = '';
+            imgs.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = 'modal__gallery-dot' + (i === 0 ? ' active' : '');
+                dot.addEventListener('click', () => modalGoTo(i));
+                modalDots.appendChild(dot);
+            });
+
+            /* Build thumbs */
+            modalThumbs.innerHTML = '';
+            imgs.forEach((src, i) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'modal__thumb' + (i === 0 ? ' active' : '');
+                const img = document.createElement('img');
+                img.src = src.trim();
+                img.alt = 'Vista ' + (i + 1);
+                thumb.appendChild(img);
+                thumb.addEventListener('click', () => modalGoTo(i));
+                modalThumbs.appendChild(thumb);
+            });
+
+            /* Fill info */
+            document.getElementById('modal-tag').textContent = gallery.dataset.lineName;
+            document.getElementById('modal-name').textContent = gallery.dataset.name;
+            document.getElementById('modal-sub').textContent = gallery.dataset.sub;
+            document.getElementById('modal-desc').textContent = gallery.dataset.desc;
+            document.getElementById('modal-price').textContent = gallery.dataset.price;
+            document.getElementById('modal-cta').href =
+                `https://wa.me/573202562307?text=${gallery.dataset.wa}`;
+
+            /* Reset sizes */
+            modalSizes.querySelectorAll('.modal__size-btn').forEach(b => b.classList.remove('selected'));
+
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        /* Open on image click */
+        document.querySelectorAll('.gallery').forEach(gallery => {
+            gallery.querySelector('.gallery__expand-hint').addEventListener('click', () => openModal(gallery));
+            gallery.querySelector('.gallery__track').addEventListener('click', () => openModal(gallery));
+        });
+
+        /* Navigation */
+        modalPrev.addEventListener('click', () => modalGoTo(mCur - 1));
+        modalNext.addEventListener('click', () => modalGoTo(mCur + 1));
+
+        /* Close */
+        document.getElementById('modal-close').addEventListener('click', closeModal);
+        overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        /* Modal size selector */
+        modalSizes.querySelectorAll('.modal__size-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                modalSizes.querySelectorAll('.modal__size-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+
+        /* Modal swipe */
+        let mtx = 0;
+        document.getElementById('modal').addEventListener('touchstart', e => { mtx = e.touches[0].clientX; }, { passive: true });
+        document.getElementById('modal').addEventListener('touchend', e => {
+            const diff = mtx - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) modalGoTo(diff > 0 ? mCur + 1 : mCur - 1);
         });
     </script>
 </body>
