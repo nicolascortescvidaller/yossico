@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Términos y Condiciones — YOSSICO. Política de compra, envíos, garantía, devoluciones y protección de datos para Colombia.">
+    <title>Términos y Condiciones — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ── Términos Layout ───────────────────────────────── */
+        .terminos {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        /* Sidebar índice */
+        .terminos__sidebar {
+            position: sticky;
+            top: 72px;
+            align-self: start;
+            padding: 60px 40px 60px 60px;
+            border-right: 1px solid var(--border);
+            max-height: calc(100vh - 72px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .terminos__sidebar-title {
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 200;
+            margin-bottom: 24px;
+        }
+
+        .terminos__index {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .terminos__index a {
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 200;
+            letter-spacing: 0.5px;
+            color: var(--gray);
+            text-decoration: none;
+            display: block;
+            padding: 6px 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            line-height: 1.5;
+        }
+
+        .terminos__index a:hover {
+            color: var(--black);
+            border-bottom-color: var(--border);
+        }
+
+        .terminos__index-num {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 300;
+            color: var(--gray-light);
+            margin-right: 6px;
+        }
+
+        /* Main content */
+        .terminos__content {
+            padding: 80px 80px 120px 80px;
+            max-width: 860px;
+        }
+
+        /* Version badge */
+        .terminos__version {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 200;
+            margin-bottom: 32px;
+        }
+
+        .terminos__version::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--gray-light);
+        }
+
+        /* Intro blockquote */
+        .terminos__intro {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 18px;
+            font-weight: 300;
+            color: var(--gray-mid);
+            line-height: 1.7;
+            border-left: 2px solid var(--border);
+            padding-left: 24px;
+            margin-bottom: 64px;
+        }
+
+        /* Section */
+        .tc-section {
+            margin-bottom: 64px;
+            scroll-margin-top: 100px;
+        }
+
+        .tc-section__num {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: var(--gray-light);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .tc-section__title {
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: clamp(22px, 2.5vw, 32px);
+            letter-spacing: -0.3px;
+            color: var(--black);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tc-section__subtitle {
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: 18px;
+            color: var(--black);
+            margin-bottom: 12px;
+            margin-top: 32px;
+        }
+
+        .tc-body {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 2;
+        }
+
+        .tc-body+.tc-body {
+            margin-top: 16px;
+        }
+
+        .tc-body strong {
+            font-weight: 300;
+            color: var(--black);
+        }
+
+        /* Warning box */
+        .tc-alert {
+            background: #faf9f6;
+            border-left: 3px solid var(--black);
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 200;
+            color: var(--gray-mid);
+            line-height: 1.8;
+        }
+
+        .tc-alert strong {
+            font-weight: 300;
+            color: var(--black);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Tables */
+        .tc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        .tc-table th {
+            font-family: var(--font-body);
+            font-size: 8px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--off-white);
+        }
+
+        .tc-table td {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 200;
+            color: var(--gray-mid);
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.6;
+        }
+
+        .tc-table td strong {
+            font-weight: 300;
+            color: var(--black);
+        }
+
+        /* Ordered list */
+        .tc-steps {
+            list-style: none;
+            counter-reset: steps;
+            margin: 20px 0;
+        }
+
+        .tc-steps li {
+            counter-increment: steps;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 200;
+            color: var(--gray-mid);
+            line-height: 1.9;
+            padding: 10px 0 10px 40px;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .tc-steps li::before {
+            content: counter(steps);
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 300;
+            color: var(--gray-light);
+            position: absolute;
+            left: 0;
+            top: 10px;
+        }
+
+        /* Bullet list */
+        .tc-list {
+            list-style: none;
+            margin: 16px 0;
+        }
+
+        .tc-list li {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 200;
+            color: var(--gray-mid);
+            line-height: 1.9;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tc-list li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--gray-light);
+        }
+
+        /* Diamond bullet */
+        .tc-list--diamond li::before {
+            content: '✦';
+            font-size: 9px;
+            top: 2px;
+        }
+
+        /* Footer signature */
+        .terminos__firma {
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .terminos__firma span {
+            font-family: var(--font-body);
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--gray);
+            font-weight: 200;
+        }
+
+        .terminos__firma em {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 15px;
+            color: var(--gray-mid);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .terminos {
+                grid-template-columns: 1fr;
+            }
+
+            .terminos__sidebar {
+                position: relative;
+                top: 0;
+                max-height: none;
+                padding: 40px 24px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .terminos__content {
+                padding: 48px 24px 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111"
+                    stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111"
+                    stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li><a href="coleccion.html">Colección</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
+            <li>
+                <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="label page-header__label reveal">Documento legal</div>
+        <h1 class="page-header__title reveal" data-delay="2">
+            Términos y<br><em>Condiciones.</em>
+        </h1>
+    </div>
+
+    <!-- Main -->
+    <div class="terminos">
+
+        <!-- Sidebar -->
+        <aside class="terminos__sidebar">
+            <p class="terminos__sidebar-title">Índice</p>
+            <ol class="terminos__index">
+                <li><a href="#s1"><span class="terminos__index-num">01</span>Información General</a></li>
+                <li><a href="#s2"><span class="terminos__index-num">02</span>Productos</a></li>
+                <li><a href="#s3"><span class="terminos__index-num">03</span>Precios y Medios de Pago</a></li>
+                <li><a href="#s4"><span class="terminos__index-num">04</span>Proceso de Compra</a></li>
+                <li><a href="#s5"><span class="terminos__index-num">05</span>Envíos y Logística</a></li>
+                <li><a href="#s6"><span class="terminos__index-num">06</span>Garantía</a></li>
+                <li><a href="#s7"><span class="terminos__index-num">07</span>Devoluciones y Cambios</a></li>
+                <li><a href="#s8"><span class="terminos__index-num">08</span>Bordado Personalizado</a></li>
+                <li><a href="#s9"><span class="terminos__index-num">09</span>Protección de Datos</a></li>
+                <li><a href="#s10"><span class="terminos__index-num">10</span>Propiedad Intelectual</a></li>
+                <li><a href="#s11"><span class="terminos__index-num">11</span>Limitación de Responsabilidad</a></li>
+                <li><a href="#s12"><span class="terminos__index-num">12</span>Ley Aplicable</a></li>
+                <li><a href="#s13"><span class="terminos__index-num">13</span>Modificaciones</a></li>
+                <li><a href="#s14"><span class="terminos__index-num">14</span>Contacto</a></li>
+            </ol>
+        </aside>
+
+        <!-- Content -->
+        <main class="terminos__content">
+
+            <div class="terminos__version">Versión 1.0 · Colombia · 2026</div>
+
+            <p class="terminos__intro">
+                Este documento regula la relación comercial entre YOSSICO y sus clientes en el territorio colombiano.
+                Al realizar una compra en nuestros canales oficiales, el cliente acepta los presentes términos en su
+                totalidad.
+            </p>
+
+            <!-- 1 -->
+            <section class="tc-section" id="s1">
+                <div class="tc-section__num">01</div>
+                <h2 class="tc-section__title">Información General</h2>
+                <p class="tc-body"><strong>Marca comercial:</strong> YOSSICO<br>
+                    <strong>País de operación:</strong> República de Colombia<br>
+                    <strong>Canales de venta oficiales:</strong>
+                </p>
+                <ul class="tc-list">
+                    <li>Sitio web: <strong>yossico.co</strong></li>
+                    <li>Instagram: <strong>@yossico</strong></li>
+                    <li>WhatsApp comercial: +57 320 256 2307</li>
+                </ul>
+                <p class="tc-body">YOSSICO es una marca colombiana de uniformes médicos de alta calidad. Todos nuestros
+                    productos son <strong>confeccionados en Colombia</strong> con <strong>telas importadas de alto
+                        desempeño</strong>, seleccionadas bajo estándares de durabilidad, comodidad y uso clínico
+                    prolongado.</p>
+            </section>
+
+            <!-- 2 -->
+            <section class="tc-section" id="s2">
+                <div class="tc-section__num">02</div>
+                <h2 class="tc-section__title">Productos</h2>
+
+                <h3 class="tc-section__subtitle">2.1 Descripción</h3>
+                <p class="tc-body">YOSSICO ofrece uniformes médicos femeninos en formato de <strong>set completo (top +
+                        pantalón)</strong>, así como gorros quirúrgicos. Cada referencia pertenece a una de las
+                    siguientes líneas:</p>
+                <table class="tc-table">
+                    <thead>
+                        <tr>
+                            <th>Línea</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Essentials</strong></td>
+                            <td>Sets de entrada con alta relación calidad-precio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Signature</strong></td>
+                            <td>Sets premium con materiales y acabados superiores</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Noir</strong></td>
+                            <td>Ediciones limitadas en colores exclusivos</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="tc-section__subtitle">2.2 Materiales</h3>
+                <p class="tc-body">Nuestras telas son importadas y seleccionadas por sus propiedades técnicas:
+                    resistencia al lavado industrial, transpirabilidad, elasticidad y durabilidad en turnos prolongados.
+                    La composición exacta de cada referencia se indica en la ficha de producto y en la etiqueta interna
+                    de cada prenda.</p>
+
+                <h3 class="tc-section__subtitle">2.3 Tallaje</h3>
+                <p class="tc-body">YOSSICO cuenta con una guía de tallas disponible en el sitio web y enviada por
+                    WhatsApp al momento de la compra. <strong>El cliente es responsable de seleccionar su talla
+                        correcta</strong> consultando dicha guía antes de realizar el pedido.</p>
+                <div class="tc-alert">
+                    <strong>⚠ Importante</strong>
+                    Los cambios por talla incorrecta seleccionada por el cliente no están cubiertos por la política de
+                    devoluciones. Se recomienda siempre consultar la guía de tallas antes de comprar.
+                </div>
+
+                <h3 class="tc-section__subtitle">2.4 Variaciones de color</h3>
+                <p class="tc-body">Los colores mostrados en fotografías pueden presentar leves variaciones respecto al
+                    producto físico debido a la calibración de pantallas y condiciones de iluminación. Estas variaciones
+                    no constituyen un defecto de fabricación.</p>
+            </section>
+
+            <!-- 3 -->
+            <section class="tc-section" id="s3">
+                <div class="tc-section__num">03</div>
+                <h2 class="tc-section__title">Precios y Medios de Pago</h2>
+
+                <h3 class="tc-section__subtitle">3.1 Precios</h3>
+                <p class="tc-body">Todos los precios publicados están expresados en <strong>pesos colombianos
+                        (COP)</strong> e incluyen IVA cuando aplique, conforme a la normativa tributaria vigente en
+                    Colombia. YOSSICO se reserva el derecho de modificar los precios en cualquier momento. El precio que
+                    aplica a cada pedido es el vigente al momento de confirmar la compra.</p>
+
+                <h3 class="tc-section__subtitle">3.2 Medios de pago aceptados</h3>
+                <ul class="tc-list">
+                    <li>Transferencia bancaria / PSE</li>
+                    <li>Nequi / Daviplata</li>
+                    <li>Tarjeta de crédito o débito (según pasarela habilitada)</li>
+                    <li>Efectivo contra entrega <em>(disponibilidad según ciudad y transportadora)</em></li>
+                </ul>
+
+                <h3 class="tc-section__subtitle">3.3 Confirmación del pedido</h3>
+                <p class="tc-body">El pedido se considera confirmado únicamente cuando se recibe el comprobante de pago.
+                    YOSSICO no reserva inventario sin pago verificado.</p>
+            </section>
+
+            <!-- 4 -->
+            <section class="tc-section" id="s4">
+                <div class="tc-section__num">04</div>
+                <h2 class="tc-section__title">Proceso de Compra</h2>
+                <ol class="tc-steps">
+                    <li>El cliente selecciona el producto, talla y color por los canales oficiales.</li>
+                    <li>YOSSICO envía la información de pago.</li>
+                    <li>El cliente realiza el pago y comparte el comprobante.</li>
+                    <li>YOSSICO confirma el pedido dentro de las siguientes <strong>24 horas hábiles</strong>.</li>
+                    <li>El pedido entra a producción o despacho según disponibilidad de inventario.</li>
+                    <li>El cliente recibe número de guía una vez despachado el pedido.</li>
+                </ol>
+            </section>
+
+            <!-- 5 -->
+            <section class="tc-section" id="s5">
+                <div class="tc-section__num">05</div>
+                <h2 class="tc-section__title">Envíos y Logística</h2>
+
+                <h3 class="tc-section__subtitle">5.1 Cobertura</h3>
+                <p class="tc-body">YOSSICO realiza envíos a todo el territorio nacional colombiano a través de
+                    transportadoras aliadas de reconocimiento nacional.</p>
+
+                <h3 class="tc-section__subtitle">5.2 Tiempos de entrega</h3>
+                <table class="tc-table">
+                    <thead>
+                        <tr>
+                            <th>Destino</th>
+                            <th>Tiempo estimado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bogotá D.C.</td>
+                            <td>1 – 2 días hábiles</td>
+                        </tr>
+                        <tr>
+                            <td>Ciudades principales (Medellín, Cali, Barranquilla, etc.)</td>
+                            <td>2 – 3 días hábiles</td>
+                        </tr>
+                        <tr>
+                            <td>Resto del país</td>
+                            <td>3 – 5 días hábiles</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="tc-alert">Los tiempos de entrega se cuentan a partir del <strong>despacho del
+                        pedido</strong>, no desde la fecha de compra. Los días hábiles no incluyen sábados, domingos ni
+                    festivos.</div>
+
+                <h3 class="tc-section__subtitle">5.3 Tiempos de despacho</h3>
+                <ul class="tc-list">
+                    <li>Productos en inventario disponible: despachados en <strong>1 – 2 días hábiles</strong> tras
+                        confirmar el pago.</li>
+                    <li>Productos bajo pedido o con bordado personalizado: el tiempo de despacho se informa al cliente
+                        al momento de confirmar el pedido.</li>
+                </ul>
+
+                <h3 class="tc-section__subtitle">5.4 Costo de envío</h3>
+                <p class="tc-body">El costo del envío será informado al cliente antes de confirmar el pedido y dependerá
+                    de la ciudad de destino y el peso del paquete. En campañas o montos mínimos de compra, YOSSICO podrá
+                    ofrecer envío gratuito, lo cual se indicará expresamente en cada promoción.</p>
+
+                <h3 class="tc-section__subtitle">5.5 Seguimiento del pedido</h3>
+                <p class="tc-body">Una vez despachado, YOSSICO enviará al cliente el número de guía y la transportadora
+                    asignada para que pueda hacer seguimiento en tiempo real.</p>
+
+                <h3 class="tc-section__subtitle">5.6 Dirección de entrega</h3>
+                <p class="tc-body">El cliente es responsable de proporcionar una dirección de entrega completa y
+                    correcta. YOSSICO no se hace responsable por demoras o pérdidas ocasionadas por datos incorrectos o
+                    incompletos suministrados por el cliente.</p>
+
+                <h3 class="tc-section__subtitle">5.7 Intentos de entrega</h3>
+                <p class="tc-body">Las transportadoras realizan hasta <strong>2 intentos de entrega</strong>. Si el
+                    pedido no puede ser entregado por causas imputables al cliente (ausencia, dirección incorrecta,
+                    rechazo), los costos de reenvío serán asumidos por el cliente.</p>
+
+                <h3 class="tc-section__subtitle">5.8 Daños en tránsito</h3>
+                <p class="tc-body">Si el paquete llega con daños visibles en el empaque, el cliente debe <strong>dejar
+                        constancia ante la transportadora en el momento de recibir</strong> y notificar a YOSSICO dentro
+                    de las siguientes <strong>24 horas</strong> con fotografías del empaque y la prenda.</p>
+            </section>
+
+            <!-- 6 -->
+            <section class="tc-section" id="s6">
+                <div class="tc-section__num">06</div>
+                <h2 class="tc-section__title">Garantía</h2>
+
+                <h3 class="tc-section__subtitle">6.1 Cobertura</h3>
+                <p class="tc-body">YOSSICO garantiza que todos sus productos están libres de defectos de fabricación al
+                    momento del despacho. La garantía cubre exclusivamente:</p>
+                <ul class="tc-list">
+                    <li>Costuras en mal estado o abiertas desde el origen</li>
+                    <li>Fallas en cierres, botones o broches incluidos en la prenda</li>
+                    <li>Defectos en el tejido o tela atribuibles al proceso de confección</li>
+                    <li>Bordados con errores ortográficos o técnicos imputables a YOSSICO</li>
+                </ul>
+
+                <h3 class="tc-section__subtitle">6.2 Vigencia</h3>
+                <p class="tc-body">La garantía tiene una vigencia de <strong>30 días calendario</strong> contados desde
+                    la fecha de recepción del pedido por parte del cliente.</p>
+
+                <h3 class="tc-section__subtitle">6.3 Lo que NO cubre la garantía</h3>
+                <ul class="tc-list">
+                    <li>Desgaste natural por uso normal de la prenda</li>
+                    <li>Daños ocasionados por mal lavado, uso de blanqueadores o productos químicos agresivos</li>
+                    <li>Alteraciones, modificaciones o reparaciones realizadas por el cliente o terceros</li>
+                    <li>Daños por accidentes, mal uso o uso en condiciones distintas a las previstas</li>
+                    <li>Variaciones menores de color respecto a las fotografías del producto</li>
+                    <li>Talla incorrecta seleccionada por el cliente</li>
+                    <li>Prendas sin etiqueta original o con signos de uso</li>
+                </ul>
+
+                <h3 class="tc-section__subtitle">6.4 Procedimiento para hacer efectiva la garantía</h3>
+                <ol class="tc-steps">
+                    <li>Notificar a YOSSICO dentro del período de garantía vía WhatsApp o correo electrónico oficial.
+                    </li>
+                    <li>Adjuntar fotografías claras del defecto reportado.</li>
+                    <li>YOSSICO evaluará el caso en un plazo máximo de <strong>3 días hábiles</strong>.</li>
+                    <li>Si el defecto es confirmado, YOSSICO procederá conforme a la política de devoluciones.</li>
+                </ol>
+            </section>
+
+            <!-- 7 -->
+            <section class="tc-section" id="s7">
+                <div class="tc-section__num">07</div>
+                <h2 class="tc-section__title">Devoluciones y Cambios</h2>
+
+                <h3 class="tc-section__subtitle">7.1 Política general</h3>
+                <p class="tc-body">YOSSICO acepta devoluciones <strong>únicamente por defecto de fabricación
+                        confirmado</strong> conforme a lo establecido en la sección de Garantía. No se aceptan
+                    devoluciones por cambio de opinión, error en la talla seleccionada por el cliente u otras razones no
+                    relacionadas con defectos de origen.</p>
+
+                <h3 class="tc-section__subtitle">7.2 Condiciones de la prenda</h3>
+                <p class="tc-body">Para que una devolución sea aceptada, la prenda debe cumplir <strong>todas</strong>
+                    las siguientes condiciones:</p>
+                <ul class="tc-list tc-list--diamond">
+                    <li>Sin usar — sin signos de haber sido lavada o puesta</li>
+                    <li>Con todas las etiquetas originales intactas</li>
+                    <li>En su empaque original o empaque equivalente que proteja la prenda</li>
+                    <li>Dentro del período de garantía (30 días desde recepción)</li>
+                </ul>
+
+                <h3 class="tc-section__subtitle">7.3 Proceso de devolución</h3>
+                <ol class="tc-steps">
+                    <li>El cliente contacta a YOSSICO por WhatsApp o correo oficial reportando el defecto.</li>
+                    <li>YOSSICO analiza las fotografías y confirma o niega la procedencia en máximo <strong>3 días
+                            hábiles</strong>.</li>
+                    <li>Si la devolución es aprobada, YOSSICO coordina la recolección de la prenda, <strong>sin costo
+                            para el cliente</strong>.</li>
+                    <li>Una vez recibida y verificada la prenda, se procesa el reembolso.</li>
+                </ol>
+
+                <h3 class="tc-section__subtitle">7.4 Reembolso</h3>
+                <p class="tc-body">El reembolso se realiza al mismo medio de pago utilizado en la compra original,
+                    dentro de los <strong>15 a 30 días hábiles</strong> siguientes a la confirmación de recepción de la
+                    prenda devuelta. Los costos de envío originales no son reembolsables salvo que el defecto haya sido
+                    responsabilidad exclusiva de YOSSICO desde el despacho.</p>
+
+                <h3 class="tc-section__subtitle">7.5 Costos de envío en devoluciones</h3>
+                <table class="tc-table">
+                    <thead>
+                        <tr>
+                            <th>Motivo de devolución</th>
+                            <th>¿Quién paga el envío?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Defecto de fabricación confirmado</td>
+                            <td><strong>YOSSICO</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Cualquier otro motivo</td>
+                            <td>No aplica — no se acepta</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="tc-section__subtitle">7.6 Cambios de talla</h3>
+                <p class="tc-body">YOSSICO no realiza cambios por talla incorrecta seleccionada por el cliente. Por esta
+                    razón, <strong>recomendamos enfáticamente</strong> consultar la guía de tallas antes de realizar el
+                    pedido y contactarnos por WhatsApp si hay dudas antes de comprar.</p>
+            </section>
+
+            <!-- 8 -->
+            <section class="tc-section" id="s8">
+                <div class="tc-section__num">08</div>
+                <h2 class="tc-section__title">Prendas con Bordado Personalizado</h2>
+                <p class="tc-body">Las prendas que incluyan bordado personalizado (nombre, cargo, institución) tienen
+                    las siguientes condiciones especiales:</p>
+                <ul class="tc-list">
+                    <li>Una vez confirmado el pedido y aprobado el arte de bordado por el cliente, <strong>no se aceptan
+                            cancelaciones ni cambios</strong>.</li>
+                    <li>El cliente es responsable de revisar y aprobar el arte antes de la confección. Los errores
+                        aprobados por el cliente no están cubiertos por garantía.</li>
+                    <li>El tiempo de producción se extiende según lo informado al momento de la compra.</li>
+                    <li>Solo se aceptan devoluciones si el error en el bordado es imputable a YOSSICO (error ortográfico
+                        diferente al aprobado, posición incorrecta, etc.).</li>
+                </ul>
+            </section>
+
+            <!-- 9 -->
+            <section class="tc-section" id="s9">
+                <div class="tc-section__num">09</div>
+                <h2 class="tc-section__title">Protección de Datos Personales</h2>
+                <p class="tc-body">YOSSICO recopila y trata los datos personales de sus clientes conforme a la
+                    <strong>Ley 1581 de 2012</strong> y el <strong>Decreto 1377 de 2013</strong> de la República de
+                    Colombia.</p>
+                <p class="tc-body">Los datos recopilados (nombre, dirección, teléfono, correo electrónico) se utilizan
+                    exclusivamente para:</p>
+                <ul class="tc-list">
+                    <li>Procesar y despachar los pedidos</li>
+                    <li>Comunicar el estado del envío</li>
+                    <li>Atender solicitudes de garantía o devolución</li>
+                    <li>Enviar comunicaciones comerciales (con posibilidad de cancelar la suscripción)</li>
+                </ul>
+                <p class="tc-body">YOSSICO no vende, cede ni comparte los datos personales de sus clientes con terceros,
+                    salvo a las transportadoras aliadas para efectos del despacho. El cliente podrá ejercer sus derechos
+                    de acceso, corrección, supresión y portabilidad de sus datos contactando a YOSSICO por los canales
+                    oficiales.</p>
+            </section>
+
+            <!-- 10 -->
+            <section class="tc-section" id="s10">
+                <div class="tc-section__num">10</div>
+                <h2 class="tc-section__title">Propiedad Intelectual</h2>
+                <p class="tc-body">El nombre <strong>YOSSICO</strong>, el logo, los diseños, textos, fotografías y demás
+                    elementos visuales publicados en los canales oficiales son propiedad exclusiva de YOSSICO y están
+                    protegidos por las leyes colombianas de propiedad intelectual.</p>
+                <p class="tc-body">Queda prohibida la reproducción, copia, distribución o uso comercial de cualquier
+                    elemento de la marca sin autorización escrita previa de YOSSICO.</p>
+            </section>
+
+            <!-- 11 -->
+            <section class="tc-section" id="s11">
+                <div class="tc-section__num">11</div>
+                <h2 class="tc-section__title">Limitación de Responsabilidad</h2>
+                <p class="tc-body">YOSSICO no será responsable por:</p>
+                <ul class="tc-list">
+                    <li>Demoras en la entrega atribuibles a la transportadora, condiciones climáticas, paros o
+                        situaciones de fuerza mayor.</li>
+                    <li>Pérdidas o daños ocasionados por información incorrecta suministrada por el cliente.</li>
+                    <li>Uso indebido de las prendas por parte del cliente.</li>
+                    <li>Daños indirectos, lucro cesante o perjuicios derivados del uso o no uso de los productos.</li>
+                </ul>
+                <p class="tc-body">La responsabilidad máxima de YOSSICO en cualquier caso estará limitada al valor de la
+                    prenda adquirida por el cliente.</p>
+            </section>
+
+            <!-- 12 -->
+            <section class="tc-section" id="s12">
+                <div class="tc-section__num">12</div>
+                <h2 class="tc-section__title">Ley Aplicable y Resolución de Conflictos</h2>
+                <p class="tc-body">Los presentes términos se rigen por las leyes de la <strong>República de
+                        Colombia</strong>, en particular por:</p>
+                <ul class="tc-list">
+                    <li><strong>Ley 1480 de 2011</strong> — Estatuto del Consumidor</li>
+                    <li><strong>Ley 1581 de 2012</strong> — Protección de Datos Personales</li>
+                    <li>Código Civil y Código de Comercio colombiano</li>
+                </ul>
+                <p class="tc-body">Ante cualquier controversia, las partes buscarán una solución directa. Si no es
+                    posible, el cliente podrá acudir a la <strong>Superintendencia de Industria y Comercio
+                        (SIC)</strong> o a los jueces competentes en la ciudad de Bogotá D.C., Colombia.</p>
+            </section>
+
+            <!-- 13 -->
+            <section class="tc-section" id="s13">
+                <div class="tc-section__num">13</div>
+                <h2 class="tc-section__title">Modificaciones a los Términos</h2>
+                <p class="tc-body">YOSSICO se reserva el derecho de actualizar o modificar estos términos en cualquier
+                    momento. Los cambios serán publicados en el sitio web oficial con indicación de la fecha de
+                    actualización. El uso continuado de los servicios después de la publicación de cambios implica la
+                    aceptación de los nuevos términos.</p>
+            </section>
+
+            <!-- 14 -->
+            <section class="tc-section" id="s14">
+                <div class="tc-section__num">14</div>
+                <h2 class="tc-section__title">Contacto</h2>
+                <p class="tc-body">Para cualquier consulta relacionada con pedidos, garantías, devoluciones o estos
+                    términos:</p>
+                <table class="tc-table">
+                    <thead>
+                        <tr>
+                            <th>Canal</th>
+                            <th>Información</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>WhatsApp</strong></td>
+                            <td>+57 320 256 2307</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Instagram</strong></td>
+                            <td>@yossico</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sitio web</strong></td>
+                            <td>yossico.co</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Horario de atención</strong></td>
+                            <td>Lunes a viernes, 8:00 a.m. – 6:00 p.m. (hora Colombia)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Firma -->
+            <div class="terminos__firma">
+                <span>YOSSICO · Uniformes Médicos · Colombia · Última actualización: 2026</span>
+                <em>"Vestidos para sanar. Diseñados para perdurar."</em>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="rgba(255,255,255,0.4)"
+                    stroke-width="1" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </div>
+        <p class="footer__tagline">"Vestidos para sanar. Diseñados para perdurar."</p>
+        <p class="footer__copy">© 2026 YOSSICO · Colombia</p>
+    </footer>
+
+    <!-- Cart -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito">
+        <div class="cart-drawer__header">
+            <span class="cart-drawer__title">Tu Pedido</span>
+            <button class="cart-drawer__close" id="cart-close"><svg viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg></button>
+        </div>
+        <div class="cart-drawer__body" id="cart-body"></div>
+        <div class="cart-drawer__footer" id="cart-footer">
+            <div class="cart-total"><span>Total</span><span id="cart-total-price">$0 COP</span></div>
+            <a href="#" id="cart-checkout" class="cart-checkout" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                Pedir por WhatsApp
+            </a>
+        </div>
+    </aside>
+
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+</body>
+
+</html>
