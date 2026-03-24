@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="YOSSICO — Uniformes médicos premium diseñados para los profesionales de la salud en Colombia. Scrubs de alta calidad con identidad propia.">
+  <meta name="description"
+    content="YOSSICO — Uniformes médicos premium diseñados para los profesionales de la salud en Colombia. Scrubs de alta calidad con identidad propia.">
   <title>YOSSICO — Uniformes Médicos Premium</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
     /* ── Hero ─────────────────────────────────────────────── */
@@ -33,7 +37,8 @@
       top: 0;
       width: 1px;
       background: var(--gray-light);
-      height: 0; /* animated by JS */
+      height: 0;
+      /* animated by JS */
       transition: height 1.4s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
 
@@ -83,9 +88,6 @@
       width: 100%;
       height: 100%;
       background: #d4d2ce;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       position: relative;
       overflow: hidden;
     }
@@ -96,37 +98,30 @@
       font-weight: 300;
       font-size: clamp(60px, 10vw, 120px);
       letter-spacing: 20px;
-      color: rgba(0,0,0,0.04);
+      color: rgba(0, 0, 0, 0.04);
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       white-space: nowrap;
+      z-index: 0;
     }
 
-    .hero__image-placeholder {
-      width: 65%;
-      max-width: 280px;
-      aspect-ratio: 2/3;
-      background: rgba(0,0,0,0.06);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
+    .hero__model-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
       position: relative;
       z-index: 1;
     }
 
-    .hero__image-placeholder svg { opacity: 0.18; width: 60px; }
-    .hero__image-placeholder span {
-      font-family: var(--font-body);
-      font-weight: 200;
-      font-size: 8px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.3);
-    }
-
     /* ── Catalog Section ──────────────────────────────────── */
-    .catalog { background: var(--off-white); padding: 120px 60px; }
+    .catalog {
+      background: var(--off-white);
+      padding: 120px 60px;
+    }
 
     .catalog__grid {
       display: grid;
@@ -137,6 +132,26 @@
     /* 4th card spans full or goes to new row — 3 + 1 layout */
     .catalog__grid .product-card:nth-child(4) {
       grid-column: 1 / 2;
+    }
+
+    .product-card__image {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 2/3;
+      background: #e8e6e2;
+    }
+
+    .product-card__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .product-card:hover .product-card__image img {
+      transform: scale(1.04);
     }
 
     /* ── Historia Section ─────────────────────────────────── */
@@ -162,7 +177,7 @@
       font-weight: 300;
       font-size: 420px;
       line-height: 1;
-      color: rgba(255,255,255,0.03);
+      color: rgba(255, 255, 255, 0.03);
       pointer-events: none;
       user-select: none;
     }
@@ -197,13 +212,13 @@
       font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255, 255, 255, 0.35);
       line-height: 1.4;
     }
 
     .acronym__word {
       display: block;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255, 255, 255, 0.55);
       font-size: 11px;
       letter-spacing: 0px;
       font-style: italic;
@@ -251,7 +266,10 @@
     }
 
     /* ── Nosotros Section ─────────────────────────────────── */
-    .nosotros { background: var(--gray-bg); padding: 120px 60px; }
+    .nosotros {
+      background: var(--gray-bg);
+      padding: 120px 60px;
+    }
 
     .nosotros__grid {
       display: grid;
@@ -260,7 +278,9 @@
       margin-top: 72px;
     }
 
-    .nosotros__card { position: relative; }
+    .nosotros__card {
+      position: relative;
+    }
 
     .nosotros__num {
       font-family: var(--font-display);
@@ -269,7 +289,8 @@
       color: var(--gray-bg);
       -webkit-text-stroke: 1px var(--gray-light);
       position: absolute;
-      top: -20px; left: -10px;
+      top: -20px;
+      left: -10px;
       line-height: 1;
       user-select: none;
     }
@@ -323,7 +344,7 @@
       font-weight: 200;
       font-size: 11px;
       letter-spacing: 2px;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255, 255, 255, 0.3);
       margin-bottom: 52px;
     }
 
@@ -336,24 +357,62 @@
 
     /* ── Responsive ─────────────────────────────────────────── */
     @media (max-width: 1100px) {
-      .hero { grid-template-columns: 1fr; min-height: auto; }
-      .hero__right { min-height: 50vw; }
-      .historia { grid-template-columns: 1fr; }
-      .catalog__grid { grid-template-columns: repeat(2, 1fr); }
-      .catalog__grid .product-card:nth-child(4) { grid-column: auto; }
-      .nosotros__grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero__right {
+        min-height: 50vw;
+      }
+
+      .historia {
+        grid-template-columns: 1fr;
+      }
+
+      .catalog__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .catalog__grid .product-card:nth-child(4) {
+        grid-column: auto;
+      }
+
+      .nosotros__grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
     }
 
     @media (max-width: 600px) {
-      .hero__left { padding: 60px 24px; }
-      .catalog { padding: 80px 24px; }
-      .catalog__grid { grid-template-columns: 1fr; }
-      .historia__left, .historia__right { padding: 80px 24px; }
-      .nosotros { padding: 80px 24px; }
-      .contacto-cta { padding: 100px 24px; }
+      .hero__left {
+        padding: 60px 24px;
+      }
+
+      .catalog {
+        padding: 80px 24px;
+      }
+
+      .catalog__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .historia__left,
+      .historia__right {
+        padding: 80px 24px;
+      }
+
+      .nosotros {
+        padding: 80px 24px;
+      }
+
+      .contacto-cta {
+        padding: 100px 24px;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- Custom Cursor -->
@@ -365,14 +424,11 @@
     <a href="index.html" class="nav__logo">
       <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="YOSSICO símbolo">
         <!-- Octagon double outline -->
-        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11"
-                 fill="none" stroke="#111" stroke-width="1"/>
-        <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12"
-                 fill="none" stroke="#111" stroke-width="0.4"/>
+        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111" stroke-width="1" />
+        <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111" stroke-width="0.4" />
         <!-- ECG pulse forming Y -->
-        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17"
-                  fill="none" stroke="#111" stroke-width="1.2"
-                  stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="#111"
+          stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
       YOSSICO
     </a>
@@ -383,6 +439,16 @@
       <li><a href="nosotros.html">Nosotros</a></li>
       <li><a href="contacto.html">Contacto</a></li>
       <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
+      <li>
+        <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
+          <svg viewBox="0 0 24 24">
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          </svg>
+          <span class="cart-badge" id="cart-badge">0</span>
+        </button>
+      </li>
     </ul>
   </nav>
 
@@ -412,15 +478,7 @@
 
     <div class="hero__right">
       <div class="hero__right-inner">
-        <div class="hero__image-placeholder">
-          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="4" width="40" height="52" rx="2" fill="none" stroke="#111" stroke-width="1"/>
-            <path d="M22 4v8c0 2 2 4 8 4s8-2 8-4V4" fill="none" stroke="#111" stroke-width="1"/>
-            <line x1="18" y1="26" x2="42" y2="26" stroke="#111" stroke-width="0.8"/>
-            <line x1="18" y1="32" x2="36" y2="32" stroke="#111" stroke-width="0.8"/>
-          </svg>
-          <span>Foto próximamente</span>
-        </div>
+        <img src="img/hero-medic.png" alt="Profesional de la salud con uniforme YOSSICO negro" class="hero__model-img">
       </div>
     </div>
   </section>
@@ -471,12 +529,7 @@
       <!-- OSLO -->
       <div class="product-card reveal" data-delay="1">
         <div class="product-card__image">
-          <div class="product-card__placeholder">
-            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="10" y="4" width="40" height="52" rx="2" fill="none" stroke="#111" stroke-width="1"/>
-              <path d="M22 4v8c0 2 2 4 8 4s8-2 8-4V4" fill="none" stroke="#111" stroke-width="1"/>
-            </svg>
-          </div>
+          <img src="img/oslo.png" alt="Set OSLO — Scrub Femenino Verde Salvia">
           <span class="product-card__tag">Essentials</span>
         </div>
         <div class="product-card__info">
@@ -484,7 +537,7 @@
           <span class="product-card__sub">Set · Scrub Femenino</span>
           <span class="product-card__price">$269.900 COP</span>
           <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20OSLO%20de%20YOSSICO"
-             class="arrow-cta product-card__cta" target="_blank" rel="noopener">
+            class="arrow-cta product-card__cta" target="_blank" rel="noopener">
             Pedir <span class="arrow">→</span>
           </a>
         </div>
@@ -493,12 +546,7 @@
       <!-- MILAN -->
       <div class="product-card reveal" data-delay="2">
         <div class="product-card__image">
-          <div class="product-card__placeholder">
-            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="10" y="4" width="40" height="52" rx="2" fill="none" stroke="#111" stroke-width="1"/>
-              <path d="M22 4v8c0 2 2 4 8 4s8-2 8-4V4" fill="none" stroke="#111" stroke-width="1"/>
-            </svg>
-          </div>
+          <img src="img/milan.png" alt="Set MILAN — Scrub Femenino Navy">
           <span class="product-card__tag">Signature</span>
         </div>
         <div class="product-card__info">
@@ -506,7 +554,7 @@
           <span class="product-card__sub">Set · Scrub Femenino</span>
           <span class="product-card__price">$269.900 COP</span>
           <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20MILAN%20de%20YOSSICO"
-             class="arrow-cta product-card__cta" target="_blank" rel="noopener">
+            class="arrow-cta product-card__cta" target="_blank" rel="noopener">
             Pedir <span class="arrow">→</span>
           </a>
         </div>
@@ -515,12 +563,7 @@
       <!-- KYOTO -->
       <div class="product-card reveal" data-delay="3">
         <div class="product-card__image">
-          <div class="product-card__placeholder">
-            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="10" y="4" width="40" height="52" rx="2" fill="none" stroke="#111" stroke-width="1"/>
-              <path d="M22 4v8c0 2 2 4 8 4s8-2 8-4V4" fill="none" stroke="#111" stroke-width="1"/>
-            </svg>
-          </div>
+          <img src="img/kyoto.png" alt="Set KYOTO — Scrub Femenino Ivory">
           <span class="product-card__tag">Signature</span>
         </div>
         <div class="product-card__info">
@@ -528,7 +571,7 @@
           <span class="product-card__sub">Set · Scrub Femenino</span>
           <span class="product-card__price">$269.900 COP</span>
           <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO"
-             class="arrow-cta product-card__cta" target="_blank" rel="noopener">
+            class="arrow-cta product-card__cta" target="_blank" rel="noopener">
             Pedir <span class="arrow">→</span>
           </a>
         </div>
@@ -537,12 +580,7 @@
       <!-- RIO -->
       <div class="product-card reveal" data-delay="4">
         <div class="product-card__image">
-          <div class="product-card__placeholder">
-            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="10" y="4" width="40" height="52" rx="2" fill="none" stroke="#111" stroke-width="1"/>
-              <path d="M22 4v8c0 2 2 4 8 4s8-2 8-4V4" fill="none" stroke="#111" stroke-width="1"/>
-            </svg>
-          </div>
+          <img src="img/rio.png" alt="Set RIO — Scrub Femenino Terracota">
           <span class="product-card__tag">Essentials</span>
         </div>
         <div class="product-card__info">
@@ -550,7 +588,7 @@
           <span class="product-card__sub">Set · Scrub Femenino</span>
           <span class="product-card__price">$269.900 COP</span>
           <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20el%20Set%20RIO%20de%20YOSSICO"
-             class="arrow-cta product-card__cta" target="_blank" rel="noopener">
+            class="arrow-cta product-card__cta" target="_blank" rel="noopener">
             Pedir <span class="arrow">→</span>
           </a>
         </div>
@@ -630,9 +668,13 @@
       </blockquote>
 
       <p class="historia__body reveal" data-delay="3">
-        Una profesional de la salud miró su uniforme y pensó: <em>"Trabajo en el lugar más importante del mundo y mi uniforme no lo refleja."</em><br><br>
-        Buscó un nombre que sonara a identidad propia, a algo que ninguna otra marca en Colombia tuviera. Tomó sus iniciales, su historia, su linaje — y lo fundió con la única palabra que define lo que hace: <strong>Co</strong>. Colectivo. Colombia. Compañía.<br><br>
-        <strong>YOSSICO no es solo una marca de uniformes médicos.</strong> Es el reconocimiento de que quien cuida a otros merece verse y sentirse extraordinario.
+        Una profesional de la salud miró su uniforme y pensó: <em>"Trabajo en el lugar más importante del mundo y mi
+          uniforme no lo refleja."</em><br><br>
+        Buscó un nombre que sonara a identidad propia, a algo que ninguna otra marca en Colombia tuviera. Tomó sus
+        iniciales, su historia, su linaje — y lo fundió con la única palabra que define lo que hace:
+        <strong>Co</strong>. Colectivo. Colombia. Compañía.<br><br>
+        <strong>YOSSICO no es solo una marca de uniformes médicos.</strong> Es el reconocimiento de que quien cuida a
+        otros merece verse y sentirse extraordinario.
       </p>
 
       <div class="historia__tagline reveal" data-delay="4">
@@ -650,7 +692,8 @@
   <!-- ── Nosotros ────────────────────────────────────────────── -->
   <section class="nosotros">
     <div style="text-align: center; margin-bottom: 0;">
-      <div class="label reveal" style="margin-bottom: 16px; display: block; text-align: center;">Por qué somos diferentes</div>
+      <div class="label reveal" style="margin-bottom: 16px; display: block; text-align: center;">Por qué somos
+        diferentes</div>
       <h2 class="section__title reveal" data-delay="2">
         Por qué <em>YOSSICO</em><br>es diferente.
       </h2>
@@ -661,45 +704,49 @@
         <span class="nosotros__num">01</span>
         <div class="nosotros__icon">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 14C4 8.477 8.477 4 14 4s10 4.477 10 10-4.477 10-10 10S4 19.523 4 14z"
-                  fill="none" stroke="#111" stroke-width="1"/>
-            <path d="M10 14c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z"
-                  fill="none" stroke="#111" stroke-width="1"/>
+            <path d="M4 14C4 8.477 8.477 4 14 4s10 4.477 10 10-4.477 10-10 10S4 19.523 4 14z" fill="none" stroke="#111"
+              stroke-width="1" />
+            <path d="M10 14c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z" fill="none" stroke="#111"
+              stroke-width="1" />
           </svg>
         </div>
         <h3 class="nosotros__card-title">Telas de alto desempeño</h3>
-        <p class="nosotros__card-text">Materiales seleccionados para resistir largas jornadas: antifluidos, transpirables, duraderos. Tu comodidad no se negocia.</p>
+        <p class="nosotros__card-text">Materiales seleccionados para resistir largas jornadas: antifluidos,
+          transpirables, duraderos. Tu comodidad no se negocia.</p>
       </div>
 
       <div class="nosotros__card reveal" data-delay="2">
         <span class="nosotros__num">02</span>
         <div class="nosotros__icon">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="4" width="20" height="20" rx="1" fill="none" stroke="#111" stroke-width="1"/>
-            <path d="M10 14l3 3 5-5" stroke="#111" stroke-width="1" stroke-linecap="round"/>
+            <rect x="4" y="4" width="20" height="20" rx="1" fill="none" stroke="#111" stroke-width="1" />
+            <path d="M10 14l3 3 5-5" stroke="#111" stroke-width="1" stroke-linecap="round" />
           </svg>
         </div>
         <h3 class="nosotros__card-title">Identidad en cada detalle</h3>
-        <p class="nosotros__card-text">Cortes diseñados para el cuerpo en movimiento. Bordados de precisión. Un uniforme que te representa, no que te uniforma.</p>
+        <p class="nosotros__card-text">Cortes diseñados para el cuerpo en movimiento. Bordados de precisión. Un uniforme
+          que te representa, no que te uniforma.</p>
       </div>
 
       <div class="nosotros__card reveal" data-delay="3">
         <span class="nosotros__num">03</span>
         <div class="nosotros__icon">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 4L4 10v8l10 6 10-6v-8z" fill="none" stroke="#111" stroke-width="1"/>
-            <path d="M14 4v16M4 10l10 6 10-6" fill="none" stroke="#111" stroke-width="1"/>
+            <path d="M14 4L4 10v8l10 6 10-6v-8z" fill="none" stroke="#111" stroke-width="1" />
+            <path d="M14 4v16M4 10l10 6 10-6" fill="none" stroke="#111" stroke-width="1" />
           </svg>
         </div>
         <h3 class="nosotros__card-title">Hecho en Colombia</h3>
-        <p class="nosotros__card-text">Producción local, calidad internacional. Apoyamos a los artesanos colombianos mientras llevamos la moda médica a otro nivel.</p>
+        <p class="nosotros__card-text">Producción local, calidad internacional. Apoyamos a los artesanos colombianos
+          mientras llevamos la moda médica a otro nivel.</p>
       </div>
     </div>
   </section>
 
   <!-- ── Contacto CTA ────────────────────────────────────────── -->
   <section class="contacto-cta section--dark">
-    <div class="label reveal" style="color: rgba(255,255,255,0.3); margin-bottom: 24px; display: block;">Habla con nosotros</div>
+    <div class="label reveal" style="color: rgba(255,255,255,0.3); margin-bottom: 24px; display: block;">Habla con
+      nosotros</div>
     <h2 class="contacto-cta__title reveal" data-delay="2">
       ¿Listo para<br><em>elevar</em> tu imagen?
     </h2>
@@ -708,15 +755,17 @@
     </p>
     <div class="contacto-cta__btns reveal" data-delay="4">
       <a href="https://wa.me/573202562307?text=Hola,%20quiero%20información%20sobre%20los%20uniformes%20YOSSICO"
-         class="btn btn--outline-white" target="_blank" rel="noopener">
+        class="btn btn--outline-white" target="_blank" rel="noopener">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          <path
+            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
         </svg>
         WhatsApp
       </a>
       <a href="https://instagram.com/yossico" class="btn btn--white" target="_blank" rel="noopener">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          <path
+            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
         </svg>
         Instagram
       </a>
@@ -727,11 +776,10 @@
   <footer class="footer">
     <div class="footer__logo">
       <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11"
-                 fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17"
-                  fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"
-                  stroke-linecap="round" stroke-linejoin="round"/>
+        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="rgba(255,255,255,0.4)"
+          stroke-width="1" />
+        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+          stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
       YOSSICO
     </div>
@@ -739,6 +787,31 @@
     <p class="footer__copy">© 2024 YOSSICO · Colombia</p>
   </footer>
 
+  <!-- ══ Cart Overlay ══ -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <!-- ══ Cart Drawer ══ -->
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito">
+    <div class="cart-drawer__header">
+      <span class="cart-drawer__title">Tu Pedido</span>
+      <button class="cart-drawer__close" id="cart-close" aria-label="Cerrar"><svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg></button>
+    </div>
+    <div class="cart-drawer__body" id="cart-body"></div>
+    <div class="cart-drawer__footer" id="cart-footer">
+      <div class="cart-total"><span>Total</span><span id="cart-total-price">$0 COP</span></div>
+      <a href="#" id="cart-checkout" class="cart-checkout" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+        Pedir por WhatsApp
+      </a>
+    </div>
+  </aside>
   <script src="script.js"></script>
+  <script src="cart.js"></script>
 </body>
+
 </html>
