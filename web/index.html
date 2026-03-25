@@ -107,14 +107,128 @@
       z-index: 0;
     }
 
-    .hero__model-img {
+    /* ── Hero Video-like Slideshow ──────────────────────── */
+    .hero__slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      z-index: 1;
+      animation: heroSlide 20s infinite;
+    }
+
+    .hero__slide img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center top;
       display: block;
-      position: relative;
-      z-index: 1;
+      animation: kenBurns1 20s infinite;
+      transform-origin: center center;
+    }
+
+    /* Stagger each slide by 4s (20s total / 5 slides) */
+    .hero__slide:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .hero__slide:nth-child(1) img {
+      animation-delay: 0s;
+    }
+
+    .hero__slide:nth-child(2) {
+      animation-delay: 4s;
+    }
+
+    .hero__slide:nth-child(2) img {
+      animation-delay: 4s;
+      animation-name: kenBurns2;
+    }
+
+    .hero__slide:nth-child(3) {
+      animation-delay: 8s;
+    }
+
+    .hero__slide:nth-child(3) img {
+      animation-delay: 8s;
+      animation-name: kenBurns3;
+    }
+
+    .hero__slide:nth-child(4) {
+      animation-delay: 12s;
+    }
+
+    .hero__slide:nth-child(4) img {
+      animation-delay: 12s;
+      animation-name: kenBurns4;
+    }
+
+    .hero__slide:nth-child(5) {
+      animation-delay: 16s;
+    }
+
+    .hero__slide:nth-child(5) img {
+      animation-delay: 16s;
+      animation-name: kenBurns1;
+    }
+
+    /* Slide fade in/out: visible for 4s, fades 0.8s */
+    @keyframes heroSlide {
+      0% {
+        opacity: 0;
+      }
+
+      4% {
+        opacity: 1;
+      }
+
+      95% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* 5 different Ken Burns movements */
+    @keyframes kenBurns1 {
+      0% {
+        transform: scale(1) translate(0, 0);
+      }
+
+      100% {
+        transform: scale(1.08) translate(-2%, -2%);
+      }
+    }
+
+    @keyframes kenBurns2 {
+      0% {
+        transform: scale(1.06) translate(2%, 1%);
+      }
+
+      100% {
+        transform: scale(1) translate(0, 0);
+      }
+    }
+
+    @keyframes kenBurns3 {
+      0% {
+        transform: scale(1) translate(-1%, 2%);
+      }
+
+      100% {
+        transform: scale(1.07) translate(2%, 0);
+      }
+    }
+
+    @keyframes kenBurns4 {
+      0% {
+        transform: scale(1.05) translate(0, -1%);
+      }
+
+      100% {
+        transform: scale(1) translate(-1%, 2%);
+      }
     }
 
     /* ── Catalog Section ──────────────────────────────────── */
@@ -478,7 +592,12 @@
 
     <div class="hero__right">
       <div class="hero__right-inner">
-        <img src="img/hero-medic.png" alt="Profesional de la salud con uniforme YOSSICO negro" class="hero__model-img">
+        <!-- Video-like slideshow: 5 imágenes con Ken Burns + crossfade -->
+        <div class="hero__slide"><img src="img/hero-medic.png" alt="YOSSICO — Uniformes médicos premium"></div>
+        <div class="hero__slide"><img src="img/milan.png" alt="YOSSICO — Set MILAN Signature"></div>
+        <div class="hero__slide"><img src="img/oslo-2.png" alt="YOSSICO — Set OSLO Essentials"></div>
+        <div class="hero__slide"><img src="img/kyoto.png" alt="YOSSICO — Set KYOTO Signature"></div>
+        <div class="hero__slide"><img src="img/lima-2.png" alt="YOSSICO — Set LIMA Essentials"></div>
       </div>
     </div>
   </section>
@@ -802,7 +921,8 @@
     </div>
     <p class="footer__tagline">"Vestidos para sanar. Diseñados para perdurar."</p>
     <p class="footer__copy">© 2026 YOSSICO · Colombia · <a href="terminos.html"
-        style="color:rgba(255,255,255,0.7); text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">Términos y
+        style="color:rgba(255,255,255,0.7); text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">Términos
+        y
         Condiciones</a></p>
   </footer>
 
