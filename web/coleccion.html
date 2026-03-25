@@ -244,6 +244,90 @@
             border-color: var(--black);
         }
 
+        /* ── Color Selector ─────────────────────────────── */
+        .color-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0 0;
+        }
+
+        .color-label {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-right: 2px;
+            white-space: nowrap;
+        }
+
+        .color-swatch {
+            position: relative;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: none;
+            transition: border-color 0.2s, transform 0.15s;
+            outline: none;
+        }
+
+        .color-swatch::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: 8px;
+            font-weight: 200;
+            letter-spacing: 1px;
+            padding: 3px 7px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .color-swatch:hover::after {
+            opacity: 1;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.15);
+        }
+
+        .color-swatch.selected {
+            border-color: var(--black);
+            transform: scale(1.1);
+        }
+
+        /* Color values */
+        .color-swatch[data-color="negro"] {
+            background: #111111;
+        }
+
+        .color-swatch[data-color="azul-oscuro"] {
+            background: #1a2744;
+        }
+
+        .color-swatch[data-color="gris"] {
+            background: #7a8084;
+        }
+
+        .color-swatch[data-color="azul-claro"] {
+            background: #4a6fa5;
+        }
+
+        .color-swatch[data-color="nativo"] {
+            background: var(--gray-bg);
+            border: 1.5px solid var(--border);
+        }
+
         /* ───────────────────────────────
            PRODUCT DETAIL MODAL
         ─────────────────────────────── */
@@ -740,6 +824,22 @@
                 <div class="product-card__info">
                     <span class="product-card__name">OSLO</span>
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
+                    <!-- Color selector -->
+                    <div class="color-selector">
+                        <span class="color-label">Color</span>
+                        <button class="color-swatch selected" data-color="nativo" data-label="Verde Salvia"
+                            data-img-0="img/oslo.png" data-img-1="img/oslo-2.png" data-img-2="img/oslo-3.png"></button>
+                        <button class="color-swatch" data-color="negro" data-label="Negro" data-img-0="img/negro.png"
+                            data-img-1="img/negro.png" data-img-2="img/negro.png"></button>
+                        <button class="color-swatch" data-color="azul-oscuro" data-label="Azul Marino"
+                            data-img-0="img/azul-oscuro.png" data-img-1="img/azul-oscuro.png"
+                            data-img-2="img/azul-oscuro.png"></button>
+                        <button class="color-swatch" data-color="gris" data-label="Gris" data-img-0="img/gris.png"
+                            data-img-1="img/gris.png" data-img-2="img/gris.png"></button>
+                        <button class="color-swatch" data-color="azul-claro" data-label="Azul Acero"
+                            data-img-0="img/azul-claro.png" data-img-1="img/azul-claro.png"
+                            data-img-2="img/azul-claro.png"></button>
+                    </div>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
                         <button class="size-btn">XS</button>
@@ -792,6 +892,19 @@
                 <div class="product-card__info">
                     <span class="product-card__name">MILAN</span>
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
+                    <div class="color-selector">
+                        <span class="color-label">Color</span>
+                        <button class="color-swatch selected" data-color="azul-oscuro" data-label="Navy"
+                            data-img-0="img/milan.png" data-img-1="img/milan-2.png"
+                            data-img-2="img/milan-3.png"></button>
+                        <button class="color-swatch" data-color="negro" data-label="Negro" data-img-0="img/negro.png"
+                            data-img-1="img/negro.png" data-img-2="img/negro.png"></button>
+                        <button class="color-swatch" data-color="gris" data-label="Gris" data-img-0="img/gris.png"
+                            data-img-1="img/gris.png" data-img-2="img/gris.png"></button>
+                        <button class="color-swatch" data-color="azul-claro" data-label="Azul Acero"
+                            data-img-0="img/azul-claro.png" data-img-1="img/azul-claro.png"
+                            data-img-2="img/azul-claro.png"></button>
+                    </div>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
                         <button class="size-btn">XS</button>
@@ -844,6 +957,19 @@
                 <div class="product-card__info">
                     <span class="product-card__name">KYOTO</span>
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
+                    <div class="color-selector">
+                        <span class="color-label">Color</span>
+                        <button class="color-swatch selected" data-color="nativo" data-label="Marfil"
+                            data-img-0="img/kyoto.png" data-img-1="img/kyoto-2.png" data-img-2="img/kyoto-3.png"
+                            style="background:#e8e2d5;"></button>
+                        <button class="color-swatch" data-color="negro" data-label="Negro" data-img-0="img/negro.png"
+                            data-img-1="img/negro.png" data-img-2="img/negro.png"></button>
+                        <button class="color-swatch" data-color="gris" data-label="Gris" data-img-0="img/gris.png"
+                            data-img-1="img/gris.png" data-img-2="img/gris.png"></button>
+                        <button class="color-swatch" data-color="azul-claro" data-label="Azul Acero"
+                            data-img-0="img/azul-claro.png" data-img-1="img/azul-claro.png"
+                            data-img-2="img/azul-claro.png"></button>
+                    </div>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
                         <button class="size-btn">XS</button>
@@ -895,6 +1021,19 @@
                 <div class="product-card__info">
                     <span class="product-card__name">RIO</span>
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
+                    <div class="color-selector">
+                        <span class="color-label">Color</span>
+                        <button class="color-swatch selected" data-color="nativo" data-label="Terracota"
+                            data-img-0="img/rio.png" data-img-1="img/rio-2.png" data-img-2="img/rio-3.png"
+                            style="background:#b5614a;"></button>
+                        <button class="color-swatch" data-color="negro" data-label="Negro" data-img-0="img/negro.png"
+                            data-img-1="img/negro.png" data-img-2="img/negro.png"></button>
+                        <button class="color-swatch" data-color="gris" data-label="Gris" data-img-0="img/gris.png"
+                            data-img-1="img/gris.png" data-img-2="img/gris.png"></button>
+                        <button class="color-swatch" data-color="azul-claro" data-label="Azul Acero"
+                            data-img-0="img/azul-claro.png" data-img-1="img/azul-claro.png"
+                            data-img-2="img/azul-claro.png"></button>
+                    </div>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
                         <button class="size-btn">XS</button>
@@ -946,6 +1085,19 @@
                 <div class="product-card__info">
                     <span class="product-card__name">LIMA</span>
                     <span class="product-card__sub">Set · Scrub Femenino · Top + Pantalón</span>
+                    <div class="color-selector">
+                        <span class="color-label">Color</span>
+                        <button class="color-swatch selected" data-color="nativo" data-label="Rosa Palo"
+                            data-img-0="img/lima.png" data-img-1="img/lima-2.png" data-img-2="img/lima-3.png"
+                            style="background:#c9a4a0;"></button>
+                        <button class="color-swatch" data-color="negro" data-label="Negro" data-img-0="img/negro.png"
+                            data-img-1="img/negro.png" data-img-2="img/negro.png"></button>
+                        <button class="color-swatch" data-color="gris" data-label="Gris" data-img-0="img/gris.png"
+                            data-img-1="img/gris.png" data-img-2="img/gris.png"></button>
+                        <button class="color-swatch" data-color="azul-claro" data-label="Azul Acero"
+                            data-img-0="img/azul-claro.png" data-img-1="img/azul-claro.png"
+                            data-img-2="img/azul-claro.png"></button>
+                    </div>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
                         <button class="size-btn">XS</button>
@@ -1002,7 +1154,8 @@
         </div>
         <p class="footer__tagline">"Vestidos para sanar. Diseñados para perdurar."</p>
         <p class="footer__copy">© 2026 YOSSICO · Colombia · <a href="terminos.html"
-                style="color:rgba(255,255,255,0.7); text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">Términos y
+                style="color:rgba(255,255,255,0.7); text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">Términos
+                y
                 Condiciones</a></p>
     </footer>
 
@@ -1161,6 +1314,34 @@
                 btn.addEventListener('click', () => {
                     sel.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
+                });
+            });
+        });
+
+        /* ── Color swatch switching ── */
+        document.querySelectorAll('.color-selector').forEach(sel => {
+            sel.querySelectorAll('.color-swatch').forEach(swatch => {
+                swatch.addEventListener('click', () => {
+                    // Mark active swatch
+                    sel.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+                    swatch.classList.add('selected');
+
+                    // Find the parent card's gallery slides
+                    const card = swatch.closest('.product-card');
+                    if (!card) return;
+                    const slides = card.querySelectorAll('.gallery__slide img');
+
+                    slides.forEach((img, i) => {
+                        const newSrc = swatch.dataset[`img${i}`];
+                        if (newSrc) img.src = newSrc;
+                    });
+
+                    // Update the gallery data-name for cart 
+                    const gallery = card.querySelector('.gallery');
+                    if (gallery && swatch.dataset.img0) {
+                        const imgs = [0, 1, 2].map(i => swatch.dataset[`img${i}`] || swatch.dataset.img0);
+                        gallery.dataset.imgs = imgs.join(',');
+                    }
                 });
             });
         });
