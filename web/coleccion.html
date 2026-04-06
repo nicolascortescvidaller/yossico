@@ -753,7 +753,15 @@
             YOSSICO
         </a>
         <ul class="nav__links">
-            <li><a href="coleccion.html">Colección</a></li>
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+                <div class="nav__dropdown-menu">
+                    <a href="coleccion.html#linea-uniformes">Essentials</a>
+                    <a href="coleccion.html#linea-uniformes">Signature</a>
+                    <a href="coleccion.html#linea-uniformes">Core</a>
+                    <div class="nav__dropdown-divider"></div>
+                    <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+                </div>
+            </li>
             <li><a href="historia.html">Historia</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
             <li><a href="contacto.html">Contacto</a></li>
@@ -780,7 +788,7 @@
     </div>
 
     <!-- Catalog Section -->
-    <section class="coleccion">
+    <section class="coleccion" id="linea-uniformes">
         <!-- Filter Bar -->
         <div class="filter-bar reveal">
             <button class="filter-btn active" data-filter="all">Todo</button>
@@ -1168,7 +1176,7 @@
     </section>
 
     <!-- Capas -->
-    <section class="coleccion" style="background: var(--white);">
+    <section class="coleccion" id="linea-capas" style="background: var(--white);">
         <div class="filter-bar reveal" style="margin-bottom:48px;">
             <div style="display:flex; flex-direction:column; gap:6px;">
                 <span class="label" style="color:var(--gray);">Complementos</span>
