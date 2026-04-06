@@ -266,36 +266,28 @@ body.cursor-hover .cursor-ring {
 /* ── Nav Dropdown ──────────────────────────────────────────── */
 .nav__dropdown {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .nav__dropdown>a {
   display: flex;
   align-items: center;
-  gap: 5px;
-}
-
-.nav__dropdown>a::before {
-  content: '';
-  position: absolute;
-  bottom: -20px;
-  left: -16px;
-  right: -16px;
-  height: 24px;
 }
 
 .nav__dropdown-menu {
   position: absolute;
-  top: calc(100% + 20px);
+  top: 100%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-4px);
   min-width: 180px;
   background: var(--white);
   border: 1px solid var(--border);
-  padding: 8px 0;
+  /* padding-top acts as invisible bridge — no gap to lose hover */
+  padding: 12px 0 8px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s var(--ease-out), transform 0.2s var(--ease-out);
-  transform: translateX(-50%) translateY(-4px);
   z-index: 1001;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
