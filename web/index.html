@@ -748,7 +748,7 @@
 
       <div class="drops__cta-block">
         <span class="drops__cta-label">Suscríbete para el próximo drop</span>
-        <a href="contacto.html" class="btn btn--primary">Notificarme</a>
+        <a href="#" class="btn btn--primary" data-open-sub>Notificarme</a>
         <a href="coleccion.html" class="btn-link">Ver colección actual →</a>
       </div>
     </div>
@@ -974,6 +974,157 @@
   </aside>
   <script src="script.js"></script>
   <script src="cart.js"></script>
+
+  <!-- ══ Subscription Popup ══ -->
+  <div class="sub-overlay" id="sub-overlay" role="dialog" aria-modal="true" aria-label="Suscríbete al drop">
+    <div class="sub-modal">
+
+      <!-- Left: brand panel -->
+      <div class="sub-modal__left">
+        <div>
+          <span class="sub-modal__tag">YOSSICO Drops</span>
+          <h2 class="sub-modal__headline">
+            Sé el primero<br>en saber<br><em>cuándo abre.</em>
+          </h2>
+        </div>
+        <div class="sub-modal__discount">
+          <span class="sub-modal__discount-label">Por registrarte obtienes</span>
+          <div class="sub-modal__discount-value">10<span>% OFF</span></div>
+        </div>
+      </div>
+
+      <!-- Right: form panel -->
+      <div class="sub-modal__right">
+        <button class="sub-modal__close" id="sub-close" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <!-- Form state -->
+        <div id="sub-form-wrap">
+          <p class="sub-form__title">Notifícame</p>
+          <p class="sub-form__sub">Cuéntanos quién eres y te avisamos antes de que abra el próximo drop — más tu
+            descuento de bienvenida.</p>
+          <form class="sub-form" id="sub-form" novalidate>
+            <div class="sub-form__field">
+              <label class="sub-form__label" for="sub-name">Nombre completo</label>
+              <input class="sub-form__input" id="sub-name" type="text" placeholder="Tu nombre" autocomplete="name"
+                required>
+            </div>
+            <div class="sub-form__field">
+              <label class="sub-form__label" for="sub-email">Correo electrónico</label>
+              <input class="sub-form__input" id="sub-email" type="email" placeholder="tu@correo.com"
+                autocomplete="email" required>
+            </div>
+            <div class="sub-form__field">
+              <label class="sub-form__label" for="sub-phone">Celular / WhatsApp</label>
+              <input class="sub-form__input" id="sub-phone" type="tel" placeholder="+57 300 000 0000" autocomplete="tel"
+                required>
+            </div>
+            <button type="submit" class="sub-form__btn">Quiero mi descuento →</button>
+            <p class="sub-form__legal">Al registrarte aceptas recibir notificaciones de drops y promociones de YOSSICO.
+              Sin spam.</p>
+          </form>
+        </div>
+
+        <!-- Success state -->
+        <div class="sub-success" id="sub-success">
+          <div class="sub-success__icon">
+            <svg viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <p class="sub-success__title">¡Estás dentro.</p>
+          <p class="sub-success__body">Te avisamos cuando abra el próximo drop.<br>Usa este código en tu primera compra:
+          </p>
+          <div class="sub-success__code-box">
+            <span class="sub-success__code-label">Tu código de descuento</span>
+            <span class="sub-success__code">YOSSICO10</span>
+          </div>
+          <p class="sub-form__legal" style="margin-top:0;">Válido para tu primera compra · 10% de descuento</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── Subscription Popup ───────────────────────────────────── */
+    const subOverlay = document.getElementById('sub-overlay');
+    const subClose = document.getElementById('sub-close');
+    const subForm = document.getElementById('sub-form');
+    const subFormWrap = document.getElementById('sub-form-wrap');
+    const subSuccess = document.getElementById('sub-success');
+
+    function openSubPopup() {
+      subOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      // Reset to form state if re-opened
+      subFormWrap.style.display = '';
+      subSuccess.classList.remove('show');
+    }
+
+    function closeSubPopup() {
+      subOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Close on overlay click
+    subOverlay.addEventListener('click', e => {
+      if (e.target === subOverlay) closeSubPopup();
+    });
+
+    // Close button
+    subClose.addEventListener('click', closeSubPopup);
+
+    // Close on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && subOverlay.classList.contains('open')) closeSubPopup();
+    });
+
+    // Trigger: "Notificarme" button in drops section
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-open-sub]');
+      if (btn) { e.preventDefault(); openSubPopup(); }
+    });
+
+    // Form submit
+    subForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('sub-name').value.trim();
+      const email = document.getElementById('sub-email').value.trim();
+      const phone = document.getElementById('sub-phone').value.trim();
+
+      if (!name || !email || !phone) {
+        // Shake empty required fields
+        [['sub-name', name], ['sub-email', email], ['sub-phone', phone]].forEach(([id, val]) => {
+          if (!val) {
+            const el = document.getElementById(id);
+            el.style.borderBottomColor = '#c0392b';
+            setTimeout(() => el.style.borderBottomColor = '', 1800);
+          }
+        });
+        return;
+      }
+
+      // Send via WhatsApp to brand number
+      const msg = encodeURIComponent(
+        `🌟 Nueva suscripción YOSSICO Drop\n\n` +
+        `Nombre: ${name}\n` +
+        `Correo: ${email}\n` +
+        `Celular/WA: ${phone}\n\n` +
+        `Código enviado: YOSSICO10`
+      );
+      window.open(`https://wa.me/573202562307?text=${msg}`, '_blank', 'noopener');
+
+      // Show success
+      subFormWrap.style.display = 'none';
+      subSuccess.classList.add('show');
+    });
+  </script>
+
 </body>
 
 </html>
