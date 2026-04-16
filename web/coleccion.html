@@ -1423,8 +1423,8 @@
                 dots.forEach((d, idx) => d.classList.toggle('active', idx === cur));
             }
 
-            prev.addEventListener('click', e => { e.stopPropagation(); goTo(cur - 1); });
-            next.addEventListener('click', e => { e.stopPropagation(); goTo(cur + 1); });
+            if (prev) prev.addEventListener('click', e => { e.stopPropagation(); goTo(cur - 1); });
+            if (next) next.addEventListener('click', e => { e.stopPropagation(); goTo(cur + 1); });
             dots.forEach((d, i) => d.addEventListener('click', e => { e.stopPropagation(); goTo(i); }));
 
             let tx = 0;
@@ -1554,10 +1554,52 @@
             document.body.style.overflow = '';
         }
 
-        /* Open on image click */
+        /* Open on image click — navega a página de detalle para los productos del catálogo */
+        const DETAIL_PRODUCTS = new Set(['oslo', 'milan', 'kyoto', 'rio', 'lima', 'core']);
+
+        function navigateTo(url) {
+            window.location.assign(url);
+        }
+
         document.querySelectorAll('.gallery').forEach(gallery => {
-            gallery.querySelector('.gallery__expand-hint').addEventListener('click', () => openModal(gallery));
-            gallery.querySelector('.gallery__track').addEventListener('click', () => openModal(gallery));
+            const pid = gallery.dataset.product;
+            const toDetail = DETAIL_PRODUCTS.has(pid);
+
+            gallery.addEventListener('click', e => {
+                // Ignorar clics en botones de navegación, dots, swatches y size-btn
+                if (e.target.closest('.gallery__btn') ||
+                    e.target.closest('.gallery__dot') ||
+                    e.target.closest('.color-swatch') ||
+                    e.target.closest('.size-btn') ||
+                    e.target.closest('.add-to-cart-btn') ||
+                    e.target.closest('.arrow-cta')) {
+                    return;
+                }
+
+                if (toDetail) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    navigateTo(`producto.html?id=${pid}`);
+                } else {
+                    openModal(gallery);
+                }
+            });
+
+            // También navega al hacer click en el nombre, subtítulo o precio del card
+            const card = gallery.closest('.product-card');
+            if (card && toDetail) {
+                ['.product-card__name', '.product-card__sub', '.product-card__price'].forEach(sel => {
+                    const el = card.querySelector(sel);
+                    if (el) {
+                        el.style.cursor = 'pointer';
+                        el.addEventListener('click', e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            navigateTo(`producto.html?id=${pid}`);
+                        });
+                    }
+                });
+            }
         });
 
         /* Navigation */
