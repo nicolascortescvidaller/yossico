@@ -343,10 +343,11 @@
     }
 
     .historia__left {
-      background: var(--black);
+      background: var(--white);
       padding: 100px 60px;
       position: relative;
       overflow: hidden;
+      border-right: 1px solid var(--border);
     }
 
     .historia__bg-letter {
@@ -358,7 +359,7 @@
       font-weight: 300;
       font-size: 420px;
       line-height: 1;
-      color: rgba(255, 255, 255, 0.03);
+      color: rgba(0, 0, 0, 0.04);
       pointer-events: none;
       user-select: none;
     }
@@ -382,7 +383,7 @@
       font-family: var(--font-display);
       font-weight: 300;
       font-size: 32px;
-      color: var(--white);
+      color: var(--black);
       min-width: 24px;
       line-height: 1;
     }
@@ -393,13 +394,13 @@
       font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.35);
+      color: var(--gray);
       line-height: 1.4;
     }
 
     .acronym__word {
       display: block;
-      color: rgba(255, 255, 255, 0.55);
+      color: var(--gray-mid);
       font-size: 11px;
       letter-spacing: 0px;
       font-style: italic;
@@ -761,7 +762,7 @@
     <div class="historia__left">
       <div class="historia__bg-letter">Y</div>
 
-      <div class="label" style="color: rgba(255,255,255,0.35); margin-bottom: 40px;">
+      <div class="label" style="margin-bottom: 40px;">
         El Acrónimo
       </div>
 
