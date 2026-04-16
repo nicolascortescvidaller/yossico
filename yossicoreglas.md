@@ -100,7 +100,7 @@ YOSSICO es la alternativa de lujo colombiana a FIGS. Una marca que entiende que 
 
 **Competidor de referencia:** FIGS (wearfigs.com)
 **Mercado objetivo:** Profesionales de la salud en Colombia — médicos, enfermeras, odontólogos, cirujanos.
-**Posicionamiento:** Lujo accesible. El mejor uniforme médico de Colombia.
+**Posicionamiento:** Lujo accesible. El mejor uniforme médico del mercado.
 
 ---
 
@@ -314,7 +314,7 @@ Dominio:      yossico.co  ó  yossi.co
 - **Grid 3 columnas:**
   - `01` Telas de alto desempeño
   - `02` Identidad en cada detalle
-  - `03` Hecho en Colombia
+  - `03` Entrega y experiencia
 - **Números decorativos:** Cormorant Garamond, 52px, color `#e8e6e2` (casi invisible, solo textura)
 
 ---
@@ -403,7 +403,7 @@ https://instagram.com/yossico
 
 **Tono de voz:**
 - Sofisticado pero cercano
-- Orgulloso de lo colombiano
+- Enfocado en la mujer profesional de la salud
 - Nunca habla de "ropa de trabajo" — siempre "uniforme de identidad"
 - Inspira, no solo vende
 
