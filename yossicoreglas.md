@@ -47,15 +47,13 @@ La escritura `Yossi.Co` funciona como nombre de marca *y* como dominio web nativ
 
 ## 2. Historia de Marca
 
-> *Era la madrugada de un turno de urgencias en Bogotá cuando la idea nació.*
+En Colombia, encontrar un uniforme médico que realmente estuviera a la altura era más difícil de lo que debería ser. Las opciones existentes no reflejaban el nivel de las mujeres que los usaban: profesionales con formación, con criterio, con una identidad construida con esfuerzo.
 
-Una profesional de la salud miró su uniforme y pensó: *"Trabajo en el lugar más importante del mundo y mi uniforme no lo refleja."*
+YOSSICO nació de esa observación. No para llenar un mercado, sino para crear un estándar. Una marca seria, exclusiva, pensada desde el principio para la mujer en salud que sabe exactamente quién es y cómo quiere presentarse al mundo.
 
-Buscó un nombre que sonara a identidad propia, a algo que ninguna otra marca en Colombia tuviera. Tomó sus iniciales, su historia, su linaje — y lo fundió con la única palabra que define lo que hace: **Co**. Colectivo. Colombia. Compañía.
+Cada prenda es una decisión deliberada en el corte, en la calidad, en los detalles que otros pasan por alto. Porque la mujer que cuida a otros merece un uniforme que la cuide a ella: que la haga sentir segura, profesional y completamente ella misma dentro de él.
 
-Con el tiempo, el equipo construyó lo que el nombre ya parecía gritar por sí solo: un acrónimo que es también una promesa.
-
-**YOSSICO no es solo una marca de uniformes médicos.** Es el reconocimiento de que quien cuida a otros merece verse y sentirse extraordinario.
+> *"Vestidos para sanar. Diseñados para perdurar."*
 
 ---
 
