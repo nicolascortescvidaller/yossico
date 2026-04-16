@@ -4,11 +4,11 @@
  */
 
 /* ── Custom Cursor ─────────────────────────────────────────── */
-const cursorDot  = document.getElementById('cursor-dot');
+const cursorDot = document.getElementById('cursor-dot');
 const cursorRing = document.getElementById('cursor-ring');
 
 let mouseX = 0, mouseY = 0;
-let ringX  = 0, ringY  = 0;
+let ringX = 0, ringY = 0;
 let animId = null;
 
 function lerp(a, b, t) { return a + (b - a) * t; }
@@ -18,12 +18,12 @@ function animateCursor() {
   ringY = lerp(ringY, mouseY, 0.12);
 
   if (cursorDot) {
-    cursorDot.style.left  = mouseX + 'px';
-    cursorDot.style.top   = mouseY + 'px';
+    cursorDot.style.left = mouseX + 'px';
+    cursorDot.style.top = mouseY + 'px';
   }
   if (cursorRing) {
     cursorRing.style.left = ringX + 'px';
-    cursorRing.style.top  = ringY + 'px';
+    cursorRing.style.top = ringY + 'px';
   }
 
   animId = requestAnimationFrame(animateCursor);
@@ -119,6 +119,31 @@ document.querySelectorAll('.nav__links a').forEach(link => {
   const href = link.getAttribute('href');
   if (href === currentPath || (currentPath === '' && href === 'index.html')) {
     link.classList.add('active');
+  }
+});
+
+/* ── Size Button Selection ──────────────────────────────────── */
+document.addEventListener('click', e => {
+  /* Card size buttons */
+  const sizeBtn = e.target.closest('.size-btn');
+  if (sizeBtn) {
+    const selector = sizeBtn.closest('.size-selector');
+    if (selector) {
+      selector.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+      sizeBtn.classList.add('selected');
+    }
+    return;
+  }
+
+  /* Modal size buttons */
+  const modalSizeBtn = e.target.closest('.modal__size-btn');
+  if (modalSizeBtn) {
+    const modalSizes = modalSizeBtn.closest('.modal__sizes');
+    if (modalSizes) {
+      modalSizes.querySelectorAll('.modal__size-btn').forEach(b => b.classList.remove('selected'));
+      modalSizeBtn.classList.add('selected');
+    }
+    return;
   }
 });
 
