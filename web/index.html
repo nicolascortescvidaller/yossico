@@ -975,6 +975,9 @@
     const subBtn = subForm.querySelector('.sub-form__btn');
     const codeDisplay = document.getElementById('sub-code-value');
 
+    // Auto-open flag — resets on every page load (in-memory only)
+    let popupDismissed = false;
+
     function openSubPopup() {
       subOverlay.classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -988,6 +991,7 @@
     function closeSubPopup() {
       subOverlay.classList.remove('open');
       document.body.style.overflow = '';
+      popupDismissed = true; // Don't auto-reopen this page load
     }
 
     function setSubmitState(state) {
@@ -1043,13 +1047,10 @@
       if (btn) { e.preventDefault(); openSubPopup(); }
     });
 
-    // Auto-open popup after 8s (first visit only)
-    if (!sessionStorage.getItem('yossico_popup_seen')) {
-      setTimeout(() => {
-        openSubPopup();
-        sessionStorage.setItem('yossico_popup_seen', '1');
-      }, 8000);
-    }
+    // Auto-open after 2.5s — always on page load, but not again if dismissed
+    setTimeout(() => {
+      if (!popupDismissed) openSubPopup();
+    }, 2500);
 
     // Form submit
     subForm.addEventListener('submit', async e => {
