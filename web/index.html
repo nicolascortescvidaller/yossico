@@ -952,9 +952,10 @@
           </p>
           <div class="sub-success__code-box">
             <span class="sub-success__code-label">Tu código de descuento</span>
-            <span class="sub-success__code">YOSSICO10</span>
+            <span class="sub-success__code" id="sub-code-value">YOSSICO-BIENVENIDA-···</span>
           </div>
-          <p class="sub-form__legal" style="margin-top:0;">Válido para tu primera compra · 10% de descuento</p>
+          <p class="sub-form__legal" style="margin-top:0;">Válido para tu primera compra · 10% de descuento · Te lo
+            enviamos también por email</p>
         </div>
 
       </div>
@@ -963,23 +964,64 @@
 
   <script>
     /* ── Subscription Popup ───────────────────────────────────── */
+    const SUPABASE_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+    const EDGE_FN_URL = `${SUPABASE_URL}/functions/v1/register-subscriber`;
+
     const subOverlay = document.getElementById('sub-overlay');
     const subClose = document.getElementById('sub-close');
     const subForm = document.getElementById('sub-form');
     const subFormWrap = document.getElementById('sub-form-wrap');
     const subSuccess = document.getElementById('sub-success');
+    const subBtn = subForm.querySelector('.sub-form__btn');
+    const codeDisplay = document.getElementById('sub-code-value');
 
     function openSubPopup() {
       subOverlay.classList.add('open');
       document.body.style.overflow = 'hidden';
-      // Reset to form state if re-opened
       subFormWrap.style.display = '';
       subSuccess.classList.remove('show');
+      subForm.reset();
+      clearFormErrors();
+      setSubmitState('idle');
     }
 
     function closeSubPopup() {
       subOverlay.classList.remove('open');
       document.body.style.overflow = '';
+    }
+
+    function setSubmitState(state) {
+      if (state === 'loading') {
+        subBtn.disabled = true;
+        subBtn.textContent = 'Registrando...';
+      } else if (state === 'error') {
+        subBtn.disabled = false;
+        subBtn.textContent = 'Quiero mi descuento →';
+      } else {
+        subBtn.disabled = false;
+        subBtn.textContent = 'Quiero mi descuento →';
+      }
+    }
+
+    function setFieldError(id, message) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.borderBottomColor = '#c0392b';
+      let errEl = el.parentElement.querySelector('.sub-form__error');
+      if (!errEl) {
+        errEl = document.createElement('p');
+        errEl.className = 'sub-form__error';
+        errEl.style.cssText = 'margin:4px 0 0; font-size:10px; color:#c0392b; font-family:var(--font-body); letter-spacing:0.5px;';
+        el.parentElement.appendChild(errEl);
+      }
+      errEl.textContent = message;
+    }
+
+    function clearFormErrors() {
+      subForm.querySelectorAll('.sub-form__input').forEach(el => {
+        el.style.borderBottomColor = '';
+      });
+      subForm.querySelectorAll('.sub-form__error').forEach(el => el.remove());
     }
 
     // Close on overlay click
@@ -995,46 +1037,77 @@
       if (e.key === 'Escape' && subOverlay.classList.contains('open')) closeSubPopup();
     });
 
-    // Trigger: "Notificarme" button in drops section
+    // Trigger: any button with data-open-sub
     document.addEventListener('click', e => {
       const btn = e.target.closest('[data-open-sub]');
       if (btn) { e.preventDefault(); openSubPopup(); }
     });
 
+    // Auto-open popup after 8s (first visit only)
+    if (!sessionStorage.getItem('yossico_popup_seen')) {
+      setTimeout(() => {
+        openSubPopup();
+        sessionStorage.setItem('yossico_popup_seen', '1');
+      }, 8000);
+    }
+
     // Form submit
-    subForm.addEventListener('submit', e => {
+    subForm.addEventListener('submit', async e => {
       e.preventDefault();
+      clearFormErrors();
+
       const name = document.getElementById('sub-name').value.trim();
       const email = document.getElementById('sub-email').value.trim();
       const phone = document.getElementById('sub-phone').value.trim();
 
-      if (!name || !email || !phone) {
-        // Shake empty required fields
-        [['sub-name', name], ['sub-email', email], ['sub-phone', phone]].forEach(([id, val]) => {
-          if (!val) {
-            const el = document.getElementById(id);
-            el.style.borderBottomColor = '#c0392b';
-            setTimeout(() => el.style.borderBottomColor = '', 1800);
-          }
-        });
-        return;
+      // Client-side validation
+      let hasError = false;
+      if (!name) { setFieldError('sub-name', 'Por favor ingresa tu nombre.'); hasError = true; }
+      if (!email) { setFieldError('sub-email', 'Por favor ingresa tu correo.'); hasError = true; }
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setFieldError('sub-email', 'El correo no es válido.'); hasError = true;
       }
+      if (!phone) { setFieldError('sub-phone', 'Por favor ingresa tu número de celular.'); hasError = true; }
+      if (hasError) return;
 
-      // Send via WhatsApp to brand number
-      const msg = encodeURIComponent(
-        `🌟 Nueva suscripción YOSSICO Drop\n\n` +
-        `Nombre: ${name}\n` +
-        `Correo: ${email}\n` +
-        `Celular/WA: ${phone}\n\n` +
-        `Código enviado: YOSSICO10`
-      );
-      window.open(`https://wa.me/573202562307?text=${msg}`, '_blank', 'noopener');
+      setSubmitState('loading');
 
-      // Show success
-      subFormWrap.style.display = 'none';
-      subSuccess.classList.add('show');
+      try {
+        const res = await fetch(EDGE_FN_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, phone }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          if (res.status === 409 || data.already_registered) {
+            setFieldError('sub-email', 'Este correo ya está registrado. ¡Revisa tu bandeja de entrada!');
+          } else {
+            setFieldError('sub-email', data.error || 'Algo salió mal. Intenta de nuevo.');
+          }
+          setSubmitState('error');
+          return;
+        }
+
+        // Success — show code returned by API
+        if (codeDisplay && data.discount_code) {
+          codeDisplay.textContent = data.discount_code;
+        }
+        subFormWrap.style.display = 'none';
+        subSuccess.classList.add('show');
+
+      } catch (err) {
+        console.error('Popup fetch error:', err);
+        setFieldError('sub-email', 'Error de conexión. Revisa tu internet e intenta de nuevo.');
+        setSubmitState('error');
+      }
     });
   </script>
+
 
 </body>
 
