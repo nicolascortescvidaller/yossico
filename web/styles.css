@@ -2,7 +2,7 @@
    YOSSICO — Design System
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500;600&family=Montserrat:wght@200;300;400&display=swap');
 
 /* ── CSS Custom Properties ─────────────────────────────────── */
 :root {
@@ -17,6 +17,7 @@
 
   --font-display: 'Cormorant Garamond', serif;
   --font-body: 'Montserrat', sans-serif;
+  --font-logo: 'DM Sans', sans-serif;
 
   --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -187,10 +188,10 @@ body.cursor-hover .cursor-ring {
 }
 
 .nav__logo {
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: 18px;
-  letter-spacing: 8px;
+  font-family: var(--font-logo);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--black);
   display: flex;
@@ -638,10 +639,10 @@ body.cursor-hover .cursor-ring {
 }
 
 .footer__logo {
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: 16px;
-  letter-spacing: 8px;
+  font-family: var(--font-logo);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 4px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.4);
   display: flex;
