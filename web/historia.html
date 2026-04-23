@@ -5,150 +5,299 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="La historia de YOSSICO — La marca de uniformes médicos premium nacida en un turno de urgencias en Bogotá, Colombia.">
+        content="La historia de YOSSICO — Una marca de uniformes médicos premium nacida de la observación de que las mujeres en salud merecen un estándar mejor.">
     <title>Historia — YOSSICO</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500;600&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Historia page styles */
-        .historia-page {
-            max-width: 780px;
-            margin: 0 auto;
-            padding: 80px 60px 120px;
+        /* ── Historia page layout ──────────────────────── */
+
+        /* Opening Statement — full-bleed editorial block */
+        .hist-opening {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 80vh;
+            border-bottom: 1px solid var(--border);
         }
 
-        .historia-page__quote {
-            font-family: var(--font-display);
-            font-style: italic;
-            font-weight: 300;
-            font-size: clamp(28px, 4vw, 40px);
-            line-height: 1.4;
-            letter-spacing: -0.5px;
-            color: var(--black);
-            border-left: 2px solid var(--gray-light);
-            padding-left: 32px;
-            margin: 56px 0;
+        .hist-opening__left {
+            padding: 120px 80px 100px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            border-right: 1px solid var(--border);
         }
 
-        .historia-page__body {
+        .hist-opening__eyebrow {
             font-family: var(--font-body);
-            font-weight: 200;
-            font-size: 14px;
-            line-height: 2.2;
+            font-weight: 300;
+            font-size: 9px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
             color: var(--gray-mid);
+            display: block;
             margin-bottom: 32px;
         }
 
-        .historia-page__body strong {
-            color: var(--black);
+        .hist-opening__title {
+            font-family: var(--font-display);
             font-weight: 300;
+            font-size: clamp(48px, 5.5vw, 80px);
+            line-height: 1.0;
+            letter-spacing: -1px;
+            color: var(--black);
         }
 
-        .historia-page__divider {
-            width: 100%;
-            height: 1px;
-            background: var(--border);
-            margin: 60px 0;
+        .hist-opening__title em {
+            font-style: italic;
+            color: var(--gray-mid);
         }
 
-        .historia-page__tagline {
+        .hist-opening__right {
+            padding: 120px 60px 100px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .hist-opening__quote {
             font-family: var(--font-display);
             font-style: italic;
             font-weight: 300;
-            font-size: 24px;
+            font-size: clamp(22px, 2.5vw, 30px);
+            line-height: 1.55;
+            color: var(--black);
+            border-left: 2px solid var(--border);
+            padding-left: 28px;
+            margin-bottom: 32px;
+        }
+
+        .hist-opening__source {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
             color: var(--gray-mid);
-            text-align: center;
-            letter-spacing: 1px;
+            padding-left: 30px;
         }
 
-        /* Acronym full page */
-        .acronym-section {
-            background: var(--black);
-            padding: 120px 60px;
+        /* ── Story Sections ────────────────────────────── */
+        .hist-section {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 0;
+            padding: 100px 60px;
+            border-bottom: 1px solid var(--border);
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .acronym-section__title {
+        .hist-section__label-col {
+            padding-top: 4px;
+            padding-right: 60px;
+        }
+
+        .hist-section__label {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+            position: sticky;
+            top: 100px;
+        }
+
+        .hist-section__content {
+            padding-left: 60px;
+            border-left: 1px solid var(--border);
+        }
+
+        .hist-section__heading {
             font-family: var(--font-display);
             font-weight: 300;
-            font-size: clamp(36px, 4vw, 54px);
-            color: var(--white);
+            font-size: clamp(32px, 3.5vw, 48px);
             letter-spacing: -0.5px;
-            margin-bottom: 64px;
+            line-height: 1.1;
+            color: var(--black);
+            margin-bottom: 40px;
         }
 
-        .acronym-full {
+        .hist-section__heading em {
+            font-style: italic;
+            color: var(--gray-mid);
+        }
+
+        .hist-section__body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 14px;
+            line-height: 2.2;
+            color: var(--black);
+            margin-bottom: 28px;
+            max-width: 620px;
+        }
+
+        .hist-section__body:last-child {
+            margin-bottom: 0;
+        }
+
+        .hist-section__body strong {
+            font-weight: 400;
+            color: var(--black);
+        }
+
+        /* ── Pull Quote ────────────────────────────────── */
+        .hist-pull {
+            background: var(--gray-bg);
+            padding: 100px 60px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .hist-pull__text {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-weight: 300;
+            font-size: clamp(28px, 3.5vw, 48px);
+            line-height: 1.4;
+            letter-spacing: -0.5px;
+            color: var(--black);
+            max-width: 800px;
+            margin: 0 auto 24px;
+        }
+
+        .hist-pull__caption {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+        }
+
+        /* ── Closing CTA Section ───────────────────────── */
+        .hist-closing {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0;
-            max-width: 900px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .acronym-full__item {
+        .hist-closing__col {
+            padding: 100px 60px;
             display: flex;
-            align-items: flex-start;
-            gap: 20px;
-            padding: 32px 40px 32px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            flex-direction: column;
+            gap: 24px;
         }
 
-        .acronym-full__item:nth-child(even) {
-            padding-left: 40px;
-            padding-right: 0;
-            border-left: 1px solid rgba(255, 255, 255, 0.07);
+        .hist-closing__col:first-child {
+            border-right: 1px solid var(--border);
         }
 
-        .acronym-full__letter {
+        .hist-closing__eyebrow {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+        }
+
+        .hist-closing__title {
             font-family: var(--font-display);
             font-weight: 300;
-            font-size: 48px;
-            color: var(--white);
-            line-height: 1;
-            min-width: 36px;
+            font-size: clamp(28px, 3vw, 40px);
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+            color: var(--black);
         }
 
-        .acronym-full__content {
-            flex: 1;
+        .hist-closing__title em {
+            font-style: italic;
+            color: var(--gray-mid);
         }
 
-        .acronym-full__word {
+        .hist-closing__body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 13px;
+            line-height: 2;
+            color: var(--black);
+            max-width: 380px;
+        }
+
+        .hist-closing__tagline {
             font-family: var(--font-display);
             font-style: italic;
             font-weight: 300;
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.7);
-            display: block;
-            margin-bottom: 4px;
+            font-size: clamp(28px, 3vw, 42px);
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+            color: var(--black);
         }
 
-        .acronym-full__meaning {
-            font-family: var(--font-body);
-            font-weight: 200;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 1px;
-            line-height: 1.6;
+        .hist-cta-row {
+            margin-top: 16px;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
-        @media (max-width: 700px) {
-            .historia-page {
+        /* ── Mobile ────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .hist-opening {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .hist-opening__left {
+                padding: 100px 24px 60px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .hist-opening__right {
                 padding: 60px 24px;
             }
 
-            .acronym-section {
-                padding: 80px 24px;
+            .hist-section {
+                grid-template-columns: 1fr;
+                padding: 72px 24px;
+                gap: 32px;
             }
 
-            .acronym-full {
+            .hist-section__label-col {
+                padding: 0;
+            }
+
+            .hist-section__content {
+                padding-left: 0;
+                border-left: none;
+            }
+
+            .hist-pull {
+                padding: 72px 24px;
+            }
+
+            .hist-closing {
                 grid-template-columns: 1fr;
             }
 
-            .acronym-full__item:nth-child(even) {
-                padding-left: 0;
-                border-left: none;
+            .hist-closing__col {
+                padding: 72px 24px;
+            }
+
+            .hist-closing__col:first-child {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
             }
         }
     </style>
@@ -159,7 +308,7 @@
     <div class="cursor-ring" id="cursor-ring"></div>
 
     <!-- Nav -->
-    <nav class="nav">
+    <nav class="nav" id="main-nav">
         <a href="index.html" class="nav__logo">
             <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111"
@@ -185,7 +334,7 @@
             <li><a href="historia.html" class="active">Historia</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
             <li><a href="contacto.html">Contacto</a></li>
-            <li><a href="contacto.html" class="nav__cta">Contactar</a></li>
+            <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
             <li>
                 <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
                     <svg viewBox="0 0 24 24">
@@ -199,109 +348,92 @@
         </ul>
     </nav>
 
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="label page-header__label reveal">Historia de Marca</div>
-        <h1 class="page-header__title reveal" data-delay="2">
-            Un estándar para quienes<br>cuidan a <em>los demás.</em>
-        </h1>
+    <!-- ── Opening Statement ───────────────────────────── -->
+    <section class="hist-opening">
+        <div class="hist-opening__left reveal">
+            <span class="hist-opening__eyebrow">Historia de marca</span>
+            <h1 class="hist-opening__title">
+                Un estándar<br>para quienes<br>cuidan a <em>los demás.</em>
+            </h1>
+        </div>
+        <div class="hist-opening__right reveal" data-delay="2">
+            <blockquote class="hist-opening__quote">
+                "En Colombia, encontrar un uniforme médico que realmente estuviera a la altura era más difícil de lo que
+                debería ser."
+            </blockquote>
+            <span class="hist-opening__source">El origen de YOSSICO</span>
+        </div>
+    </section>
+
+    <!-- ── Sección 1: El Origen ────────────────────────── -->
+    <div class="hist-section">
+        <div class="hist-section__label-col reveal">
+            <span class="hist-section__label">01 — El origen</span>
+        </div>
+        <div class="hist-section__content reveal" data-delay="2">
+            <h2 class="hist-section__heading">
+                No para llenar<br>un mercado,<br>sino para <em>crear<br>un estándar.</em>
+            </h2>
+            <p class="hist-section__body">
+                Las opciones existentes no reflejaban el nivel de las mujeres que los usaban: <strong>profesionales con
+                    formación, con criterio, con una identidad construida con esfuerzo.</strong>
+            </p>
+            <p class="hist-section__body">
+                YOSSICO nació de esa observación. Una marca seria y exclusiva, pensada desde el principio para la mujer
+                en salud que sabe exactamente quién es y cómo quiere presentarse al mundo.
+            </p>
+        </div>
     </div>
 
-    <!-- Story Content -->
-    <article class="historia-page">
-        <div class="label reveal" style="margin-bottom: 8px;">El origen</div>
-
-        <blockquote class="historia-page__quote reveal" data-delay="2">
-            "En Colombia, encontrar un uniforme médico que realmente estuviera a la altura era más difícil de lo que
-            debería ser."
-        </blockquote>
-
-        <p class="historia-page__body reveal" data-delay="3">
-            Las opciones existentes no reflejaban el nivel de las mujeres que los usaban: <strong>profesionales con
-                formación, con criterio, con una identidad construida con esfuerzo.</strong>
+    <!-- ── Pull Quote ──────────────────────────────────── -->
+    <div class="hist-pull reveal">
+        <p class="hist-pull__text">
+            "La mujer que cuida a otros merece un uniforme que la cuide a ella."
         </p>
+        <span class="hist-pull__caption">La promesa YOSSICO</span>
+    </div>
 
-        <p class="historia-page__body reveal" data-delay="4">
-            YOSSICO nació de esa observación. No para llenar un mercado, sino para <strong>crear un estándar.</strong>
-            Una marca seria, exclusiva, pensada desde el principio para la mujer en salud que sabe exactamente quién es
-            y cómo quiere presentarse al mundo.
-        </p>
+    <!-- ── Sección 2: La Promesa ───────────────────────── -->
+    <div class="hist-section">
+        <div class="hist-section__label-col reveal">
+            <span class="hist-section__label">02 — La promesa</span>
+        </div>
+        <div class="hist-section__content reveal" data-delay="2">
+            <h2 class="hist-section__heading">
+                Cada detalle es<br>una <em>decisión deliberada.</em>
+            </h2>
+            <p class="hist-section__body">
+                Cada prenda es una decisión deliberada en el corte, en la calidad, en los detalles que otros pasan por
+                alto.
+            </p>
+            <p class="hist-section__body">
+                Porque un uniforme que te hace sentir segura, profesional y completamente tú misma dentro de él no es un
+                lujo — es lo mínimo que mereces en cada turno.
+            </p>
+        </div>
+    </div>
 
-        <div class="historia-page__divider reveal"></div>
-
-        <div class="label reveal" style="margin-bottom: 24px;">La promesa</div>
-
-        <p class="historia-page__body reveal" data-delay="2">
-            Cada prenda es una decisión deliberada en el corte, en la calidad, en los detalles que otros pasan por alto.
-        </p>
-
-        <p class="historia-page__body reveal" data-delay="3">
-            Porque <strong>la mujer que cuida a otros merece un uniforme que la cuide a ella:</strong> que la haga
-            sentir segura, profesional y completamente ella misma dentro de él.
-        </p>
-
-        <div class="historia-page__divider reveal"></div>
-
-        <p class="historia-page__tagline reveal">
-            "Vestidos para sanar. Diseñados para perdurar."
-        </p>
-    </article>
-
-    <!-- Acronym full section -->
-    <section class="acronym-section">
-        <div class="label reveal" style="color:rgba(255,255,255,0.3); margin-bottom:20px;">El nombre</div>
-        <h2 class="acronym-section__title reveal" data-delay="2">Lo que significa <em
-                style="font-style:italic; color:rgba(255,255,255,0.5)">YOSSICO</em></h2>
-
-        <div class="acronym-full">
-            <div class="acronym-full__item reveal" data-delay="1">
-                <span class="acronym-full__letter">Y</span>
-                <div class="acronym-full__content">
-                    <span class="acronym-full__word">Your Standard</span>
-                    <span class="acronym-full__meaning">Tu nivel de excelencia.</span>
-                </div>
+    <!-- ── Closing: Tagline + CTAs ─────────────────────── -->
+    <section class="hist-closing">
+        <div class="hist-closing__col reveal">
+            <span class="hist-closing__eyebrow">El nombre</span>
+            <h2 class="hist-closing__title">
+                Detrás del nombre<br>hay <em>siete palabras.</em>
+            </h2>
+            <p class="hist-closing__body">
+                Cada letra de YOSSICO tiene un significado. Juntas, definen quiénes son las mujeres que visten esta
+                marca.
+            </p>
+            <div class="hist-cta-row">
+                <a href="acronimo.html" class="btn btn--primary">Ver el acrónimo →</a>
             </div>
-            <div class="acronym-full__item reveal" data-delay="2">
-                <span class="acronym-full__letter">O</span>
-                <div class="acronym-full__content">
-                    <span class="acronym-full__word">Origen</span>
-                    <span class="acronym-full__meaning">La vocación que no se elige, se siente.</span>
-                </div>
-            </div>
-            <div class="acronym-full__item reveal" data-delay="3">
-                <span class="acronym-full__letter">S</span>
-                <div class="acronym-full__content">
-                    <span class="acronym-full__word">Salud</span>
-                    <span class="acronym-full__meaning">La razón de existir.</span>
-                </div>
-            </div>
-            <div class="acronym-full__item reveal" data-delay="4">
-                <span class="acronym-full__letter">S</span>
-                <div class="acronym-full__content">
-                    <span class="acronym-full__word">Servicio</span>
-                    <span class="acronym-full__meaning">Cada turno, cada paciente, cada detalle.</span>
-                </div>
-            </div>
-            <div class="acronym-full__item reveal" data-delay="5">
-                <span class="acronym-full__letter">I</span>
-                <div class="acronym-full__content">
-                    <span class="acronym-full__word">Identidad</span>
-                    <span class="acronym-full__meaning">Un uniforme que te reconoce.</span>
-                </div>
-            </div>
-            <div class="acronym-full__item reveal" data-delay="6">
-                <span class="acronym-full__letter">C</span>
-                <div class="acronym-full__content">
-                    <span class="acronym-full__word">Calidad</span>
-                    <span class="acronym-full__meaning">Sin negociación.</span>
-                </div>
-            </div>
-            <div class="acronym-full__item reveal" data-delay="1" style="border-bottom:none;">
-                <span class="acronym-full__letter">O</span>
-                <div class="acronym-full__content">
-                    <span class="acronym-full__word">Orgullo</span>
-                    <span class="acronym-full__meaning">De quién eres y lo que haces.</span>
-                </div>
+        </div>
+        <div class="hist-closing__col reveal" data-delay="2">
+            <p class="hist-closing__tagline">
+                "Vestidos para sanar.<br>Diseñados para perdurar."
+            </p>
+            <div class="hist-cta-row" style="margin-top: 40px;">
+                <a href="coleccion.html" class="btn-link">Ver la colección →</a>
             </div>
         </div>
     </section>
@@ -320,8 +452,7 @@
         <p class="footer__tagline">"Vestidos para sanar. Diseñados para perdurar."</p>
         <p class="footer__copy">© 2026 YOSSICO · Colombia · <a href="terminos.html"
                 style="color:rgba(255,255,255,0.7); text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">Términos
-                y
-                Condiciones</a></p>
+                y Condiciones</a></p>
     </footer>
 
     <div class="cart-overlay" id="cart-overlay"></div>

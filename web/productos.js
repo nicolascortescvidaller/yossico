@@ -136,18 +136,18 @@ const YOSSICO_PRODUCTS = {
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20LIMA%20de%20YOSSICO',
     },
 
-    core: {
-        id: 'core',
-        name: 'CORE',
+    bogota: {
+        id: 'bogota',
+        name: 'BOGOTÁ',
         line: 'Core',
         sub: 'Set · Top + Pantalón · Tela Técnica',
         price: 229900,
         priceDisplay: '$229.900 COP',
         tag: 'Core',
-        desc: 'La línea Core nace para la profesional que da sus primeros pasos con YOSSICO. Confección limpia, corte funcional y tela técnica de alto rendimiento. Sin adornos innecesarios, solo lo esencial llevado con orgullo. Disponible en tres colores icónicos.',
+        desc: 'BOGOTÁ es el primer uniforme de la línea Core. Confección limpia, corte funcional y tela técnica de alto rendimiento para la profesional que da sus primeros pasos con YOSSICO. Sin adornos innecesarios, solo lo esencial llevado con orgullo.',
         features: [
             { label: 'Composición', value: 'Tela técnica 100% poliéster de alto desempeño' },
-            { label: 'Corte', value: 'Fit estándar · corte funcional unisex adaptado para mujer' },
+            { label: 'Corte', value: 'Fit estándar · corte funcional adaptado para mujer' },
             { label: 'Detalles top', value: 'Cuello redondo · bolsillos laterales' },
             { label: 'Pantalón', value: 'Bota recta · elástico + cordón en cintura' },
             { label: 'Tallas', value: 'S — M — L' },
@@ -156,9 +156,33 @@ const YOSSICO_PRODUCTS = {
         colors: [
             { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/core-negro.png', 'img/core-azul.png', 'img/core-morado.png'] },
             { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/core-azul.png', 'img/core-negro.png', 'img/core-morado.png'] },
-            { key: 'morado', label: 'Morado Oscuro', hex: '#3b1a5e', imgs: ['img/core-morado.png', 'img/core-negro.png', 'img/core-azul.png'] },
+            { key: 'morado', label: 'Morado Violeta', hex: '#3b1a5e', imgs: ['img/core-morado.png', 'img/core-negro.png', 'img/core-azul.png'] },
         ],
         defaultImgs: ['img/core-negro.png', 'img/core-azul.png', 'img/core-morado.png'],
-        wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20CORE%20de%20YOSSICO',
+        wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20BOGOTÁ%20de%20YOSSICO',
+    },
+
+    manta: {
+        id: 'manta',
+        name: 'MANTA',
+        line: 'Core',
+        sub: 'Set · Top + Pantalón · Tela Técnica',
+        price: 229900,
+        priceDisplay: '$229.900 COP',
+        tag: 'Core',
+        desc: 'MANTA es el segundo uniforme de la línea Core. Un diseño depurado y funcional con corte que prioriza el movimiento. Disponible en Azul Marino, un color que transmite calma y profesionalismo en cada turno.',
+        features: [
+            { label: 'Composición', value: 'Tela técnica 100% poliéster de alto desempeño' },
+            { label: 'Corte', value: 'Fit estándar · corte funcional adaptado para mujer' },
+            { label: 'Detalles top', value: 'Cuello redondo · bolsillos funcionales' },
+            { label: 'Pantalón', value: 'Bota recta · elástico + cordón en cintura' },
+            { label: 'Tallas', value: 'S — M — L' },
+            { label: 'Cuidado', value: 'Lavado a máquina · resistente al desgaste · no usar suavizante' },
+        ],
+        colors: [
+            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/core-azul.png', 'img/core-azul.png', 'img/core-azul.png'] },
+        ],
+        defaultImgs: ['img/core-azul.png', 'img/core-azul.png', 'img/core-azul.png'],
+        wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20MANTA%20de%20YOSSICO',
     },
 };
