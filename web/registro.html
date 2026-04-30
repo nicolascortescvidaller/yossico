@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse — YOSSICO</title>
+    <meta name="description" content="Crea tu cuenta YOSSICO y accede a tus descuentos y perfil.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Re-use auth page styles from login.html */
+        .auth-page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--off-white);
+        }
+
+        .auth-panel {
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 60px 64px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-panel::before {
+            content: 'YOSSICO';
+            position: absolute;
+            bottom: -40px;
+            left: -20px;
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: clamp(80px, 12vw, 160px);
+            letter-spacing: 12px;
+            color: rgba(255, 255, 255, 0.04);
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .auth-panel__logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-logo, var(--font-body));
+            font-weight: 500;
+            font-size: 15px;
+            letter-spacing: 3px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .auth-panel__logo svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .auth-panel__body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 0;
+        }
+
+        .auth-panel__tag {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+            margin-bottom: 24px;
+        }
+
+        .auth-panel__headline {
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: clamp(32px, 3.5vw, 52px);
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+            color: #fff;
+            margin-bottom: 28px;
+        }
+
+        .auth-panel__headline em {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .auth-panel__sub {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 11px;
+            line-height: 1.9;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.35);
+            max-width: 280px;
+        }
+
+        .auth-panel__footer {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-form-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 72px;
+        }
+
+        .auth-form-panel__title {
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: clamp(24px, 2.5vw, 36px);
+            letter-spacing: -0.3px;
+            color: var(--black);
+            margin-bottom: 8px;
+        }
+
+        .auth-form-panel__sub {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            color: var(--gray);
+            margin-bottom: 40px;
+        }
+
+        .auth-field {
+            margin-bottom: 24px;
+        }
+
+        .auth-field__label {
+            display: block;
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+            margin-bottom: 10px;
+        }
+
+        .auth-field__input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 0;
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 14px;
+            color: var(--black);
+            outline: none;
+            transition: border-color 0.25s;
+        }
+
+        .auth-field__input:focus {
+            border-bottom-color: var(--black);
+        }
+
+        .auth-field__input::placeholder {
+            color: var(--gray-light);
+        }
+
+        .auth-field__error {
+            display: block;
+            margin-top: 6px;
+            font-family: var(--font-body);
+            font-size: 10px;
+            color: #c0392b;
+            letter-spacing: 0.3px;
+            min-height: 14px;
+        }
+
+        /* Password strength bar */
+        .pw-strength {
+            margin-top: 8px;
+            height: 2px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .pw-strength__bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            transition: width 0.3s, background 0.3s;
+        }
+
+        .pw-label {
+            font-family: var(--font-body);
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+
+        .auth-submit {
+            width: 100%;
+            padding: 16px 24px;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s, opacity 0.2s;
+            margin-top: 8px;
+            margin-bottom: 24px;
+        }
+
+        .auth-submit:hover {
+            background: #333;
+        }
+
+        .auth-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .auth-switch {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 11px;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        .auth-switch a {
+            color: var(--black);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .auth-legal {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 9px;
+            letter-spacing: 0.5px;
+            color: var(--gray-light);
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .auth-alert {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 300;
+            border-left: 3px solid;
+            display: none;
+        }
+
+        .auth-alert.error {
+            border-color: #c0392b;
+            background: #fdf2f2;
+            color: #c0392b;
+        }
+
+        .auth-alert.success {
+            border-color: #27ae60;
+            background: #f0faf4;
+            color: #1a7a40;
+        }
+
+        .auth-alert.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .auth-page {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-panel {
+                display: none;
+            }
+
+            .auth-form-panel {
+                padding: 48px 32px;
+            }
+        }
+
+        .nav {
+            background: var(--black);
+        }
+
+        .nav__logo {
+            color: var(--white);
+        }
+
+        .nav__links a,
+        .nav__links button {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .nav__links a:hover {
+            color: #fff !important;
+        }
+
+        .nav__cta {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: #fff !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="rgba(255,255,255,0.5)"
+                    stroke-width="1" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li><a href="coleccion.html">Colección</a></li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
+            <li><!-- user icon injected by auth.js --></li>
+        </ul>
+    </nav>
+
+    <div class="auth-page">
+
+        <!-- Left: brand panel -->
+        <div class="auth-panel">
+            <a href="index.html" class="auth-panel__logo">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none"
+                        stroke="rgba(255,255,255,0.4)" stroke-width="1" />
+                    <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                        stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                YOSSICO
+            </a>
+            <div class="auth-panel__body">
+                <p class="auth-panel__tag">Únete a la comunidad</p>
+                <h2 class="auth-panel__headline">
+                    Empieza con<br>el <em>uniforme</em><br>adecuado.
+                </h2>
+                <p class="auth-panel__sub">
+                    Crea tu cuenta, accede a descuentos exclusivos y sé la primera en conocer cada nuevo drop de
+                    YOSSICO.
+                </p>
+            </div>
+            <p class="auth-panel__footer">© 2026 YOSSICO · Colombia</p>
+        </div>
+
+        <!-- Right: form -->
+        <div class="auth-form-panel">
+            <h1 class="auth-form-panel__title">Crear cuenta</h1>
+            <p class="auth-form-panel__sub">Completa los campos para registrarte.</p>
+
+            <div class="auth-alert" id="auth-alert"></div>
+
+            <form id="register-form" novalidate>
+                <div class="auth-field">
+                    <label class="auth-field__label" for="reg-email">Correo electrónico</label>
+                    <input class="auth-field__input" id="reg-email" type="email" placeholder="tu@correo.com"
+                        autocomplete="email" required>
+                    <span class="auth-field__error" id="err-email"></span>
+                </div>
+
+                <div class="auth-field">
+                    <label class="auth-field__label" for="reg-password">Contraseña <span
+                            style="color:var(--gray-light); font-size:8px;">(mín. 8 caracteres)</span></label>
+                    <input class="auth-field__input" id="reg-password" type="password" placeholder="••••••••"
+                        autocomplete="new-password" required>
+                    <div class="pw-strength">
+                        <div class="pw-strength__bar" id="pw-bar"></div>
+                    </div>
+                    <p class="pw-label" id="pw-label"></p>
+                    <span class="auth-field__error" id="err-password"></span>
+                </div>
+
+                <div class="auth-field">
+                    <label class="auth-field__label" for="reg-confirm">Confirmar contraseña</label>
+                    <input class="auth-field__input" id="reg-confirm" type="password" placeholder="••••••••"
+                        autocomplete="new-password" required>
+                    <span class="auth-field__error" id="err-confirm"></span>
+                </div>
+
+                <p class="auth-legal">
+                    Al registrarte aceptas los <a href="terminos.html" style="color:var(--gray-mid);">Términos y
+                        Condiciones</a> de YOSSICO.
+                </p>
+
+                <button type="submit" class="auth-submit" id="reg-btn">Crear mi cuenta</button>
+            </form>
+
+            <p class="auth-switch">
+                ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        /* ── Register Page Logic ─────────────────────────────── */
+        document.addEventListener('DOMContentLoaded', async () => {
+            await YOSSICO_AUTH.requireGuest();
+
+            const form = document.getElementById('register-form');
+            const btn = document.getElementById('reg-btn');
+            const alert = document.getElementById('auth-alert');
+            const pwBar = document.getElementById('pw-bar');
+            const pwLabel = document.getElementById('pw-label');
+            const pwInput = document.getElementById('reg-password');
+
+            function showAlert(msg, type = 'error') {
+                alert.textContent = msg;
+                alert.className = `auth-alert ${type} show`;
+            }
+
+            function clearErrors() {
+                ['err-email', 'err-password', 'err-confirm'].forEach(id => {
+                    document.getElementById(id).textContent = '';
+                });
+                ['reg-email', 'reg-password', 'reg-confirm'].forEach(id => {
+                    document.getElementById(id).style.borderBottomColor = '';
+                });
+                alert.className = 'auth-alert';
+            }
+
+            // Password strength
+            pwInput.addEventListener('input', () => {
+                const pw = pwInput.value;
+                let score = 0;
+                if (pw.length >= 8) score++;
+                if (/[A-Z]/.test(pw)) score++;
+                if (/[0-9]/.test(pw)) score++;
+                if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+                const configs = [
+                    { w: '0%', bg: 'transparent', label: '' },
+                    { w: '25%', bg: '#e74c3c', label: 'Muy débil' },
+                    { w: '50%', bg: '#e67e22', label: 'Débil' },
+                    { w: '75%', bg: '#f1c40f', label: 'Regular' },
+                    { w: '100%', bg: '#27ae60', label: 'Fuerte' },
+                ];
+                const c = configs[score] || configs[0];
+                pwBar.style.width = c.w;
+                pwBar.style.background = c.bg;
+                pwLabel.textContent = c.label;
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearErrors();
+
+                const email = document.getElementById('reg-email').value.trim();
+                const password = document.getElementById('reg-password').value;
+                const confirm = document.getElementById('reg-confirm').value;
+
+                let hasError = false;
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    document.getElementById('err-email').textContent = 'Ingresa un correo válido.';
+                    document.getElementById('reg-email').style.borderBottomColor = '#c0392b';
+                    hasError = true;
+                }
+                if (!password || password.length < 8) {
+                    document.getElementById('err-password').textContent = 'La contraseña debe tener al menos 8 caracteres.';
+                    document.getElementById('reg-password').style.borderBottomColor = '#c0392b';
+                    hasError = true;
+                }
+                if (password !== confirm) {
+                    document.getElementById('err-confirm').textContent = 'Las contraseñas no coinciden.';
+                    document.getElementById('reg-confirm').style.borderBottomColor = '#c0392b';
+                    hasError = true;
+                }
+                if (hasError) return;
+
+                btn.disabled = true;
+                btn.textContent = 'Creando cuenta...';
+
+                const { data, error } = await YOSSICO_AUTH.signUp(email, password);
+
+                if (error) {
+                    btn.disabled = false;
+                    btn.textContent = 'Crear mi cuenta';
+                    const msg = error.message.includes('already')
+                        ? 'Este correo ya está registrado. Inicia sesión.'
+                        : error.message;
+                    showAlert(msg);
+                    return;
+                }
+
+                // Create profile record
+                if (data?.user) {
+                    await YOSSICO_AUTH.upsertProfile(data.user.id, {
+                        correo_electronico: email
+                    });
+                }
+
+                // If session available (email confirmation OFF) → redirect
+                if (data?.session) {
+                    window.location.href = 'perfil.html';
+                } else {
+                    // Email confirmation ON
+                    showAlert('Casi listo. Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.', 'success');
+                    btn.disabled = false;
+                    btn.textContent = 'Crear mi cuenta';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

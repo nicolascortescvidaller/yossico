@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil — YOSSICO</title>
+    <meta name="description" content="Gestiona tu perfil, descuentos e historial de pedidos YOSSICO.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ── Dashboard Layout ──────────────────────────────────── */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: calc(100vh - 66px);
+            margin-top: 66px;
+            /* nav height */
+        }
+
+        /* ── Sidebar ─────────────────────────────────────────── */
+        .dash-sidebar {
+            background: var(--black);
+            padding: 48px 0 48px 48px;
+            position: sticky;
+            top: 66px;
+            height: calc(100vh - 66px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dash-sidebar__label {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 8px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            margin-bottom: 32px;
+        }
+
+        .dash-sidebar__nav {
+            list-style: none;
+            flex: 1;
+        }
+
+        .dash-sidebar__nav li {
+            margin-bottom: 4px;
+        }
+
+        .dash-sidebar__nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 0;
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 0;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .dash-sidebar__nav a:hover,
+        .dash-sidebar__nav a.active {
+            color: var(--white);
+            border-left-color: var(--white);
+            padding-left: 12px;
+        }
+
+        .dash-sidebar__nav a svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            stroke: currentColor;
+        }
+
+        .dash-sidebar__logout {
+            margin-top: auto;
+        }
+
+        .dash-sidebar__logout button {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dash-sidebar__logout button:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            color: var(--white);
+        }
+
+        /* ── Content Area ─────────────────────────────────────── */
+        .dash-content {
+            background: var(--off-white);
+            padding: 64px;
+        }
+
+        /* Section panels */
+        .dash-section {
+            display: none;
+            animation: dashFadeIn 0.3s ease;
+        }
+
+        .dash-section.active {
+            display: block;
+        }
+
+        @keyframes dashFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dash-section__header {
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dash-section__tag {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 12px;
+        }
+
+        .dash-section__title {
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: clamp(28px, 2.5vw, 40px);
+            letter-spacing: -0.3px;
+            color: var(--black);
+        }
+
+        /* Profile data cards */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .profile-field {
+            padding: 20px 24px;
+            background: var(--white);
+            border: 1px solid var(--border);
+        }
+
+        .profile-field__label {
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .profile-field__value {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 14px;
+            color: var(--black);
+        }
+
+        .profile-field__value.empty {
+            color: var(--gray-light);
+            font-style: italic;
+            font-size: 12px;
+        }
+
+        /* Buttons */
+        .dash-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .dash-btn--dark {
+            background: var(--black);
+            color: var(--white);
+            border: 1px solid var(--black);
+        }
+
+        .dash-btn--dark:hover {
+            background: #333;
+        }
+
+        .dash-btn--outline {
+            background: transparent;
+            color: var(--black);
+            border: 1px solid var(--border);
+        }
+
+        .dash-btn--outline:hover {
+            border-color: var(--black);
+        }
+
+        .dash-btn--danger {
+            background: transparent;
+            color: #c0392b;
+            border: 1px solid rgba(192, 57, 43, 0.2);
+        }
+
+        .dash-btn--danger:hover {
+            border-color: #c0392b;
+        }
+
+        .dash-btn-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Edit form (hidden by default) */
+        .edit-form {
+            display: none;
+            margin-top: 32px;
+        }
+
+        .edit-form.show {
+            display: block;
+        }
+
+        .edit-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .edit-field {}
+
+        .edit-field__label {
+            display: block;
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+            margin-bottom: 8px;
+        }
+
+        .edit-field__input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 0;
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 13px;
+            color: var(--black);
+            outline: none;
+            transition: border-color 0.25s;
+        }
+
+        .edit-field__input:focus {
+            border-bottom-color: var(--black);
+        }
+
+        /* Alert */
+        .dash-alert {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-family: var(--font-body);
+            font-size: 11px;
+            border-left: 3px solid;
+            display: none;
+        }
+
+        .dash-alert.error {
+            border-color: #c0392b;
+            background: #fdf2f2;
+            color: #c0392b;
+        }
+
+        .dash-alert.success {
+            border-color: #27ae60;
+            background: #f0faf4;
+            color: #1a7a40;
+        }
+
+        .dash-alert.show {
+            display: block;
+        }
+
+        /* Discount cards */
+        .discount-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .discount-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .discount-card__code {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--black);
+        }
+
+        .discount-card__meta {
+            font-family: var(--font-body);
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .discount-badge.available {
+            background: #f0faf4;
+            color: #27ae60;
+            border: 1px solid #c3e6cb;
+        }
+
+        .discount-badge.used {
+            background: #f5f5f5;
+            color: #aaa;
+            border: 1px solid #ddd;
+        }
+
+        .copy-btn {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            font-family: var(--font-body);
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #333;
+        }
+
+        .copy-btn.copied {
+            background: #27ae60;
+        }
+
+        /* Orders table */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th {
+            text-align: left;
+            font-family: var(--font-body);
+            font-weight: 200;
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .orders-table td {
+            padding: 16px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 300;
+            color: var(--black);
+            border-bottom: 1px solid var(--off-white);
+        }
+
+        .orders-empty {
+            text-align: center;
+            padding: 60px 20px;
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: 20px;
+            color: var(--gray-light);
+        }
+
+        /* Loader */
+        .dash-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            font-family: var(--font-body);
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                margin-top: 0;
+            }
+
+            .dash-sidebar {
+                position: static;
+                height: auto;
+                padding: 32px;
+            }
+
+            .dash-content {
+                padding: 32px 24px;
+            }
+
+            .profile-grid,
+            .edit-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .discount-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="YOSSICO">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111"
+                    stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111"
+                    stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+                <div class="nav__dropdown-menu">
+                    <a href="coleccion.html#linea-uniformes">Essentials</a>
+                    <a href="coleccion.html#linea-uniformes">Signature</a>
+                    <a href="coleccion.html#linea-uniformes">Core</a>
+                    <div class="nav__dropdown-divider"></div>
+                    <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+                </div>
+            </li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
+            <li><button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </button></li>
+        </ul>
+    </nav>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard" style="display:none;">
+
+        <!-- Sidebar -->
+        <aside class="dash-sidebar">
+            <p class="dash-sidebar__label">Mi cuenta</p>
+            <ul class="dash-sidebar__nav" id="dash-nav">
+                <li>
+                    <a href="#" data-section="perfil" class="active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                        </svg>
+                        Mi Perfil
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-section="envio">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+                            <path
+                                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        Datos de Envío
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-section="pedidos">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <line x1="3" y1="9" x2="21" y2="9" />
+                            <line x1="9" y1="21" x2="9" y2="9" />
+                        </svg>
+                        Historial de Pedidos
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-section="descuentos">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+                            <path
+                                d="M9 14.5L14.5 9M9.5 9a0.5 0.5 0 1 1-1 0 0.5 0.5 0 0 1 1 0zm5 5a0.5 0.5 0 1 1-1 0 0.5 0.5 0 0 1 1 0z" />
+                            <circle cx="12" cy="12" r="10" />
+                        </svg>
+                        Mis Descuentos
+                    </a>
+                </li>
+            </ul>
+            <div class="dash-sidebar__logout">
+                <button id="dash-logout-btn">Cerrar sesión</button>
+            </div>
+        </aside>
+
+        <!-- Content -->
+        <main class="dash-content">
+
+            <!-- 1. Mi Perfil -->
+            <section class="dash-section active" id="section-perfil">
+                <div class="dash-section__header">
+                    <p class="dash-section__tag">Tu cuenta</p>
+                    <h1 class="dash-section__title" id="profile-greeting">Mi Perfil</h1>
+                </div>
+
+                <div class="dash-alert" id="profile-alert"></div>
+
+                <!-- Data display -->
+                <div class="profile-grid" id="profile-display">
+                    <div class="profile-field">
+                        <p class="profile-field__label">Nombre completo</p>
+                        <p class="profile-field__value" id="disp-nombre">—</p>
+                    </div>
+                    <div class="profile-field">
+                        <p class="profile-field__label">Apellido</p>
+                        <p class="profile-field__value" id="disp-apellido">—</p>
+                    </div>
+                    <div class="profile-field" style="grid-column: 1 / -1;">
+                        <p class="profile-field__label">Correo electrónico</p>
+                        <p class="profile-field__value" id="disp-email">—</p>
+                    </div>
+                </div>
+
+                <div class="dash-btn-row">
+                    <button class="dash-btn dash-btn--dark" id="edit-profile-btn">Editar perfil</button>
+                    <button class="dash-btn dash-btn--outline" id="change-pw-btn">Cambiar contraseña</button>
+                </div>
+
+                <!-- Edit form -->
+                <div class="edit-form" id="edit-profile-form">
+                    <div class="edit-grid" style="margin-top:32px;">
+                        <div class="edit-field">
+                            <label class="edit-field__label" for="ed-nombre">Nombre completo</label>
+                            <input class="edit-field__input" id="ed-nombre" type="text" autocomplete="given-name">
+                        </div>
+                        <div class="edit-field">
+                            <label class="edit-field__label" for="ed-apellido">Apellido</label>
+                            <input class="edit-field__input" id="ed-apellido" type="text" autocomplete="family-name">
+                        </div>
+                    </div>
+                    <div class="dash-btn-row">
+                        <button class="dash-btn dash-btn--dark" id="save-profile-btn">Guardar cambios</button>
+                        <button class="dash-btn dash-btn--outline" id="cancel-edit-btn">Cancelar</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Datos de Envío -->
+            <section class="dash-section" id="section-envio">
+                <div class="dash-section__header">
+                    <p class="dash-section__tag">Logística</p>
+                    <h1 class="dash-section__title">Datos de Envío</h1>
+                </div>
+
+                <div class="dash-alert" id="envio-alert"></div>
+
+                <div class="profile-grid">
+                    <div class="profile-field" style="grid-column: 1 / -1;">
+                        <p class="profile-field__label">Dirección</p>
+                        <p class="profile-field__value" id="disp-direccion">—</p>
+                    </div>
+                    <div class="profile-field">
+                        <p class="profile-field__label">Ciudad</p>
+                        <p class="profile-field__value" id="disp-ciudad">—</p>
+                    </div>
+                    <div class="profile-field">
+                        <p class="profile-field__label">Apartamento / Número</p>
+                        <p class="profile-field__value" id="disp-apto">—</p>
+                    </div>
+                </div>
+
+                <button class="dash-btn dash-btn--dark" id="edit-envio-btn">Editar datos de envío</button>
+
+                <div class="edit-form" id="edit-envio-form">
+                    <div class="edit-grid" style="margin-top:32px;">
+                        <div class="edit-field" style="grid-column: 1 / -1;">
+                            <label class="edit-field__label" for="ed-direccion">Dirección</label>
+                            <input class="edit-field__input" id="ed-direccion" type="text"
+                                autocomplete="street-address">
+                        </div>
+                        <div class="edit-field">
+                            <label class="edit-field__label" for="ed-ciudad">Ciudad</label>
+                            <input class="edit-field__input" id="ed-ciudad" type="text" autocomplete="address-level2">
+                        </div>
+                        <div class="edit-field">
+                            <label class="edit-field__label" for="ed-apto">Apartamento / Número</label>
+                            <input class="edit-field__input" id="ed-apto" type="text">
+                        </div>
+                    </div>
+                    <div class="dash-btn-row">
+                        <button class="dash-btn dash-btn--dark" id="save-envio-btn">Guardar</button>
+                        <button class="dash-btn dash-btn--outline" id="cancel-envio-btn">Cancelar</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Historial de Pedidos -->
+            <section class="dash-section" id="section-pedidos">
+                <div class="dash-section__header">
+                    <p class="dash-section__tag">Tus compras</p>
+                    <h1 class="dash-section__title">Historial de Pedidos</h1>
+                </div>
+                <div id="orders-content">
+                    <div class="orders-empty">Aún no tienes pedidos registrados.</div>
+                </div>
+            </section>
+
+            <!-- 4. Mis Descuentos -->
+            <section class="dash-section" id="section-descuentos">
+                <div class="dash-section__header">
+                    <p class="dash-section__tag">Beneficios</p>
+                    <h1 class="dash-section__title">Mis Descuentos</h1>
+                </div>
+                <div id="discounts-content" class="dash-loader">Cargando…</div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Loading state -->
+    <div class="dash-loader" id="dash-loading" style="min-height:calc(100vh - 66px); margin-top:66px;">
+        Verificando sesión…
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        /* ── Dashboard Logic ─────────────────────────────────── */
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            // Require auth
+            const user = await YOSSICO_AUTH.requireAuth();
+            if (!user) return;
+
+            // Show dashboard
+            document.getElementById('dash-loading').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'grid';
+
+            let profile = null;
+
+            /* ── Load Profile ──────────────────────────────────── */
+            async function loadProfile() {
+                const { data } = await YOSSICO_AUTH.getProfile(user.id);
+                profile = data || {};
+
+                document.getElementById('profile-greeting').textContent =
+                    profile.nombre_completo ? `Hola, ${profile.nombre_completo}.` : 'Mi Perfil';
+
+                const set = (id, val) => {
+                    const el = document.getElementById(id);
+                    if (!val) { el.textContent = 'Sin datos'; el.classList.add('empty'); }
+                    else { el.textContent = val; el.classList.remove('empty'); }
+                };
+
+                set('disp-nombre', profile.nombre_completo);
+                set('disp-apellido', profile.apellido);
+                set('disp-email', user.email);
+                set('disp-direccion', profile.direccion);
+                set('disp-ciudad', profile.ciudad);
+                set('disp-apto', profile.apartamento_numero);
+            }
+
+            await loadProfile();
+
+            /* ── Load Discounts ─────────────────────────────────── */
+            async function loadDiscounts() {
+                const container = document.getElementById('discounts-content');
+                const { data: discounts, error } = await YOSSICO_AUTH.getDiscounts(user.email);
+
+                if (error || !discounts || discounts.length === 0) {
+                    container.innerHTML = `<div class="orders-empty">No tienes códigos de descuento aún.</div>`;
+                    return;
+                }
+
+                container.className = 'discount-grid';
+                container.innerHTML = discounts.map(d => {
+                    const used = d.used;
+                    const date = new Date(d.created_at).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+                    return `
+            <div class="discount-card">
+              <div>
+                <div class="discount-card__code">${d.discount_code}</div>
+                <div class="discount-card__meta">10% OFF · Primera compra · Obtenido el ${date}</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span class="discount-badge ${used ? 'used' : 'available'}">${used ? 'Usado' : 'Disponible'}</span>
+                ${!used ? `<button class="copy-btn" data-code="${d.discount_code}">Copiar</button>` : ''}
+              </div>
+            </div>
+          `;
+                }).join('');
+
+                // Copy buttons
+                container.querySelectorAll('.copy-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        navigator.clipboard.writeText(btn.dataset.code).then(() => {
+                            btn.textContent = '¡Copiado!';
+                            btn.classList.add('copied');
+                            setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+                        });
+                    });
+                });
+            }
+
+            /* ── Sidebar Navigation ─────────────────────────────── */
+            document.getElementById('dash-nav').addEventListener('click', (e) => {
+                const link = e.target.closest('[data-section]');
+                if (!link) return;
+                e.preventDefault();
+
+                const section = link.dataset.section;
+
+                document.querySelectorAll('.dash-sidebar__nav a').forEach(a => a.classList.remove('active'));
+                document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+
+                link.classList.add('active');
+                document.getElementById(`section-${section}`).classList.add('active');
+
+                // Lazy load discounts
+                if (section === 'descuentos') loadDiscounts();
+            });
+
+            /* ── Profile Edit ─────────────────────────────────── */
+            document.getElementById('edit-profile-btn').addEventListener('click', () => {
+                document.getElementById('ed-nombre').value = profile?.nombre_completo || '';
+                document.getElementById('ed-apellido').value = profile?.apellido || '';
+                document.getElementById('edit-profile-form').classList.add('show');
+            });
+
+            document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+                document.getElementById('edit-profile-form').classList.remove('show');
+            });
+
+            document.getElementById('save-profile-btn').addEventListener('click', async () => {
+                const btn = document.getElementById('save-profile-btn');
+                const alert = document.getElementById('profile-alert');
+                btn.disabled = true;
+                btn.textContent = 'Guardando…';
+
+                const { error } = await YOSSICO_AUTH.upsertProfile(user.id, {
+                    nombre_completo: document.getElementById('ed-nombre').value.trim(),
+                    apellido: document.getElementById('ed-apellido').value.trim(),
+                });
+
+                btn.disabled = false;
+                btn.textContent = 'Guardar cambios';
+
+                if (error) {
+                    alert.textContent = 'Error al guardar. Intenta de nuevo.';
+                    alert.className = 'dash-alert error show';
+                } else {
+                    alert.textContent = 'Perfil actualizado correctamente.';
+                    alert.className = 'dash-alert success show';
+                    await loadProfile();
+                    document.getElementById('edit-profile-form').classList.remove('show');
+                    setTimeout(() => alert.className = 'dash-alert', 3000);
+                }
+            });
+
+            /* ── Change Password ───────────────────────────────── */
+            document.getElementById('change-pw-btn').addEventListener('click', async () => {
+                const btn = document.getElementById('change-pw-btn');
+                const alert = document.getElementById('profile-alert');
+                btn.disabled = true;
+                btn.textContent = 'Enviando correo…';
+
+                const { error } = await YOSSICO_AUTH.resetPassword(user.email);
+                btn.disabled = false;
+                btn.textContent = 'Cambiar contraseña';
+
+                if (error) {
+                    alert.textContent = 'Error al enviar el correo.';
+                    alert.className = 'dash-alert error show';
+                } else {
+                    alert.textContent = `Revisa tu correo (${user.email}) para cambiar tu contraseña.`;
+                    alert.className = 'dash-alert success show';
+                    setTimeout(() => alert.className = 'dash-alert', 5000);
+                }
+            });
+
+            /* ── Shipping Data Edit ────────────────────────────── */
+            document.getElementById('edit-envio-btn').addEventListener('click', () => {
+                document.getElementById('ed-direccion').value = profile?.direccion || '';
+                document.getElementById('ed-ciudad').value = profile?.ciudad || '';
+                document.getElementById('ed-apto').value = profile?.apartamento_numero || '';
+                document.getElementById('edit-envio-form').classList.add('show');
+            });
+
+            document.getElementById('cancel-envio-btn').addEventListener('click', () => {
+                document.getElementById('edit-envio-form').classList.remove('show');
+            });
+
+            document.getElementById('save-envio-btn').addEventListener('click', async () => {
+                const btn = document.getElementById('save-envio-btn');
+                const alert = document.getElementById('envio-alert');
+                btn.disabled = true;
+                btn.textContent = 'Guardando…';
+
+                const { error } = await YOSSICO_AUTH.upsertProfile(user.id, {
+                    direccion: document.getElementById('ed-direccion').value.trim(),
+                    ciudad: document.getElementById('ed-ciudad').value.trim(),
+                    apartamento_numero: document.getElementById('ed-apto').value.trim(),
+                });
+
+                btn.disabled = false;
+                btn.textContent = 'Guardar';
+
+                if (error) {
+                    alert.textContent = 'Error al guardar. Intenta de nuevo.';
+                    alert.className = 'dash-alert error show';
+                } else {
+                    alert.textContent = 'Datos de envío actualizados.';
+                    alert.className = 'dash-alert success show';
+                    await loadProfile();
+                    document.getElementById('edit-envio-form').classList.remove('show');
+                    setTimeout(() => alert.className = 'dash-alert', 3000);
+                }
+            });
+
+            /* ── Logout ─────────────────────────────────────────── */
+            document.getElementById('dash-logout-btn').addEventListener('click', YOSSICO_AUTH.signOut);
+        });
+    </script>
+</body>
+
+</html>
