@@ -149,29 +149,37 @@
 
     /* ── Init ────────────────────────────────────────────────── */
     document.addEventListener('DOMContentLoaded', async () => {
+
+        // ── Email confirmation / password-reset callback ───────
+        // Supabase redirects here with #access_token=...&type=signup (or recovery)
+        // The JS client processes the token automatically at init time,
+        // so we just need to wait one tick and read the session.
+        const hash = window.location.hash;
+        if (hash.includes('access_token')) {
+            const isRecovery = hash.includes('type=recovery');
+            // Small delay to let the client finish storing the session
+            await new Promise(r => setTimeout(r, 400));
+            const user = await getUser();
+            // Clean the ugly hash from the URL bar
+            history.replaceState(null, '', window.location.pathname);
+            if (isRecovery) {
+                // Password reset: land on login so they can set a new password
+                window.location.href = 'login.html';
+            } else if (user) {
+                // Email confirmed & logged in → go straight to profile
+                window.location.href = 'perfil.html';
+            } else {
+                // Something went wrong — let them log in manually
+                window.location.href = 'login.html';
+            }
+            return; // Stop here, no need to inject nav
+        }
+
         injectUserNav();
         const user = await getUser();
         updateNavState(user);
-
-        // Handle email confirmation callback:
-        // When a user clicks the confirmation link, Supabase redirects to the
-        // Site URL with #access_token=...&type=signup in the hash.
-        // We capture that here and send them straight to their profile.
-        const hash = window.location.hash;
-        if (hash.includes('type=signup') || hash.includes('type=recovery')) {
-            getSb().auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_IN' && session) {
-                    // Clean up the URL hash before redirecting
-                    history.replaceState(null, '', window.location.pathname);
-                    window.location.href = 'perfil.html';
-                }
-                if (event === 'PASSWORD_RECOVERY') {
-                    history.replaceState(null, '', window.location.pathname);
-                    window.location.href = 'login.html';
-                }
-            });
-        }
     });
+
 
     /* ── Public API ──────────────────────────────────────────── */
     window.YOSSICO_AUTH = {
