@@ -152,6 +152,25 @@
         injectUserNav();
         const user = await getUser();
         updateNavState(user);
+
+        // Handle email confirmation callback:
+        // When a user clicks the confirmation link, Supabase redirects to the
+        // Site URL with #access_token=...&type=signup in the hash.
+        // We capture that here and send them straight to their profile.
+        const hash = window.location.hash;
+        if (hash.includes('type=signup') || hash.includes('type=recovery')) {
+            getSb().auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN' && session) {
+                    // Clean up the URL hash before redirecting
+                    history.replaceState(null, '', window.location.pathname);
+                    window.location.href = 'perfil.html';
+                }
+                if (event === 'PASSWORD_RECOVERY') {
+                    history.replaceState(null, '', window.location.pathname);
+                    window.location.href = 'login.html';
+                }
+            });
+        }
     });
 
     /* ── Public API ──────────────────────────────────────────── */
