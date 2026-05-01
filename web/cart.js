@@ -119,9 +119,16 @@ function renderCart() {
     const tp = document.getElementById('cart-total-price');
     if (tp) tp.textContent = Cart.formatPrice(Cart.total);
 
-    /* Checkout link */
+    /* Checkout button → redirect to checkout page */
     const co = document.getElementById('cart-checkout');
-    if (co) co.href = Cart.buildWAMessage();
+    if (co) {
+        co.removeAttribute('href');
+        co.onclick = (e) => {
+            e.preventDefault();
+            if (!Cart.items.length) return;
+            window.location.href = 'checkout.html';
+        };
+    }
 }
 
 function escHtml(str) {

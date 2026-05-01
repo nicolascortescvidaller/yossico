@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — YOSSICO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .ck-page { min-height:100vh; background:var(--off-white); display:grid; grid-template-rows:auto 1fr; }
+    .ck-body { display:grid; grid-template-columns:1fr 1fr; max-width:1200px; margin:0 auto; width:100%; gap:0; }
+    /* ── Left: order summary ── */
+    .ck-summary { padding:56px 56px 56px 40px; border-right:1px solid var(--border); }
+    .ck-summary__tag { font-family:var(--font-body); font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gray); margin-bottom:12px; }
+    .ck-summary__title { font-family:var(--font-display); font-weight:300; font-size:32px; color:var(--black); margin-bottom:40px; }
+    .ck-items { display:flex; flex-direction:column; gap:20px; margin-bottom:32px; }
+    .ck-item { display:grid; grid-template-columns:64px 1fr auto; gap:16px; align-items:center; padding:16px; background:#fff; border:1px solid var(--border); }
+    .ck-item__img { width:64px; height:64px; object-fit:cover; display:block; }
+    .ck-item__name { font-family:var(--font-body); font-weight:400; font-size:12px; letter-spacing:1px; color:var(--black); text-transform:uppercase; margin-bottom:4px; }
+    .ck-item__meta { font-family:var(--font-body); font-weight:200; font-size:10px; color:var(--gray); letter-spacing:0.5px; }
+    .ck-item__price { font-family:var(--font-body); font-weight:300; font-size:13px; color:var(--black); white-space:nowrap; text-align:right; }
+    .ck-item__sub { font-family:var(--font-body); font-size:9px; color:var(--gray); margin-top:2px; text-align:right; }
+    .ck-divider { height:1px; background:var(--border); margin:8px 0 20px; }
+    .ck-total-row { display:flex; justify-content:space-between; align-items:baseline; }
+    .ck-total-label { font-family:var(--font-body); font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gray); }
+    .ck-total-value { font-family:var(--font-display); font-weight:300; font-size:28px; color:var(--black); }
+    /* ── Right: form ── */
+    .ck-form-panel { padding:56px 40px 56px 56px; }
+    .ck-form-panel__title { font-family:var(--font-display); font-weight:300; font-size:32px; color:var(--black); margin-bottom:40px; }
+    .ck-field { margin-bottom:24px; }
+    .ck-field label { display:block; font-family:var(--font-body); font-weight:200; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gray-mid); margin-bottom:10px; }
+    .ck-field input, .ck-field textarea { width:100%; background:transparent; border:none; border-bottom:1px solid var(--border); padding:10px 0; font-family:var(--font-body); font-weight:300; font-size:13px; color:var(--black); outline:none; transition:border-color .25s; resize:none; }
+    .ck-field input:focus, .ck-field textarea:focus { border-bottom-color:var(--black); }
+    .ck-field input::placeholder, .ck-field textarea::placeholder { color:var(--gray-light); }
+    .ck-field--optional label::after { content:' (opcional)'; font-size:8px; color:var(--gray-light); letter-spacing:1px; }
+    .ck-discount-row { display:flex; gap:12px; align-items:flex-end; }
+    .ck-discount-row .ck-field { flex:1; margin-bottom:0; }
+    .ck-apply-btn { padding:10px 20px; background:transparent; border:1px solid var(--border); font-family:var(--font-body); font-size:9px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; white-space:nowrap; transition:border-color .2s; }
+    .ck-apply-btn:hover { border-color:var(--black); }
+    .ck-discount-msg { font-family:var(--font-body); font-size:10px; margin-top:6px; color:#27ae60; display:none; }
+    /* Payment placeholder */
+    .ck-payment-placeholder { margin:32px 0; padding:20px 24px; border:1px dashed var(--border); display:flex; align-items:center; gap:16px; }
+    .ck-payment-placeholder svg { flex-shrink:0; opacity:.3; }
+    .ck-payment-placeholder__text { font-family:var(--font-body); font-weight:200; font-size:10px; letter-spacing:1px; color:var(--gray); line-height:1.7; }
+    .ck-payment-placeholder__text strong { display:block; font-weight:400; color:var(--black); font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:2px; }
+    /* Submit */
+    .ck-submit { width:100%; padding:18px; background:var(--black); color:var(--white); border:none; font-family:var(--font-body); font-weight:300; font-size:10px; letter-spacing:3px; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:12px; transition:background .2s; }
+    .ck-submit:hover { background:#222; }
+    .ck-submit svg { width:18px; height:18px; fill:currentColor; }
+    .ck-legal { font-family:var(--font-body); font-size:9px; color:var(--gray-light); text-align:center; margin-top:12px; letter-spacing:0.5px; line-height:1.7; }
+    .ck-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; gap:16px; text-align:center; }
+    .ck-empty p { font-family:var(--font-display); font-weight:300; font-size:28px; color:var(--black); }
+    .ck-empty a { font-family:var(--font-body); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--black); text-decoration:underline; text-underline-offset:4px; }
+    @media(max-width:860px){
+      .ck-body { grid-template-columns:1fr; }
+      .ck-summary { padding:40px 24px; border-right:none; border-bottom:1px solid var(--border); }
+      .ck-form-panel { padding:40px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="YOSSICO">
+        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111" stroke-width="1"/>
+        <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111" stroke-width="0.4"/>
+        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      YOSSICO
+    </a>
+    <ul class="nav__links">
+      <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+        <div class="nav__dropdown-menu">
+          <a href="coleccion.html#linea-uniformes">Essentials</a>
+          <a href="coleccion.html#linea-uniformes">Signature</a>
+          <a href="coleccion.html#linea-uniformes">Core</a>
+          <div class="nav__dropdown-divider"></div>
+          <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+        </div>
+      </li>
+      <li><a href="acronimo.html">El Acrónimo</a></li>
+      <li><a href="historia.html">Historia</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
+      <li><button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button></li>
+    </ul>
+  </nav>
+
+  <div class="ck-page">
+    <div class="ck-body" id="ck-body">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- Cart drawer (shared) -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito">
+    <div class="cart-drawer__header">
+      <span class="cart-drawer__title">Tu Pedido</span>
+      <button class="cart-drawer__close" id="cart-close" aria-label="Cerrar"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="cart-drawer__body" id="cart-body"></div>
+    <div class="cart-drawer__footer" id="cart-footer">
+      <div class="cart-total"><span>Total</span><span id="cart-total-price">$0 COP</span></div>
+      <a href="#" id="cart-checkout" class="cart-checkout" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Pedir por WhatsApp
+      </a>
+    </div>
+  </aside>
+
+  <script src="script.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    /* ── Checkout page logic ─────────────────────────────── */
+    // WA_NUMBER and CART_KEY are already declared in cart.js (global scope)
+    // Redeclaring them with const here causes a SyntaxError that kills the whole script
+
+    function fmtPrice(n) {
+      return '$' + Math.round(n).toLocaleString('es-CO') + ' COP';
+    }
+    function getCart() {
+      try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch { return []; }
+    }
+    function cartTotal(items) {
+      return items.reduce((s, i) => s + i.price * i.qty, 0);
+    }
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function renderEmpty() {
+      document.getElementById('ck-body').innerHTML = `
+        <div class="ck-empty" style="grid-column:1/-1;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <p>Tu carrito está vacío.</p>
+          <a href="coleccion.html">Ver colección →</a>
+        </div>`;
+    }
+
+    function renderCheckout(items) {
+      const t = cartTotal(items);
+      document.getElementById('ck-body').innerHTML = `
+        <!-- LEFT: order summary -->
+        <div class="ck-summary">
+          <p class="ck-summary__tag">Tu pedido</p>
+          <h1 class="ck-summary__title">Resumen</h1>
+          <div class="ck-items">
+            ${items.map(i => `
+              <div class="ck-item">
+                <img class="ck-item__img" src="${esc(i.img)}" alt="${esc(i.name)}">
+                <div>
+                  <p class="ck-item__name">${esc(i.name)}</p>
+                  <p class="ck-item__meta">${i.line ? esc(i.line) + ' · ' : ''}Talla ${esc(i.size)} · ×${i.qty}</p>
+                </div>
+                <div>
+                  <p class="ck-item__price">${fmtPrice(i.price * i.qty)}</p>
+                  <p class="ck-item__sub">${fmtPrice(i.price)} c/u</p>
+                </div>
+              </div>`).join('')}
+          </div>
+          <div class="ck-divider"></div>
+          <div class="ck-total-row">
+            <span class="ck-total-label">Total</span>
+            <span class="ck-total-value" id="ck-total-display">${fmtPrice(t)}</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: form -->
+        <div class="ck-form-panel">
+          <h2 class="ck-form-panel__title">Tus datos</h2>
+
+          <div class="ck-field">
+            <label for="ck-nombre">Nombre completo</label>
+            <input id="ck-nombre" type="text" placeholder="Tu nombre y apellido" autocomplete="name">
+          </div>
+          <div class="ck-field">
+            <label for="ck-tel">Teléfono / WhatsApp</label>
+            <input id="ck-tel" type="tel" placeholder="+57 300 000 0000" autocomplete="tel">
+          </div>
+          <div class="ck-field">
+            <label for="ck-ciudad">Ciudad</label>
+            <input id="ck-ciudad" type="text" placeholder="Bogotá, Medellín..." autocomplete="address-level2">
+          </div>
+          <div class="ck-field">
+            <label for="ck-dir">Dirección de entrega</label>
+            <input id="ck-dir" type="text" placeholder="Calle, carrera, conjunto..." autocomplete="street-address">
+          </div>
+          <div class="ck-field ck-field--optional">
+            <label for="ck-notas">Notas del pedido</label>
+            <textarea id="ck-notas" rows="2" placeholder="Color preferido, instrucciones especiales..."></textarea>
+          </div>
+
+          <!-- Discount code -->
+          <div class="ck-field ck-field--optional">
+            <label>Código de descuento</label>
+            <div class="ck-discount-row">
+              <div class="ck-field" style="margin-bottom:0;">
+                <input id="ck-discount" type="text" placeholder="YOSSICO-BIENVENIDA-XXXXXX" style="text-transform:uppercase;">
+              </div>
+              <button class="ck-apply-btn" id="ck-apply-discount">Aplicar</button>
+            </div>
+            <p class="ck-discount-msg" id="ck-discount-msg"></p>
+          </div>
+
+          <!-- Wompi placeholder -->
+          <div class="ck-payment-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.2" stroke-linecap="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+            <div class="ck-payment-placeholder__text">
+              <strong>Pago digital — Próximamente</strong>
+              Wompi · Tarjeta débito/crédito · Nequi · PSE
+            </div>
+          </div>
+
+          <button class="ck-submit" id="ck-confirm">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Confirmar pedido por WhatsApp
+          </button>
+          <p class="ck-legal">Al confirmar, serás redirigido a WhatsApp para finalizar tu pedido con el equipo YOSSICO.</p>
+        </div>`;
+
+      /* Discount apply */
+      let discountPct = 0;
+      document.getElementById('ck-apply-discount').addEventListener('click', async () => {
+        const code = document.getElementById('ck-discount').value.trim().toUpperCase();
+        const msg  = document.getElementById('ck-discount-msg');
+        if (!code) return;
+
+        // Query Supabase subscribers table to validate
+        try {
+          if (!window.YOSSICO_AUTH) throw new Error('auth not ready');
+          const { data, error } = await window.YOSSICO_AUTH.getSb()
+            .from('subscribers')
+            .select('discount_code, used')
+            .eq('discount_code', code)
+            .maybeSingle();
+
+          if (error || !data) {
+            msg.style.color = '#c0392b'; msg.textContent = 'Código no válido.'; msg.style.display = 'block'; return;
+          }
+          if (data.used) {
+            msg.style.color = '#c0392b'; msg.textContent = 'Este código ya fue utilizado.'; msg.style.display = 'block'; return;
+          }
+          discountPct = 10;
+          const newTotal = t * (1 - discountPct / 100);
+          document.getElementById('ck-total-display').textContent = fmtPrice(newTotal) + ' (−10%)';
+          msg.style.color = '#27ae60'; msg.textContent = '¡Código aplicado! 10% de descuento.'; msg.style.display = 'block';
+        } catch (err) {
+          console.warn('Discount validation error:', err);
+          msg.style.color = '#c0392b'; msg.textContent = 'Error al validar. Intenta de nuevo.'; msg.style.display = 'block';
+        }
+      });
+
+      /* Confirm → build WA message */
+      document.getElementById('ck-confirm').addEventListener('click', () => {
+        const nombre  = document.getElementById('ck-nombre').value.trim();
+        const tel     = document.getElementById('ck-tel').value.trim();
+        const ciudad  = document.getElementById('ck-ciudad').value.trim();
+        const dir     = document.getElementById('ck-dir').value.trim();
+        const notas   = document.getElementById('ck-notas').value.trim();
+        const dcode   = document.getElementById('ck-discount').value.trim().toUpperCase();
+
+        if (!nombre || !ciudad || !dir) {
+          alert('Por favor completa: nombre, ciudad y dirección.');
+          return;
+        }
+
+        const finalTotal = t * (1 - discountPct / 100);
+        let msg = 'Hola YOSSICO, quiero confirmar mi pedido:%0A%0A';
+        items.forEach(i => {
+          msg += `▸ ${i.name} | ${i.line || ''} | Talla ${i.size} | ×${i.qty} | ${fmtPrice(i.price * i.qty)}%0A`;
+        });
+        if (discountPct) msg += `%0ACódigo: ${dcode} (−${discountPct}%)%0A`;
+        msg += `%0A*Total: ${fmtPrice(finalTotal)}*%0A`;
+        msg += `%0ANombre: ${nombre}`;
+        if (tel)    msg += `%0ATeléfono: ${tel}`;
+        msg += `%0ACiudad: ${ciudad}`;
+        msg += `%0ADirección: ${dir}`;
+        if (notas)  msg += `%0ANotas: ${notas}`;
+
+        window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+      });
+    }
+
+    /* Init — works whether DOM is already ready or not */
+    function ckInit() {
+      const items = getCart();
+      if (!items.length) { renderEmpty(); return; }
+      renderCheckout(items);
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', ckInit);
+    } else {
+      ckInit();
+    }
+  </script>
+  <!-- Auth loaded AFTER checkout script so it doesn't race with ckInit -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
