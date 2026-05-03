@@ -57,51 +57,52 @@ a {
   color: inherit;
 }
 
-/* ── Custom Cursor ─────────────────────────────────────────── */
+/* ── Custom Cursor (mix-blend-mode: difference) ────────────── */
 .cursor-dot {
   position: fixed;
   top: 0;
   left: 0;
-  width: 6px;
-  height: 6px;
-  background: var(--black);
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999;
   transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: difference;
+  transition: width 0.2s var(--ease-out), height 0.2s var(--ease-out);
+  will-change: transform;
 }
 
 .cursor-ring {
   position: fixed;
   top: 0;
   left: 0;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--black);
+  width: 38px;
+  height: 38px;
+  border: 1px solid #ffffff;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9998;
+  z-index: 99998;
   transform: translate(-50%, -50%);
-  transition: width 0.25s var(--ease-out),
-    height 0.25s var(--ease-out),
-    border-color 0.25s;
+  mix-blend-mode: difference;
+  transition: width 0.25s var(--ease-out), height 0.25s var(--ease-out),
+              border-width 0.25s var(--ease-out), opacity 0.25s;
+  will-change: transform;
+  opacity: 0.7;
 }
 
-body:has(section.section--dark) .cursor-ring,
-.cursor-ring.on-dark {
-  border-color: var(--white);
-}
-
-/* Hover state */
+/* Hover state — dot grows, ring contracts */
 body.cursor-hover .cursor-dot {
-  width: 8px;
-  height: 8px;
+  width: 16px;
+  height: 16px;
 }
 
 body.cursor-hover .cursor-ring {
-  width: 48px;
-  height: 48px;
+  width: 28px;
+  height: 28px;
+  opacity: 1;
+  border-width: 1.5px;
 }
 
 /* ── Typography Utilities ──────────────────────────────────── */

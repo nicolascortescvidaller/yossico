@@ -3,13 +3,17 @@
  * Cursor, scroll reveal, nav blur, ticker, stagger animations
  */
 
-/* ── Custom Cursor ─────────────────────────────────────────── */
-const cursorDot = document.getElementById('cursor-dot');
+/* ── Custom Cursor (mix-blend-mode: difference) ─────────────── */
+const cursorDot  = document.getElementById('cursor-dot');
 const cursorRing = document.getElementById('cursor-ring');
 
+/* Skip entirely on touch devices */
+const isTouch = window.matchMedia('(hover: none)').matches;
+
 let mouseX = 0, mouseY = 0;
-let ringX = 0, ringY = 0;
+let ringX  = 0, ringY  = 0;
 let animId = null;
+let cursorVisible = false;
 
 function lerp(a, b, t) { return a + (b - a) * t; }
 
@@ -17,36 +21,49 @@ function animateCursor() {
   ringX = lerp(ringX, mouseX, 0.12);
   ringY = lerp(ringY, mouseY, 0.12);
 
-  if (cursorDot) {
-    cursorDot.style.left = mouseX + 'px';
-    cursorDot.style.top = mouseY + 'px';
-  }
-  if (cursorRing) {
-    cursorRing.style.left = ringX + 'px';
-    cursorRing.style.top = ringY + 'px';
-  }
+  if (cursorDot)  { cursorDot.style.left  = mouseX + 'px'; cursorDot.style.top  = mouseY + 'px'; }
+  if (cursorRing) { cursorRing.style.left = ringX  + 'px'; cursorRing.style.top = ringY  + 'px'; }
 
   animId = requestAnimationFrame(animateCursor);
 }
 
-document.addEventListener('mousemove', e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
+if (!isTouch) {
+  /* Hide until first move so they don't flash at 0,0 */
+  if (cursorDot)  cursorDot.style.opacity  = '0';
+  if (cursorRing) cursorRing.style.opacity = '0';
 
-document.addEventListener('mouseenter', () => {
-  if (!animId) animId = requestAnimationFrame(animateCursor);
-});
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
 
-document.addEventListener('mouseleave', () => {
-  if (animId) { cancelAnimationFrame(animId); animId = null; }
-});
+    if (!cursorVisible) {
+      cursorVisible = true;
+      if (cursorDot)  { cursorDot.style.opacity  = '';  cursorDot.style.transition  += ', opacity 0.3s'; }
+      if (cursorRing) { cursorRing.style.opacity = '0.7'; cursorRing.style.transition += ', opacity 0.3s'; }
+      if (!animId) animId = requestAnimationFrame(animateCursor);
+    }
+  });
 
-// Hover state
+  document.addEventListener('mouseleave', () => {
+    if (cursorDot)  cursorDot.style.opacity  = '0';
+    if (cursorRing) cursorRing.style.opacity = '0';
+  });
+
+  document.addEventListener('mouseenter', () => {
+    if (cursorVisible) {
+      if (cursorDot)  cursorDot.style.opacity  = '';
+      if (cursorRing) cursorRing.style.opacity = '0.7';
+      if (!animId) animId = requestAnimationFrame(animateCursor);
+    }
+  });
+}
+
+/* Hover state on interactive elements */
 document.querySelectorAll('a, button, .product-card, [data-hover]').forEach(el => {
   el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
   el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
 });
+
 
 /* ── Nav Scroll Blur ───────────────────────────────────────── */
 const nav = document.querySelector('.nav');
