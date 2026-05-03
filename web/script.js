@@ -149,3 +149,56 @@ document.addEventListener('click', e => {
 
 /* ── Init ──────────────────────────────────────────────────── */
 animId = requestAnimationFrame(animateCursor);
+
+/* ── Mobile Hamburger Menu ─────────────────────────────────── */
+(function initMobileNav() {
+  const navEl = document.querySelector('.nav');
+  if (!navEl) return;
+
+  /* Build hamburger button */
+  const burger = document.createElement('button');
+  burger.className = 'nav__hamburger';
+  burger.setAttribute('aria-label', 'Menú');
+  burger.innerHTML = '<span></span><span></span><span></span>';
+  navEl.appendChild(burger);
+
+  /* Build mobile slide-in menu */
+  const mobileMenu = document.createElement('nav');
+  mobileMenu.className = 'nav__mobile-menu';
+  mobileMenu.innerHTML = `
+    <a href="coleccion.html">Colección</a>
+    <a href="acronimo.html">El Acrónimo</a>
+    <a href="historia.html">Historia</a>
+    <a href="nosotros.html">Nosotros</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="coleccion.html" class="nav__mobile-cta">Ver Colección</a>
+  `;
+  document.body.appendChild(mobileMenu);
+
+  /* Toggle */
+  burger.addEventListener('click', () => {
+    const isOpen = burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  /* Close on link click */
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      burger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  /* Close on outside tap */
+  document.addEventListener('click', e => {
+    if (mobileMenu.classList.contains('open') &&
+        !mobileMenu.contains(e.target) &&
+        !burger.contains(e.target)) {
+      burger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+})();
