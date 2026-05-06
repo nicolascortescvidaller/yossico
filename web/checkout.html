@@ -261,8 +261,8 @@
         }
       });
 
-      /* Confirm → build WA message */
-      document.getElementById('ck-confirm').addEventListener('click', () => {
+      /* Confirm → INSERT pedido → decrementar stock → WhatsApp */
+      document.getElementById('ck-confirm').addEventListener('click', async () => {
         const nombre  = document.getElementById('ck-nombre').value.trim();
         const tel     = document.getElementById('ck-tel').value.trim();
         const ciudad  = document.getElementById('ck-ciudad').value.trim();
@@ -276,19 +276,103 @@
         }
 
         const finalTotal = t * (1 - discountPct / 100);
-        let msg = 'Hola YOSSICO, quiero confirmar mi pedido:%0A%0A';
-        items.forEach(i => {
-          msg += `▸ ${i.name} | ${i.line || ''} | Talla ${i.size} | ×${i.qty} | ${fmtPrice(i.price * i.qty)}%0A`;
-        });
-        if (discountPct) msg += `%0ACódigo: ${dcode} (−${discountPct}%)%0A`;
-        msg += `%0A*Total: ${fmtPrice(finalTotal)}*%0A`;
-        msg += `%0ANombre: ${nombre}`;
-        if (tel)    msg += `%0ATeléfono: ${tel}`;
-        msg += `%0ACiudad: ${ciudad}`;
-        msg += `%0ADirección: ${dir}`;
-        if (notas)  msg += `%0ANotas: ${notas}`;
 
-        window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+        /* ── Loading state ───────────────────────────────────── */
+        const btn = document.getElementById('ck-confirm');
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span style="letter-spacing:2px;font-size:9px;font-family:var(--font-body)">Procesando…</span>';
+
+        /* ── Error helper ─────────────────────────────────────── */
+        function showError(msg) {
+          let errEl = document.getElementById('ck-submit-error');
+          if (!errEl) {
+            errEl = document.createElement('p');
+            errEl.id = 'ck-submit-error';
+            errEl.style.cssText = 'font-family:var(--font-body);font-size:10px;color:#c0392b;text-align:center;margin-top:12px;letter-spacing:0.5px;';
+            btn.insertAdjacentElement('afterend', errEl);
+          }
+          errEl.textContent = msg;
+          btn.disabled = false;
+          btn.innerHTML = originalHTML;
+        }
+
+        /* ── Build Supabase client (lazy, no auth.js dependency) */
+        let sb;
+        try {
+          sb = window.supabase.createClient(
+            'https://mgzevtcipwfpqgolmpwm.supabase.co',
+            'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19'
+          );
+        } catch (e) {
+          showError('No se pudo conectar. Verifica tu conexión e intenta de nuevo.');
+          return;
+        }
+
+        /* ── 1. INSERT en tabla pedidos ──────────────────────── */
+        const itemsForDb = items.map(i => ({
+          nombre: i.name,
+          color:  i.color || '',
+          talla:  i.size,
+          qty:    i.qty,
+          precio: i.price
+        }));
+
+        const { error: insertError } = await sb.from('pedidos').insert({
+          cliente_nombre:   nombre,
+          cliente_telefono: tel || null,
+          cliente_ciudad:   ciudad,
+          cliente_direccion: dir,
+          items:            itemsForDb,
+          total:            finalTotal,
+          estado:           'pendiente',
+          codigo_descuento: dcode || null,
+          drop_numero:      'Drop 1'
+        });
+
+        if (insertError) {
+          console.error('[checkout] INSERT error:', insertError);
+          showError('No se pudo registrar el pedido. Intenta de nuevo.');
+          return;
+        }
+
+        /* ── 2. Decrementar stock vía RPC ────────────────────── */
+        const stockItems = items.map(i => ({
+          nombre: i.name,
+          color:  i.color || '',
+          talla:  i.size,
+          qty:    i.qty
+        }));
+
+        const { error: rpcError } = await sb.rpc('decrementar_stock', {
+          items: stockItems
+        });
+
+        if (rpcError) {
+          /* Stock no crítico — logueamos pero continuamos */
+          console.warn('[checkout] decrementar_stock error:', rpcError.message);
+        }
+
+        /* ── 3. Abrir WhatsApp ───────────────────────────────── */
+        let waMsg = 'Hola YOSSICO, quiero confirmar mi pedido:%0A%0A';
+        items.forEach(i => {
+          waMsg += `▸ ${i.name} | ${i.line || ''} | Talla ${i.size} | ×${i.qty} | ${fmtPrice(i.price * i.qty)}%0A`;
+        });
+        if (discountPct) waMsg += `%0ACódigo: ${dcode} (−${discountPct}%)%0A`;
+        waMsg += `%0A*Total: ${fmtPrice(finalTotal)}*%0A`;
+        waMsg += `%0ANombre: ${nombre}`;
+        if (tel)   waMsg += `%0ATeléfono: ${tel}`;
+        waMsg += `%0ACiudad: ${ciudad}`;
+        waMsg += `%0ADirección: ${dir}`;
+        if (notas) waMsg += `%0ANotas: ${notas}`;
+
+        window.open(`https://wa.me/${WA_NUMBER}?text=${waMsg}`, '_blank');
+
+        /* Restaurar botón */
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+        const errEl = document.getElementById('ck-submit-error');
+        if (errEl) errEl.remove();
       });
     }
 
