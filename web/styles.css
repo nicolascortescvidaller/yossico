@@ -1379,21 +1379,17 @@ body.cursor-hover .cursor-ring {
   border-right: 1px solid var(--border);
 }
 
-.sub-modal__left::before {
-  content: 'DROP';
+.sub-modal__drop-word {
+  display: block;
+  text-align: center;
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 72px;
-  letter-spacing: 12px;
-  color: rgba(0, 0, 0, 0.05);
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  line-height: 1;
-  pointer-events: none;
+  font-size: 48px;
+  letter-spacing: 16px;
+  color: rgba(0, 0, 0, 0.12);
+  margin-top: 16px;
   user-select: none;
-  white-space: nowrap;
+  pointer-events: none;
 }
 
 .sub-modal__tag {
