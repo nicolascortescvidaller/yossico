@@ -7,13 +7,13 @@
 /* ── CSS Custom Properties ─────────────────────────────────── */
 :root {
   --gray: #5c5c5c;
-  --gray-light: #8a8a8a;
-  --gray-bg: #a3a2a0;
+  --gray-light: #999896;
+  --gray-bg: #cbc9c6;
   --gray-mid: #3a3a3a;
   --white: #ffffff;
   --black: #111111;
-  --off-white: #afaeac;
-  --border: #8e8d8b;
+  --off-white: #d8d6d3;
+  --border: #b5b3b0;
 
   --font-display: 'Cormorant Garamond', serif;
   --font-body: 'Montserrat', sans-serif;
@@ -38,7 +38,7 @@ html {
 }
 
 body {
-  background: #afaeac;
+  background: #d8d6d3;
   color: var(--black);
   font-family: var(--font-body);
   font-weight: 400;
@@ -183,9 +183,9 @@ body.cursor-hover .cursor-ring {
 }
 
 .nav.scrolled {
-  background: rgba(175, 174, 172, 0.92);
+  background: rgba(216, 214, 211, 0.92);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .nav__logo {
