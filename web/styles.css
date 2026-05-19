@@ -6,14 +6,14 @@
 
 /* ── CSS Custom Properties ─────────────────────────────────── */
 :root {
-  --gray: #5c5c5c;
-  --gray-light: #999896;
-  --gray-bg: #cbc9c6;
-  --gray-mid: #3a3a3a;
+  --gray: #4a4a4a;
+  --gray-light: #888684;
+  --gray-bg: #d8d6d3;
+  --gray-mid: #2e2e2e;
   --white: #ffffff;
   --black: #111111;
-  --off-white: #d8d6d3;
-  --border: #b5b3b0;
+  --off-white: #e5e3e0;
+  --border: #c8c6c3;
 
   --font-display: 'Cormorant Garamond', serif;
   --font-body: 'Montserrat', sans-serif;
@@ -38,7 +38,7 @@ html {
 }
 
 body {
-  background: #d8d6d3;
+  background: #e5e3e0;
   color: var(--black);
   font-family: var(--font-body);
   font-weight: 400;
@@ -116,12 +116,12 @@ body.cursor-hover .cursor-ring {
 
 .text-display {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .label {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 9px;
   letter-spacing: 5px;
   text-transform: uppercase;
@@ -183,9 +183,9 @@ body.cursor-hover .cursor-ring {
 }
 
 .nav.scrolled {
-  background: rgba(216, 214, 211, 0.92);
+  background: rgba(229, 227, 224, 0.93);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
 .nav__logo {
@@ -213,7 +213,7 @@ body.cursor-hover .cursor-ring {
 
 .nav__links a {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -304,7 +304,7 @@ body.cursor-hover .cursor-ring {
   display: block;
   padding: 10px 20px;
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 9px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -335,7 +335,7 @@ body.cursor-hover .cursor-ring {
   align-items: center;
   gap: 8px;
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -390,7 +390,7 @@ body.cursor-hover .cursor-ring {
 
 .btn-link {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -416,7 +416,7 @@ body.cursor-hover .cursor-ring {
   align-items: center;
   gap: 6px;
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 9px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -455,7 +455,7 @@ body.cursor-hover .cursor-ring {
 
 .ticker__item {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 8px;
   letter-spacing: 5px;
   text-transform: uppercase;
@@ -525,7 +525,7 @@ body.cursor-hover .cursor-ring {
   top: 16px;
   left: 16px;
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 8px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -544,7 +544,7 @@ body.cursor-hover .cursor-ring {
 
 .product-card__name {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 22px;
   letter-spacing: -0.5px;
   color: var(--black);
@@ -552,7 +552,7 @@ body.cursor-hover .cursor-ring {
 
 .product-card__sub {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 9px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -561,7 +561,7 @@ body.cursor-hover .cursor-ring {
 
 .product-card__price {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 20px;
   color: var(--black);
   margin-top: 6px;
@@ -602,7 +602,7 @@ body.cursor-hover .cursor-ring {
 
 .section__title {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(36px, 4vw, 54px);
   letter-spacing: -0.5px;
   color: var(--black);
@@ -660,7 +660,7 @@ body.cursor-hover .cursor-ring {
 .footer__tagline {
   font-family: var(--font-display);
   font-style: italic;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.25);
   text-align: center;
@@ -668,7 +668,7 @@ body.cursor-hover .cursor-ring {
 
 .footer__copy {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 9px;
   letter-spacing: 2px;
   color: rgba(255, 255, 255, 0.2);
@@ -688,7 +688,7 @@ body.cursor-hover .cursor-ring {
 
 .page-header__title {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(48px, 6vw, 88px);
   letter-spacing: -1px;
   line-height: 0.95;
@@ -750,7 +750,7 @@ body.cursor-hover .cursor-ring {
 .nav__mobile-menu a {
   display: block;
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 11px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -942,7 +942,7 @@ body.cursor-hover .cursor-ring {
   color: var(--white);
   font-family: var(--font-body);
   font-size: 8px;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0;
   width: 16px;
   height: 16px;
@@ -1001,7 +1001,7 @@ body.cursor-hover .cursor-ring {
 
 .cart-drawer__title {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 22px;
   letter-spacing: -0.3px;
   color: var(--black);
@@ -1060,7 +1060,7 @@ body.cursor-hover .cursor-ring {
 .cart-empty p {
   font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 300;
+  font-weight: 400;
   color: var(--black);
 }
 
@@ -1069,7 +1069,7 @@ body.cursor-hover .cursor-ring {
   font-size: 10px;
   letter-spacing: 1px;
   color: var(--gray-mid);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 /* Cart item */
@@ -1107,7 +1107,7 @@ body.cursor-hover .cursor-ring {
 .cart-item__name {
   font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 300;
+  font-weight: 400;
   color: var(--black);
   letter-spacing: -0.3px;
 }
@@ -1118,13 +1118,13 @@ body.cursor-hover .cursor-ring {
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--black);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .cart-item__price {
   font-family: var(--font-display);
   font-size: 15px;
-  font-weight: 300;
+  font-weight: 400;
   color: var(--black);
   margin-top: 4px;
 }
@@ -1149,7 +1149,7 @@ body.cursor-hover .cursor-ring {
   cursor: none;
   transition: background 0.2s, border-color 0.2s;
   font-family: var(--font-body);
-  font-weight: 200;
+  font-weight: 400;
 }
 
 .cart-qty-btn:hover {
@@ -1161,7 +1161,7 @@ body.cursor-hover .cursor-ring {
 .cart-qty-num {
   font-family: var(--font-body);
   font-size: 11px;
-  font-weight: 300;
+  font-weight: 400;
   color: var(--black);
   min-width: 14px;
   text-align: center;
@@ -1207,13 +1207,13 @@ body.cursor-hover .cursor-ring {
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--black);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 #cart-total-price {
   font-family: var(--font-display);
   font-size: 24px;
-  font-weight: 300;
+  font-weight: 400;
   color: var(--black);
 }
 
@@ -1225,7 +1225,7 @@ body.cursor-hover .cursor-ring {
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
-  font-weight: 200;
+  font-weight: 400;
   font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -1256,7 +1256,7 @@ body.cursor-hover .cursor-ring {
   border: 1px solid var(--border);
   color: var(--black);
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 9px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -1358,7 +1358,7 @@ body.cursor-hover .cursor-ring {
 .sub-modal__left::before {
   content: 'DROP';
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 120px;
   letter-spacing: 10px;
   color: rgba(255, 255, 255, 0.03);
@@ -1372,7 +1372,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-modal__tag {
   font-family: var(--font-body);
-  font-weight: 200;
+  font-weight: 400;
   font-size: 8px;
   letter-spacing: 4px;
   text-transform: uppercase;
@@ -1383,7 +1383,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-modal__headline {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(28px, 3vw, 42px);
   line-height: 1.1;
   letter-spacing: -0.3px;
@@ -1403,7 +1403,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-modal__discount-label {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-style: italic;
   font-size: 16px;
   color: rgba(255, 255, 255, 0.55);
@@ -1413,7 +1413,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-modal__discount-value {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 48px;
   letter-spacing: -1px;
   color: var(--white);
@@ -1464,7 +1464,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-form__title {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 28px;
   letter-spacing: -0.3px;
   color: var(--black);
@@ -1473,7 +1473,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-form__sub {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 11px;
   color: var(--gray-mid);
   line-height: 1.8;
@@ -1495,7 +1495,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-form__label {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 8px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -1504,7 +1504,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-form__input {
   font-family: var(--font-body);
-  font-weight: 200;
+  font-weight: 400;
   font-size: 13px;
   color: var(--black);
   background: none;
@@ -1518,7 +1518,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-form__input::placeholder {
   color: rgba(0, 0, 0, 0.45);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .sub-form__input:focus {
@@ -1530,7 +1530,7 @@ body.cursor-hover .cursor-ring {
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
-  font-weight: 200;
+  font-weight: 400;
   font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -1547,7 +1547,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-form__legal {
   font-family: var(--font-body);
-  font-weight: 200;
+  font-weight: 400;
   font-size: 9px;
   color: rgba(0, 0, 0, 0.3);
   line-height: 1.6;
@@ -1593,7 +1593,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-success__title {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 26px;
   letter-spacing: -0.3px;
   color: var(--black);
@@ -1601,7 +1601,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-success__body {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 12px;
   color: var(--gray-mid);
   line-height: 1.8;
@@ -1619,7 +1619,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-success__code-label {
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 8px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -1628,7 +1628,7 @@ body.cursor-hover .cursor-ring {
 
 .sub-success__code {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 32px;
   letter-spacing: 4px;
   color: var(--black);
@@ -1705,7 +1705,7 @@ body.cursor-hover .cursor-ring {
 .nav__user-email {
   padding: 10px 20px 8px;
   font-family: var(--font-body);
-  font-weight: 200;
+  font-weight: 400;
   font-size: 9px;
   letter-spacing: 0.5px;
   color: rgba(255, 255, 255, 0.35);
@@ -1720,7 +1720,7 @@ body.cursor-hover .cursor-ring {
   display: block;
   padding: 9px 20px;
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 10px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
