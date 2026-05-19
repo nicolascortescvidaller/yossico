@@ -511,17 +511,24 @@
 
         /* Modal — right: product info */
         .modal__info {
-            padding: 52px 48px 48px;
+            padding: 0 48px 48px;
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow-y: auto;
         }
 
         .modal__nav {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 28px;
+            padding: 20px 0 20px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 2;
+            border-bottom: 1px solid var(--border);
         }
 
         .modal__back {
