@@ -1346,28 +1346,31 @@ body.cursor-hover .cursor-ring {
 
 /* Left panel — dark brand */
 .sub-modal__left {
-  background: var(--black);
+  background: var(--white);
   padding: 56px 48px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
   overflow: hidden;
+  border-right: 1px solid var(--border);
 }
 
 .sub-modal__left::before {
   content: 'DROP';
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 400;
-  font-size: 120px;
-  letter-spacing: 10px;
-  color: rgba(255, 255, 255, 0.03);
+  font-size: 72px;
+  letter-spacing: 12px;
+  color: rgba(0, 0, 0, 0.05);
   position: absolute;
-  bottom: -20px;
-  left: -10px;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
   line-height: 1;
   pointer-events: none;
   user-select: none;
+  white-space: nowrap;
 }
 
 .sub-modal__tag {
@@ -1376,7 +1379,7 @@ body.cursor-hover .cursor-ring {
   font-size: 8px;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--gray);
   display: block;
   margin-bottom: 28px;
 }
@@ -1387,17 +1390,17 @@ body.cursor-hover .cursor-ring {
   font-size: clamp(28px, 3vw, 42px);
   line-height: 1.1;
   letter-spacing: -0.3px;
-  color: var(--white);
+  color: var(--black);
 }
 
 .sub-modal__headline em {
   font-style: italic;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--gray);
 }
 
 .sub-modal__discount {
   margin-top: 40px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border);
   padding-top: 24px;
 }
 
@@ -1406,7 +1409,7 @@ body.cursor-hover .cursor-ring {
   font-weight: 400;
   font-style: italic;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--gray-mid);
   display: block;
   line-height: 1.5;
 }
@@ -1549,7 +1552,7 @@ body.cursor-hover .cursor-ring {
   font-family: var(--font-body);
   font-weight: 400;
   font-size: 9px;
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--black);
   line-height: 1.6;
   margin-top: 12px;
   text-align: center;
