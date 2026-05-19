@@ -517,13 +517,38 @@
             position: relative;
         }
 
-        .modal__close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+        .modal__nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .modal__back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             background: none;
             border: none;
-            cursor: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .modal__back:hover {
+            color: var(--black);
+        }
+
+        .modal__close {
+            background: none;
+            border: none;
+            cursor: pointer;
             padding: 8px;
             display: flex;
             align-items: center;
@@ -780,9 +805,17 @@
         </ul>
     </nav>
 
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Navegación">
+        <a href="index.html" class="breadcrumb__link">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Inicio
+        </a>
+    </nav>
+
     <!-- Page Header -->
     <div class="page-header">
-        <div class="label page-header__label reveal">Colección 2024</div>
+        <div class="label page-header__label reveal">Colección 2026</div>
         <h1 class="page-header__title reveal" data-delay="2">
             Scrubs que te<br><em>definen.</em>
         </h1>
@@ -1346,12 +1379,18 @@
 
             <!-- Right: info -->
             <div class="modal__info">
-                <button class="modal__close" id="modal-close" aria-label="Cerrar">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
+                <div class="modal__nav">
+                    <button class="modal__back" id="modal-back" aria-label="Volver a la colección">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        Volver
+                    </button>
+                    <button class="modal__close" id="modal-close" aria-label="Cerrar">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
 
                 <span class="modal__tag" id="modal-tag"></span>
                 <h2 class="modal__name" id="modal-name"></h2>
@@ -1655,6 +1694,7 @@
 
         /* Close */
         document.getElementById('modal-close').addEventListener('click', closeModal);
+        document.getElementById('modal-back').addEventListener('click', closeModal);
         overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 

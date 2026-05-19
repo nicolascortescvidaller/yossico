@@ -482,7 +482,7 @@ body.cursor-hover .cursor-ring {
 /* ── Product Card ──────────────────────────────────────────── */
 .product-card {
   position: relative;
-  background: var(--white);
+  background: transparent;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -675,10 +675,33 @@ body.cursor-hover .cursor-ring {
   text-align: right;
 }
 
+/* ── Breadcrumb ─────────────────────────────────────────────── */
+.breadcrumb {
+  padding: 100px 60px 0;
+}
+
+.breadcrumb__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gray-mid);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb__link:hover {
+  color: var(--black);
+}
+
 /* ── Page Header (inner pages) ─────────────────────────────── */
 .page-header {
-  padding: 160px 60px 80px;
-  background: var(--gray-bg);
+  padding: 32px 60px 80px;
+  background: transparent;
   border-bottom: 1px solid var(--border);
 }
 
