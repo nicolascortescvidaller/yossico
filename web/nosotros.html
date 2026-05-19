@@ -15,168 +15,163 @@
     <link rel="stylesheet" href="styles.css">
     <style>
       body { background: #ffffff; }
-        /* Valores */
-        .valores {
-            padding: 120px 60px;
-            background: var(--white);
-        }
 
-        .valores__grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
-            margin-top: 72px;
-        }
+      /* Page header */
+      .page-header { background: #ffffff; }
 
-        .valor-card {
-            background: var(--off-white);
-            padding: 52px 40px;
-            position: relative;
-        }
+      /* Valores */
+      .valores {
+        padding: 120px 60px;
+        background: #ffffff;
+      }
 
-        .valor-card__num {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: 64px;
-            -webkit-text-stroke: 1px var(--gray-light);
-            color: transparent;
-            line-height: 1;
-            margin-bottom: 24px;
-            user-select: none;
-        }
+      .valores__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        margin-top: 72px;
+      }
 
-        .valor-card__title {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: 24px;
-            letter-spacing: -0.3px;
-            color: var(--black);
-            margin-bottom: 16px;
-        }
+      .valor-card {
+        background: #f7f7f7;
+        padding: 52px 40px;
+        position: relative;
+        border: 1px solid var(--border);
+      }
 
-        .valor-card__text {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 12px;
-            color: var(--black);
-            line-height: 2;
-        }
+      .valor-card__num {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 64px;
+        -webkit-text-stroke: 1px #b0aeab;
+        color: transparent;
+        line-height: 1;
+        margin-bottom: 24px;
+        user-select: none;
+      }
 
-        /* Manifesto */
-        .manifesto {
-            background: var(--gray-bg);
-            padding: 120px 60px;
-        }
+      .valor-card__title {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 24px;
+        letter-spacing: -0.3px;
+        color: var(--black);
+        margin-bottom: 16px;
+      }
 
-        .manifesto__inner {
-            max-width: 680px;
-            margin: 0 auto;
-            text-align: center;
-        }
+      .valor-card__text {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 12px;
+        color: var(--gray-mid);
+        line-height: 2;
+      }
 
-        .manifesto__title {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: clamp(36px, 5vw, 60px);
-            letter-spacing: -0.5px;
-            line-height: 1.15;
-            color: var(--black);
-            margin-bottom: 32px;
-        }
+      /* Manifesto */
+      .manifesto {
+        background: #f7f7f7;
+        padding: 120px 60px;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
 
-        .manifesto__title em {
-            font-style: italic;
-            color: var(--gray-mid);
-        }
+      .manifesto__inner {
+        max-width: 680px;
+        margin: 0 auto;
+        text-align: center;
+      }
 
-        .manifesto__text {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 14px;
-            color: var(--black);
-            line-height: 2.2;
-            margin-bottom: 48px;
-        }
+      .manifesto__title {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: clamp(36px, 5vw, 60px);
+        letter-spacing: -0.5px;
+        line-height: 1.15;
+        color: var(--black);
+        margin-bottom: 32px;
+      }
 
-        /* Posicionamiento */
-        .posicion {
-            background: var(--black);
-            padding: 100px 60px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-        }
+      .manifesto__title em {
+        font-style: italic;
+        color: var(--gray);
+      }
 
-        .posicion__stat {
-            text-align: center;
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
+      .manifesto__text {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 14px;
+        color: var(--gray-mid);
+        line-height: 2.2;
+        margin-bottom: 48px;
+      }
 
-        .posicion__num {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: 64px;
-            color: var(--white);
-            letter-spacing: -2px;
-            line-height: 1;
-            margin-bottom: 8px;
-        }
+      /* Posicionamiento — dark section removed, now white */
+      .posicion {
+        background: #ffffff;
+        padding: 100px 60px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+        border-top: 1px solid var(--border);
+      }
 
-        .posicion__label {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 9px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.3);
-        }
+      .posicion__stat {
+        text-align: center;
+        padding: 40px;
+        border: 1px solid var(--border);
+      }
 
-        .posicion__title {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: clamp(32px, 3vw, 48px);
-            color: var(--white);
-            letter-spacing: -0.5px;
-            margin-bottom: 20px;
-        }
+      .posicion__num {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 64px;
+        color: var(--black);
+        letter-spacing: -2px;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
 
-        .posicion__title em {
-            font-style: italic;
-            color: rgba(255, 255, 255, 0.5);
-        }
+      .posicion__label {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 9px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
 
-        .posicion__text {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.35);
-            line-height: 2;
-            margin-bottom: 36px;
-        }
+      .posicion__title {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: clamp(32px, 3vw, 48px);
+        color: var(--black);
+        letter-spacing: -0.5px;
+        margin-bottom: 20px;
+      }
 
-        @media (max-width: 900px) {
-            .valores {
-                padding: 80px 24px;
-            }
+      .posicion__title em {
+        font-style: italic;
+        color: var(--gray);
+      }
 
-            .valores__grid {
-                grid-template-columns: 1fr;
-                gap: 2px;
-            }
+      .posicion__text {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 12px;
+        color: var(--gray-mid);
+        line-height: 2;
+        margin-bottom: 36px;
+      }
 
-            .manifesto {
-                padding: 80px 24px;
-            }
-
-            .posicion {
-                grid-template-columns: 1fr;
-                padding: 80px 24px;
-                gap: 40px;
-            }
-        }
+      @media (max-width: 900px) {
+        .valores { padding: 80px 24px; }
+        .valores__grid { grid-template-columns: 1fr; }
+        .manifesto { padding: 80px 24px; }
+        .posicion { grid-template-columns: 1fr; padding: 80px 24px; gap: 48px; }
+      }
     </style>
+
 </head>
 
 <body>

@@ -15,192 +15,194 @@
     <link rel="stylesheet" href="styles.css">
     <style>
       body { background: #ffffff; }
-        /* Contact hero */
+
+      /* Contact hero — white */
+      .contacto-hero {
+        min-height: calc(100vh - 72px);
+        padding-top: 72px;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding-left: 60px;
+        padding-right: 60px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .contacto-hero::before {
+        content: 'YOSSICO';
+        font-family: var(--font-display);
+        font-weight: 400;
+        letter-spacing: 20px;
+        font-size: clamp(40px, 10vw, 160px);
+        color: rgba(0, 0, 0, 0.04);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        white-space: nowrap;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      .contacto-hero__title {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: clamp(52px, 7vw, 100px);
+        color: var(--black);
+        letter-spacing: -1px;
+        line-height: 1.0;
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .contacto-hero__title em {
+        font-style: italic;
+        color: var(--gray);
+      }
+
+      .contacto-hero__sub {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--gray);
+        margin-bottom: 64px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Channels — dark border on white */
+      .channels {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px;
+        position: relative;
+        z-index: 1;
+        max-width: 680px;
+        width: 100%;
+      }
+
+      .channel {
+        border: 1px solid var(--border);
+        padding: 52px 48px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        transition: border-color 0.3s, background 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .channel:hover {
+        border-color: var(--black);
+        background: rgba(0, 0, 0, 0.02);
+      }
+
+      .channel__icon {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .channel__icon svg {
+        color: var(--gray-mid);
+      }
+
+      .channel__name {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 28px;
+        color: var(--black);
+      }
+
+      .channel__handle {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: var(--gray);
+      }
+
+      .channel__cta {
+        margin-top: auto;
+        padding-top: 24px;
+      }
+
+      .channel__arrow {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 9px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gray-mid);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.25s, gap 0.25s;
+      }
+
+      .channel:hover .channel__arrow {
+        color: var(--black);
+        gap: 14px;
+      }
+
+      /* Info strip */
+      .contacto-info {
+        background: #f7f7f7;
+        padding: 80px 60px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 60px;
+        border-top: 1px solid var(--border);
+      }
+
+      .info-item__label {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 8px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-bottom: 12px;
+      }
+
+      .info-item__value {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 20px;
+        color: var(--black);
+      }
+
+      .info-item__sub {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 11px;
+        color: var(--gray);
+        margin-top: 6px;
+      }
+
+      @media (max-width: 800px) {
         .contacto-hero {
-            min-height: calc(100vh - 72px);
-            padding-top: 72px;
-            background: var(--black);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding-left: 60px;
-            padding-right: 60px;
-            position: relative;
-            overflow: hidden;
+          padding: 100px 24px 60px;
+          min-height: auto;
         }
-
-        .contacto-hero::before {
-            content: 'YOSSICO';
-            font-family: var(--font-display);
-            font-weight: 400;
-            letter-spacing: 20px;
-            font-size: clamp(40px, 10vw, 160px);
-            color: rgba(255, 255, 255, 0.025);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            white-space: nowrap;
-            pointer-events: none;
-            user-select: none;
-        }
-
-        .contacto-hero__title {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: clamp(52px, 7vw, 100px);
-            color: var(--white);
-            letter-spacing: -1px;
-            line-height: 1.0;
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .contacto-hero__title em {
-            font-style: italic;
-            color: rgba(255, 255, 255, 0.45);
-        }
-
-        .contacto-hero__sub {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 11px;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-bottom: 64px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Channels */
         .channels {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2px;
-            position: relative;
-            z-index: 1;
+          grid-template-columns: 1fr;
         }
-
-        .channel {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 52px 48px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 16px;
-            transition: border-color 0.3s, background 0.3s;
-            cursor: none;
-            text-decoration: none;
-        }
-
-        .channel:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        .channel__icon {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .channel__icon svg {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .channel__name {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: 28px;
-            color: var(--white);
-        }
-
-        .channel__handle {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.35);
-        }
-
-        .channel__cta {
-            margin-top: auto;
-            padding-top: 24px;
-        }
-
-        .channel__arrow {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 9px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: color 0.25s, gap 0.25s;
-        }
-
-        .channel:hover .channel__arrow {
-            color: rgba(255, 255, 255, 0.8);
-            gap: 14px;
-        }
-
-        /* Info strip */
         .contacto-info {
-            background: var(--off-white);
-            padding: 80px 60px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 60px;
+          grid-template-columns: 1fr;
+          padding: 60px 24px;
+          gap: 40px;
         }
-
-        .info-item__label {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 8px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--gray);
-            margin-bottom: 12px;
-        }
-
-        .info-item__value {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: 20px;
-            color: var(--black);
-        }
-
-        .info-item__sub {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 11px;
-            color: var(--gray);
-            margin-top: 6px;
-        }
-
-        @media (max-width: 800px) {
-            .contacto-hero {
-                padding: 100px 24px 60px;
-                min-height: auto;
-            }
-
-            .channels {
-                grid-template-columns: 1fr;
-            }
-
-            .contacto-info {
-                grid-template-columns: 1fr;
-                padding: 60px 24px;
-                gap: 40px;
-            }
-        }
+      }
     </style>
 </head>
 
@@ -209,20 +211,20 @@
     <div class="cursor-ring" id="cursor-ring"></div>
 
     <!-- Nav -->
-    <nav class="nav" style="--nav-color: rgba(255,255,255,0.6);">
-        <a href="index.html" class="nav__logo" style="color: var(--white);">
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
             <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="white"
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="currentColor"
                     stroke-width="1" />
                 <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="white"
                     stroke-width="0.4" />
                 <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
-                    stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             YOSSICO
         </a>
         <ul class="nav__links">
-            <li class="nav__dropdown"><a href="coleccion.html" style="color:rgba(255,255,255,0.5);">Colección</a>
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
                 <div class="nav__dropdown-menu">
                     <a href="coleccion.html#linea-uniformes">Essentials</a>
                     <a href="coleccion.html#linea-uniformes">Signature</a>
@@ -231,10 +233,10 @@
                     <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
                 </div>
             </li>
-            <li><a href="acronimo.html" style="color:rgba(255,255,255,0.5);">El Acrónimo</a></li>
-            <li><a href="historia.html" style="color:rgba(255,255,255,0.5);">Historia</a></li>
-            <li><a href="nosotros.html" style="color:rgba(255,255,255,0.5);">Nosotros</a></li>
-            <li><a href="contacto.html" style="color:rgba(255,255,255,0.5);">Contacto</a></li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
             <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
             <li>
                 <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
@@ -251,7 +253,7 @@
 
     <!-- Contact Hero -->
     <section class="contacto-hero">
-        <div class="label reveal" style="color:rgba(255,255,255,0.3); margin-bottom: 20px;">Estamos aquí</div>
+        <div class="label reveal" style="margin-bottom: 20px;">Estamos aquí</div>
         <h1 class="contacto-hero__title reveal" data-delay="2">
             Hablemos<br><em>hoy.</em>
         </h1>
