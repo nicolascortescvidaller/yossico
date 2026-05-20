@@ -1714,7 +1714,9 @@ body.cursor-hover .cursor-ring {
   position: absolute;
   top: calc(100% + 16px);
   right: 0;
-  background: var(--black);
+  background: #ffffff;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   min-width: 180px;
   padding: 8px 0;
   opacity: 0;
@@ -1736,8 +1738,8 @@ body.cursor-hover .cursor-ring {
   font-weight: 400;
   font-size: 9px;
   letter-spacing: 0.5px;
-  color: rgba(255, 255, 255, 0.35);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--gray);
+  border-bottom: 1px solid var(--border);
   margin-bottom: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1752,7 +1754,7 @@ body.cursor-hover .cursor-ring {
   font-size: 10px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--gray-mid);
   text-decoration: none;
   background: none;
   border: none;
@@ -1763,17 +1765,17 @@ body.cursor-hover .cursor-ring {
 }
 
 .nav__user-link:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--black);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .nav__user-link--cta {
-  color: #fff;
+  color: var(--black);
   font-weight: 400;
 }
 
 .nav__user-logout {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border);
   margin-top: 4px;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--gray);
 }
