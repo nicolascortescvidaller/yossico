@@ -17,12 +17,13 @@
             min-height: 100vh;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            background: var(--off-white);
+            background: #ffffff;
         }
 
-        /* Left panel — brand */
+        /* Left panel — brand (white) */
         .auth-panel {
-            background: var(--black);
+            background: #f7f7f7;
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -31,53 +32,13 @@
             overflow: hidden;
         }
 
-        .auth-panel::before {
-            content: 'YOSSICO';
-            position: absolute;
-            bottom: -40px;
-            left: -20px;
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: clamp(80px, 12vw, 160px);
-            letter-spacing: 12px;
-            color: rgba(255, 255, 255, 0.04);
-            white-space: nowrap;
-            user-select: none;
-            line-height: 1;
-        }
-
-        .auth-panel__logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: var(--font-logo, var(--font-body));
-            font-weight: 500;
-            font-size: 15px;
-            letter-spacing: 3px;
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .auth-panel__logo svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .auth-panel__body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 60px 0;
-        }
-
         .auth-panel__tag {
             font-family: var(--font-body);
             font-weight: 400;
             font-size: 9px;
             letter-spacing: 4px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.35);
+            color: var(--gray);
             margin-bottom: 24px;
         }
 
@@ -87,22 +48,22 @@
             font-size: clamp(32px, 3.5vw, 52px);
             line-height: 1.1;
             letter-spacing: -0.5px;
-            color: #fff;
+            color: var(--black);
             margin-bottom: 28px;
         }
 
         .auth-panel__headline em {
             font-style: italic;
-            color: rgba(255, 255, 255, 0.45);
+            color: var(--gray);
         }
 
         .auth-panel__sub {
             font-family: var(--font-body);
             font-weight: 400;
-            font-size: 11px;
+            font-size: 12px;
             line-height: 1.9;
             letter-spacing: 0.5px;
-            color: rgba(255, 255, 255, 0.35);
+            color: var(--gray-mid);
             max-width: 280px;
         }
 
@@ -111,11 +72,12 @@
             font-weight: 400;
             font-size: 9px;
             letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.2);
+            color: var(--gray);
         }
 
         /* Right panel — form */
         .auth-form-panel {
+            background: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -140,9 +102,9 @@
             margin-bottom: 48px;
         }
 
-        /* Form fields */
+        /* Form fields — full border, clean */
         .auth-field {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .auth-field__label {
@@ -153,25 +115,25 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--gray-mid);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .auth-field__input {
             width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--border);
-            padding: 10px 0;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 12px 14px;
             font-family: var(--font-body);
             font-weight: 400;
             font-size: 14px;
             color: var(--black);
             outline: none;
-            transition: border-color 0.25s;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
         }
 
         .auth-field__input:focus {
-            border-bottom-color: var(--black);
+            border-color: var(--black);
         }
 
         .auth-field__input::placeholder {
@@ -211,7 +173,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 36px;
+            margin-bottom: 32px;
         }
 
         .auth-remember input[type="checkbox"] {
@@ -245,14 +207,8 @@
             margin-bottom: 28px;
         }
 
-        .auth-submit:hover {
-            background: #333;
-        }
-
-        .auth-submit:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .auth-submit:hover { background: #333; }
+        .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .auth-switch {
             font-family: var(--font-body);
@@ -278,63 +234,15 @@
             display: none;
         }
 
-        .auth-alert.error {
-            border-color: #c0392b;
-            background: #fdf2f2;
-            color: #c0392b;
-        }
-
-        .auth-alert.success {
-            border-color: #27ae60;
-            background: #f0faf4;
-            color: #1a7a40;
-        }
-
-        .auth-alert.show {
-            display: block;
-        }
+        .auth-alert.error  { border-color: #c0392b; background: #fdf2f2; color: #c0392b; }
+        .auth-alert.success { border-color: #27ae60; background: #f0faf4; color: #1a7a40; }
+        .auth-alert.show   { display: block; }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .auth-page {
-                grid-template-columns: 1fr;
-            }
-
-            .auth-panel {
-                display: none;
-            }
-
-            .auth-form-panel {
-                padding: 48px 32px;
-            }
-        }
-
-        /* Nav override for auth pages */
-        .nav {
-            background: var(--black);
-        }
-
-        .nav__logo {
-            color: var(--white);
-        }
-
-        .nav__logo svg polygon,
-        .nav__logo svg polyline {
-            stroke: var(--white) !important;
-        }
-
-        .nav__links a,
-        .nav__links button {
-            color: rgba(255, 255, 255, 0.5) !important;
-        }
-
-        .nav__links a:hover {
-            color: #fff !important;
-        }
-
-        .nav__cta {
-            background: rgba(255, 255, 255, 0.1) !important;
-            color: #fff !important;
+            .auth-page { grid-template-columns: 1fr; }
+            .auth-panel { display: none; }
+            .auth-form-panel { padding: 48px 32px; }
         }
     </style>
 </head>
@@ -371,16 +279,6 @@
 
         <!-- Left: brand panel -->
         <div class="auth-panel">
-            <a href="index.html" class="auth-panel__logo">
-                <svg viewBox="0 0 32 32" fill="none">
-                    <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none"
-                        stroke="rgba(255,255,255,0.4)" stroke-width="1" />
-                    <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
-                        stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                YOSSICO
-            </a>
             <div class="auth-panel__body">
                 <p class="auth-panel__tag">Bienvenida de vuelta</p>
                 <h2 class="auth-panel__headline">
