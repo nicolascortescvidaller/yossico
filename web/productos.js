@@ -14,7 +14,8 @@ const YOSSICO_PRODUCTS = {
         tag: 'Essentials',
         desc: 'Inspirado en la serenidad escandinava, el Set OSLO combina líneas limpias y una paleta de colores sobria con una confección estructurada. Top con cuello V clásico, bolsillos funcionales a los lados y pantalón recto de corte femenino con elástico y cordón. Pensado para la profesional que valora el confort sin sacrificar la elegancia.',
         features: [
-            { label: 'Composición', value: 'Tela técnica resinada · 80% poliéster, 20% viscosa' },
+            { label: 'Composición', value: '92% poliéster + 8% spandex' },
+            { label: 'Gramaje', value: '170g/m²' },
             { label: 'Corte', value: 'Slim fit femenino · talle entallado' },
             { label: 'Detalles top', value: 'Cuello V con vivo · dos bolsillos laterales · vivo en mangas' },
             { label: 'Pantalón', value: 'Bota recta · elástico + cordón en cintura · bolsillos laterales' },
@@ -41,7 +42,8 @@ const YOSSICO_PRODUCTS = {
         tag: 'Signature',
         desc: 'El Set MILAN captura la elegancia italiana con un top de cuello mao, corte entallado y pantalón recto de alta precisión. En navy profundo, proyecta autoridad y sofisticación en cada turno. La línea Signature eleva el uniforme a una declaración de identidad profesional.',
         features: [
-            { label: 'Composición', value: 'Tela técnica premium · 85% poliéster, 15% elastano' },
+            { label: 'Composición', value: '72% poliéster + 21% rayón + 7% spandex' },
+            { label: 'Gramaje', value: '210g/m²' },
             { label: 'Corte', value: 'Slim fit · corte entallado con mayor movilidad' },
             { label: 'Detalles top', value: 'Cuello mao · botones al tono · bolsillo pecho izquierdo con bordado' },
             { label: 'Pantalón', value: 'Bota recta · elástico + cordón · dos bolsillos laterales y uno trasero' },
@@ -68,7 +70,8 @@ const YOSSICO_PRODUCTS = {
         tag: 'Signature',
         desc: 'KYOTO encarna la filosofía zen japonesa: un top cruzado con cuello cruzado y pantalón palazzo de caída impecable. Para la profesional que busca fluidez, calma y presencia. La línea Signature está diseñada para quienes entienden que el detalle lo es todo.',
         features: [
-            { label: 'Composición', value: 'Tela técnica premium · 85% poliéster, 15% elastano' },
+            { label: 'Composición', value: '72% poliéster + 21% rayón + 7% spandex' },
+            { label: 'Gramaje', value: '210g/m²' },
             { label: 'Corte', value: 'Palazzo · pantalón ancho de caída fluida' },
             { label: 'Detalles top', value: 'Cuello cruzado · cierre oculto · bolsillos laterales profundos' },
             { label: 'Pantalón', value: 'Palazzo amplio · elástico en cintura · caída premium' },
@@ -94,7 +97,8 @@ const YOSSICO_PRODUCTS = {
         tag: 'Essentials',
         desc: 'RIO trae la energía vibrante latinoamericana al uniforme médico: top tipo V con bolsillos funcionales y pantalón jogger con cargo pocket lateral. Para la profesional que busca dinamismo y comodidad sin comprometer la presencia.',
         features: [
-            { label: 'Composición', value: 'Tela técnica resinada · 80% poliéster, 20% viscosa' },
+            { label: 'Composición', value: '92% poliéster + 8% spandex' },
+            { label: 'Gramaje', value: '170g/m²' },
             { label: 'Corte', value: 'Relaxed fit · corte holgado pero estructurado' },
             { label: 'Detalles top', value: 'Cuello V · bolsillos laterales profundos · manga con detalle' },
             { label: 'Pantalón', value: 'Jogger · cargo pocket lateral · elástico + cordón en cintura · bota ajustada' },
@@ -120,7 +124,8 @@ const YOSSICO_PRODUCTS = {
         tag: 'Essentials',
         desc: 'LIMA captura la calidez latinoamericana en un diseño atemporal. Top suelto con cuello V redondeado y pantalón palazzo de caída fluida, pensado para quienes buscan comodidad sin perder el estilo. Una prenda que acompaña desde el primer turno hasta el último.',
         features: [
-            { label: 'Composición', value: 'Tela técnica resinada · 80% poliéster, 20% viscosa' },
+            { label: 'Composición', value: '72% poliéster + 22% rayón + 6% spandex' },
+            { label: 'Gramaje', value: '166g/m²' },
             { label: 'Corte', value: 'Fit holgado · top suelto con pantalón de caída fluida' },
             { label: 'Detalles top', value: 'Cuello V redondeado · bolsillos laterales · dobladillo recto' },
             { label: 'Pantalón', value: 'Palazzo · elástico en cintura · amplitud total en bota' },
@@ -146,7 +151,8 @@ const YOSSICO_PRODUCTS = {
         tag: 'Core',
         desc: 'BOGOTÁ es el primer uniforme de la línea Core. Confección limpia, corte funcional y tela técnica de alto rendimiento para la profesional que da sus primeros pasos con YOSSICO. Sin adornos innecesarios, solo lo esencial llevado con orgullo.',
         features: [
-            { label: 'Composición', value: 'Tela técnica 100% poliéster de alto desempeño' },
+            { label: 'Composición', value: '94% poliéster + 6% spandex' },
+            { label: 'Gramaje', value: '120g/m²' },
             { label: 'Corte', value: 'Fit estándar · corte funcional adaptado para mujer' },
             { label: 'Detalles top', value: 'Cuello redondo · bolsillos laterales' },
             { label: 'Pantalón', value: 'Bota recta · elástico + cordón en cintura' },
@@ -172,7 +178,8 @@ const YOSSICO_PRODUCTS = {
         tag: 'Core',
         desc: 'MANTA es el segundo uniforme de la línea Core. Un diseño depurado y funcional con corte que prioriza el movimiento. Disponible en Azul Marino, un color que transmite calma y profesionalismo en cada turno.',
         features: [
-            { label: 'Composición', value: 'Tela técnica 100% poliéster de alto desempeño' },
+            { label: 'Composición', value: '94% poliéster + 6% spandex' },
+            { label: 'Gramaje', value: '120g/m²' },
             { label: 'Corte', value: 'Fit estándar · corte funcional adaptado para mujer' },
             { label: 'Detalles top', value: 'Cuello redondo · bolsillos funcionales' },
             { label: 'Pantalón', value: 'Bota recta · elástico + cordón en cintura' },

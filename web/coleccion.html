@@ -843,7 +843,8 @@
 
             <!-- OSLO -->
             <div class="product-card reveal" data-delay="1" data-line="essentials">
-                <div class="gallery" id="gallery-oslo" data-product="oslo" data-name="OSLO" data-line-name="Essentials"
+                <div class="gallery" id="gallery-oslo" data-product="oslo"
+                    data-fabric="92% poliéster + 8% spandex — 170g/m²" data-name="OSLO" data-line-name="Essentials"
                     data-sub="Set · Scrub Femenino · Top + Pantalón" data-price="$275.900 COP"
                     data-desc="Inspirado en la serenidad escandinava, el Set OSLO combina líneas limpias y una paleta verde salvia con una confección estructurada. Pensado para la profesional que valora el confort sin sacrificar la elegancia."
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20OSLO%20de%20YOSSICO"
@@ -910,6 +911,7 @@
                 <div class="gallery" id="gallery-milan" data-product="milan" data-name="MILAN"
                     data-line-name="Signature" data-sub="Set · Scrub Femenino · Top + Pantalón"
                     data-price="$339.900 COP"
+                    data-fabric="72% poliéster + 21% rayón + 7% spandex — 210g/m²"
                     data-desc="El Set MILAN captura la elegancia italiana con un top de cuello mao, corte entallado y pantalón recto de alta precisión. En navy profundo, proyecta autoridad y sofisticación en cada turno."
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20MILAN%20de%20YOSSICO"
                     data-imgs="img/milan.png,img/milan-2.png,img/milan-3.png">
@@ -971,7 +973,8 @@
 
             <!-- KYOTO -->
             <div class="product-card reveal" data-delay="3" data-line="signature">
-                <div class="gallery" id="gallery-kyoto" data-product="kyoto" data-name="KYOTO"
+                <div class="gallery" id="gallery-kyoto" data-product="kyoto"
+                    data-fabric="72% poliéster + 21% rayón + 7% spandex — 210g/m²" data-name="KYOTO"
                     data-line-name="Signature" data-sub="Set · Scrub Femenino · Top + Pantalón"
                     data-price="$339.900 COP"
                     data-desc="KYOTO encarna la filosofía zen japonesa: un top cruzado en marfil suave con pantalón palazzo de caída impecable. Para la profesional que busca fluidez, calma y presencia."
@@ -1092,7 +1095,8 @@
 
             <!-- LIMA -->
             <div class="product-card reveal" data-delay="5" data-line="essentials">
-                <div class="gallery" id="gallery-lima" data-product="lima" data-name="LIMA" data-line-name="Essentials"
+                <div class="gallery" id="gallery-lima" data-product="lima"
+                    data-fabric="72% poliéster + 22% rayón + 6% spandex — 166g/m²" data-name="LIMA" data-line-name="Essentials"
                     data-sub="Set · Scrub Femenino · Top + Pantalón" data-price="$275.900 COP"
                     data-desc="LIMA captura la calidez y el ritmo latinoamericano en un rosa palo atemporal. Top suelto con cuello V redondeado y pantalón palazzo de caída fluida, pensado para quienes buscan comodidad sin perder el estilo."
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20LIMA%20de%20YOSSICO"
@@ -1152,7 +1156,8 @@
 
             <!-- BOGOTÁ -->
             <div class="product-card reveal" data-delay="6" data-line="core">
-                <div class="gallery" id="gallery-bogota" data-product="bogota" data-name="BOGOTÁ" data-line-name="Core"
+                <div class="gallery" id="gallery-bogota" data-product="bogota"
+                    data-fabric="94% poliéster + 6% spandex — 120g/m²" data-name="BOGOTÁ" data-line-name="Core"
                     data-sub="Set · Top + Pantalón · Tela Técnica" data-price="$229.900 COP"
                     data-desc="BOGOTÁ es el primer uniforme de la línea Core. Confección limpia, corte funcional y tela técnica de alto rendimiento para la profesional que da sus primeros pasos con YOSSICO."
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20BOGOTÁ%20de%20YOSSICO"
@@ -1217,6 +1222,7 @@
             <div class="product-card reveal" data-delay="7" data-line="core">
                 <div class="gallery" id="gallery-manta" data-product="manta" data-name="MANTA" data-line-name="Core"
                     data-sub="Set · Top + Pantalón · Tela Técnica" data-price="$229.900 COP"
+                    data-fabric="94% poliéster + 6% spandex — 120g/m²"
                     data-desc="MANTA es el segundo uniforme de la línea Core. Un diseño depurado y funcional con corte que prioriza el movimiento. Disponible en Azul Marino, un color que transmite calma y profesionalismo en cada turno."
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20MANTA%20de%20YOSSICO"
                     data-imgs="img/core-azul.png,img/core-azul.png,img/core-azul.png">
@@ -1404,6 +1410,7 @@
                 <p class="modal__sub" id="modal-sub"></p>
                 <div class="modal__divider"></div>
                 <p class="modal__desc" id="modal-desc"></p>
+                <p class="modal__fabric" id="modal-fabric" style="font-family:var(--font-body);font-weight:400;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-top:10px;margin-bottom:0;"></p>
 
                 <ul class="modal__features">
                     <li>Tela técnica de alto rendimiento</li>
@@ -1631,6 +1638,8 @@
             document.getElementById('modal-name').textContent = gallery.dataset.name;
             document.getElementById('modal-sub').textContent = gallery.dataset.sub;
             document.getElementById('modal-desc').textContent = gallery.dataset.desc;
+            const fabricEl = document.getElementById('modal-fabric');
+            if (fabricEl) fabricEl.textContent = gallery.dataset.fabric || '';
             document.getElementById('modal-price').textContent = gallery.dataset.price;
             document.getElementById('modal-cta').href =
                 `https://wa.me/573202562307?text=${gallery.dataset.wa}`;
