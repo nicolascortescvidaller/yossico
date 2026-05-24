@@ -87,17 +87,6 @@ const YOSSICO_PRODUCTS = {
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO',
     },
 
-    rio: {
-        id: 'rio',
-        name: 'RIO',
-        line: 'Essentials',
-        sub: 'Set · Scrub Femenino · Top + Pantalón',
-        price: 275900,
-        priceDisplay: '$275.900 COP',
-        tag: 'Essentials',
-        desc: 'RIO trae la energía vibrante latinoamericana al uniforme médico: top tipo V con bolsillos funcionales y pantalón jogger con cargo pocket lateral. Para la profesional que busca dinamismo y comodidad sin comprometer la presencia.',
-        features: [
-            { label: 'Composición', value: '92% poliéster + 8% spandex' },
             { label: 'Gramaje', value: '170g/m²' },
             { label: 'Corte', value: 'Relaxed fit · corte holgado pero estructurado' },
             { label: 'Detalles top', value: 'Cuello V · bolsillos laterales profundos · manga con detalle' },
