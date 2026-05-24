@@ -1658,7 +1658,10 @@
             const pid = gallery.dataset.product;
             const toDetail = DETAIL_PRODUCTS.has(pid);
 
-            gallery.addEventListener('click', e => {
+            // Make gallery area clearly clickable
+            gallery.style.cursor = 'pointer';
+
+            function handleGalleryClick(e) {
                 // Ignorar clics en botones de navegación, dots, swatches y size-btn
                 if (e.target.closest('.gallery__btn') ||
                     e.target.closest('.gallery__dot') ||
@@ -1676,7 +1679,20 @@
                 } else {
                     openModal(gallery);
                 }
+            }
+
+            // Primary listener on the gallery container
+            gallery.addEventListener('click', handleGalleryClick);
+
+            // Direct listeners on each slide image for robustness (mobile & edge cases)
+            gallery.querySelectorAll('.gallery__slide img').forEach(img => {
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', handleGalleryClick);
             });
+
+            // Also on the expand-hint overlay
+            const hint = gallery.querySelector('.gallery__expand-hint');
+            if (hint) hint.addEventListener('click', handleGalleryClick);
 
             // También navega al hacer click en el nombre, subtítulo o precio del card
             const card = gallery.closest('.product-card');
