@@ -675,6 +675,23 @@ body.cursor-hover .cursor-ring {
   text-align: right;
 }
 
+.footer__inst-link {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  margin-top: 24px;
+  transition: color 0.2s;
+}
+
+.footer__inst-link:hover {
+  color: var(--white);
+}
+
 /* ── Breadcrumb ─────────────────────────────────────────────── */
 .breadcrumb {
   padding: 100px 60px 0;
