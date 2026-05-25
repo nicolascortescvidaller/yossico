@@ -1344,6 +1344,7 @@ body.cursor-hover .cursor-ring {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease;
+  overflow-y: auto;
 }
 
 .sub-overlay.open {
@@ -1778,4 +1779,56 @@ body.cursor-hover .cursor-ring {
   border-top: 1px solid var(--border);
   margin-top: 4px;
   color: var(--gray);
+}
+
+/* ── Popup mobile ────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .sub-overlay {
+    align-items: flex-start;
+    padding: 16px 12px 32px;
+  }
+
+  .sub-modal {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    margin: auto;
+  }
+
+  .sub-modal__left {
+    padding: 36px 24px 28px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sub-modal__drop-word {
+    font-size: 32px;
+    letter-spacing: 10px;
+  }
+
+  .sub-modal__headline {
+    font-size: 28px;
+  }
+
+  .sub-modal__discount {
+    margin-top: 24px;
+  }
+
+  .sub-modal__right {
+    padding: 32px 24px 40px;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .sub-modal__close {
+    top: 12px;
+    right: 12px;
+  }
+
+  .sub-form__title {
+    font-size: 22px;
+  }
+
+  .sub-form__sub {
+    margin-bottom: 20px;
+  }
 }
