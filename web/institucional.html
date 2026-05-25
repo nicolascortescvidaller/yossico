@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="YOSSICO para instituciones — Identidad y uniformes médicos premium para clínicas y consultorios en Colombia.">
+    <title>Institucional — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: #ffffff;
+        }
+
+        .inst-hero {
+            padding: 140px 24px 80px;
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .inst-hero__title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(32px, 5vw, 48px);
+            color: var(--black);
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .inst-hero__subtitle {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-style: italic;
+            font-size: clamp(20px, 3vw, 28px);
+            color: var(--gray-mid);
+            margin-bottom: 40px;
+        }
+
+        .inst-hero__text {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--gray-mid);
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .inst-form-wrap {
+            margin-top: 64px;
+            text-align: left;
+            background: #f7f7f7;
+            padding: 48px;
+            border: 1px solid var(--border);
+        }
+
+        .inst-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .inst-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .inst-label {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--black);
+        }
+
+        .inst-input {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--black);
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 14px 16px;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .inst-input:focus {
+            border-color: var(--black);
+        }
+
+        .inst-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .inst-checkbox-wrap {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .inst-checkbox {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--gray);
+            border-radius: 0;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            margin-top: 2px;
+        }
+
+        .inst-checkbox:checked {
+            background: var(--black);
+            border-color: var(--black);
+        }
+
+        .inst-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 1px 1px 0;
+            transform: rotate(45deg);
+        }
+
+        .inst-checkbox-label {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--gray-mid);
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .inst-checkbox-label a {
+            color: var(--black);
+            text-decoration: underline;
+        }
+
+        .inst-btn {
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            padding: 16px 32px;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: background 0.2s;
+        }
+
+        .inst-btn:hover {
+            background: #333;
+        }
+        
+        .inst-btn:disabled {
+            background: var(--border);
+            color: var(--gray);
+            cursor: not-allowed;
+        }
+
+        .inst-msg {
+            font-family: var(--font-body);
+            font-size: 11px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .inst-footer-note {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 12px;
+            color: var(--gray-mid);
+            text-align: center;
+            margin-top: 48px;
+            line-height: 1.6;
+        }
+
+        .inst-footer-note a {
+            color: var(--black);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .inst-form-wrap {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="currentColor"
+                    stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="white"
+                    stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+                <div class="nav__dropdown-menu">
+                    <a href="coleccion.html#linea-uniformes">Essentials</a>
+                    <a href="coleccion.html#linea-uniformes">Signature</a>
+                    <a href="coleccion.html#linea-uniformes">Core</a>
+                    <div class="nav__dropdown-divider"></div>
+                    <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+                </div>
+            </li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
+            <li>
+                <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <section class="inst-hero">
+        <h1 class="inst-hero__title reveal">YOSSICO PARA INSTITUCIONES</h1>
+        <p class="inst-hero__subtitle reveal" data-delay="1">Cuando el equipo también representa a la marca.</p>
+
+        <p class="inst-hero__text reveal" data-delay="2">Algunas clínicas, consultorios y grupos médicos nos han escrito con una pregunta distinta: no buscan un uniforme, buscan una identidad para su equipo.</p>
+        <p class="inst-hero__text reveal" data-delay="3">Si eso es lo que tienes en mente, nos interesa escucharte.</p>
+        <p class="inst-hero__text reveal" data-delay="4">Trabajamos con instituciones que quieren vestir a su equipo con la misma atención al detalle que ponemos en cada prenda. El proceso es diferente al de nuestros drops — más personalizado, más conversado.</p>
+        <p class="inst-hero__text reveal" data-delay="5">Si quieres explorar cómo podría verse YOSSICO en tu institución, escríbenos. Sin compromisos.</p>
+
+        <div class="inst-form-wrap reveal" data-delay="6">
+            <form id="inst-form" class="inst-form" novalidate>
+                <div class="inst-field">
+                    <label class="inst-label" for="i-nombre">Nombre completo</label>
+                    <input class="inst-input" type="text" id="i-nombre" required>
+                </div>
+                <div class="inst-field">
+                    <label class="inst-label" for="i-institucion">Institución / Clínica / Consultorio</label>
+                    <input class="inst-input" type="text" id="i-institucion" required>
+                </div>
+                <div class="inst-field">
+                    <label class="inst-label" for="i-ciudad">Ciudad</label>
+                    <input class="inst-input" type="text" id="i-ciudad" required>
+                </div>
+                <div class="inst-field">
+                    <label class="inst-label" for="i-equipo">Número aproximado de personas en el equipo</label>
+                    <input class="inst-input" type="number" id="i-equipo" min="1" required>
+                </div>
+                <div class="inst-field">
+                    <label class="inst-label" for="i-correo">Correo electrónico</label>
+                    <input class="inst-input" type="email" id="i-correo" required>
+                </div>
+                <div class="inst-field">
+                    <label class="inst-label" for="i-mensaje">Mensaje (Opcional)</label>
+                    <textarea class="inst-input inst-textarea" id="i-mensaje"></textarea>
+                </div>
+
+                <div class="inst-checkbox-wrap">
+                    <input type="checkbox" id="i-terms" class="inst-checkbox" required>
+                    <label class="inst-checkbox-label" for="i-terms">Acepto los <a href="terminos.html" target="_blank">términos y condiciones y la política de privacidad</a> de YOSSICO</label>
+                </div>
+
+                <button type="submit" class="inst-btn" id="i-submit">Enviar Solicitud</button>
+                <p id="i-msg" class="inst-msg"></p>
+            </form>
+        </div>
+
+        <p class="inst-footer-note reveal" data-delay="7">
+            También puedes escribirnos directamente a <a href="mailto:customerserviceyossico@gmail.com">customerserviceyossico@gmail.com</a> — respondemos en máximo 48 horas.
+        </p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="rgba(255,255,255,0.4)"
+                    stroke-width="1" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </div>
+        <p class="footer__tagline">"Vestidos para sanar. Diseñados para perdurar."</p>
+        <p class="footer__copy">© 2026 YOSSICO · Colombia <span style="margin:0 6px;">·</span> <a href="terminos.html"
+                style="color:rgba(255,255,255,0.7); text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">Términos
+                y Condiciones</a> <span style="color:rgba(255,255,255,0.3); margin:0 6px;">·</span> <a href="institucional.html" style="color:rgba(255,255,255,0.7); text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">YOSSICO Institucional</a></p>
+    </footer>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer__header">
+            <span class="cart-drawer__title">Tu Pedido</span>
+            <button class="cart-drawer__close" id="cart-close"><svg viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg></button>
+        </div>
+        <div class="cart-drawer__body" id="cart-body"></div>
+        <div class="cart-drawer__footer" id="cart-footer">
+            <div class="cart-total"><span>Total</span><span id="cart-total-price">$0 COP</span></div>
+            <a href="#" id="cart-checkout" class="cart-checkout" target="_blank" rel="noopener"><svg
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+353:                 </svg> Pedir por WhatsApp</a>
+354:         </div>
+355:     </aside>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="cart.js"></script>
+
+    <script>
+        (function () {
+            const form = document.getElementById('inst-form');
+            if (!form) return;
+
+            const SUPABASE_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+            const SUPABASE_ANON_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
+            const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const btn = document.getElementById('i-submit');
+                const msg = document.getElementById('i-msg');
+                
+                const nombre = document.getElementById('i-nombre').value.trim();
+                const institucion = document.getElementById('i-institucion').value.trim();
+                const ciudad = document.getElementById('i-ciudad').value.trim();
+                const num_personas = document.getElementById('i-equipo').value.trim();
+                const correo = document.getElementById('i-correo').value.trim();
+                const mensaje = document.getElementById('i-mensaje').value.trim();
+                const terms = document.getElementById('i-terms').checked;
+
+                msg.textContent = '';
+                msg.style.color = 'var(--black)';
+
+                if (!nombre || !institucion || !ciudad || !num_personas || !correo) {
+                    msg.textContent = 'Por favor, completa todos los campos requeridos.';
+                    msg.style.color = '#c0392b';
+                    return;
+                }
+
+                if (!terms) {
+                    msg.textContent = 'Debes aceptar los términos y condiciones.';
+                    msg.style.color = '#c0392b';
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'Enviando...';
+
+                const { error } = await sb.from('institucional_leads').insert([{
+                    nombre,
+                    institucion,
+                    ciudad,
+                    num_personas: parseInt(num_personas) || null,
+                    correo,
+                    mensaje: mensaje || null
+                }]);
+
+                if (error) {
+                    btn.disabled = false;
+                    btn.textContent = 'Enviar Solicitud';
+                    msg.textContent = 'Ocurrió un error al enviar tu solicitud. Inténtalo de nuevo.';
+                    msg.style.color = '#c0392b';
+                    console.error(error);
+                } else {
+                    form.reset();
+                    btn.textContent = 'Enviado';
+                    msg.textContent = '¡Gracias por escribirnos! Te contactaremos pronto.';
+                    msg.style.color = 'var(--gray-mid)';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
