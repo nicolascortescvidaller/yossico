@@ -87,22 +87,6 @@ const YOSSICO_PRODUCTS = {
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO',
     },
 
-            { label: 'Gramaje', value: '170g/m²' },
-            { label: 'Corte', value: 'Relaxed fit · corte holgado pero estructurado' },
-            { label: 'Detalles top', value: 'Cuello V · bolsillos laterales profundos · manga con detalle' },
-            { label: 'Pantalón', value: 'Jogger · cargo pocket lateral · elástico + cordón en cintura · bota ajustada' },
-            { label: 'Tallas', value: 'S — M — L' },
-            { label: 'Cuidado', value: 'Lavado a máquina frío · no usar secadora · plancha a baja temperatura' },
-        ],
-        colors: [
-            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/negro.png', 'img/negro.png', 'img/negro.png'] },
-            { key: 'gris', label: 'Gris', hex: '#7a8084', imgs: ['img/gris.png', 'img/gris.png', 'img/gris.png'] },
-            { key: 'azul-claro', label: 'Azul Acero', hex: '#4a6fa5', imgs: ['img/azul-claro.png', 'img/azul-claro.png', 'img/azul-claro.png'] },
-        ],
-        defaultImgs: ['img/rio.png', 'img/rio-2.png', 'img/rio-3.png'],
-        wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20RIO%20de%20YOSSICO',
-    },
-
     lima: {
         id: 'lima',
         name: 'LIMA',
