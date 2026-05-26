@@ -645,7 +645,7 @@ body.cursor-hover .cursor-ring {
   font-size: 14px;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--white);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -654,7 +654,7 @@ body.cursor-hover .cursor-ring {
 .footer__logo svg {
   width: 22px;
   height: 22px;
-  opacity: 0.4;
+  opacity: 1;
 }
 
 .footer__tagline {
@@ -662,7 +662,7 @@ body.cursor-hover .cursor-ring {
   font-style: italic;
   font-weight: 400;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--white);
   text-align: center;
 }
 
@@ -671,7 +671,7 @@ body.cursor-hover .cursor-ring {
   font-weight: 400;
   font-size: 9px;
   letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.2);
+  color: var(--white);
   text-align: right;
 }
 
@@ -689,13 +689,13 @@ body.cursor-hover .cursor-ring {
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--white);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: opacity 0.2s;
 }
 
 .footer__bottom-links a:hover {
-  color: var(--white);
+  opacity: 0.7;
 }
 
 .size-guide-link {
