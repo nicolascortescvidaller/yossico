@@ -216,31 +216,120 @@
         </div>
 
         <div class="illustration-wrap reveal" data-delay="3">
-            <svg width="400" height="300" viewBox="0 0 400 300" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="Ilustración de cómo tomar medidas">
-                <!-- Top Outline -->
-                <path d="M100 50 L130 50 L140 70 L160 70 L170 50 L200 50 L220 90 L200 100 L190 180 L110 180 L100 100 L80 90 Z" />
-                <path d="M140 70 L150 90 L160 70" /> <!-- V-neck -->
-                <!-- Pants Outline -->
-                <path d="M120 200 L180 200 L190 290 L160 290 L150 240 L140 290 L110 290 Z" />
+            <svg width="100%" height="auto" style="max-width: 800px;" viewBox="0 0 800 480" fill="none" aria-label="Ilustración de cómo tomar medidas">
                 
-                <!-- Measurement lines -->
-                <line x1="100" y1="40" x2="200" y2="40" stroke="var(--gray)" stroke-dasharray="4" />
-                <text x="150" y="32" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="middle" stroke="none">Hombro</text>
+                <!-- TOP (Left) -->
+                <g class="scrub-top">
+                    <!-- Top Body -->
+                    <path d="M 220 60 
+                             L 160 70 
+                             L 100 130 
+                             L 130 160 
+                             L 170 140 
+                             L 170 360 
+                             L 330 360 
+                             L 330 140 
+                             L 370 160 
+                             L 400 130 
+                             L 340 70 
+                             L 280 60" 
+                          fill="none" stroke="var(--black)" stroke-width="2" stroke-linejoin="round"/>
+                          
+                    <!-- V Neck -->
+                    <path d="M 220 60 L 250 140 L 280 60" fill="none" stroke="var(--black)" stroke-width="2" stroke-linejoin="round"/>
 
-                <line x1="100" y1="100" x2="200" y2="100" stroke="var(--gray)" stroke-dasharray="4" />
-                <text x="150" y="112" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="middle" stroke="none">Busto</text>
+                    <!-- Arm seams -->
+                    <path d="M 160 70 L 170 140" fill="none" stroke="var(--black)" stroke-width="1.5"/>
+                    <path d="M 340 70 L 330 140" fill="none" stroke="var(--black)" stroke-width="1.5"/>
 
-                <line x1="85" y1="50" x2="85" y2="180" stroke="var(--gray)" stroke-dasharray="4" />
-                <text x="75" y="115" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="end" stroke="none">Largo</text>
+                    <!-- Pocket -->
+                    <path d="M 280 160 L 310 160 L 310 190 L 295 200 L 280 190 Z" fill="none" stroke="var(--black)" stroke-width="1.5" stroke-linejoin="round"/>
+                </g>
 
-                <line x1="120" y1="205" x2="180" y2="205" stroke="var(--gray)" stroke-dasharray="4" />
-                <text x="150" y="218" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="middle" stroke="none">Cintura</text>
+                <!-- PANTS (Right) -->
+                <g class="scrub-pants">
+                    <!-- Pants Body -->
+                    <path d="M 540 60 
+                             L 660 60 
+                             L 675 130 
+                             L 670 420 
+                             L 610 420 
+                             L 600 180 
+                             L 590 420 
+                             L 530 420 
+                             L 525 130 
+                             Z" 
+                          fill="none" stroke="var(--black)" stroke-width="2" stroke-linejoin="round"/>
 
-                <line x1="115" y1="230" x2="185" y2="230" stroke="var(--gray)" stroke-dasharray="4" />
-                <text x="150" y="242" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="middle" stroke="none">Cadera</text>
+                    <!-- Waistband -->
+                    <path d="M 537 85 L 663 85" fill="none" stroke="var(--black)" stroke-width="1.5"/>
 
-                <line x1="205" y1="200" x2="205" y2="290" stroke="var(--gray)" stroke-dasharray="4" />
-                <text x="215" y="250" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="start" stroke="none">Largo</text>
+                    <!-- Drawstrings -->
+                    <path d="M 600 85 Q 585 120 595 140" fill="none" stroke="var(--black)" stroke-width="1.5"/>
+                    <path d="M 600 85 Q 615 120 605 140" fill="none" stroke="var(--black)" stroke-width="1.5"/>
+
+                    <!-- Pockets -->
+                    <path d="M 525 130 Q 540 140 545 160" fill="none" stroke="var(--black)" stroke-width="1.5"/>
+                    <path d="M 675 130 Q 660 140 655 160" fill="none" stroke="var(--black)" stroke-width="1.5"/>
+                </g>
+
+                <!-- MEASUREMENT LINES -->
+                <g stroke="var(--gray)" stroke-width="1.5" stroke-dasharray="4 4" fill="none">
+                    <!-- Top Hombro -->
+                    <line x1="160" y1="40" x2="340" y2="40" />
+                    <line x1="160" y1="35" x2="160" y2="45" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <line x1="340" y1="35" x2="340" y2="45" stroke-dasharray="none" stroke="var(--gray)"/>
+                    
+                    <!-- Top Busto -->
+                    <line x1="170" y1="180" x2="330" y2="180" />
+                    <line x1="170" y1="175" x2="170" y2="185" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <line x1="330" y1="175" x2="330" y2="185" stroke-dasharray="none" stroke="var(--gray)"/>
+                    
+                    <!-- Top Largo -->
+                    <line x1="70" y1="60" x2="70" y2="360" />
+                    <line x1="65" y1="60" x2="75" y2="60" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <line x1="65" y1="360" x2="75" y2="360" stroke-dasharray="none" stroke="var(--gray)"/>
+
+                    <!-- Top Manga -->
+                    <line x1="355" y1="55" x2="415" y2="115" />
+                    <line x1="351" y1="59" x2="359" y2="51" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <line x1="411" y1="119" x2="419" y2="111" stroke-dasharray="none" stroke="var(--gray)"/>
+                    
+                    <!-- Top Puño -->
+                    <line x1="415" y1="145" x2="385" y2="175" />
+                    <line x1="411" y1="141" x2="419" y2="149" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <line x1="381" y1="171" x2="389" y2="179" stroke-dasharray="none" stroke="var(--gray)"/>
+
+                    <!-- Pants Cintura -->
+                    <line x1="540" y1="40" x2="660" y2="40" />
+                    <line x1="540" y1="35" x2="540" y2="45" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <line x1="660" y1="35" x2="660" y2="45" stroke-dasharray="none" stroke="var(--gray)"/>
+
+                    <!-- Pants Cadera -->
+                    <line x1="525" y1="130" x2="675" y2="130" />
+                    <line x1="525" y1="125" x2="525" y2="135" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <line x1="675" y1="125" x2="675" y2="135" stroke-dasharray="none" stroke="var(--gray)"/>
+
+                    <!-- Pants Largo -->
+                    <line x1="720" y1="60" x2="720" y2="420" />
+                    <line x1="715" y1="60" x2="725" y2="60" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <line x1="715" y1="420" x2="725" y2="420" stroke-dasharray="none" stroke="var(--gray)"/>
+                </g>
+
+                <!-- LABELS -->
+                <g fill="var(--gray-mid)" font-family="var(--font-body)" font-size="12" letter-spacing="1" text-anchor="middle">
+                    <!-- Top Labels -->
+                    <text x="250" y="32">Hombro</text>
+                    <text x="250" y="172">Busto</text>
+                    <text x="60" y="215" text-anchor="end">Largo top</text>
+                    <text x="395" y="75" text-anchor="start">Manga</text>
+                    <text x="415" y="175" text-anchor="start">Puño</text>
+                    
+                    <!-- Pants Labels -->
+                    <text x="600" y="32">Cintura</text>
+                    <text x="600" y="122">Cadera</text>
+                    <text x="730" y="245" text-anchor="start">Largo pantalón</text>
+                </g>
             </svg>
         </div>
 
