@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Conviértete en embajadora YOSSICO. Más que un uniforme, una identidad.">
+    <title>Embajadoras — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            background: #ffffff;
+        }
+
+        .split-section {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .split-section--reverse {
+            flex-direction: row-reverse;
+        }
+
+        .split-image {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .split-content {
+            flex: 1;
+            padding: 120px 8%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--white);
+        }
+
+        .split-title {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: var(--black);
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .split-subtitle {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(32px, 4vw, 48px);
+            color: var(--black);
+            margin-bottom: 32px;
+            line-height: 1.1;
+        }
+
+        .split-desc {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 14px;
+            color: var(--gray-mid);
+            line-height: 1.8;
+            margin-bottom: 48px;
+            max-width: 480px;
+        }
+
+        .split-desc--quote {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 24px;
+            color: var(--black);
+            line-height: 1.4;
+            max-width: 500px;
+            margin-bottom: 64px;
+        }
+
+        .btn-scroll {
+            align-self: flex-start;
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            padding: 16px 32px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-scroll:hover {
+            background: #333;
+        }
+
+        /* Benefits */
+        .benefits-section {
+            padding: 120px 8%;
+            background: #fcfcfc;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 64px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            text-align: center;
+        }
+
+        .benefit-icon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 24px;
+            color: var(--black);
+        }
+
+        .benefit-title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 20px;
+            color: var(--black);
+            margin-bottom: 16px;
+        }
+
+        .benefit-text {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 1.6;
+        }
+
+        /* Form */
+        .inst-form-title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 28px;
+            color: var(--black);
+            margin-bottom: 32px;
+        }
+
+        .inst-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            max-width: 480px;
+        }
+
+        .inst-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .inst-label {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+
+        .inst-input {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--black);
+            background: none;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 0;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .inst-input:focus {
+            border-bottom-color: var(--black);
+        }
+
+        .inst-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .inst-checkbox-wrap {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .inst-checkbox {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--gray);
+            border-radius: 0;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .inst-checkbox:checked {
+            background: var(--black);
+            border-color: var(--black);
+        }
+
+        .inst-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 1px 1px 0;
+            transform: rotate(45deg);
+        }
+
+        .inst-checkbox-label {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--gray-mid);
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .inst-checkbox-label a {
+            color: var(--black);
+            text-decoration: underline;
+        }
+
+        .inst-btn {
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            padding: 16px 32px;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: background 0.2s;
+        }
+
+        .inst-btn:hover {
+            background: #333;
+        }
+
+        .inst-btn:disabled {
+            background: var(--border);
+            color: var(--gray);
+            cursor: not-allowed;
+        }
+
+        .inst-msg {
+            font-family: var(--font-body);
+            font-size: 11px;
+            margin-top: 16px;
+        }
+
+        .form-footer-text {
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .split-section {
+                flex-direction: column !important;
+            }
+            .split-image {
+                min-height: 60vh;
+            }
+            .split-content {
+                padding: 64px 24px;
+            }
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+            .benefits-section {
+                padding: 80px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="currentColor"
+                    stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="white"
+                    stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+                <div class="nav__dropdown-menu">
+                    <a href="coleccion.html#linea-uniformes">Essentials</a>
+                    <a href="coleccion.html#linea-uniformes">Signature</a>
+                    <a href="coleccion.html#linea-uniformes">Core</a>
+                    <div class="nav__dropdown-divider"></div>
+                    <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+                </div>
+            </li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
+            <li>
+                <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="split-section reveal">
+        <div class="split-image" style="background-image: url('img/embajadora-hero.webp');" aria-label="Embajadora Yossico"></div>
+        <div class="split-content">
+            <h1 class="split-title reveal" data-delay="1">Embajadoras Yossico</h1>
+            <p class="split-subtitle reveal" data-delay="2">Más que un uniforme.<br>Una identidad.</p>
+            <p class="split-desc reveal" data-delay="3">Buscamos profesionales de la salud que inspiren con su presencia, que lideren con su ejemplo y que entiendan que vestir bien es también una forma de ejercer con orgullo.</p>
+            <button class="btn-scroll reveal" data-delay="4" onclick="document.getElementById('form-section').scrollIntoView({behavior: 'smooth'})">Quiero ser embajadora →</button>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="benefits-grid reveal">
+            <div class="benefit-card">
+                <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"/>
+                </svg>
+                <h3 class="benefit-title">Uniformes YOSSICO</h3>
+                <p class="benefit-text">Acceso a prendas de la colección como parte del programa.</p>
+            </div>
+            <div class="benefit-card">
+                <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                <h3 class="benefit-title">Descuentos exclusivos</h3>
+                <p class="benefit-text">Beneficios especiales para ti y tu comunidad.</p>
+            </div>
+            <div class="benefit-card">
+                <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <h3 class="benefit-title">Comunidad</h3>
+                <p class="benefit-text">Haz parte de un grupo selecto de profesionales que representan la marca.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="split-section split-section--reverse reveal" id="form-section">
+        <div class="split-image" style="background-image: url('img/embajadora-halfbody.webp');" aria-label="Profesional de la salud Yossico"></div>
+        <div class="split-content">
+            <p class="split-desc--quote">"No buscamos influenciadoras. Buscamos mujeres que ya son una referencia en su entorno. Si eso eres tú, nos interesa conocerte."</p>
+            
+            <form class="inst-form" id="embajadoras-form">
+                <h2 class="inst-form-title">Cuéntanos sobre ti</h2>
+                
+                <div class="inst-field">
+                    <label class="inst-label" for="nombres">Nombre completo *</label>
+                    <input type="text" id="nombres" class="inst-input" required>
+                </div>
+                
+                <div class="inst-field">
+                    <label class="inst-label" for="especialidad">Especialidad / área de la salud *</label>
+                    <input type="text" id="especialidad" class="inst-input" required>
+                </div>
+                
+                <div class="inst-field">
+                    <label class="inst-label" for="ciudad">Ciudad *</label>
+                    <input type="text" id="ciudad" class="inst-input" required>
+                </div>
+                
+                <div class="inst-field">
+                    <label class="inst-label" for="instagram">Instagram (opcional)</label>
+                    <input type="text" id="instagram" class="inst-input" placeholder="@usuario">
+                </div>
+
+                <div class="inst-field">
+                    <label class="inst-label" for="correo">Correo electrónico *</label>
+                    <input type="email" id="correo" class="inst-input" required>
+                </div>
+                
+                <div class="inst-field">
+                    <label class="inst-label" for="mensaje">¿Por qué quieres ser embajadora YOSSICO? *</label>
+                    <textarea id="mensaje" class="inst-input inst-textarea" required maxlength="200" placeholder="Máximo 200 caracteres..."></textarea>
+                </div>
+                
+                <div class="inst-checkbox-wrap">
+                    <input type="checkbox" id="terminos" class="inst-checkbox" required>
+                    <label for="terminos" class="inst-checkbox-label">Acepto los <a href="terminos.html" target="_blank">términos y condiciones</a> de YOSSICO</label>
+                </div>
+                
+                <button type="submit" class="inst-btn" id="submit-btn">Postularme</button>
+                <div id="form-msg" class="inst-msg"></div>
+                <p class="form-footer-text">Revisamos cada postulación personalmente. Te contactamos en un máximo de 7 días.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="white" stroke-width="1" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </div>
+        <p class="footer__tagline">"Vestidos para sanar. Diseñados para perdurar."</p>
+        <p class="footer__copy">© 2026 YOSSICO · Colombia <span style="margin:0 6px;">·</span> <a href="terminos.html" style="color:white; text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">Términos y Condiciones</a></p>
+        <div class="footer__bottom-links">
+            <a href="institucional.html">YOSSICO Institucional</a>
+            <a href="embajadoras.html">Embajadoras YOSSICO</a>
+            <a href="guia-de-tallas.html">Guía de Tallas</a>
+            <a href="cuidado-de-tus-prendas.html">Cuidado de tus prendas</a>
+            <a href="tecnologia-de-la-tela.html">Tecnología de la tela</a>
+        </div>
+    </footer>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer__header">
+            <span class="cart-drawer__title">Tu Pedido</span>
+            <button class="cart-drawer__close" id="cart-close"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+        </div>
+        <div class="cart-drawer__body" id="cart-body"></div>
+        <div class="cart-drawer__footer" id="cart-footer">
+            <div class="cart-total"><span>Total</span><span id="cart-total-price">$0 COP</span></div>
+            <a href="#" id="cart-checkout" class="cart-checkout" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+        </div>
+    </aside>
+
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+        import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/auth.js';
+        
+        const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const form = document.getElementById('embajadoras-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const msgDiv = document.getElementById('form-msg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+            msgDiv.textContent = '';
+            msgDiv.style.color = 'inherit';
+
+            const payload = {
+                nombre: document.getElementById('nombres').value.trim(),
+                especialidad: document.getElementById('especialidad').value.trim(),
+                ciudad: document.getElementById('ciudad').value.trim(),
+                instagram: document.getElementById('instagram').value.trim() || null,
+                correo: document.getElementById('correo').value.trim(),
+                mensaje: document.getElementById('mensaje').value.trim()
+            };
+
+            try {
+                const { error } = await sb.from('embajadoras_leads').insert([payload]);
+                if (error) throw error;
+                
+                msgDiv.textContent = 'Tu postulación ha sido enviada exitosamente. Estaremos en contacto pronto.';
+                msgDiv.style.color = '#333';
+                form.reset();
+            } catch (err) {
+                console.error(err);
+                msgDiv.textContent = 'Ocurrió un error al enviar tu postulación. Por favor intenta de nuevo.';
+                msgDiv.style.color = 'red';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Postularme';
+            }
+        });
+    </script>
+</body>
+</html>
