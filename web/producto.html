@@ -707,13 +707,13 @@
                 // Full slide
                 const slide = document.createElement('div');
                 slide.className = `pd__slide${i === 0 ? ' active' : ''}`;
-                slide.innerHTML = `<img src="${src}" alt="${prod.name} — vista ${i + 1}">`;
+                slide.innerHTML = `<img loading="lazy" src="${src}" alt="${prod.name} — vista ${i + 1}">`;
                 main.insertBefore(slide, main.querySelector('.pd__gall-btn--prev'));
 
                 // Thumbnail
                 const thumb = document.createElement('div');
                 thumb.className = `pd__thumb${i === 0 ? ' active' : ''}`;
-                thumb.innerHTML = `<img src="${src}" alt="Miniatura ${i + 1}">`;
+                thumb.innerHTML = `<img loading="lazy" src="${src}" alt="Miniatura ${i + 1}">`;
                 thumb.addEventListener('click', () => goToSlide(i));
                 thumbs.appendChild(thumb);
             });

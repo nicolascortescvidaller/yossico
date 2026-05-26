@@ -155,7 +155,7 @@
           <div class="ck-items">
             ${items.map(i => `
               <div class="ck-item">
-                <img class="ck-item__img" src="${esc(i.img)}" alt="${esc(i.name)}">
+                <img loading="lazy" class="ck-item__img" src="${esc(i.img)}" alt="${esc(i.name)}">
                 <div>
                   <p class="ck-item__name">${esc(i.name)}</p>
                   <p class="ck-item__meta">${i.line ? esc(i.line) + ' · ' : ''}Talla ${esc(i.size)} · ×${i.qty}</p>
