@@ -675,21 +675,43 @@ body.cursor-hover .cursor-ring {
   text-align: right;
 }
 
-.footer__inst-link {
+.footer__bottom-links {
   grid-column: 1 / -1;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.footer__bottom-links a {
   font-family: var(--font-body);
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
-  margin-top: 24px;
   transition: color 0.2s;
 }
 
-.footer__inst-link:hover {
+.footer__bottom-links a:hover {
   color: var(--white);
+}
+
+.size-guide-link {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--gray);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-left: 12px;
+  transition: color 0.2s;
+}
+
+.size-guide-link:hover {
+  color: var(--black);
 }
 
 /* ── Breadcrumb ─────────────────────────────────────────────── */

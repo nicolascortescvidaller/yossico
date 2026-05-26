@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía de tallas YOSSICO — Encuentra la medida perfecta para tu uniforme médico.">
+    <title>Guía de Tallas — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { background: #ffffff; }
+
+        .info-page {
+            padding: 140px 24px 80px;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .info-page__title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(36px, 5vw, 64px);
+            color: var(--black);
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .info-page__subtitle {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--gray-mid);
+            text-align: center;
+            margin-bottom: 64px;
+            line-height: 1.6;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin-bottom: 64px;
+        }
+
+        .size-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--black);
+            min-width: 600px;
+        }
+
+        .size-table th, .size-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .size-table th {
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 400;
+            color: var(--gray);
+            border-bottom: 2px solid var(--black);
+        }
+
+        .size-table tr:hover td {
+            background: #fafafa;
+        }
+
+        .illustration-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 64px;
+        }
+
+        .info-page__footer {
+            text-align: center;
+            border-top: 1px solid var(--border);
+            padding-top: 48px;
+        }
+
+        .info-page__footer p {
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--gray-mid);
+            margin-bottom: 24px;
+        }
+
+        .btn-wa {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 16px 32px;
+            transition: background 0.2s;
+        }
+
+        .btn-wa:hover {
+            background: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="currentColor"
+                    stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="white"
+                    stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+                <div class="nav__dropdown-menu">
+                    <a href="coleccion.html#linea-uniformes">Essentials</a>
+                    <a href="coleccion.html#linea-uniformes">Signature</a>
+                    <a href="coleccion.html#linea-uniformes">Core</a>
+                    <div class="nav__dropdown-divider"></div>
+                    <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+                </div>
+            </li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
+            <li>
+                <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <section class="info-page">
+        <h1 class="info-page__title reveal">Guía de Tallas</h1>
+        <p class="info-page__subtitle reveal" data-delay="1">Todas las medidas son tomadas manualmente. Puede existir una diferencia de 1-2 cm.</p>
+
+        <div class="table-wrap reveal" data-delay="2">
+            <table class="size-table">
+                <thead>
+                    <tr>
+                        <th>Talla</th>
+                        <th>Hombro</th>
+                        <th>Busto</th>
+                        <th>Manga</th>
+                        <th>Puño</th>
+                        <th>Largo top</th>
+                        <th>Cintura</th>
+                        <th>Cadera</th>
+                        <th>Largo pantalón</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>S</strong></td>
+                        <td>41 cm</td>
+                        <td>105 cm</td>
+                        <td>19.5 cm</td>
+                        <td>38 cm</td>
+                        <td>66 cm</td>
+                        <td>66 cm</td>
+                        <td>103 cm</td>
+                        <td>100 cm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>M</strong></td>
+                        <td>43 cm</td>
+                        <td>111 cm</td>
+                        <td>20 cm</td>
+                        <td>40 cm</td>
+                        <td>68 cm</td>
+                        <td>71 cm</td>
+                        <td>109 cm</td>
+                        <td>102 cm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L</strong></td>
+                        <td>45 cm</td>
+                        <td>117 cm</td>
+                        <td>20.5 cm</td>
+                        <td>42 cm</td>
+                        <td>70 cm</td>
+                        <td>76 cm</td>
+                        <td>115 cm</td>
+                        <td>104 cm</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="illustration-wrap reveal" data-delay="3">
+            <svg width="400" height="300" viewBox="0 0 400 300" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="Ilustración de cómo tomar medidas">
+                <!-- Top Outline -->
+                <path d="M100 50 L130 50 L140 70 L160 70 L170 50 L200 50 L220 90 L200 100 L190 180 L110 180 L100 100 L80 90 Z" />
+                <path d="M140 70 L150 90 L160 70" /> <!-- V-neck -->
+                <!-- Pants Outline -->
+                <path d="M120 200 L180 200 L190 290 L160 290 L150 240 L140 290 L110 290 Z" />
+                
+                <!-- Measurement lines -->
+                <line x1="100" y1="40" x2="200" y2="40" stroke="var(--gray)" stroke-dasharray="4" />
+                <text x="150" y="32" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="middle" stroke="none">Hombro</text>
+
+                <line x1="100" y1="100" x2="200" y2="100" stroke="var(--gray)" stroke-dasharray="4" />
+                <text x="150" y="112" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="middle" stroke="none">Busto</text>
+
+                <line x1="85" y1="50" x2="85" y2="180" stroke="var(--gray)" stroke-dasharray="4" />
+                <text x="75" y="115" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="end" stroke="none">Largo</text>
+
+                <line x1="120" y1="205" x2="180" y2="205" stroke="var(--gray)" stroke-dasharray="4" />
+                <text x="150" y="218" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="middle" stroke="none">Cintura</text>
+
+                <line x1="115" y1="230" x2="185" y2="230" stroke="var(--gray)" stroke-dasharray="4" />
+                <text x="150" y="242" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="middle" stroke="none">Cadera</text>
+
+                <line x1="205" y1="200" x2="205" y2="290" stroke="var(--gray)" stroke-dasharray="4" />
+                <text x="215" y="250" fill="var(--gray)" font-size="10" font-family="var(--font-body)" text-anchor="start" stroke="none">Largo</text>
+            </svg>
+        </div>
+
+        <div class="info-page__footer reveal" data-delay="4">
+            <p>¿Tienes dudas con tu talla? Escríbenos por WhatsApp y te asesoramos personalmente.</p>
+            <a href="https://wa.me/573202562307?text=Hola,%20necesito%20ayuda%20para%20elegir%20mi%20talla%20YOSSICO" class="btn-wa" target="_blank" rel="noopener">
+                Contactar por WhatsApp →
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </div>
+        <p class="footer__tagline">"Vestidos para sanar. Diseñados para perdurar."</p>
+        <p class="footer__copy">© 2026 YOSSICO · Colombia <span style="margin:0 6px;">·</span> <a href="terminos.html" style="color:rgba(255,255,255,0.7); text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">Términos y Condiciones</a></p>
+        <div class="footer__bottom-links">
+            <a href="institucional.html">YOSSICO Institucional</a>
+            <a href="guia-de-tallas.html">Guía de Tallas</a>
+            <a href="cuidado-de-tus-prendas.html">Cuidado de tus prendas</a>
+            <a href="tecnologia-de-la-tela.html">Tecnología de la tela</a>
+        </div>
+    </footer>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer__header">
+            <span class="cart-drawer__title">Tu Pedido</span>
+            <button class="cart-drawer__close" id="cart-close"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+        </div>
+        <div class="cart-drawer__body" id="cart-body"></div>
+        <div class="cart-drawer__footer" id="cart-footer">
+            <div class="cart-total"><span>Total</span><span id="cart-total-price">$0 COP</span></div>
+            <a href="#" id="cart-checkout" class="cart-checkout" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+        </div>
+    </aside>
+
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+</body>
+</html>

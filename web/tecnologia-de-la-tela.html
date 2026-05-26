@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tecnología de la tela YOSSICO — Descubre los materiales premium detrás de nuestros uniformes.">
+    <title>Tecnología de la tela — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { background: #ffffff; }
+
+        .info-page {
+            padding: 140px 24px 80px;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .info-page__title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(36px, 5vw, 64px);
+            color: var(--black);
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .info-page__subtitle {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--gray-mid);
+            text-align: center;
+            margin-bottom: 80px;
+            line-height: 1.6;
+        }
+
+        .tech-lines {
+            margin-bottom: 80px;
+        }
+
+        .tech-line {
+            padding: 48px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tech-line:first-child {
+            border-top: 1px solid var(--border);
+        }
+
+        .tech-line__header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .tech-line__title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 32px;
+            color: var(--black);
+        }
+
+        .tech-line__meta {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray);
+            background: #f7f7f7;
+            padding: 6px 12px;
+        }
+
+        .tech-line__text {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 14px;
+            color: var(--gray-mid);
+            line-height: 1.8;
+            max-width: 600px;
+        }
+
+        .tech-benefits {
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .tech-benefits__title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 24px;
+            color: var(--black);
+            margin-bottom: 40px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .benefit-item__icon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 16px;
+            color: var(--black);
+        }
+
+        .benefit-item__text {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--gray-mid);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .info-page__footer {
+            text-align: center;
+            border-top: 1px solid var(--border);
+            padding-top: 48px;
+        }
+
+        .info-page__footer p {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-style: italic;
+            font-size: 24px;
+            color: var(--gray-mid);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 800px) {
+            .benefits-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 40px 24px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="currentColor"
+                    stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="white"
+                    stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none"
+                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+                <div class="nav__dropdown-menu">
+                    <a href="coleccion.html#linea-uniformes">Essentials</a>
+                    <a href="coleccion.html#linea-uniformes">Signature</a>
+                    <a href="coleccion.html#linea-uniformes">Core</a>
+                    <div class="nav__dropdown-divider"></div>
+                    <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+                </div>
+            </li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="coleccion.html" class="nav__cta">Ver Colección</a></li>
+            <li>
+                <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <section class="info-page">
+        <h1 class="info-page__title reveal">Tecnología de la tela</h1>
+        <p class="info-page__subtitle reveal" data-delay="1">No todos los uniformes son iguales. La diferencia está en el material.</p>
+
+        <div class="tech-lines reveal" data-delay="2">
+            <!-- Essentials -->
+            <div class="tech-line">
+                <div class="tech-line__header">
+                    <h2 class="tech-line__title">Essentials</h2>
+                    <span class="tech-line__meta">92% poliéster + 8% spandex · 170 g/m²</span>
+                </div>
+                <p class="tech-line__text">Tela de alto desempeño diseñada para jornadas largas. El poliéster garantiza resistencia y durabilidad; el spandex permite libertad de movimiento en cada posición. Peso medio que equilibra comodidad y estructura.</p>
+            </div>
+
+            <!-- Core -->
+            <div class="tech-line">
+                <div class="tech-line__header">
+                    <h2 class="tech-line__title">Core</h2>
+                    <span class="tech-line__meta">94% poliéster + 6% spandex · 120 g/m²</span>
+                </div>
+                <p class="tech-line__text">Tela ultraligera ideal para entornos de alta actividad. Mayor transpirabilidad sin sacrificar resistencia. El menor gramaje la hace especialmente cómoda en turnos exigentes.</p>
+            </div>
+
+            <!-- Signature -->
+            <div class="tech-line">
+                <div class="tech-line__header">
+                    <h2 class="tech-line__title">Signature</h2>
+                    <span class="tech-line__meta">72% poliéster + 21% rayón + 7% spandex · 210 g/m²</span>
+                </div>
+                <p class="tech-line__text">La tela más premium de la colección. El rayón aporta una caída suave y un tacto sedoso que la diferencia visualmente. Mayor gramaje para una presencia más estructurada y elegante.</p>
+            </div>
+        </div>
+
+        <div class="tech-benefits reveal" data-delay="3">
+            <h3 class="tech-benefits__title">Beneficios</h3>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <svg class="benefit-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                    </svg>
+                    <span class="benefit-item__text">Antifluidos</span>
+                </div>
+                <div class="benefit-item">
+                    <svg class="benefit-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2" />
+                    </svg>
+                    <span class="benefit-item__text">Transpirable</span>
+                </div>
+                <div class="benefit-item">
+                    <svg class="benefit-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8L22 12L18 16" />
+                        <path d="M6 8L2 12L6 16" />
+                        <path d="M12 2L12 22" />
+                        <path d="M2 12H22" />
+                    </svg>
+                    <span class="benefit-item__text">Elástico en 4 direcciones</span>
+                </div>
+                <div class="benefit-item">
+                    <svg class="benefit-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                        <path d="M2 12h20" />
+                    </svg>
+                    <span class="benefit-item__text">Resistente al color</span>
+                </div>
+                <div class="benefit-item">
+                    <svg class="benefit-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span class="benefit-item__text">Secado rápido</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-page__footer reveal" data-delay="4">
+            <p>Cada tela fue seleccionada con un propósito. Porque lo que vistes en el trabajo dice quién eres.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </div>
+        <p class="footer__tagline">"Vestidos para sanar. Diseñados para perdurar."</p>
+        <p class="footer__copy">© 2026 YOSSICO · Colombia <span style="margin:0 6px;">·</span> <a href="terminos.html" style="color:rgba(255,255,255,0.7); text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; font-size:10px; transition:color 0.2s;">Términos y Condiciones</a></p>
+        <div class="footer__bottom-links">
+            <a href="institucional.html">YOSSICO Institucional</a>
+            <a href="guia-de-tallas.html">Guía de Tallas</a>
+            <a href="cuidado-de-tus-prendas.html">Cuidado de tus prendas</a>
+            <a href="tecnologia-de-la-tela.html">Tecnología de la tela</a>
+        </div>
+    </footer>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer__header">
+            <span class="cart-drawer__title">Tu Pedido</span>
+            <button class="cart-drawer__close" id="cart-close"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+        </div>
+        <div class="cart-drawer__body" id="cart-body"></div>
+        <div class="cart-drawer__footer" id="cart-footer">
+            <div class="cart-total"><span>Total</span><span id="cart-total-price">$0 COP</span></div>
+            <a href="#" id="cart-checkout" class="cart-checkout" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+        </div>
+    </aside>
+
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+</body>
+</html>
