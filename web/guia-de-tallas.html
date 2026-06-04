@@ -216,125 +216,133 @@
         </div>
 
         <div class="illustration-wrap reveal" data-delay="3">
-            <svg width="100%" height="auto" style="max-width: 860px;" viewBox="-100 -20 1000 540" fill="none" aria-label="Ilustración de cómo tomar medidas">
-                
-                <!-- TOP (Left) -->
-                <g class="scrub-top">
-                    <!-- Top Body -->
-                    <path d="M 220 60 
-                             L 160 70 
-                             L 100 130 
-                             L 130 160 
-                             L 170 140 
-                             L 170 360 
-                             L 330 360 
-                             L 330 140 
-                             L 370 160 
-                             L 400 130 
-                             L 340 70 
-                             L 280 60" 
-                          fill="none" stroke="var(--black)" stroke-width="2" stroke-linejoin="round"/>
-                          
+            <svg width="100%" height="auto" style="max-width: 860px;" viewBox="0 0 900 500" fill="none" aria-label="Ilustración de cómo tomar medidas">
+
+                <!-- ══ TOP (Left, centered ~x=270) ══ -->
+                <g>
+                    <!-- Body -->
+                    <path d="M 250 70
+                             L 190 80
+                             L 130 140
+                             L 160 170
+                             L 200 150
+                             L 200 370
+                             L 360 370
+                             L 360 150
+                             L 400 170
+                             L 430 140
+                             L 370 80
+                             L 310 70"
+                        fill="none" stroke="var(--black)" stroke-width="2" stroke-linejoin="round"/>
                     <!-- V Neck -->
-                    <path d="M 220 60 L 250 140 L 280 60" fill="none" stroke="var(--black)" stroke-width="2" stroke-linejoin="round"/>
-
+                    <path d="M 250 70 L 280 150 L 310 70"
+                        fill="none" stroke="var(--black)" stroke-width="2" stroke-linejoin="round"/>
                     <!-- Arm seams -->
-                    <path d="M 160 70 L 170 140" fill="none" stroke="var(--black)" stroke-width="1.5"/>
-                    <path d="M 340 70 L 330 140" fill="none" stroke="var(--black)" stroke-width="1.5"/>
-
+                    <path d="M 190 80 L 200 150" fill="none" stroke="var(--black)" stroke-width="1.5"/>
+                    <path d="M 370 80 L 360 150" fill="none" stroke="var(--black)" stroke-width="1.5"/>
                     <!-- Pocket -->
-                    <path d="M 280 160 L 310 160 L 310 190 L 295 200 L 280 190 Z" fill="none" stroke="var(--black)" stroke-width="1.5" stroke-linejoin="round"/>
+                    <path d="M 310 170 L 340 170 L 340 200 L 325 210 L 310 200 Z"
+                        fill="none" stroke="var(--black)" stroke-width="1.5" stroke-linejoin="round"/>
                 </g>
 
-                <!-- PANTS (Right) -->
-                <g class="scrub-pants">
-                    <!-- Pants Body -->
-                    <path d="M 540 60 
-                             L 660 60 
-                             L 675 130 
-                             L 670 420 
-                             L 610 420 
-                             L 600 180 
-                             L 590 420 
-                             L 530 420 
-                             L 525 130 
-                             Z" 
-                          fill="none" stroke="var(--black)" stroke-width="2" stroke-linejoin="round"/>
-
+                <!-- ══ PANTS (Right, centered ~x=640) ══ -->
+                <g>
+                    <!-- Body -->
+                    <path d="M 565 70
+                             L 715 70
+                             L 730 145
+                             L 725 430
+                             L 660 430
+                             L 648 195
+                             L 636 430
+                             L 575 430
+                             L 568 145
+                             Z"
+                        fill="none" stroke="var(--black)" stroke-width="2" stroke-linejoin="round"/>
                     <!-- Waistband -->
-                    <path d="M 537 85 L 663 85" fill="none" stroke="var(--black)" stroke-width="1.5"/>
-
+                    <path d="M 572 96 L 718 96" fill="none" stroke="var(--black)" stroke-width="1.5"/>
                     <!-- Drawstrings -->
-                    <path d="M 600 85 Q 585 120 595 140" fill="none" stroke="var(--black)" stroke-width="1.5"/>
-                    <path d="M 600 85 Q 615 120 605 140" fill="none" stroke="var(--black)" stroke-width="1.5"/>
-
+                    <path d="M 648 96 Q 633 132 643 152" fill="none" stroke="var(--black)" stroke-width="1.5"/>
+                    <path d="M 648 96 Q 663 132 653 152" fill="none" stroke="var(--black)" stroke-width="1.5"/>
                     <!-- Pockets -->
-                    <path d="M 525 130 Q 540 140 545 160" fill="none" stroke="var(--black)" stroke-width="1.5"/>
-                    <path d="M 675 130 Q 660 140 655 160" fill="none" stroke="var(--black)" stroke-width="1.5"/>
+                    <path d="M 568 145 Q 583 155 588 175" fill="none" stroke="var(--black)" stroke-width="1.5"/>
+                    <path d="M 730 145 Q 715 155 710 175" fill="none" stroke="var(--black)" stroke-width="1.5"/>
                 </g>
 
-                <!-- MEASUREMENT LINES -->
-                <g stroke="var(--gray)" stroke-width="1.5" stroke-dasharray="4 4" fill="none">
-                    <!-- Top Hombro (above, from shoulder to shoulder) -->
-                    <line x1="160" y1="40" x2="340" y2="40" />
-                    <line x1="160" y1="33" x2="160" y2="47" stroke-dasharray="none" stroke="var(--gray)"/>
-                    <line x1="340" y1="33" x2="340" y2="47" stroke-dasharray="none" stroke="var(--gray)"/>
-                    
-                    <!-- Top Busto (horizontal line, extends left outside garment) -->
-                    <line x1="-60" y1="180" x2="330" y2="180" />
-                    <line x1="-60" y1="173" x2="-60" y2="187" stroke-dasharray="none" stroke="var(--gray)"/>
-                    <line x1="330" y1="173" x2="330" y2="187" stroke-dasharray="none" stroke="var(--gray)"/>
-                    
-                    <!-- Top Largo (vertical, left side) -->
-                    <line x1="-70" y1="60" x2="-70" y2="360" />
-                    <line x1="-77" y1="60" x2="-63" y2="60" stroke-dasharray="none" stroke="var(--gray)"/>
-                    <line x1="-77" y1="360" x2="-63" y2="360" stroke-dasharray="none" stroke="var(--gray)"/>
+                <!-- ══ MEASUREMENT LINES ══ -->
+                <g stroke="var(--gray)" stroke-width="1.2" stroke-dasharray="4 4" fill="none">
 
-                    <!-- Top Manga -->
-                    <line x1="355" y1="55" x2="415" y2="115" />
-                    <line x1="351" y1="59" x2="359" y2="51" stroke-dasharray="none" stroke="var(--gray)"/>
-                    <line x1="411" y1="119" x2="419" y2="111" stroke-dasharray="none" stroke="var(--gray)"/>
-                    
-                    <!-- Top Puño -->
-                    <line x1="415" y1="145" x2="385" y2="175" />
-                    <line x1="411" y1="141" x2="419" y2="149" stroke-dasharray="none" stroke="var(--gray)"/>
-                    <line x1="381" y1="171" x2="389" y2="179" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <!-- Hombro: above shoulders -->
+                    <line x1="190" y1="48" x2="370" y2="48"/>
+                    <line x1="190" y1="41" x2="190" y2="55" stroke-dasharray="none"/>
+                    <line x1="370" y1="41" x2="370" y2="55" stroke-dasharray="none"/>
 
-                    <!-- Pants Cintura (above waistband) -->
-                    <line x1="540" y1="40" x2="660" y2="40" />
-                    <line x1="540" y1="33" x2="540" y2="47" stroke-dasharray="none" stroke="var(--gray)"/>
-                    <line x1="660" y1="33" x2="660" y2="47" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <!-- Busto: extends right past garment into center gap -->
+                    <line x1="200" y1="192" x2="490" y2="192"/>
+                    <line x1="200" y1="185" x2="200" y2="199" stroke-dasharray="none"/>
+                    <line x1="490" y1="185" x2="490" y2="199" stroke-dasharray="none"/>
 
-                    <!-- Pants Cadera (extends right outside pants) -->
-                    <line x1="525" y1="130" x2="800" y2="130" />
-                    <line x1="525" y1="123" x2="525" y2="137" stroke-dasharray="none" stroke="var(--gray)"/>
-                    <line x1="800" y1="123" x2="800" y2="137" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <!-- Largo top: vertical, left side (x=105, well within viewBox) -->
+                    <line x1="105" y1="70" x2="105" y2="370"/>
+                    <line x1="98"  y1="70" x2="112" y2="70"  stroke-dasharray="none"/>
+                    <line x1="98"  y1="370" x2="112" y2="370" stroke-dasharray="none"/>
 
-                    <!-- Pants Largo (vertical, right side) -->
-                    <line x1="820" y1="60" x2="820" y2="420" />
-                    <line x1="813" y1="60" x2="827" y2="60" stroke-dasharray="none" stroke="var(--gray)"/>
-                    <line x1="813" y1="420" x2="827" y2="420" stroke-dasharray="none" stroke="var(--gray)"/>
+                    <!-- Manga: diagonal -->
+                    <line x1="385" y1="65" x2="445" y2="125"/>
+                    <line x1="381" y1="69" x2="389" y2="61" stroke-dasharray="none"/>
+                    <line x1="441" y1="129" x2="449" y2="121" stroke-dasharray="none"/>
+
+                    <!-- Puño: diagonal -->
+                    <line x1="445" y1="155" x2="415" y2="185"/>
+                    <line x1="441" y1="151" x2="449" y2="159" stroke-dasharray="none"/>
+                    <line x1="411" y1="181" x2="419" y2="189" stroke-dasharray="none"/>
+
+                    <!-- Cintura: above waistband -->
+                    <line x1="565" y1="48" x2="715" y2="48"/>
+                    <line x1="565" y1="41" x2="565" y2="55" stroke-dasharray="none"/>
+                    <line x1="715" y1="41" x2="715" y2="55" stroke-dasharray="none"/>
+
+                    <!-- Cadera: extends left from pants into center gap -->
+                    <line x1="500" y1="145" x2="730" y2="145"/>
+                    <line x1="500" y1="138" x2="500" y2="152" stroke-dasharray="none"/>
+                    <line x1="730" y1="138" x2="730" y2="152" stroke-dasharray="none"/>
+
+                    <!-- Largo pantalón: vertical, right side (x=810, well within viewBox) -->
+                    <line x1="810" y1="70" x2="810" y2="430"/>
+                    <line x1="803" y1="70"  x2="817" y2="70"  stroke-dasharray="none"/>
+                    <line x1="803" y1="430" x2="817" y2="430" stroke-dasharray="none"/>
                 </g>
 
-                <!-- LABELS -->
-                <g fill="var(--gray-mid)" font-family="var(--font-body)" font-size="12" letter-spacing="1" text-anchor="middle">
-                    <!-- Top Labels -->
-                    <text x="250" y="30">Hombro</text>
-                    <text x="-60" y="165">Busto</text>
-                    <!-- "Largo top" vertical, along left measurement line -->
-                    <text transform="translate(-88, 210) rotate(-90)" text-anchor="middle">Largo top</text>
-                    <text x="430" y="75" text-anchor="start">Manga</text>
-                    <text x="428" y="170" text-anchor="start">Puño</text>
-                    
-                    <!-- Pants Labels -->
-                    <text x="600" y="30">Cintura</text>
-                    <!-- "Cadera" to the right of pants -->
-                    <text x="810" y="126">Cadera</text>
-                    <!-- "Largo pantalón" vertical, along right measurement line -->
-                    <text transform="translate(840, 240) rotate(90)" text-anchor="middle">Largo pantalón</text>
+                <!-- ══ LABELS ══ -->
+                <g fill="var(--gray-mid)" font-family="var(--font-body)" font-size="11" letter-spacing="1">
+
+                    <!-- Hombro: centered above -->
+                    <text x="280" y="38" text-anchor="middle">Hombro</text>
+
+                    <!-- Busto: to the right of center gap, horizontal -->
+                    <text x="498" y="196" text-anchor="start">Busto</text>
+
+                    <!-- Largo top: rotated vertical, safely inside left margin -->
+                    <text transform="rotate(-90 125 220)" x="125" y="220" text-anchor="middle">Largo top</text>
+
+                    <!-- Manga -->
+                    <text x="452" y="108" text-anchor="start">Manga</text>
+
+                    <!-- Puño -->
+                    <text x="452" y="178" text-anchor="start">Puño</text>
+
+                    <!-- Cintura: centered above -->
+                    <text x="640" y="38" text-anchor="middle">Cintura</text>
+
+                    <!-- Cadera: to the left of center gap, horizontal -->
+                    <text x="492" y="142" text-anchor="end">Cadera</text>
+
+                    <!-- Largo pantalón: rotated vertical, safely inside right margin -->
+                    <text transform="rotate(90 840 250)" x="840" y="250" text-anchor="middle">Largo pantalón</text>
                 </g>
             </svg>
         </div>
+
 
 
 
