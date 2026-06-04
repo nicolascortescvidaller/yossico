@@ -11,6 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         .auth-page {
             min-height: 100vh;
@@ -311,6 +312,9 @@
                         Condiciones</a> de YOSSICO.
                 </p>
 
+                <!-- Turnstile Widget -->
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-bottom: 24px;"></div>
+
                 <button type="submit" class="auth-submit" id="reg-btn">Crear mi cuenta</button>
             </form>
 
@@ -398,14 +402,21 @@
                 }
                 if (hasError) return;
 
+                const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+                if (!turnstileToken) {
+                    showAlert('Por favor, completa la verificación de seguridad.');
+                    return;
+                }
+
                 btn.disabled = true;
                 btn.textContent = 'Creando cuenta...';
 
-                const { data, error } = await YOSSICO_AUTH.signUp(email, password);
+                const { data, error } = await YOSSICO_AUTH.signUp(email, password, turnstileToken);
 
                 if (error) {
                     btn.disabled = false;
                     btn.textContent = 'Crear mi cuenta';
+                    turnstile.reset(); // Reset turnstile on error
                     const msg = error.message.includes('already')
                         ? 'Este correo ya está registrado. Inicia sesión.'
                         : error.message;

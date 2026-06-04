@@ -12,6 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
@@ -444,6 +445,9 @@
                     <label for="terminos" class="inst-checkbox-label">Acepto los <a href="terminos.html" target="_blank">términos y condiciones</a> de YOSSICO</label>
                 </div>
                 
+                <!-- Turnstile Widget -->
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-top: 16px;"></div>
+                
                 <button type="submit" class="inst-btn" id="submit-btn">Postularme</button>
                 <div id="form-msg" class="inst-msg"></div>
                 <p class="form-footer-text">Revisamos cada postulación personalmente. Te contactamos en un máximo de 7 días.</p>
@@ -502,6 +506,15 @@
             msgDiv.textContent = '';
             msgDiv.style.color = 'inherit';
 
+            const turnstileToken = document.querySelector('#embajadoras-form [name="cf-turnstile-response"]')?.value;
+            if (!turnstileToken) {
+                msgDiv.textContent = 'Por favor completa la verificación de seguridad.';
+                msgDiv.style.color = 'red';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Postularme';
+                return;
+            }
+
             const payload = {
                 nombre: document.getElementById('nombres').value.trim(),
                 especialidad: document.getElementById('especialidad').value.trim(),
@@ -512,16 +525,29 @@
             };
 
             try {
-                const { error } = await sb.from('embajadoras_leads').insert([payload]);
-                if (error) throw error;
-                
+                const EDGE_FN_URL = `${SUPABASE_URL}/functions/v1/submit-lead`;
+                const res = await fetch(EDGE_FN_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        table: 'embajadoras_leads',
+                        turnstileToken: turnstileToken,
+                        payload: payload
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al enviar la postulación.');
+
                 msgDiv.textContent = 'Tu postulación ha sido enviada exitosamente. Estaremos en contacto pronto.';
                 msgDiv.style.color = '#333';
                 form.reset();
+                turnstile.reset();
             } catch (err) {
                 console.error(err);
-                msgDiv.textContent = 'Ocurrió un error al enviar tu postulación. Por favor intenta de nuevo.';
+                msgDiv.textContent = err.message || 'Ocurrió un error al enviar tu postulación. Por favor intenta de nuevo.';
                 msgDiv.style.color = 'red';
+                if (typeof turnstile !== 'undefined') turnstile.reset();
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Postularme';

@@ -13,6 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         body {
             background: #ffffff;
@@ -293,9 +294,12 @@
 
                 <div class="inst-checkbox-wrap">
                     <input type="checkbox" id="i-terms" class="inst-checkbox" required>
-                    <label class="inst-checkbox-label" for="i-terms">Acepto los <a href="terminos.html" target="_blank">términos y condiciones y la política de privacidad</a> de YOSSICO</label>
+                    <label for="i-terms" class="inst-checkbox-label">Acepto los <a href="terminos.html" target="_blank">términos y condiciones</a> de YOSSICO</label>
                 </div>
-
+                
+                <!-- Turnstile Widget -->
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-top: 16px;"></div>
+                
                 <button type="submit" class="inst-btn" id="i-submit">Enviar Solicitud</button>
                 <p id="i-msg" class="inst-msg"></p>
             </form>
@@ -393,29 +397,53 @@
                     return;
                 }
 
+                const turnstileToken = document.querySelector('#inst-form [name="cf-turnstile-response"]')?.value;
+                if (!turnstileToken) {
+                    msg.textContent = 'Por favor, completa la verificación de seguridad.';
+                    msg.style.color = '#c0392b';
+                    return;
+                }
+
                 btn.disabled = true;
                 btn.textContent = 'Enviando...';
 
-                const { error } = await sb.from('institucional_leads').insert([{
-                    nombre,
-                    institucion,
-                    ciudad,
-                    num_personas: parseInt(num_personas) || null,
-                    correo,
-                    mensaje: mensaje || null
-                }]);
+                try {
+                    const EDGE_FN_URL = `${SUPABASE_URL}/functions/v1/submit-lead`;
+                    const res = await fetch(EDGE_FN_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            table: 'institucional_leads',
+                            turnstileToken: turnstileToken,
+                            payload: {
+                                nombre,
+                                institucion,
+                                ciudad,
+                                num_personas: parseInt(num_personas) || null,
+                                correo,
+                                mensaje: mensaje || null
+                            }
+                        })
+                    });
 
-                if (error) {
-                    btn.disabled = false;
-                    btn.textContent = 'Enviar Solicitud';
-                    msg.textContent = 'Ocurrió un error al enviar tu solicitud. Inténtalo de nuevo.';
-                    msg.style.color = '#c0392b';
-                    console.error(error);
-                } else {
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        throw new Error(data.error || 'Error al enviar la solicitud.');
+                    }
+
                     form.reset();
+                    turnstile.reset(); // Reset in case they want to submit again
                     btn.textContent = 'Enviado';
                     msg.textContent = '¡Gracias por escribirnos! Te contactaremos pronto.';
                     msg.style.color = 'var(--gray-mid)';
+                } catch (error) {
+                    btn.disabled = false;
+                    btn.textContent = 'Enviar Solicitud';
+                    msg.textContent = error.message || 'Ocurrió un error al enviar tu solicitud. Inténtalo de nuevo.';
+                    msg.style.color = '#c0392b';
+                    turnstile.reset(); // Reset on error
+                    console.error(error);
                 }
             });
         })();

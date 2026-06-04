@@ -30,8 +30,14 @@
         return getSb().auth.signInWithPassword({ email, password });
     }
 
-    async function signUp(email, password) {
-        return getSb().auth.signUp({ email, password });
+    async function signUp(email, password, captchaToken) {
+        return getSb().auth.signUp({ 
+            email, 
+            password,
+            options: {
+                captchaToken: captchaToken
+            }
+        });
     }
 
     async function signOut() {

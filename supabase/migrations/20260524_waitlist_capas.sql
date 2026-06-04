@@ -12,8 +12,14 @@ CREATE TABLE IF NOT EXISTS waitlist_capas (
 );
 
 -- Unique correo: evita duplicados silenciosos
-ALTER TABLE waitlist_capas
-    ADD CONSTRAINT waitlist_capas_correo_unique UNIQUE (correo);
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'waitlist_capas_correo_unique'
+    ) THEN
+        ALTER TABLE waitlist_capas ADD CONSTRAINT waitlist_capas_correo_unique UNIQUE (correo);
+    END IF;
+END $$;
 
 -- Índice de búsqueda por correo
 CREATE INDEX IF NOT EXISTS waitlist_capas_correo_idx ON waitlist_capas (correo);
@@ -22,11 +28,13 @@ CREATE INDEX IF NOT EXISTS waitlist_capas_correo_idx ON waitlist_capas (correo);
 ALTER TABLE waitlist_capas ENABLE ROW LEVEL SECURITY;
 
 -- Cualquier visitante anónimo puede insertar (formulario público)
+DROP POLICY IF EXISTS "waitlist_capas_insert_public" ON waitlist_capas;
 CREATE POLICY "waitlist_capas_insert_public"
     ON waitlist_capas FOR INSERT
     WITH CHECK (true);
 
 -- Solo el service_role (admin) puede leer
+DROP POLICY IF EXISTS "waitlist_capas_select_admin" ON waitlist_capas;
 CREATE POLICY "waitlist_capas_select_admin"
     ON waitlist_capas FOR SELECT
     USING (auth.role() = 'service_role');

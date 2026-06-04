@@ -913,7 +913,8 @@
     </div>
   </aside>
   <script src="script.js"></script>
-  <script src="cart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/auth.js"></script>
 
@@ -966,6 +967,10 @@
               <input class="sub-form__input" id="sub-phone" type="tel" placeholder="+57 300 000 0000" autocomplete="tel"
                 required>
             </div>
+            
+            <!-- Turnstile Widget -->
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-bottom: 20px;"></div>
+            
             <button type="submit" class="sub-form__btn">Quiero mi descuento →</button>
             <p class="sub-form__legal">Al registrarte aceptas recibir notificaciones de drops y promociones de YOSSICO.
               Sin spam.</p>
@@ -1103,6 +1108,12 @@
       if (!phone) { setFieldError('sub-phone', 'Por favor ingresa tu número de celular.'); hasError = true; }
       if (hasError) return;
 
+      const turnstileToken = document.querySelector('#sub-form [name="cf-turnstile-response"]')?.value;
+      if (!turnstileToken) {
+        setFieldError('sub-email', 'Por favor completa la validación de seguridad.');
+        return;
+      }
+
       setSubmitState('loading');
 
       try {
@@ -1111,7 +1122,7 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name, email, phone }),
+          body: JSON.stringify({ name, email, phone, turnstileToken }),
         });
 
         const data = await res.json();
@@ -1121,6 +1132,7 @@
             setFieldError('sub-email', 'Este correo ya está registrado. ¡Revisa tu bandeja de entrada!');
           } else {
             setFieldError('sub-email', data.error || 'Algo salió mal. Intenta de nuevo.');
+            turnstile.reset(); // Reset Turnstile on generic error
           }
           setSubmitState('error');
           return;

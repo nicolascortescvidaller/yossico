@@ -13,6 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         /* ── Layout ── */
         .coleccion {
@@ -1269,6 +1270,10 @@
                                 style="border:1px solid var(--border);padding:10px 12px;font-family:var(--font-body);font-size:12px;color:var(--black);background:#fff;outline:none;box-sizing:border-box;width:100%;">
                             <input id="wl-correo" type="email" placeholder="Correo" required
                                 style="border:1px solid var(--border);padding:10px 12px;font-family:var(--font-body);font-size:12px;color:var(--black);background:#fff;outline:none;box-sizing:border-box;width:100%;">
+                            
+                            <!-- Turnstile Widget -->
+                            <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-top: 4px;"></div>
+                            
                             <button type="submit" id="wl-submit"
                                 style="background:var(--black);color:#fff;border:none;padding:13px 24px;font-family:var(--font-body);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;">
                                 Avisarme
@@ -1744,28 +1749,56 @@
                     return;
                 }
 
+                const turnstileToken = document.querySelector('#waitlist-capas-form [name="cf-turnstile-response"]')?.value;
+                if (!turnstileToken) {
+                    msg.textContent = 'Por favor completa la verificación de seguridad.';
+                    msg.style.color = '#c0392b';
+                    return;
+                }
+
                 btn.disabled = true;
                 btn.textContent = 'Enviando...';
                 msg.textContent = '';
 
-                const { error } = await sb
-                    .from('waitlist_capas')
-                    .insert([{ nombre, telefono, correo }]);
+                try {
+                    const EDGE_FN_URL = `${SUPABASE_URL}/functions/v1/submit-lead`;
+                    const res = await fetch(EDGE_FN_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            table: 'waitlist_capas',
+                            turnstileToken: turnstileToken,
+                            payload: { nombre, telefono, correo }
+                        })
+                    });
 
-                btn.disabled = false;
+                    const data = await res.json();
+                    btn.disabled = false;
 
-                if (error) {
+                    if (!res.ok) {
+                        btn.textContent = 'Avisarme';
+                        msg.style.color = '#c0392b';
+                        if (res.status === 409 || data.error?.includes('ya está en la lista') || data.error?.includes('23505')) {
+                            msg.textContent = 'Este correo ya está en la lista.';
+                        } else {
+                            msg.textContent = data.error || 'Error al guardar. Intenta de nuevo.';
+                        }
+                        turnstile.reset();
+                    } else {
+                        form.style.display = 'none';
+                        msg.style.color = 'var(--gray)';
+                        msg.style.display = 'block';
+                        msg.textContent = '¡Listo! Te avisamos cuando lleguen.';
+                        turnstile.reset();
+                    }
+                } catch (err) {
+                    btn.disabled = false;
                     btn.textContent = 'Avisarme';
                     msg.style.color = '#c0392b';
-                    msg.textContent = error.code === '23505'
-                        ? 'Este correo ya está en la lista.'
-                        : 'Error al guardar. Intenta de nuevo.';
-                } else {
-                    form.style.display = 'none';
-                    msg.style.color = 'var(--gray)';
-                    msg.style.display = 'block';
-                    msg.textContent = '¡Listo! Te avisamos cuando lleguen.';
+                    msg.textContent = 'Error de conexión. Intenta de nuevo.';
+                    turnstile.reset();
                 }
+
             });
         })();
     </script>

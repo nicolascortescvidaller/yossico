@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { name, email, phone } = await req.json();
+    const { name, email, phone, turnstileToken } = await req.json();
 
     // Validate inputs
     if (!name || !email || !phone) {
@@ -28,6 +28,42 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ error: "El correo electrónico no es válido." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Turnstile verification
+    if (!turnstileToken) {
+      return new Response(
+        JSON.stringify({ error: "Falta validación de seguridad." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const secretKey = Deno.env.get("TURNSTILE_SECRET_KEY");
+    if (!secretKey) {
+      console.error("Falta TURNSTILE_SECRET_KEY en las variables de entorno.");
+      return new Response(
+        JSON.stringify({ error: "Error de configuración del servidor." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const formData = new URLSearchParams();
+    formData.append("secret", secretKey);
+    formData.append("response", turnstileToken);
+
+    const turnstileRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      body: formData,
+    });
+    
+    const turnstileData = await turnstileRes.json();
+
+    if (!turnstileData.success) {
+      console.error("Turnstile falló:", turnstileData);
+      return new Response(
+        JSON.stringify({ error: "Verificación de seguridad fallida. Eres un bot?" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 

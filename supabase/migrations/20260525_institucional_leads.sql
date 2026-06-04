@@ -21,11 +21,13 @@ CREATE INDEX IF NOT EXISTS institucional_leads_correo_idx ON institucional_leads
 ALTER TABLE institucional_leads ENABLE ROW LEVEL SECURITY;
 
 -- Cualquier visitante anónimo puede insertar (formulario público)
+DROP POLICY IF EXISTS "institucional_leads_insert_public" ON institucional_leads;
 CREATE POLICY "institucional_leads_insert_public"
     ON institucional_leads FOR INSERT
     WITH CHECK (true);
 
 -- Solo el service_role (admin) puede leer
+DROP POLICY IF EXISTS "institucional_leads_select_admin" ON institucional_leads;
 CREATE POLICY "institucional_leads_select_admin"
     ON institucional_leads FOR SELECT
     USING (auth.role() = 'service_role');
