@@ -828,6 +828,11 @@
         <span class="countdown__num" id="cd-minutes">00</span>
         <span class="countdown__label">MINUTOS</span>
       </div>
+      <div class="countdown__sep" aria-hidden="true">·</div>
+      <div class="countdown__unit">
+        <span class="countdown__num" id="cd-seconds">00</span>
+        <span class="countdown__label">SEGUNDOS</span>
+      </div>
     </div>
   </section>
 
@@ -1019,6 +1024,7 @@
       const elD = document.getElementById('cd-days');
       const elH = document.getElementById('cd-hours');
       const elM = document.getElementById('cd-minutes');
+      const elS = document.getElementById('cd-seconds');
 
       function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -1037,10 +1043,11 @@
         const diff = TARGET - now;
 
         if (diff <= 0) {
-          elW.textContent = elD.textContent = elH.textContent = elM.textContent = '00';
+          elW.textContent = elD.textContent = elH.textContent = elM.textContent = elS.textContent = '00';
           return;
         }
 
+        const totalSeconds = Math.floor(diff / 1000);
         const totalMinutes = Math.floor(diff / 60000);
         const totalHours   = Math.floor(diff / 3600000);
         const totalDays    = Math.floor(diff / 86400000);
@@ -1048,11 +1055,13 @@
         const days         = totalDays % 7;
         const hours        = totalHours % 24;
         const minutes      = totalMinutes % 60;
+        const seconds      = totalSeconds % 60;
 
         tick(elW, pad(weeks));
         tick(elD, pad(days));
         tick(elH, pad(hours));
         tick(elM, pad(minutes));
+        tick(elS, pad(seconds));
       }
 
       update();
