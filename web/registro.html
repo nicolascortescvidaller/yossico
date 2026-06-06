@@ -31,6 +31,25 @@
             overflow: hidden;
         }
 
+        .auth-panel__body, .auth-panel__footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-panel__bg-img {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 65%;
+            object-fit: contain;
+            object-position: bottom center;
+            mix-blend-mode: multiply;
+            z-index: 0;
+            pointer-events: none;
+        }
+
         .auth-panel__tag {
             font-family: var(--font-body);
             font-weight: 400;
@@ -270,6 +289,7 @@
                     Crea tu cuenta, accede a descuentos exclusivos y sé la primera en conocer cada nuevo drop de YOSSICO.
                 </p>
             </div>
+            <img src="img/kyoto_back.png" class="auth-panel__bg-img" alt="Modelo KYOTO de espaldas">
             <p class="auth-panel__footer">© 2026 YOSSICO · Colombia</p>
         </div>
 
