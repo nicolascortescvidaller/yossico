@@ -83,7 +83,7 @@ const YOSSICO_PRODUCTS = {
             { key: 'gris', label: 'Gris', hex: '#7a8084', imgs: ['img/gris.webp', 'img/gris.webp', 'img/gris.webp'] },
             { key: 'azul-claro', label: 'Azul Acero', hex: '#4a6fa5', imgs: ['img/azul-claro.webp', 'img/azul-claro.webp', 'img/azul-claro.webp'] },
         ],
-        defaultImgs: ['img/kyoto.webp', 'img/kyoto-2.webp', 'img/kyoto-3.webp'],
+        defaultImgs: ['img/kyoto_front.png', 'img/kyoto_detail.png', 'img/kyoto_back.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO',
     },
 
