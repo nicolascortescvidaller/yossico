@@ -23,12 +23,11 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina frío · no usar secadora · plancha a baja temperatura' },
         ],
         colors: [
-            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/negro.webp', 'img/negro.webp', 'img/negro.webp'] },
-            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/azul-oscuro.webp', 'img/azul-oscuro.webp', 'img/azul-oscuro.webp'] },
-            { key: 'gris', label: 'Gris', hex: '#7a8084', imgs: ['img/gris.webp', 'img/gris.webp', 'img/gris.webp'] },
-            { key: 'azul-claro', label: 'Azul Acero', hex: '#4a6fa5', imgs: ['img/azul-claro.webp', 'img/azul-claro.webp', 'img/azul-claro.webp'] },
+            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/oslo_front.png', 'img/oslo_detail.png', 'img/oslo_back.png'] },
+            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/oslo_front.png', 'img/oslo_detail.png', 'img/oslo_back.png'] },
+            { key: 'vinotinto', label: 'Vinotinto', hex: '#5c2836', imgs: ['img/oslo_front.png', 'img/oslo_detail.png', 'img/oslo_back.png'] },
         ],
-        defaultImgs: ['img/oslo.webp', 'img/oslo-2.webp', 'img/oslo-3.webp'],
+        defaultImgs: ['img/oslo_front.png', 'img/oslo_detail.png', 'img/oslo_back.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20OSLO%20de%20YOSSICO',
     },
 
