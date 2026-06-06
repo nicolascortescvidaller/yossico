@@ -51,10 +51,7 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina frío · no usar secadora · plancha a baja temperatura' },
         ],
         colors: [
-            { key: 'azul-oscuro', label: 'Navy', hex: '#1a2744', imgs: ['img/milan.webp', 'img/milan-2.webp', 'img/milan-3.webp'] },
-            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/negro.webp', 'img/negro.webp', 'img/negro.webp'] },
-            { key: 'gris', label: 'Gris', hex: '#7a8084', imgs: ['img/gris.webp', 'img/gris.webp', 'img/gris.webp'] },
-            { key: 'azul-claro', label: 'Azul Acero', hex: '#4a6fa5', imgs: ['img/azul-claro.webp', 'img/azul-claro.webp', 'img/azul-claro.webp'] },
+            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/milan_front.png', 'img/milan_detail.png', 'img/milan_back.png'] },
         ],
         defaultImgs: ['img/milan_front.png', 'img/milan_detail.png', 'img/milan_back.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20MILAN%20de%20YOSSICO',
@@ -79,9 +76,7 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina frío · no usar secadora · plancha a baja temperatura' },
         ],
         colors: [
-            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/negro.webp', 'img/negro.webp', 'img/negro.webp'] },
-            { key: 'gris', label: 'Gris', hex: '#7a8084', imgs: ['img/gris.webp', 'img/gris.webp', 'img/gris.webp'] },
-            { key: 'azul-claro', label: 'Azul Acero', hex: '#4a6fa5', imgs: ['img/azul-claro.webp', 'img/azul-claro.webp', 'img/azul-claro.webp'] },
+            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/kyoto_front.png', 'img/kyoto_detail.png', 'img/kyoto_back.png'] },
         ],
         defaultImgs: ['img/kyoto_front.png', 'img/kyoto_detail.png', 'img/kyoto_back.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO',
