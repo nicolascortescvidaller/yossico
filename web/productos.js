@@ -56,7 +56,7 @@ const YOSSICO_PRODUCTS = {
             { key: 'gris', label: 'Gris', hex: '#7a8084', imgs: ['img/gris.webp', 'img/gris.webp', 'img/gris.webp'] },
             { key: 'azul-claro', label: 'Azul Acero', hex: '#4a6fa5', imgs: ['img/azul-claro.webp', 'img/azul-claro.webp', 'img/azul-claro.webp'] },
         ],
-        defaultImgs: ['img/milan.webp', 'img/milan-2.webp', 'img/milan-3.webp'],
+        defaultImgs: ['img/milan_front.png', 'img/milan_detail.png', 'img/milan_back.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20MILAN%20de%20YOSSICO',
     },
 
