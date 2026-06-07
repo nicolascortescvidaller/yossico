@@ -236,19 +236,20 @@
         const msg  = document.getElementById('ck-discount-msg');
         if (!code) return;
 
-        // Query Supabase subscribers table to validate
+        // Query Supabase via RPC to validate discount (bypasses RLS securely)
         try {
           if (!window.YOSSICO_AUTH) throw new Error('auth not ready');
           const { data, error } = await window.YOSSICO_AUTH.getSb()
-            .from('subscribers')
-            .select('discount_code, used')
-            .eq('discount_code', code)
-            .maybeSingle();
+            .rpc('validar_descuento', { codigo: code });
 
-          if (error || !data) {
-            msg.style.color = '#c0392b'; msg.textContent = 'Código no válido.'; msg.style.display = 'block'; return;
+          if (error) {
+            console.warn('RPC error:', error);
+            msg.style.color = '#c0392b'; msg.textContent = 'Error al validar el código.'; msg.style.display = 'block'; return;
           }
-          if (data.used) {
+          if (!data || !data.valido) {
+            msg.style.color = '#c0392b'; msg.textContent = 'Código no válido o inexistente.'; msg.style.display = 'block'; return;
+          }
+          if (data.usado) {
             msg.style.color = '#c0392b'; msg.textContent = 'Este código ya fue utilizado.'; msg.style.display = 'block'; return;
           }
           discountPct = 10;
