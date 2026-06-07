@@ -192,6 +192,38 @@ animId = requestAnimationFrame(animateCursor);
   `;
   document.body.appendChild(mobileMenu);
 
+  /* Inject a mobile user icon slot into the nav bar (shown on mobile only) */
+  const mobileUserWrap = document.createElement('div');
+  mobileUserWrap.className = 'nav__mobile-user';
+  mobileUserWrap.id = 'nav-mobile-user-slot';
+  navEl.insertBefore(mobileUserWrap, burger);
+
+  /* When auth.js later injects the user item into .nav__links,
+     we also clone the button into the mobile slot */
+  function syncMobileUserIcon() {
+    const userBtn = document.getElementById('nav-user-btn');
+    const userDropdown = document.getElementById('nav-user-dropdown');
+    if (!userBtn || !userDropdown || mobileUserWrap.childElementCount > 0) return;
+
+    /* Clone button only (the dropdown from desktop handles state) */
+    const cloneBtn = document.createElement('button');
+    cloneBtn.className = 'nav__user-btn';
+    cloneBtn.setAttribute('aria-label', 'Mi cuenta');
+    cloneBtn.innerHTML = userBtn.innerHTML;
+    cloneBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userBtn.click(); // delegate to real button so dropdown logic stays unified
+    });
+    mobileUserWrap.appendChild(cloneBtn);
+  }
+
+  /* Poll briefly for auth injection (auth.js loads after script.js) */
+  let pollCount = 0;
+  const poll = setInterval(() => {
+    syncMobileUserIcon();
+    if (document.getElementById('nav-user-btn') || ++pollCount > 20) clearInterval(poll);
+  }, 200);
+
   /* Toggle */
   burger.addEventListener('click', () => {
     const isOpen = burger.classList.toggle('open');
@@ -219,3 +251,4 @@ animId = requestAnimationFrame(animateCursor);
     }
   });
 })();
+

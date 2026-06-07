@@ -1729,6 +1729,11 @@ body.cursor-hover .cursor-ring {
   align-items: center;
 }
 
+/* Mobile-only user icon slot — hidden on desktop */
+.nav__mobile-user {
+  display: none;
+}
+
 .nav__user-btn {
   background: none;
   border: none;
@@ -1822,52 +1827,85 @@ body.cursor-hover .cursor-ring {
 
 /* ── Popup mobile ────────────────────────────────────────── */
 @media (max-width: 640px) {
+  /* Overlay is fully scrollable, starts at top of viewport */
   .sub-overlay {
     align-items: flex-start;
-    padding: 16px 12px 32px;
+    padding: 8px 10px 24px;
+    overflow-y: auto;
   }
 
   .sub-modal {
     grid-template-columns: 1fr;
     max-width: 100%;
-    margin: auto;
+    margin: 0 auto;
+    /* Never taller than viewport — inner sections scroll */
+    max-height: none;
   }
 
   .sub-modal__left {
-    padding: 36px 24px 28px;
+    padding: 28px 20px 20px;
     border-right: none;
     border-bottom: 1px solid var(--border);
   }
 
   .sub-modal__drop-word {
-    font-size: 32px;
-    letter-spacing: 10px;
+    font-size: 28px;
+    letter-spacing: 8px;
+    margin-top: 8px;
   }
 
   .sub-modal__headline {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .sub-modal__discount {
-    margin-top: 24px;
+    margin-top: 16px;
+  }
+
+  .sub-modal__discount-label {
+    font-size: 13px;
   }
 
   .sub-modal__right {
-    padding: 32px 24px 40px;
+    padding: 24px 20px 32px;
     max-height: none;
     overflow-y: visible;
   }
 
   .sub-modal__close {
-    top: 12px;
-    right: 12px;
+    top: 10px;
+    right: 10px;
   }
 
   .sub-form__title {
-    font-size: 22px;
+    font-size: 20px;
+    margin-bottom: 8px;
   }
 
   .sub-form__sub {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+    font-size: 10px;
+  }
+
+  .sub-form__input {
+    padding: 10px 0;
+    font-size: 12px;
+  }
+
+  .sub-form__btn {
+    padding: 14px 24px;
+    font-size: 9px;
+  }
+}
+
+/* ── User icon visible on mobile header ──────────────────── */
+@media (max-width: 600px) {
+  /* The auth user item is injected into .nav__links which is hidden.
+     We mirror it into the nav right area next to hamburger via CSS trick:
+     Show the user icon in a fixed slot in the nav wrapper */
+  .nav__mobile-user {
+    display: flex;
+    align-items: center;
+    margin-right: 4px;
   }
 }

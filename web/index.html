@@ -287,9 +287,18 @@
       user-select: none;
     }
     @media (max-width: 600px) {
-      .countdown-section { padding: 56px 20px; }
-      .countdown__unit { padding: 0 12px; }
-      .countdown__sep { font-size: 28px; }
+      .countdown-section { padding: 48px 16px; }
+      .countdown__units {
+        flex-wrap: wrap;
+        gap: 16px 0;
+        justify-content: center;
+      }
+      .countdown__unit { padding: 0 10px; }
+      .countdown__num { font-size: clamp(36px, 12vw, 64px); }
+      .countdown__sep { font-size: 22px; padding-top: 4px; }
+    }
+    @media (max-width: 380px) {
+      .countdown__unit { padding: 0 8px; }
     }
 
     /* ── Drops Section ───────────────────────────────────────── */
