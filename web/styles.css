@@ -1729,11 +1729,6 @@ body.cursor-hover .cursor-ring {
   align-items: center;
 }
 
-/* Mobile-only user icon slot — hidden on desktop */
-.nav__mobile-user {
-  display: none;
-}
-
 .nav__user-btn {
   background: none;
   border: none;
@@ -1900,12 +1895,10 @@ body.cursor-hover .cursor-ring {
 
 /* ── User icon visible on mobile header ──────────────────── */
 @media (max-width: 600px) {
-  /* The auth user item is injected into .nav__links which is hidden.
-     We mirror it into the nav right area next to hamburger via CSS trick:
-     Show the user icon in a fixed slot in the nav wrapper */
-  .nav__mobile-user {
-    display: flex;
-    align-items: center;
-    margin-right: 4px;
+  /* Dropdown opens downward from the icon, stays in viewport */
+  .nav__user .nav__user-dropdown {
+    right: 0;
+    left: auto;
+    z-index: 1200;
   }
 }

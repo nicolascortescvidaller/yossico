@@ -77,13 +77,15 @@
 
     /* ── Nav Injection ───────────────────────────────────────── */
     function injectUserNav() {
-        const navLinks = document.querySelector('.nav__links');
-        if (!navLinks) return;
+        const navEl = document.querySelector('.nav');
+        if (!navEl) return;
 
-        const li = document.createElement('li');
-        li.className = 'nav__user';
-        li.id = 'nav-user-item';
-        li.innerHTML = `
+        // Inject directly into .nav (not inside .nav__links which is hidden on mobile)
+        // Position it just before the hamburger button if it exists, otherwise append
+        const wrapper = document.createElement('div');
+        wrapper.className = 'nav__user';
+        wrapper.id = 'nav-user-item';
+        wrapper.innerHTML = `
       <button class="nav__user-btn" id="nav-user-btn" aria-label="Mi cuenta" aria-expanded="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -95,9 +97,20 @@
       </div>
     `;
 
-        // Insert before cart (last li)
-        const cartLi = navLinks.querySelector('li:last-child');
-        navLinks.insertBefore(li, cartLi);
+        // Insert before hamburger (if present) so order is: logo | links | [user] [cart] [hamburger]
+        const hamburger = navEl.querySelector('.nav__hamburger');
+        const mobileUserSlot = navEl.querySelector('.nav__mobile-user');
+
+        if (mobileUserSlot) {
+            // Remove the empty slot script.js created — we don't need it anymore
+            mobileUserSlot.remove();
+        }
+
+        if (hamburger) {
+            navEl.insertBefore(wrapper, hamburger);
+        } else {
+            navEl.appendChild(wrapper);
+        }
 
         const btn = document.getElementById('nav-user-btn');
         const dropdown = document.getElementById('nav-user-dropdown');
