@@ -784,7 +784,7 @@ body.cursor-hover .cursor-ring {
 
 /* ── Page Header (inner pages) ─────────────────────────────── */
 .page-header {
-  padding: 32px 60px 80px;
+  padding: 120px 60px 80px;
   background: transparent;
   border-bottom: 1px solid var(--border);
 }
