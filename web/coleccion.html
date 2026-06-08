@@ -788,18 +788,17 @@
         <ul class="nav__links">
             <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
                 <div class="nav__dropdown-menu">
-                    <a href="coleccion.html#linea-uniformes">Essentials</a>
-                    <a href="coleccion.html#linea-uniformes">Signature</a>
-                    <a href="coleccion.html#linea-uniformes">Core</a>
+                    <a href="coleccion.html?linea=essentials">Essentials</a>
+                    <a href="coleccion.html?linea=signature">Signature</a>
+                    <a href="coleccion.html?linea=core">Core</a>
                     <div class="nav__dropdown-divider"></div>
-                    <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+                    <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
                 </div>
             </li>
             <li><a href="acronimo.html">El Acrónimo</a></li>
             <li><a href="historia.html">Historia</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
             <li><a href="contacto.html">Contacto</a></li>
-            <li><a href="contacto.html" class="nav__cta">Contactar</a></li>
             <li>
                 <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">
                     <svg viewBox="0 0 24 24">
@@ -1471,16 +1470,32 @@
     <script src="cart.js"></script>
     <script>
         /* ── Filter ── */
-        document.querySelectorAll('.filter-btn').forEach(btn => {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.product-card[data-line]');
+        
+        function applyFilter(filter) {
+            filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+            cards.forEach(card => {
+                card.classList.toggle('hidden', filter !== 'all' && card.dataset.line !== filter);
+            });
+        }
+
+        filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const filter = btn.dataset.filter;
-                document.querySelectorAll('.product-card[data-line]').forEach(card => {
-                    card.classList.toggle('hidden', filter !== 'all' && card.dataset.line !== filter);
-                });
+                applyFilter(btn.dataset.filter);
+                // Update URL without reloading
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('linea', btn.dataset.filter);
+                window.history.pushState({}, '', newUrl);
             });
         });
+
+        // Apply filter on page load if parameter exists
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialFilter = urlParams.get('linea');
+        if (initialFilter && document.querySelector(`.filter-btn[data-filter="${initialFilter}"]`)) {
+            applyFilter(initialFilter);
+        }
 
         /* ── Card gallery slider (crossfade) ── */
         document.querySelectorAll('.gallery').forEach(gallery => {
