@@ -127,11 +127,9 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina · resistente al desgaste · no usar suavizante' },
         ],
         colors: [
-            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/core-negro.webp', 'img/core-negro.webp', 'img/core-negro.webp'] },
             { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png'] },
-            { key: 'morado', label: 'Morado Violeta', hex: '#3b1a5e', imgs: ['img/core-morado.webp', 'img/core-morado.webp', 'img/core-morado.webp'] },
         ],
-        defaultImgs: ['img/core-negro.webp', 'img/core-negro.webp', 'img/core-negro.webp'],
+        defaultImgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20BOGOTÁ%20de%20YOSSICO',
     },
 
@@ -154,9 +152,9 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina · resistente al desgaste · no usar suavizante' },
         ],
         colors: [
-            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/core-azul.webp', 'img/core-azul.webp', 'img/core-azul.webp'] },
+            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png'] },
         ],
-        defaultImgs: ['img/core-azul.webp', 'img/core-azul.webp', 'img/core-azul.webp'],
+        defaultImgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20MANTA%20de%20YOSSICO',
     },
 };
