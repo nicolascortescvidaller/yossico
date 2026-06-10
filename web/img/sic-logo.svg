@@ -1,1 +1,10 @@
-File not found: /v1/AUTH_mw/wikipedia-commons-local-public.ee/e/ee/Logo_de_la_Superintendencia_de_Industria_y_Comercio.svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" width="300" height="60">
+  <style>
+    .text-top { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: bold; fill: #111; letter-spacing: 1px; }
+    .text-bottom { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #111; letter-spacing: 0.5px; }
+    .line { stroke: #111; stroke-width: 2; }
+  </style>
+  <text x="0" y="20" class="text-top">SUPERINTENDENCIA DE</text>
+  <text x="0" y="40" class="text-bottom">INDUSTRIA Y COMERCIO</text>
+  <line x1="0" y1="50" x2="300" y2="50" class="line"/>
+</svg>
