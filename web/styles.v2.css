@@ -767,24 +767,29 @@ body.cursor-hover .cursor-ring {
 .breadcrumb__link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-family: var(--font-body);
   font-weight: 400;
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--gray-mid);
+  color: var(--black);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.25s;
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  background: transparent;
 }
 
 .breadcrumb__link:hover {
-  color: var(--black);
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
 }
 
 /* ── Page Header (inner pages) ─────────────────────────────── */
 .page-header {
-  padding: 120px 60px 80px;
+  padding: 20px 60px 40px;
   background: transparent;
   border-bottom: 1px solid var(--border);
 }
@@ -896,7 +901,7 @@ body.cursor-hover .cursor-ring {
 
 
   .page-header {
-    padding: 120px 24px 60px;
+    padding: 20px 24px 30px;
   }
 }
 
