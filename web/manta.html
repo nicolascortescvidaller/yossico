@@ -740,7 +740,63 @@
                 <button class="pd__size-btn">M</button>
                 <button class="pd__size-btn out-of-stock" disabled>L</button>
             </div>
-            <span class="pd__size-guide">¿Cuál es mi talla?</span>
+            <div class="pd__accordion" style="margin-top: 12px; border-bottom: none;">
+                <button class="pd__accordion-trigger" style="padding: 12px 0; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; border-bottom: none; justify-content: flex-start; gap: 8px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 8v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M7 6v12"></path><path d="M11 6v12"></path><path d="M15 6v12"></path></svg>
+                    <span>¿Cuál es mi talla?</span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" style="margin-left: auto;"><path d="M2 4L6 8L10 4"/></svg>
+                </button>
+                <div class="pd__accordion-content">
+                    <div class="table-wrap" style="overflow-x: auto; margin-bottom: 16px; margin-top: 8px;">
+                        <table class="size-table" style="width: 100%; border-collapse: collapse; font-family: var(--font-body); font-size: 12px; color: var(--black); min-width: 500px;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 12px 8px; border-bottom: 2px solid var(--black); text-align: center; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; color: var(--gray);">Talla</th>
+                                    <th style="padding: 12px 8px; border-bottom: 2px solid var(--black); text-align: center; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; color: var(--gray);">Hombro</th>
+                                    <th style="padding: 12px 8px; border-bottom: 2px solid var(--black); text-align: center; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; color: var(--gray);">Busto</th>
+                                    <th style="padding: 12px 8px; border-bottom: 2px solid var(--black); text-align: center; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; color: var(--gray);">Manga</th>
+                                    <th style="padding: 12px 8px; border-bottom: 2px solid var(--black); text-align: center; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; color: var(--gray);">Largo top</th>
+                                    <th style="padding: 12px 8px; border-bottom: 2px solid var(--black); text-align: center; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; color: var(--gray);">Cintura</th>
+                                    <th style="padding: 12px 8px; border-bottom: 2px solid var(--black); text-align: center; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; color: var(--gray);">Cadera</th>
+                                    <th style="padding: 12px 8px; border-bottom: 2px solid var(--black); text-align: center; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; color: var(--gray);">Largo pant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;"><strong>S</strong></td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">41 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">105 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">19.5 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">66 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">66 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">103 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">100 cm</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;"><strong>M</strong></td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">43 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">111 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">20 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">68 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">71 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">109 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">102 cm</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;"><strong>L</strong></td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">45 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">117 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">20.5 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">70 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">76 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">115 cm</td>
+                                    <td style="padding: 12px 8px; border-bottom: 1px solid var(--border); text-align: center;">104 cm</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
             <!-- Quantity selector -->
             <div class="pd__selector-label" style="margin-top: 16px;">Cantidad</div>
