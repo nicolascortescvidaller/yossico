@@ -23,11 +23,11 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina frío · no usar secadora · plancha a baja temperatura' },
         ],
         colors: [
-            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/oslo_front.png', 'img/oslo_detail.png', 'img/oslo_back.png'] },
-            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/oslo_front.png', 'img/oslo_detail.png', 'img/oslo_back.png'] },
-            { key: 'vinotinto', label: 'Vinotinto', hex: '#5c2836', imgs: ['img/oslo_front.png', 'img/oslo_detail.png', 'img/oslo_back.png'] },
+            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/oslo_black_front.png', 'img/oslo_black_half.png', 'img/oslo_black_back.png'] },
+            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/oslo_navy_front.png', 'img/oslo_navy_half.png', 'img/oslo_navy_back.png'] },
+            { key: 'vinotinto', label: 'Vinotinto', hex: '#5c2836', imgs: ['img/oslo_burgundy_front.png', 'img/oslo_burgundy_half.png', 'img/oslo_burgundy_back.png'] },
         ],
-        defaultImgs: ['img/oslo_front.png', 'img/oslo_detail.png', 'img/oslo_back.png'],
+        defaultImgs: ['img/oslo_black_front.png', 'img/oslo_black_half.png', 'img/oslo_black_back.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20OSLO%20de%20YOSSICO',
     },
 
@@ -100,11 +100,11 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina frío · no usar secadora · plancha a baja temperatura' },
         ],
         colors: [
-            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/negro.webp', 'img/negro.webp', 'img/negro.webp'] },
-            { key: 'gris', label: 'Gris', hex: '#7a8084', imgs: ['img/gris.webp', 'img/gris.webp', 'img/gris.webp'] },
-            { key: 'azul-claro', label: 'Azul Acero', hex: '#4a6fa5', imgs: ['img/azul-claro.webp', 'img/azul-claro.webp', 'img/azul-claro.webp'] },
+            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/lima_black_front.png', 'img/lima_black_half.png', 'img/lima_black_back.png'] },
+            { key: 'azul-pacifico', label: 'Azul Pacífico', hex: '#1B6B6B', imgs: ['img/lima_teal_front.png', 'img/lima_teal_half.png', 'img/lima_teal_back.png'] },
+            { key: 'verde-oliva', label: 'Verde Oliva', hex: '#7A8C5E', imgs: ['img/lima_olive_front.png', 'img/lima_olive_half.png', 'img/lima_olive_back.png'] },
         ],
-        defaultImgs: ['img/lima.webp', 'img/lima-2.webp', 'img/lima-3.webp'],
+        defaultImgs: ['img/lima_black_front.png', 'img/lima_black_half.png', 'img/lima_black_back.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20LIMA%20de%20YOSSICO',
     },
 
