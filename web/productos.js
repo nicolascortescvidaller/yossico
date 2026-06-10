@@ -127,9 +127,9 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina · resistente al desgaste · no usar suavizante' },
         ],
         colors: [
-            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png'] },
+            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png', 'img/bogota_navy_side.png', 'img/bogota_navy_closeup.png'] },
         ],
-        defaultImgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png'],
+        defaultImgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png', 'img/bogota_navy_side.png', 'img/bogota_navy_closeup.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20BOGOTÁ%20de%20YOSSICO',
     },
 
@@ -152,9 +152,9 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina · resistente al desgaste · no usar suavizante' },
         ],
         colors: [
-            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png'] },
+            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png', 'img/bogota_navy_side.png', 'img/bogota_navy_closeup.png'] },
         ],
-        defaultImgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png'],
+        defaultImgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png', 'img/bogota_navy_side.png', 'img/bogota_navy_closeup.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20MANTA%20de%20YOSSICO',
     },
 };

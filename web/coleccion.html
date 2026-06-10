@@ -1087,13 +1087,17 @@
                     data-sub="Set · Top + Pantalón · Tela Técnica" data-price="$229.900 COP"
                     data-desc="BOGOTÁ es el primer uniforme de la línea Core. Confección limpia, corte funcional y tela técnica de alto rendimiento para la profesional que da sus primeros pasos con YOSSICO."
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20BOGOTÁ%20de%20YOSSICO"
-                    data-imgs="img/bogota_navy_front.png,img/bogota_navy_half.png,img/bogota_navy_back.png">
+                    data-imgs="img/bogota_navy_front.png,img/bogota_navy_half.png,img/bogota_navy_back.png,img/bogota_navy_side.png,img/bogota_navy_closeup.png">
                     <div class="gallery__track">
                         <div class="gallery__slide active"><img loading="lazy" src="img/bogota_navy_front.png" alt="Set BOGOTÁ — Azul Marino Frontal">
                         </div>
                         <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_half.png" alt="Set BOGOTÁ — Azul Marino Medio">
                         </div>
                         <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_back.png" alt="Set BOGOTÁ — Azul Marino Espalda">
+                        </div>
+                        <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_side.png" alt="Set BOGOTÁ — Azul Marino Perfil">
+                        </div>
+                        <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_closeup.png" alt="Set BOGOTÁ — Azul Marino Detalles">
                         </div>
                     </div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
@@ -1121,7 +1125,8 @@
                         <span class="color-label">Color</span>
                         <button class="color-swatch selected" data-color="azul-oscuro" data-label="Azul Marino"
                             data-img-0="img/bogota_navy_front.png" data-img-1="img/bogota_navy_half.png"
-                            data-img-2="img/bogota_navy_back.png"></button>
+                            data-img-2="img/bogota_navy_back.png" data-img-3="img/bogota_navy_side.png"
+                            data-img-4="img/bogota_navy_closeup.png"></button>
                     </div>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
@@ -1146,13 +1151,17 @@
                     data-fabric="94% poliéster + 6% spandex — 120g/m²"
                     data-desc="MANTA es el segundo uniforme de la línea Core. Un diseño depurado y funcional con corte que prioriza el movimiento. Disponible en Azul Marino, un color que transmite calma y profesionalismo en cada turno."
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20MANTA%20de%20YOSSICO"
-                    data-imgs="img/bogota_navy_front.png,img/bogota_navy_half.png,img/bogota_navy_back.png">
+                    data-imgs="img/bogota_navy_front.png,img/bogota_navy_half.png,img/bogota_navy_back.png,img/bogota_navy_side.png,img/bogota_navy_closeup.png">
                     <div class="gallery__track">
                         <div class="gallery__slide active"><img loading="lazy" src="img/bogota_navy_front.png" alt="Set MANTA — Azul Marino">
                         </div>
                         <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_half.png" alt="Set MANTA — Azul Marino">
                         </div>
                         <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_back.png" alt="Set MANTA — Azul Marino">
+                        </div>
+                        <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_side.png" alt="Set MANTA — Azul Marino">
+                        </div>
+                        <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_closeup.png" alt="Set MANTA — Azul Marino">
                         </div>
                     </div>
                     <div class="gallery__expand-hint"><span>Ver detalle</span></div>
@@ -1165,7 +1174,8 @@
                         <span class="color-label">Color</span>
                         <button class="color-swatch selected" data-color="azul-oscuro" data-label="Azul Marino"
                             data-img-0="img/bogota_navy_front.png" data-img-1="img/bogota_navy_half.png"
-                            data-img-2="img/bogota_navy_back.png"></button>
+                            data-img-2="img/bogota_navy_back.png" data-img-3="img/bogota_navy_side.png"
+                            data-img-4="img/bogota_navy_closeup.png"></button>
                     </div>
                     <div class="size-selector">
                         <span class="size-label">Talla</span>
@@ -1556,7 +1566,7 @@
                     // Update the gallery data-name for cart 
                     const gallery = card.querySelector('.gallery');
                     if (gallery && swatch.dataset.img0) {
-                        const imgs = [0, 1, 2].map(i => swatch.dataset[`img${i}`] || swatch.dataset.img0);
+                        const imgs = Array.from(slides).map((_, i) => swatch.dataset[`img${i}`] || swatch.dataset.img0);
                         gallery.dataset.imgs = imgs.join(',');
                     }
                 });
