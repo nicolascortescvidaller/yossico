@@ -219,10 +219,10 @@
         }
 
         .pd__name {
-            font-family: var(--font-display);
-            font-weight: 400;
+            font-family: var(--font-logo);
+            font-weight: 700;
             font-size: clamp(52px, 6vw, 80px);
-            letter-spacing: -1.5px;
+            letter-spacing: -2px;
             line-height: 0.92;
             color: var(--black);
             margin-bottom: 12px;
@@ -250,8 +250,17 @@
             font-weight: 400;
             font-size: 36px;
             color: var(--black);
-            margin-bottom: 32px;
+            margin-bottom: 4px;
             letter-spacing: -0.5px;
+        }
+
+        .pd__tax-note {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: var(--gray-light);
+            margin-bottom: 32px;
         }
 
         .pd__desc {
@@ -714,6 +723,7 @@
 
             <div class="pd__divider"></div>
             <p class="pd__price" id="pd-price"></p>
+            <p class="pd__tax-note">Impuestos incluidos.</p>
             <p class="pd__desc" id="pd-desc"></p>
 
             <!-- Color selector -->
