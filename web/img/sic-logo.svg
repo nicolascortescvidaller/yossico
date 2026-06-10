@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" width="300" height="60">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50">
   <style>
-    .text-top { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: bold; fill: #FFFFFF; letter-spacing: 1px; }
-    .text-bottom { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #FFFFFF; letter-spacing: 0.5px; }
-    .line { stroke: #FFFFFF; stroke-width: 2; }
+    .text-top { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; fill: #FFFFFF; letter-spacing: 1.5px; }
+    .text-bottom { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #FFFFFF; letter-spacing: 0.5px; }
+    .line { stroke: #FFFFFF; stroke-width: 1.5; }
   </style>
-  <text x="0" y="20" class="text-top">SUPERINTENDENCIA DE</text>
-  <text x="0" y="40" class="text-bottom">INDUSTRIA Y COMERCIO</text>
-  <line x1="0" y1="50" x2="300" y2="50" class="line"/>
+  <text x="0" y="16" class="text-top">SUPERINTENDENCIA DE</text>
+  <text x="0" y="34" class="text-bottom">INDUSTRIA Y COMERCIO</text>
+  <line x1="0" y1="44" x2="185" y2="44" class="line"/>
 </svg>
