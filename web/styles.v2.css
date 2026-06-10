@@ -812,6 +812,18 @@ body.cursor-hover .cursor-ring {
   font-style: italic;
 }
 
+#hero-rotating-word {
+  display: inline-block;
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#hero-rotating-word.fade-out {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
 /* ── Responsive ─────────────────────────────────────────────── */
 
 /* Hamburger button — hidden on desktop */

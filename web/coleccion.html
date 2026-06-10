@@ -827,7 +827,7 @@
     <div class="page-header">
         <div class="label page-header__label reveal">Colección 2026</div>
         <h1 class="page-header__title reveal" data-delay="2">
-            Scrubs que te <em>definen.</em>
+            Scrubs que te <em id="hero-rotating-word">definen.</em>
         </h1>
     </div>
 
@@ -1868,6 +1868,23 @@
                 }
 
             });
+        })();
+
+        /* ── Hero text rotation ── */
+        (function() {
+            const words = ["definen.", "identifican.", "elevan.", "distinguen."];
+            let i = 0;
+            const el = document.getElementById('hero-rotating-word');
+            if (el) {
+                setInterval(() => {
+                    el.classList.add('fade-out');
+                    setTimeout(() => {
+                        i = (i + 1) % words.length;
+                        el.textContent = words[i];
+                        el.classList.remove('fade-out');
+                    }, 400);
+                }, 2000);
+            }
         })();
     </script>
 </body>
