@@ -152,11 +152,11 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina · resistente al desgaste · no usar suavizante' },
         ],
         colors: [
-            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png', 'img/bogota_navy_side.png', 'img/bogota_navy_closeup.png'] },
-            { key: 'vinotinto', label: 'Vinotinto', hex: '#581f2a', imgs: ['img/bogota_vino_front.png', 'img/bogota_vino_half.png', 'img/bogota_vino_back.png', 'img/bogota_vino_side.png', 'img/bogota_vino_closeup.png'] },
-            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/bogota_black_front.png', 'img/bogota_black_half.png', 'img/bogota_black_back.png', 'img/bogota_black_side.png', 'img/bogota_black_closeup.png'] },
+            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/manta_navy_1.png', 'img/manta_navy_2.png', 'img/manta_navy_3.png', 'img/manta_navy_4.png', 'img/manta_navy_5.png'] },
+            { key: 'vinotinto', label: 'Vinotinto', hex: '#581f2a', imgs: ['img/manta_vino_1.png', 'img/manta_vino_2.png', 'img/manta_vino_3.png', 'img/manta_vino_4.png', 'img/manta_vino_5.png'] },
+            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/manta_black_1.png', 'img/manta_black_2.png', 'img/manta_black_3.png', 'img/manta_black_4.png', 'img/manta_black_5.png'] },
         ],
-        defaultImgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png', 'img/bogota_navy_side.png', 'img/bogota_navy_closeup.png'],
+        defaultImgs: ['img/manta_navy_1.png', 'img/manta_navy_2.png', 'img/manta_navy_3.png', 'img/manta_navy_4.png', 'img/manta_navy_5.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20MANTA%20de%20YOSSICO',
     },
 };
