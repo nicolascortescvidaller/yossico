@@ -44,7 +44,7 @@ body {
   line-height: 1.6;
   cursor: none;
   overflow-x: hidden;
-  padding-top: 36px;
+  padding-top: 41px;
 }
 
 img {
@@ -166,30 +166,9 @@ body.cursor-hover .cursor-ring {
 }
 
 /* ── Navigation ────────────────────────────────────────────── */
-.announcement-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 36px;
-  background: var(--black);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  z-index: 1001;
-  text-align: center;
-  padding: 0 16px;
-}
-
 .nav {
   position: fixed;
-  top: 36px;
+  top: 41px;
   left: 0;
   right: 0;
   z-index: 1000;
@@ -859,7 +838,7 @@ body.cursor-hover .cursor-ring {
 .nav__mobile-menu {
   display: none;
   position: fixed;
-  top: 108px;
+  top: 113px;
   left: 0;
   right: 0;
   bottom: 0;
