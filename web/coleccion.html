@@ -54,7 +54,7 @@
         .product-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
+            gap: 80px 20px;
         }
 
         .product-card.hidden {
@@ -757,12 +757,14 @@
 
             .product-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 60px 16px;
             }
         }
 
         @media (max-width: 600px) {
             .product-grid {
                 grid-template-columns: 1fr;
+                gap: 60px;
             }
         }
     </style>
