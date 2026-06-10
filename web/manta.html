@@ -769,19 +769,36 @@
                 </div>
             </div>
 
-            <!-- Accordion -->
+            <!-- Accordions -->
             <div class="pd__accordion">
-                <button class="pd__accordion-trigger" id="acc-trigger">
+                <button class="pd__accordion-trigger">
                     <span>Cuidado e Instrucciones de Lavado</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
                 </button>
-                <div class="pd__accordion-content" id="acc-content">
+                <div class="pd__accordion-content">
                     <ul class="tc-list" style="margin-top: 10px; margin-bottom: 20px;">
                         <li>Lavar a máquina en agua fría, ciclo delicado</li>
                         <li>No usar blanqueadores ni productos con cloro</li>
                         <li>No secar en secadora — secar a la sombra</li>
                         <li>Planchar a temperatura baja si es necesario</li>
                         <li>No lavar en seco</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pd__accordion">
+                <button class="pd__accordion-trigger">
+                    <span>Detalles del Producto</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="pd__accordion-content">
+                    <ul class="tc-list" style="margin-top: 10px; margin-bottom: 20px;">
+                        <li><strong>Línea:</strong> Core</li>
+                        <li><strong>Composición:</strong> 94% poliéster + 6% spandex</li>
+                        <li><strong>Peso de la tela:</strong> 120g/m²</li>
+                        <li><strong>Incluye:</strong> Top + Pantalón</li>
+                        <li><strong>Colores disponibles:</strong> Negro, Azul Marino, Vinotinto</li>
+                        <li><strong>Tallas disponibles:</strong> S, M, L</li>
                     </ul>
                 </div>
             </div>
@@ -965,18 +982,18 @@
         });
 
         /* ── Accordion logic ──────────────────────── */
-        const accTrigger = document.getElementById('acc-trigger');
-        const accContent = document.getElementById('acc-content');
-        
-        accTrigger.addEventListener('click', () => {
-            const isExpanded = accTrigger.classList.contains('expanded');
-            if (isExpanded) {
-                accTrigger.classList.remove('expanded');
-                accContent.style.maxHeight = '0px';
-            } else {
-                accTrigger.classList.add('expanded');
-                accContent.style.maxHeight = accContent.scrollHeight + 'px';
-            }
+        document.querySelectorAll('.pd__accordion-trigger').forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const isExpanded = trigger.classList.contains('expanded');
+                const content = trigger.nextElementSibling;
+                if (isExpanded) {
+                    trigger.classList.remove('expanded');
+                    content.style.maxHeight = '0px';
+                } else {
+                    trigger.classList.add('expanded');
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
         });
 
         /* ── Add to cart ──────────────────────────── */
