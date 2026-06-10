@@ -153,6 +153,8 @@ const YOSSICO_PRODUCTS = {
         ],
         colors: [
             { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png', 'img/bogota_navy_side.png', 'img/bogota_navy_closeup.png'] },
+            { key: 'vinotinto', label: 'Vinotinto', hex: '#581f2a', imgs: ['img/bogota_vino_front.png', 'img/bogota_vino_half.png', 'img/bogota_vino_back.png', 'img/bogota_vino_side.png', 'img/bogota_vino_closeup.png'] },
+            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/bogota_black_front.png', 'img/bogota_black_half.png', 'img/bogota_black_back.png', 'img/bogota_black_side.png', 'img/bogota_black_closeup.png'] },
         ],
         defaultImgs: ['img/bogota_navy_front.png', 'img/bogota_navy_half.png', 'img/bogota_navy_back.png', 'img/bogota_navy_side.png', 'img/bogota_navy_closeup.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20MANTA%20de%20YOSSICO',

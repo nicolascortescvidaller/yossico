@@ -674,6 +674,10 @@
 
         <!-- Left: Gallery -->
         <div class="pd__gallery" id="pd-gallery">
+            <a href="coleccion.html" class="pd__back" style="margin: 24px 24px 16px 24px; align-self: flex-start;">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                Volver a la colección
+            </a>
             <div class="pd__gallery-main" id="pd-gallery-main">
                 <!-- slides injected by JS -->
                 <button class="pd__gall-btn pd__gall-btn--prev" id="pd-prev" aria-label="Anterior">
@@ -694,11 +698,6 @@
 
         <!-- Right: Info -->
         <div class="pd__info" id="pd-info">
-
-            <a href="coleccion.html" class="pd__back">
-                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                Volver a la colección
-            </a>
 
             <div class="pd__breadcrumb">
                 <a href="coleccion.html">Colección</a>
@@ -848,6 +847,7 @@
         document.getElementById('pd-desc').textContent = prod.desc;
 
         /* ── Features ─────────────────────────────── */
+        /* Eliminado en MANTA ya que ahora usamos el Acordeón 
         const featList = document.getElementById('pd-features-list');
         prod.features.forEach(f => {
             featList.insertAdjacentHTML('beforeend', `
@@ -856,6 +856,7 @@
           <span class="pd__feature-value">${f.value}</span>
         </div>`);
         });
+        */
 
         /* ── Gallery state ─────────────────────────── */
         let currentImgs = [...prod.defaultImgs];
