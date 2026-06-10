@@ -1688,7 +1688,11 @@
                 if (toDetail) {
                     e.preventDefault();
                     e.stopPropagation();
-                    navigateTo(`producto.html?id=${pid}`);
+                    if (pid === 'manta') {
+                        navigateTo('manta.html');
+                    } else {
+                        navigateTo(`producto.html?id=${pid}`);
+                    }
                 } else {
                     openModal(gallery);
                 }
@@ -1717,7 +1721,11 @@
                         el.addEventListener('click', e => {
                             e.preventDefault();
                             e.stopPropagation();
-                            navigateTo(`producto.html?id=${pid}`);
+                            if (pid === 'manta') {
+                                navigateTo('manta.html');
+                            } else {
+                                navigateTo(`producto.html?id=${pid}`);
+                            }
                         });
                     }
                 });
