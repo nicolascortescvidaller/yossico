@@ -660,6 +660,11 @@
 
         const params = new URLSearchParams(window.location.search);
         const id = (params.get('id') || '').toLowerCase();
+        
+        if (id === 'manta') {
+            window.location.replace('manta.html');
+        }
+        
         const prod = YOSSICO_PRODUCTS[id];
 
         if (!prod) {
