@@ -963,7 +963,7 @@
                 // Full slide
                 const slide = document.createElement('div');
                 slide.className = `pd__slide${i === 0 ? ' active' : ''}`;
-                slide.innerHTML = `<img loading="lazy" src="${src}" alt="${prod.name} — vista ${i + 1}" ${i === 1 ? 'class="contain-img"' : ''}>`;
+                slide.innerHTML = `<img loading="lazy" src="${src}" alt="${prod.name} — vista ${i + 1}" ${(i === 0 || i === 2) ? 'class="contain-img"' : ''}>`;
                 main.insertBefore(slide, main.querySelector('.pd__gall-btn--prev'));
 
                 // Thumbnail
