@@ -581,31 +581,31 @@
             <p class="pd__price" id="pd-price"></p>
             <p class="pd__desc" id="pd-desc"></p>
 
-            <!-- Color selector -->
-            <div class="pd__selector-label">
-                Color <span id="pd-color-name" class="pd__color-name"></span>
-            </div>
-            <div class="pd__colors" id="pd-colors"></div>
-
-            <!-- Size selector -->
+            <!-- Size selector (Moved above color) -->
             <div class="pd__selector-label">Talla</div>
             <div class="pd__sizes" id="pd-sizes">
                 <button class="pd__size-btn">S</button>
                 <button class="pd__size-btn">M</button>
-                <button class="pd__size-btn">L</button>
+                <button class="pd__size-btn out-of-stock" disabled>L</button>
             </div>
+
+            <!-- Color selector -->
+            <div class="pd__selector-label" style="margin-top: 16px;">
+                Color <span id="pd-color-name" class="pd__color-name"></span>
+            </div>
+            <div class="pd__colors" id="pd-colors"></div>
             <span class="pd__size-guide">¿Cuál es mi talla?</span>
 
             <!-- CTAs -->
             <div class="pd__ctas">
-                <button class="pd__cta-primary" id="pd-add-cart">
+                <button class="pd__cta-primary pd__cta-primary--full" id="pd-add-cart" style="opacity: 0.6;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                         stroke-linecap="round">
                         <circle cx="9" cy="21" r="1" />
                         <circle cx="20" cy="21" r="1" />
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                     </svg>
-                    Agregar al carrito
+                    <span id="pd-add-text">Selecciona tu talla</span>
                 </button>
                 <a href="#" class="pd__cta-secondary" id="pd-wa" target="_blank" rel="noopener">
                     <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
@@ -780,6 +780,14 @@
                 sizesContainer.querySelectorAll('.pd__size-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 selectedSize = btn.textContent.trim();
+                
+                // Update Add to Cart button state
+                const addBtn = document.getElementById('pd-add-cart');
+                const addText = document.getElementById('pd-add-text');
+                if (addBtn && addText) {
+                    addBtn.style.opacity = '1';
+                    addText.textContent = 'Agregar al carrito';
+                }
             });
         });
 
@@ -796,7 +804,7 @@
             }
             // Use shared addToCart from cart.js
             addToCart({
-                name: prod.name,
+                name: `${prod.name} (${colorNameEl.textContent})`,
                 size: selectedSize,
                 price: prod.price,
                 img: currentImgs[0],

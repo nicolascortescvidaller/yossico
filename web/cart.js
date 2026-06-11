@@ -206,9 +206,11 @@ document.addEventListener('click', e => {
         const card = addCardBtn.closest('.product-card');
         const gallery = card?.querySelector('.gallery');
         const sizeBtn = card?.querySelector('.size-btn.selected');
+        const colorBtn = card?.querySelector('.color-swatch.selected');
+        const colorLabel = colorBtn ? ` (${colorBtn.dataset.label})` : '';
         if (!gallery) return;
         addToCart({
-            name: gallery.dataset.name,
+            name: gallery.dataset.name + colorLabel,
             size: sizeBtn?.textContent || '',
             price: parseCOP(gallery.dataset.price),
             img: gallery.dataset.imgs.split(',')[0].trim(),
@@ -226,8 +228,10 @@ document.addEventListener('click', e => {
         const tag = document.getElementById('modal-tag')?.textContent;
         /* Get first image from modal track */
         const img = document.querySelector('#modal-track .modal__slide img')?.src || '';
+        const colorBtn = document.querySelector('#modal-colors .color-swatch.selected');
+        const colorLabel = colorBtn ? ` (${colorBtn.dataset.label})` : '';
         addToCart({
-            name: name || '',
+            name: (name || '') + colorLabel,
             size: sizeBtn?.textContent || '',
             price: parseCOP(price),
             img: img.replace(window.location.origin, '').replace(window.location.pathname.replace(/[^/]+$/, ''), ''),
