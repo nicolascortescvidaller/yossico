@@ -50,9 +50,9 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina frío · no usar secadora · plancha a baja temperatura' },
         ],
         colors: [
-            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/milan_front.png', 'img/milan_detail.png', 'img/milan_back.png'] },
+            { key: 'negro', label: 'Negro', hex: '#111111', imgs: ['img/milan_front.png', 'img/milan_detail.png', 'img/milan_back.png', 'img/milan_black_labels.png'] },
         ],
-        defaultImgs: ['img/milan_front.png', 'img/milan_detail.png', 'img/milan_back.png'],
+        defaultImgs: ['img/milan_front.png', 'img/milan_detail.png', 'img/milan_back.png', 'img/milan_black_labels.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20MILAN%20de%20YOSSICO',
     },
 
@@ -75,9 +75,9 @@ const YOSSICO_PRODUCTS = {
             { label: 'Cuidado', value: 'Lavado a máquina frío · no usar secadora · plancha a baja temperatura' },
         ],
         colors: [
-            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/kyoto_front.png', 'img/kyoto_detail.png', 'img/kyoto_back.png'] },
+            { key: 'azul-oscuro', label: 'Azul Marino', hex: '#1a2744', imgs: ['img/kyoto_front.png', 'img/kyoto_detail.png', 'img/kyoto_back.png', 'img/kyoto_navy_labels.png'] },
         ],
-        defaultImgs: ['img/kyoto_front.png', 'img/kyoto_detail.png', 'img/kyoto_back.png'],
+        defaultImgs: ['img/kyoto_front.png', 'img/kyoto_detail.png', 'img/kyoto_back.png', 'img/kyoto_navy_labels.png'],
         wa: 'Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO',
     },
 
