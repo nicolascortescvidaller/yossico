@@ -919,6 +919,24 @@ body.cursor-hover .cursor-ring {
   .page-header {
     padding: 20px 24px 30px;
   }
+
+  /* Footer responsive (Tablet) */
+  .footer {
+    padding: 60px 24px 30px;
+  }
+  .footer__columns {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  .footer__bottom-bar {
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .footer__sic {
+    justify-content: flex-start !important;
+  }
 }
 
 @media (max-width: 600px) {
