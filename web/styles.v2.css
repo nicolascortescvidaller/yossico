@@ -1891,6 +1891,7 @@ body.cursor-hover .cursor-ring {
     padding: 28px 20px 20px;
     border-right: none;
     border-bottom: 1px solid var(--border);
+    text-align: center;
   }
 
   .sub-modal__drop-word {
