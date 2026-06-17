@@ -211,6 +211,12 @@ body.cursor-hover .cursor-ring {
   list-style: none;
 }
 
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .nav__links a {
   font-family: var(--font-body);
   font-weight: 400;

@@ -97,19 +97,23 @@
       </div>
     `;
 
-        // Insert before hamburger (if present) so order is: logo | links | [user] [cart] [hamburger]
         const hamburger = navEl.querySelector('.nav__hamburger');
         const mobileUserSlot = navEl.querySelector('.nav__mobile-user');
 
         if (mobileUserSlot) {
-            // Remove the empty slot script.js created — we don't need it anymore
             mobileUserSlot.remove();
         }
 
-        if (hamburger) {
-            navEl.insertBefore(wrapper, hamburger);
+        // Insert into .nav__actions
+        const actionsEl = navEl.querySelector('.nav__actions');
+        if (actionsEl) {
+            actionsEl.appendChild(wrapper);
         } else {
-            navEl.appendChild(wrapper);
+            if (hamburger) {
+                navEl.insertBefore(wrapper, hamburger);
+            } else {
+                navEl.appendChild(wrapper);
+            }
         }
 
         const btn = document.getElementById('nav-user-btn');
