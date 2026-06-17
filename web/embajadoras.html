@@ -534,79 +534,88 @@
 
     <script src="script.js"></script>
     <script src="cart.js"></script>
-    <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-        import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/auth.js';
-        
-        const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const form = document.getElementById('embajadoras-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const msgDiv = document.getElementById('form-msg');
-        
-        const successOverlay = document.getElementById('success-overlay');
-        const successCloseBtn = document.getElementById('success-close');
+    <script>
+        // Esperamos a que el DOM y los scripts anteriores carguen completamente
+        document.addEventListener('DOMContentLoaded', function () {
 
-        function closeSuccessModal() {
-            successOverlay.classList.remove('open');
-        }
+            const SUPABASE_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+            const SUPABASE_ANON_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
 
-        successCloseBtn.addEventListener('click', closeSuccessModal);
-        successOverlay.addEventListener('click', (e) => {
-            if (e.target === successOverlay) closeSuccessModal();
-        });
+            // Usar el cliente global de Supabase cargado por el CDN en el <head>
+            const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Enviando...';
-            msgDiv.textContent = '';
-            msgDiv.style.color = 'inherit';
+            const form = document.getElementById('embajadoras-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const msgDiv = document.getElementById('form-msg');
+            const successOverlay = document.getElementById('success-overlay');
+            const successCloseBtn = document.getElementById('success-close');
 
-            const turnstileToken = document.querySelector('#embajadoras-form [name="cf-turnstile-response"]')?.value;
-            if (!turnstileToken) {
-                msgDiv.textContent = 'Por favor completa la verificación de seguridad.';
-                msgDiv.style.color = 'red';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Postularme';
-                return;
+            function closeSuccessModal() {
+                successOverlay.classList.remove('open');
+                document.body.style.overflow = '';
             }
 
-            const payload = {
-                nombre: document.getElementById('nombres').value.trim(),
-                especialidad: document.getElementById('especialidad').value.trim(),
-                ciudad: document.getElementById('ciudad').value.trim(),
-                instagram: document.getElementById('instagram').value.trim() || null,
-                correo: document.getElementById('correo').value.trim(),
-                mensaje: document.getElementById('mensaje').value.trim()
-            };
+            successCloseBtn.addEventListener('click', closeSuccessModal);
+            successOverlay.addEventListener('click', function (e) {
+                if (e.target === successOverlay) closeSuccessModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeSuccessModal();
+            });
 
-            try {
-                // Inserción directa desde el frontend usando RLS (anon key)
-                const { error } = await sb
-                    .from('embajadoras_leads')
-                    .insert([payload]);
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Enviando...';
+                msgDiv.textContent = '';
+                msgDiv.style.color = 'inherit';
 
-                if (error) {
-                    console.error("Error detallado de Supabase:", error);
-                    throw new Error(error.message || 'Error al enviar la postulación en la base de datos.');
+                const turnstileToken = document.querySelector('#embajadoras-form [name="cf-turnstile-response"]')?.value;
+                if (!turnstileToken) {
+                    msgDiv.textContent = 'Por favor completa la verificación de seguridad.';
+                    msgDiv.style.color = 'red';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Postularme';
+                    return;
                 }
-                
-                console.log("Inserción exitosa en Supabase:", data);
 
-                form.reset();
-                if (typeof turnstile !== 'undefined') turnstile.reset();
-                
-                // Show success modal
-                successOverlay.classList.add('open');
-            } catch (err) {
-                console.error("Error capturado durante el submit:", err);
-                msgDiv.textContent = err.message || 'Ocurrió un error al enviar tu postulación. Por favor intenta de nuevo.';
-                msgDiv.style.color = 'red';
-                if (typeof turnstile !== 'undefined') turnstile.reset();
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Postularme';
-            }
+                const payload = {
+                    nombre: document.getElementById('nombres').value.trim(),
+                    especialidad: document.getElementById('especialidad').value.trim(),
+                    ciudad: document.getElementById('ciudad').value.trim(),
+                    instagram: document.getElementById('instagram').value.trim() || null,
+                    correo: document.getElementById('correo').value.trim(),
+                    mensaje: document.getElementById('mensaje').value.trim() || null
+                };
+
+                try {
+                    const { error } = await sb
+                        .from('embajadoras_leads')
+                        .insert([payload]);
+
+                    if (error) {
+                        console.error('[Embajadoras] Error de Supabase:', JSON.stringify(error));
+                        throw new Error(error.message || 'Error al guardar la postulación.');
+                    }
+
+                    console.log('[Embajadoras] Inserción exitosa.');
+                    form.reset();
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
+
+                    // Mostrar popup de éxito
+                    successOverlay.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+
+                } catch (err) {
+                    console.error('[Embajadoras] Error capturado:', err);
+                    msgDiv.textContent = err.message || 'Ocurrió un error. Por favor intenta de nuevo.';
+                    msgDiv.style.color = 'red';
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Postularme';
+                }
+            });
         });
     </script>
 </body>
