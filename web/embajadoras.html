@@ -560,26 +560,25 @@
             };
 
             try {
-                const EDGE_FN_URL = `${SUPABASE_URL}/functions/v1/submit-lead`;
-                const res = await fetch(EDGE_FN_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        table: 'embajadoras_leads',
-                        turnstileToken: turnstileToken,
-                        payload: payload
-                    })
-                });
+                // Inserción directa desde el frontend usando RLS (anon key)
+                const { data, error } = await sb
+                    .from('embajadoras_leads')
+                    .insert([payload])
+                    .select();
 
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'Error al enviar la postulación.');
+                if (error) {
+                    console.error("Error detallado de Supabase:", error);
+                    throw new Error(error.message || 'Error al enviar la postulación en la base de datos.');
+                }
+                
+                console.log("Inserción exitosa en Supabase:", data);
 
                 msgDiv.textContent = 'Tu postulación ha sido enviada exitosamente. Estaremos en contacto pronto.';
                 msgDiv.style.color = '#333';
                 form.reset();
-                turnstile.reset();
+                if (typeof turnstile !== 'undefined') turnstile.reset();
             } catch (err) {
-                console.error(err);
+                console.error("Error capturado durante el submit:", err);
                 msgDiv.textContent = err.message || 'Ocurrió un error al enviar tu postulación. Por favor intenta de nuevo.';
                 msgDiv.style.color = 'red';
                 if (typeof turnstile !== 'undefined') turnstile.reset();
