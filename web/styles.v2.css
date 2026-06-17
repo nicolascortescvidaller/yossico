@@ -1020,7 +1020,11 @@ body.cursor-hover .cursor-ring {
   .sub-modal__right {
     padding: 36px 24px;
   }
-
+  
+  .success-modal {
+    padding: 36px 24px;
+  }
+}
   /* Cart drawer full width */
   .cart-drawer {
     width: 100vw;
@@ -1431,6 +1435,80 @@ body.cursor-hover .cursor-ring {
 .size-selector.shake,
 .modal__sizes.shake {
   animation: shake 0.45s ease;
+}
+
+/* ═══════════════════════════════════════════════
+   SUCCESS POPUP
+   ═══════════════════════════════════════════════ */
+
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.success-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.success-modal {
+  background: var(--white);
+  width: 100%;
+  max-width: 480px;
+  padding: 48px;
+  text-align: center;
+  transform: translateY(20px);
+  transition: transform 0.35s ease;
+  position: relative;
+}
+
+.success-overlay.open .success-modal {
+  transform: translateY(0);
+}
+
+.success-modal__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--black);
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.success-modal__text {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--gray);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.success-modal__btn {
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  padding: 16px 32px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+}
+
+.success-modal__btn:hover {
+  background: var(--gray);
 }
 
 /* ═══════════════════════════════════════════════

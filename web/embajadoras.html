@@ -523,6 +523,15 @@
         </div>
     </aside>
 
+    <!-- ══ Success Popup ══ -->
+    <div class="success-overlay" id="success-overlay" role="dialog" aria-modal="true" aria-label="Éxito">
+        <div class="success-modal">
+            <h2 class="success-modal__title">¡Gracias por tu postulación!</h2>
+            <p class="success-modal__text">Hemos recibido tu solicitud. Nos pondremos en contacto contigo en un plazo de 48 a 72 horas.</p>
+            <button class="success-modal__btn" id="success-close">Cerrar</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script src="cart.js"></script>
     <script type="module">
@@ -533,6 +542,18 @@
         const form = document.getElementById('embajadoras-form');
         const submitBtn = document.getElementById('submit-btn');
         const msgDiv = document.getElementById('form-msg');
+        
+        const successOverlay = document.getElementById('success-overlay');
+        const successCloseBtn = document.getElementById('success-close');
+
+        function closeSuccessModal() {
+            successOverlay.classList.remove('open');
+        }
+
+        successCloseBtn.addEventListener('click', closeSuccessModal);
+        successOverlay.addEventListener('click', (e) => {
+            if (e.target === successOverlay) closeSuccessModal();
+        });
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -573,10 +594,11 @@
                 
                 console.log("Inserción exitosa en Supabase:", data);
 
-                msgDiv.textContent = 'Tu postulación ha sido enviada exitosamente. Estaremos en contacto pronto.';
-                msgDiv.style.color = '#333';
                 form.reset();
                 if (typeof turnstile !== 'undefined') turnstile.reset();
+                
+                // Show success modal
+                successOverlay.classList.add('open');
             } catch (err) {
                 console.error("Error capturado durante el submit:", err);
                 msgDiv.textContent = err.message || 'Ocurrió un error al enviar tu postulación. Por favor intenta de nuevo.';
