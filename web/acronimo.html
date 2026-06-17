@@ -120,13 +120,13 @@
             font-size: clamp(80px, 9vw, 130px);
             line-height: 1;
             letter-spacing: -3px;
-            color: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.15);
             transition: color 0.35s;
             user-select: none;
         }
 
         .acr-item:hover .acr-item__letter {
-            color: rgba(255, 255, 255, 0.18);
+            color: rgba(255, 255, 255, 0.35);
         }
 
         .acr-item__content {
@@ -266,11 +266,24 @@
 
         /* Cart and User icon overrides for dark background */
         .cart-icon-btn, .nav__user-btn {
-            color: rgba(255, 255, 255, 0.5) !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .cart-icon-btn svg, .nav__user-btn svg {
+            stroke: rgba(255, 255, 255, 0.8) !important;
         }
 
         .cart-icon-btn:hover, .nav__user-btn:hover {
             color: var(--white) !important;
+        }
+
+        .cart-icon-btn:hover svg, .nav__user-btn:hover svg {
+            stroke: var(--white) !important;
+        }
+        
+        .cart-badge {
+            background: var(--white) !important;
+            color: var(--black) !important;
         }
     </style>
 </head>
