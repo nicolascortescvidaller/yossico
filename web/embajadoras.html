@@ -428,18 +428,18 @@
                 </div>
                 
                 <div class="inst-field">
-                    <label class="inst-label" for="instagram">Instagram (opcional)</label>
-                    <input type="text" id="instagram" class="inst-input" placeholder="@usuario">
-                </div>
-
-                <div class="inst-field">
                     <label class="inst-label" for="correo">Correo electrónico *</label>
                     <input type="email" id="correo" class="inst-input" required>
                 </div>
+
+                <div class="inst-field">
+                    <label class="inst-label" for="instagram">Instagram (opcional)</label>
+                    <input type="text" id="instagram" class="inst-input" placeholder="@usuario">
+                </div>
                 
                 <div class="inst-field">
-                    <label class="inst-label" for="mensaje">¿Por qué quieres ser embajadora YOSSICO? *</label>
-                    <textarea id="mensaje" class="inst-input inst-textarea" required maxlength="200" placeholder="Máximo 200 caracteres..."></textarea>
+                    <label class="inst-label" for="mensaje">¿Por qué quieres ser embajadora YOSSICO? (opcional)</label>
+                    <textarea id="mensaje" class="inst-input inst-textarea" maxlength="200" placeholder="Máximo 200 caracteres..."></textarea>
                 </div>
                 
                 <div class="inst-checkbox-wrap">
@@ -582,10 +582,9 @@
 
             try {
                 // Inserción directa desde el frontend usando RLS (anon key)
-                const { data, error } = await sb
+                const { error } = await sb
                     .from('embajadoras_leads')
-                    .insert([payload])
-                    .select();
+                    .insert([payload]);
 
                 if (error) {
                     console.error("Error detallado de Supabase:", error);
