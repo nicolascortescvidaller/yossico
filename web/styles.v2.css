@@ -660,10 +660,12 @@ body.cursor-hover .cursor-ring {
 }
 
 .footer__logo {
-  font-family: var(--font-display);
-  font-weight: 400;
+  font-family: var(--font-logo);
+  font-weight: 500;
   font-size: 24px;
-  letter-spacing: 4px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--white);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -671,6 +673,7 @@ body.cursor-hover .cursor-ring {
 }
 
 .footer__logo svg {
+  display: none !important;
   width: 24px;
   height: 24px;
 }
@@ -1083,8 +1086,8 @@ body.cursor-hover .cursor-ring {
 
 .cart-badge {
   position: absolute;
-  top: 0px;
-  right: -2px;
+  top: 6px;
+  right: 6px;
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
@@ -1913,6 +1916,7 @@ body.cursor-hover .cursor-ring {
 .nav__user-btn svg {
   width: 24px;
   height: 24px;
+  transform: translateY(1px);
 }
 
 .nav__user-dropdown {
