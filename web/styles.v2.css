@@ -679,11 +679,13 @@ body.cursor-hover .cursor-ring {
 }
 
 .footer__tagline {
-  font-family: var(--font-display);
-  font-style: italic;
+  font-family: var(--font-body);
+  font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  color: var(--white);
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
   margin-bottom: 32px;
   max-width: 280px;
 }
@@ -1059,7 +1061,8 @@ body.cursor-hover .cursor-ring {
   cursor: none;
   display: flex;
   align-items: center;
-  padding: 4px;
+  padding: 8px;
+  border-radius: 8px;
   color: var(--gray-mid);
   transition: color 0.2s;
 }
@@ -1080,16 +1083,16 @@ body.cursor-hover .cursor-ring {
 
 .cart-badge {
   position: absolute;
-  top: -4px;
-  right: -6px;
+  top: 0px;
+  right: -2px;
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
-  font-size: 8px;
-  font-weight: 400;
+  font-size: 10px;
+  font-weight: 600;
   letter-spacing: 0;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: none;
   align-items: center;
@@ -1582,7 +1585,7 @@ body.cursor-hover .cursor-ring {
   font-weight: 400;
   font-size: 48px;
   letter-spacing: 16px;
-  color: rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.25);
   margin-top: 16px;
   user-select: none;
   pointer-events: none;
@@ -1628,10 +1631,10 @@ body.cursor-hover .cursor-ring {
   font-family: var(--font-display);
   font-weight: 400;
   font-style: italic;
-  font-size: 16px;
+  font-size: 20px;
   color: var(--gray-mid);
   display: block;
-  line-height: 1.5;
+  line-height: 1.4;
   text-align: center;
 }
 
@@ -1689,7 +1692,7 @@ body.cursor-hover .cursor-ring {
 .sub-form__title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 28px;
+  font-size: 32px;
   letter-spacing: -0.3px;
   color: var(--black);
   margin-bottom: 8px;
@@ -1698,7 +1701,7 @@ body.cursor-hover .cursor-ring {
 .sub-form__sub {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--gray-mid);
   line-height: 1.8;
   margin-bottom: 32px;
@@ -1720,7 +1723,7 @@ body.cursor-hover .cursor-ring {
 .sub-form__label {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--black);
@@ -1889,7 +1892,8 @@ body.cursor-hover .cursor-ring {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px;
+  padding: 8px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   color: var(--black);
