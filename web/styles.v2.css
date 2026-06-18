@@ -172,7 +172,7 @@ body.cursor-hover .cursor-ring {
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 0 60px;
+  padding: 0 60px 4px 60px;
   height: 96px;
   display: flex;
   align-items: center;
@@ -660,10 +660,12 @@ body.cursor-hover .cursor-ring {
 }
 
 .footer__logo {
-  font-family: var(--font-display);
-  font-weight: 400;
+  font-family: var(--font-logo);
+  font-weight: 500;
   font-size: 24px;
-  letter-spacing: 4px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--white);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -671,6 +673,7 @@ body.cursor-hover .cursor-ring {
 }
 
 .footer__logo svg {
+  display: none !important;
   width: 24px;
   height: 24px;
 }
