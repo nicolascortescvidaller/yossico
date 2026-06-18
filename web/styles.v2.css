@@ -1056,13 +1056,18 @@ body.cursor-hover .cursor-ring {
 /* ── Cart icon in nav ─────────────────────────── */
 .cart-icon-btn {
   position: relative;
-  background: none;
-  border: none;
+  background-color: transparent !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
   cursor: none;
   display: flex;
   align-items: center;
-  padding: 8px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 50%;
   color: var(--gray-mid);
   transition: color 0.2s;
 }
@@ -1889,11 +1894,16 @@ body.cursor-hover .cursor-ring {
 }
 
 .nav__user-btn {
-  background: none;
-  border: none;
+  background-color: transparent !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   color: var(--black);
