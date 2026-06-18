@@ -660,12 +660,10 @@ body.cursor-hover .cursor-ring {
 }
 
 .footer__logo {
-  font-family: var(--font-logo);
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-weight: 400;
   font-size: 24px;
-  letter-spacing: 5px;
-  text-transform: uppercase;
-  color: var(--white);
+  letter-spacing: 4px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -673,19 +671,16 @@ body.cursor-hover .cursor-ring {
 }
 
 .footer__logo svg {
-  display: none !important;
   width: 24px;
   height: 24px;
 }
 
 .footer__tagline {
-  font-family: var(--font-body);
-  font-style: normal;
+  font-family: var(--font-display);
+  font-style: italic;
   font-weight: 400;
-  font-size: 10px;
-  letter-spacing: 5px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  color: var(--white);
   margin-bottom: 32px;
   max-width: 280px;
 }
