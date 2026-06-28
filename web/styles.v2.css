@@ -1064,10 +1064,13 @@ body.cursor-hover .cursor-ring {
   cursor: none;
   display: flex;
   align-items: center;
-  padding: 12px;
-  border-radius: 50%;
+  justify-content: center;
+  /* 8px padding = 40px total tap area. Icon is 24px.
+     Badge top-right corner of icon = top: 8px-9px=-1 → use 3px; right: 3px */
+  padding: 8px;
   color: var(--gray-mid);
   transition: color 0.2s;
+  text-decoration: none;
 }
 
 .cart-icon-btn:hover {
@@ -1085,21 +1088,26 @@ body.cursor-hover .cursor-ring {
 }
 
 .cart-badge {
+  /* Position relative to .cart-icon-btn which has 8px padding.
+     Icon occupies from 8px to 32px (top/right). Icon top-right = top:8px, right:8px.
+     Badge is 16px; to center it on icon corner: top=8-8=0px, right=8-8=0px → nudge slightly inward */
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 0px;
+  right: 0px;
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
   letter-spacing: 0;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   display: none;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
+  z-index: 10;
 }
 
 /* ── Overlay ──────────────────────────────────── */
@@ -1900,10 +1908,10 @@ body.cursor-hover .cursor-ring {
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
-  padding: 12px;
-  border-radius: 50%;
+  padding: 8px;
   display: flex;
   align-items: center;
+  justify-content: center;
   color: var(--black);
   opacity: 0.6;
   transition: opacity 0.2s;
@@ -1916,7 +1924,6 @@ body.cursor-hover .cursor-ring {
 .nav__user-btn svg {
   width: 24px;
   height: 24px;
-  transform: translateY(1px);
 }
 
 .nav__user-dropdown {
