@@ -1053,7 +1053,7 @@ body.cursor-hover .cursor-ring {
 
 /* ── Cart icon in nav ─────────────────────────── */
 .cart-icon-btn {
-  position: relative;
+  /* Clickable area – NOT position:relative so badge won't anchor here */
   background-color: transparent !important;
   appearance: none !important;
   -webkit-appearance: none !important;
@@ -1065,8 +1065,6 @@ body.cursor-hover .cursor-ring {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 8px padding = 40px total tap area. Icon is 24px.
-     Badge top-right corner of icon = top: 8px-9px=-1 → use 3px; right: 3px */
   padding: 8px;
   color: var(--gray-mid);
   transition: color 0.2s;
@@ -1077,6 +1075,17 @@ body.cursor-hover .cursor-ring {
   color: var(--black);
 }
 
+/* Tight wrapper = exactly 24×24px = the visible icon. Badge anchors here. */
+.cart-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
 .cart-icon-btn svg {
   width: 24px;
   height: 24px;
@@ -1085,15 +1094,17 @@ body.cursor-hover .cursor-ring {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
+  display: block;
 }
 
 .cart-badge {
-  /* Position relative to .cart-icon-btn which has 8px padding.
-     Icon occupies from 8px to 32px (top/right). Icon top-right = top:8px, right:8px.
-     Badge is 16px; to center it on icon corner: top=8-8=0px, right=8-8=0px → nudge slightly inward */
+  /* Anchored to .cart-icon-wrap (24×24px icon). 
+     Badge is 16px, so half = 8px. 
+     top: -8px + 4px = -4px  (slightly inside corner)
+     right: -8px + 4px = -4px */
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: -5px;
+  right: -5px;
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
@@ -1108,6 +1119,7 @@ body.cursor-hover .cursor-ring {
   justify-content: center;
   pointer-events: none;
   z-index: 10;
+  line-height: 1;
 }
 
 /* ── Overlay ──────────────────────────────────── */
