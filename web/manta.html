@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=101">
+    <link rel="stylesheet" href="styles.v2.css?v=102">
     <style>
         /* ── Product Detail Layout ─────────────────────── */
         .pd {
@@ -986,51 +986,62 @@
 
         const id   = 'manta';
         const prod = YOSSICO_PRODUCTS[id];
-
         if (!prod) window.location.href = 'coleccion.html';
 
         /* ── Populate meta ────────────────────────── */
         document.getElementById('page-title').textContent = `${prod.name} — YOSSICO`;
         document.querySelector('meta[name="description"]').content =
             `${prod.name} · ${prod.line} · ${prod.priceDisplay} — YOSSICO`;
-
-        /* ── Breadcrumb ─────────────────────────── */
         document.getElementById('pd-breadcrumb-line').textContent = prod.line;
         document.getElementById('pd-breadcrumb-name').textContent = prod.name;
-
-        /* ── Static text ─────────────────────────── */
         document.getElementById('pd-name').textContent  = prod.name;
         document.getElementById('pd-sub').textContent   = prod.sub;
         document.getElementById('pd-price').textContent = prod.priceDisplay;
         document.getElementById('pd-desc').textContent  = prod.desc;
 
         /* ─────────────────────────────────────────────
+           DOM REFERENCES — declared early so async stock callbacks can access them
+           ───────────────────────────────────────────── */
+        const sizesContainer  = document.getElementById('pd-sizes');
+        const colorsContainer = document.getElementById('pd-colors');
+        const colorNameEl     = document.getElementById('pd-color-name');
+        let activeColorKey    = prod.colors[0].key;
+        let selectedSize      = '';
+        let currentSlide      = 0;
+        let currentImgs       = prod.defaultImgs;
+
+        /* ─────────────────────────────────────────────
            STOCK EN TIEMPO REAL — Supabase
            ───────────────────────────────────────────── */
         const SUPABASE_URL      = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
-        const LOW_STOCK_THRESHOLD = 5;   // ≤ this = "Últimas unidades"
-        const PRODUCT_NAME = 'MANTA';    // must match `nombre` column in Supabase
+        const LOW_STOCK_THRESHOLD = 5;
+        const PRODUCT_NAME = 'MANTA';
 
-        /* stockMap: "color|talla" → integer */
-        let stockMap = {};
+        let stockMap    = {};
         let stockLoaded = false;
 
         function getSb() {
-            // Reuse auth.js client if available, otherwise create a new one
             if (window.YOSSICO_AUTH && window.YOSSICO_AUTH.getSb) return window.YOSSICO_AUTH.getSb();
             return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
         async function fetchMantaStock() {
             try {
+                console.log('[manta stock] fetching...');
                 const { data, error } = await getSb()
                     .from('productos')
                     .select('color, talla, stock')
                     .eq('nombre', PRODUCT_NAME);
 
                 if (error) {
-                    console.warn('[manta stock] error:', error.message);
+                    console.error('[manta stock] Supabase error:', error.message);
+                    hideStockStatus();
+                    return;
+                }
+                console.log('[manta stock] rows received:', data);
+                if (!data || data.length === 0) {
+                    console.warn('[manta stock] No rows for MANTA — verify nombre="MANTA" exists in productos table');
                     hideStockStatus();
                     return;
                 }
@@ -1044,7 +1055,7 @@
                 updateSizeButtons();
                 updateColorSwatches();
             } catch (e) {
-                console.warn('[manta stock] exception:', e);
+                console.error('[manta stock] exception:', e);
                 hideStockStatus();
             }
         }
@@ -1054,87 +1065,48 @@
             return key in stockMap ? stockMap[key] : null;
         }
 
-        /* Update all 3 size buttons for the currently active color */
         function updateSizeButtons() {
-            const sizeButtons = sizesContainer.querySelectorAll('.pd__size-btn');
-            const addBtn      = document.getElementById('pd-add-cart');
-
-            sizeButtons.forEach(btn => {
+            const addBtn = document.getElementById('pd-add-cart');
+            sizesContainer.querySelectorAll('.pd__size-btn').forEach(btn => {
                 const talla = btn.textContent.trim();
                 const stock = getStock(activeColorKey, talla);
-
-                // Reset all state classes
                 btn.classList.remove('out-of-stock', 'low-stock');
                 btn.disabled = false;
-                btn.title = '';
+                btn.title    = '';
 
-                if (stock === null) {
-                    // Not in DB: treat as available (graceful degradation)
-                    return;
-                }
-
+                if (stock === null) return;
                 if (stock <= 0) {
                     btn.classList.add('out-of-stock');
                     btn.disabled = true;
-                    btn.title = 'Agotado';
-                    // If this size was selected, deselect it
+                    btn.title    = 'Agotado';
                     if (btn.classList.contains('selected')) {
                         btn.classList.remove('selected');
                         selectedSize = '';
-                        if (addBtn) {
-                            addBtn.style.opacity = '0.6';
-                            document.getElementById('pd-add-text').textContent = 'Selecciona tu talla';
-                        }
+                        if (addBtn) { addBtn.style.opacity = '0.6'; document.getElementById('pd-add-text').textContent = 'Selecciona tu talla'; }
                     }
                 } else if (stock <= LOW_STOCK_THRESHOLD) {
                     btn.classList.add('low-stock');
                     btn.title = `Últimas ${stock} unidades`;
                 }
             });
-
-            // Update status row based on the selected size
             updateStockStatusRow();
         }
 
-        /* Update the status pill below the size buttons */
         function updateStockStatusRow() {
             const statusEl = document.getElementById('pd-stock-status');
             if (!statusEl) return;
-
-            if (!stockLoaded) {
-                setStatus(statusEl, 'is-loading', 'Consultando disponibilidad…');
-                return;
-            }
-
+            if (!stockLoaded) { setStatus(statusEl, 'is-loading', 'Consultando disponibilidad…'); return; }
             if (!selectedSize) {
-                // Show summary: if ANY size available show green
-                const sizes = ['S','M','L'];
-                const totals = sizes.map(t => getStock(activeColorKey, t) ?? 99);
-                const totalStock = totals.reduce((a, b) => a + b, 0);
-                const allOut = totals.every(s => s <= 0);
-                if (allOut) {
-                    setStatus(statusEl, 'is-out', 'Agotado en este color');
-                } else {
-                    // Show nothing when no size selected (clean UI)
-                    statusEl.className = 'pd__stock-status';
-                    statusEl.innerHTML = '';
-                }
+                const allOut = ['S','M','L'].every(t => { const s = getStock(activeColorKey, t); return s !== null && s <= 0; });
+                if (allOut) setStatus(statusEl, 'is-out', 'Agotado en este color');
+                else { statusEl.className = 'pd__stock-status'; statusEl.innerHTML = ''; }
                 return;
             }
-
             const stock = getStock(activeColorKey, selectedSize);
-            if (stock === null) {
-                statusEl.className = 'pd__stock-status';
-                statusEl.innerHTML = '';
-                return;
-            }
-            if (stock <= 0) {
-                setStatus(statusEl, 'is-out', 'Agotado en esta talla');
-            } else if (stock <= LOW_STOCK_THRESHOLD) {
-                setStatus(statusEl, 'is-low', `Últimas ${stock} unidades`);
-            } else {
-                setStatus(statusEl, 'is-ok', 'Disponible');
-            }
+            if (stock === null) { statusEl.className = 'pd__stock-status'; statusEl.innerHTML = ''; return; }
+            if (stock <= 0)                        setStatus(statusEl, 'is-out', 'Agotado en esta talla');
+            else if (stock <= LOW_STOCK_THRESHOLD) setStatus(statusEl, 'is-low', `Últimas ${stock} unidades`);
+            else                                   setStatus(statusEl, 'is-ok', 'Disponible');
         }
 
         function setStatus(el, cls, text) {
@@ -1147,85 +1119,54 @@
             if (el) { el.className = 'pd__stock-status'; el.innerHTML = ''; }
         }
 
-        /* Update color swatches: dim + stripe if all sizes are 0 for that color */
         function updateColorSwatches() {
             colorsContainer.querySelectorAll('.pd__color-swatch').forEach(swatch => {
                 const colorKey = swatch.dataset.color;
-                const sizes    = ['S','M','L'];
-                const allOut   = sizes.every(t => {
-                    const s = getStock(colorKey, t);
-                    return s !== null && s <= 0;
-                });
+                const allOut   = ['S','M','L'].every(t => { const s = getStock(colorKey, t); return s !== null && s <= 0; });
                 swatch.classList.toggle('color-out-of-stock', allOut);
             });
         }
 
-        /* ── Gallery ────────────────────────────── */
-        let currentSlide = 0;
-        let currentImgs  = prod.defaultImgs;
-
+        /* ── Gallery ───────────────────────────── */
         function buildGallery(imgs) {
             const main   = document.getElementById('pd-gallery-main');
             const thumbs = document.getElementById('pd-thumbs');
-
-            // Keep nav buttons
             const prevBtn = main.querySelector('#pd-prev');
-            const nextBtn = main.querySelector('#pd-next');
-
-            // Remove old slides
             main.querySelectorAll('.pd__slide').forEach(s => s.remove());
             thumbs.innerHTML = '';
             currentSlide = 0;
-
             imgs.forEach((src, i) => {
                 const slide = document.createElement('div');
                 slide.className = `pd__slide${i === 0 ? ' active' : ''}`;
-                slide.innerHTML = `<img src="${src}" alt="${prod.name} vista ${i+1}">`;
+                slide.innerHTML = `<img loading="${i === 0 ? 'eager' : 'lazy'}" src="${src}" alt="${prod.name} vista ${i+1}">`;
                 main.insertBefore(slide, prevBtn);
-
-                const thumb = document.createElement('img');
-                thumb.src = src;
+                const thumb = document.createElement('div');
                 thumb.className = `pd__thumb${i === 0 ? ' active' : ''}`;
+                thumb.innerHTML = `<img loading="lazy" src="${src}" alt="Miniatura ${i+1}">`;
                 thumb.addEventListener('click', () => goToSlide(i));
                 thumbs.appendChild(thumb);
             });
         }
 
         function goToSlide(idx) {
-            document.querySelectorAll('.pd__slide').forEach((s, i) => {
-                s.classList.toggle('active', i === idx);
-            });
-            document.querySelectorAll('.pd__thumb').forEach((t, i) => {
-                t.classList.toggle('active', i === idx);
-            });
+            document.querySelectorAll('.pd__slide').forEach((s, i) => s.classList.toggle('active', i === idx));
+            document.querySelectorAll('.pd__thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
             currentSlide = idx;
         }
 
-        function advSlide(dir) {
-            const total = document.querySelectorAll('.pd__slide').length;
-            goToSlide((currentSlide + dir + total) % total);
-        }
-
-        document.getElementById('pd-prev').addEventListener('click', () => advSlide(-1));
-        document.getElementById('pd-next').addEventListener('click', () => advSlide(1));
-
+        document.getElementById('pd-prev').addEventListener('click', () => { const t = document.querySelectorAll('.pd__slide').length; goToSlide((currentSlide - 1 + t) % t); });
+        document.getElementById('pd-next').addEventListener('click', () => { const t = document.querySelectorAll('.pd__slide').length; goToSlide((currentSlide + 1) % t); });
         buildGallery(prod.defaultImgs);
 
-        /* ── Color swatches ────────────────────────── */
-        const colorsContainer = document.getElementById('pd-colors');
-        const colorNameEl     = document.getElementById('pd-color-name');
-        let activeColorKey    = prod.colors[0].key;
-
+        /* ── Color swatches ───────────────────────── */
         colorNameEl.textContent = prod.colors[0].label;
-
         prod.colors.forEach((c, i) => {
             const btn = document.createElement('button');
-            btn.className    = `pd__color-swatch${i === 0 ? ' selected' : ''}`;
+            btn.className        = `pd__color-swatch${i === 0 ? ' selected' : ''}`;
             btn.style.background = c.hex;
-            btn.title        = c.label;
-            btn.dataset.color = c.key;   // needed for stock lookup
+            btn.title            = c.label;
+            btn.dataset.color    = c.key;
             btn.setAttribute('aria-label', c.label);
-
             btn.addEventListener('click', () => {
                 colorsContainer.querySelectorAll('.pd__color-swatch').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
@@ -1233,101 +1174,55 @@
                 colorNameEl.textContent = c.label;
                 currentImgs = c.imgs;
                 buildGallery(c.imgs);
-
-                // Deselect size & refresh stock UI
                 sizesContainer.querySelectorAll('.pd__size-btn').forEach(b => b.classList.remove('selected'));
                 selectedSize = '';
                 const addBtn = document.getElementById('pd-add-cart');
-                if (addBtn) {
-                    addBtn.style.opacity = '0.6';
-                    document.getElementById('pd-add-text').textContent = 'Selecciona tu talla';
-                }
+                if (addBtn) { addBtn.style.opacity = '0.6'; document.getElementById('pd-add-text').textContent = 'Selecciona tu talla'; }
                 if (stockLoaded) updateSizeButtons();
             });
             colorsContainer.appendChild(btn);
         });
 
-        /* ── Size buttons ─────────────────────────── */
-        const sizesContainer = document.getElementById('pd-sizes');
-        let selectedSize     = '';
-
+        /* ── Size buttons ────────────────────────── */
         sizesContainer.querySelectorAll('.pd__size-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 if (btn.disabled) return;
                 sizesContainer.querySelectorAll('.pd__size-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 selectedSize = btn.textContent.trim();
-
-                const addBtn  = document.getElementById('pd-add-cart');
-                const addText = document.getElementById('pd-add-text');
-                if (addBtn && addText) {
-                    addBtn.style.opacity = '1';
-                    addText.textContent  = 'Agregar al carrito';
-                }
+                const addBtn = document.getElementById('pd-add-cart');
+                if (addBtn) { addBtn.style.opacity = '1'; document.getElementById('pd-add-text').textContent = 'Agregar al carrito'; }
                 updateStockStatusRow();
             });
         });
 
-        /* ── WhatsApp ───────────────────────────── */
-        document.getElementById('pd-wa').href =
-            `https://wa.me/573127300661?text=${prod.wa}`;
-
-        /* ── Quantity ───────────────────────────── */
+        /* ── WhatsApp / Quantity / Accordions ────── */
+        document.getElementById('pd-wa').href = `https://wa.me/573127300661?text=${prod.wa}`;
         const qtyMinus = document.getElementById('qty-minus');
         const qtyPlus  = document.getElementById('qty-plus');
         const qtyInput = document.getElementById('qty-input');
-
-        qtyMinus.addEventListener('click', () => {
-            let v = parseInt(qtyInput.value);
-            if (v > 1) qtyInput.value = v - 1;
-        });
-        qtyPlus.addEventListener('click', () => {
-            let v = parseInt(qtyInput.value);
-            if (v < 10) qtyInput.value = v + 1;
-        });
-
-        /* ── Accordions ─────────────────────────── */
+        qtyMinus.addEventListener('click', () => { let v = parseInt(qtyInput.value); if (v > 1) qtyInput.value = v - 1; });
+        qtyPlus.addEventListener('click',  () => { let v = parseInt(qtyInput.value); if (v < 10) qtyInput.value = v + 1; });
         document.querySelectorAll('.pd__accordion-trigger').forEach(trigger => {
             trigger.addEventListener('click', () => {
-                const isExpanded = trigger.classList.contains('expanded');
-                const content    = trigger.nextElementSibling;
-                if (isExpanded) {
-                    trigger.classList.remove('expanded');
-                    content.style.maxHeight = '0px';
-                } else {
-                    trigger.classList.add('expanded');
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                }
+                const expanded = trigger.classList.contains('expanded');
+                const content  = trigger.nextElementSibling;
+                if (expanded) { trigger.classList.remove('expanded'); content.style.maxHeight = '0px'; }
+                else { trigger.classList.add('expanded'); content.style.maxHeight = content.scrollHeight + 'px'; }
             });
         });
 
-        /* ── Add to cart ────────────────────────── */
+        /* ── Add to cart ──────────────────────── */
         document.getElementById('pd-add-cart').addEventListener('click', () => {
-            if (!selectedSize) {
-                sizesContainer.classList.add('shake');
-                setTimeout(() => sizesContainer.classList.remove('shake'), 500);
-                return;
-            }
+            if (!selectedSize) { sizesContainer.classList.add('shake'); setTimeout(() => sizesContainer.classList.remove('shake'), 500); return; }
             const qty = parseInt(qtyInput.value);
             for (let i = 0; i < qty; i++) {
-                addToCart({
-                    name:  `${prod.name} (${colorNameEl.textContent})`,
-                    size:  selectedSize,
-                    price: prod.price,
-                    img:   currentImgs[0],
-                    line:  prod.line,
-                });
+                addToCart({ name: `${prod.name} (${colorNameEl.textContent})`, size: selectedSize, price: prod.price, img: currentImgs[0], line: prod.line });
             }
         });
 
-        /* ── Bootstrap stock ─────────────────────── */
-        // Wait for Supabase to be ready before fetching
-        if (typeof window.supabase !== 'undefined') {
-            fetchMantaStock();
-        } else {
-            document.addEventListener('DOMContentLoaded', fetchMantaStock);
-        }
-        // Refresh every 90 seconds
+        /* ── Bootstrap stock fetch (Supabase already loaded sync above) ── */
+        fetchMantaStock();
         setInterval(fetchMantaStock, 90_000);
     </script>
 </body>
