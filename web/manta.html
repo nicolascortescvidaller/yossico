@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=104">
+    <link rel="stylesheet" href="styles.v2.css?v=105">
     <style>
         /* ── Product Detail Layout ─────────────────────── */
         .pd {
@@ -345,6 +345,8 @@
             justify-content: center;
             cursor: none;
             transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
         }
 
         .pd__size-btn:hover,
@@ -499,39 +501,7 @@
             border-color: #e8e8e8;
         }
 
-        /* ── Low stock size ─────────────────────────── */
-        .pd__size-btn.low-stock {
-            border-color: #c0392b !important;
-            color: #c0392b !important;
-        }
-        .pd__size-btn.low-stock::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #c0392b;
-        }
-        .pd__size-btn.low-stock:hover {
-            background: #fff0ee !important;
-            border-color: #c0392b !important;
-            color: #c0392b !important;
-        }
 
-        /* Stock label inside size button */
-        .pd__size-btn .stock-label {
-            display: block;
-            font-size: 7px;
-            letter-spacing: 0;
-            line-height: 1;
-            margin-top: 2px;
-            color: #c0392b;
-            font-weight: 500;
-        }
-        .pd__size-btn.out-of-stock .stock-label {
-            color: #bbb;
-        }
 
         /* ── Stock status row ───────────────────────── */
         .pd__stock-status {
@@ -1144,19 +1114,7 @@
 
                 } else if (stock <= LOW_STOCK_THRESHOLD) {
                     // ── ÚLTIMAS UNIDADES ─────────────────────────
-                    btn.classList.add('low-stock');
                     btn.title = `Últimas ${stock} unidades`;
-                    btn.style.borderColor = '#c0392b';
-                    btn.style.color       = '#c0392b';
-
-                    const lbl = document.createElement('span');
-                    lbl.className   = 'stock-label';
-                    lbl.textContent = `Últimas ${stock}`;
-                    lbl.style.cssText = 'display:block;font-size:7px;letter-spacing:0;line-height:1;margin-top:2px;color:#c0392b;';
-                    btn.appendChild(lbl);
-                } else {
-                    // ── DISPONIBLE ───────────────────────────────
-                    // Normal state — no special styling needed
                 }
             });
             updateStockStatusRow();
