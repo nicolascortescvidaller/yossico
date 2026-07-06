@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=100">
+    <link rel="stylesheet" href="styles.v2.css?v=101">
     <style>
         /* ── Product Detail Layout ─────────────────────── */
         .pd {
@@ -479,23 +479,86 @@
         /* ── Out of stock size ──────────────────────── */
         .pd__size-btn.out-of-stock {
             position: relative;
-            color: var(--gray-mid);
-            border-color: var(--border);
+            color: #bbb;
+            border-color: #e8e8e8;
             cursor: not-allowed;
             background: rgba(0,0,0,0.02);
+            overflow: hidden;
         }
         .pd__size-btn.out-of-stock::after {
             content: '';
             position: absolute;
             width: 140%;
             height: 1px;
-            background: var(--gray-mid);
+            background: #bbb;
             transform: rotate(-45deg);
         }
         .pd__size-btn.out-of-stock:hover {
             background: rgba(0,0,0,0.02);
-            color: var(--gray-mid);
-            border-color: var(--border);
+            color: #bbb;
+            border-color: #e8e8e8;
+        }
+
+        /* ── Low stock size ─────────────────────────── */
+        .pd__size-btn.low-stock {
+            border-color: #c8a96e;
+        }
+        .pd__size-btn.low-stock::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #c8a96e;
+        }
+
+        /* ── Stock status row ───────────────────────── */
+        .pd__stock-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 18px;
+            margin-bottom: 16px;
+            font-family: var(--font-body);
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .pd__stock-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .pd__stock-status.is-ok .pd__stock-dot       { background: #3d9970; }
+        .pd__stock-status.is-ok span                  { color: #3d9970; }
+        .pd__stock-status.is-low .pd__stock-dot      { background: #c8a96e; }
+        .pd__stock-status.is-low span                { color: #c8a96e; }
+        .pd__stock-status.is-out .pd__stock-dot      { background: #bbb; }
+        .pd__stock-status.is-out span                { color: #bbb; }
+        .pd__stock-status.is-loading .pd__stock-dot  { background: #ddd; animation: pulse 1.2s infinite; }
+        .pd__stock-status.is-loading span            { color: #bbb; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+        }
+
+        /* ── Out-of-stock color swatch ──────────────── */
+        .pd__color-swatch.color-out-of-stock {
+            opacity: 0.35;
+        }
+        .pd__color-swatch.color-out-of-stock::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 4px,
+                rgba(255,255,255,0.5) 4px,
+                rgba(255,255,255,0.5) 5px
+            );
         }
 
         /* ── Quantity Selector ──────────────────────── */
@@ -738,9 +801,14 @@
             <!-- Size selector (Moved above color) -->
             <div class="pd__selector-label">Talla</div>
             <div class="pd__sizes" id="pd-sizes">
-                <button class="pd__size-btn">S</button>
-                <button class="pd__size-btn">M</button>
-                <button class="pd__size-btn out-of-stock" disabled>L</button>
+                <button class="pd__size-btn" style="position:relative;">S</button>
+                <button class="pd__size-btn" style="position:relative;">M</button>
+                <button class="pd__size-btn" style="position:relative;">L</button>
+            </div>
+            <!-- Stock status indicator (updated in real-time) -->
+            <div class="pd__stock-status is-loading" id="pd-stock-status">
+                <span class="pd__stock-dot"></span>
+                <span>Consultando disponibilidad…</span>
             </div>
 
             <!-- Color selector -->
@@ -913,78 +981,223 @@
     <script src="cart.js"></script>
     <script>
         /* ═══════════════════════════════════════════
-           YOSSICO — producto.html Page Logic
+           YOSSICO — MANTA page logic + stock en tiempo real
            ═══════════════════════════════════════════ */
 
-        const id = 'manta';
+        const id   = 'manta';
         const prod = YOSSICO_PRODUCTS[id];
 
-        if (!prod) {
-            window.location.href = 'coleccion.html';
-        }
+        if (!prod) window.location.href = 'coleccion.html';
 
-        /* ── Populate meta ─────────────────────────── */
+        /* ── Populate meta ────────────────────────── */
         document.getElementById('page-title').textContent = `${prod.name} — YOSSICO`;
         document.querySelector('meta[name="description"]').content =
             `${prod.name} · ${prod.line} · ${prod.priceDisplay} — YOSSICO`;
 
-        /* ── Breadcrumb ────────────────────────────── */
+        /* ── Breadcrumb ─────────────────────────── */
         document.getElementById('pd-breadcrumb-line').textContent = prod.line;
         document.getElementById('pd-breadcrumb-name').textContent = prod.name;
 
-        /* ── Static text fields ────────────────────── */
-        document.getElementById('pd-name').textContent = prod.name;
-        document.getElementById('pd-sub').textContent = prod.sub;
+        /* ── Static text ─────────────────────────── */
+        document.getElementById('pd-name').textContent  = prod.name;
+        document.getElementById('pd-sub').textContent   = prod.sub;
         document.getElementById('pd-price').textContent = prod.priceDisplay;
-        document.getElementById('pd-desc').textContent = prod.desc;
+        document.getElementById('pd-desc').textContent  = prod.desc;
 
-        /* ── Features ─────────────────────────────── */
-        /* Eliminado en MANTA ya que ahora usamos el Acordeón 
-        const featList = document.getElementById('pd-features-list');
-        prod.features.forEach(f => {
-            featList.insertAdjacentHTML('beforeend', `
-        <div class="pd__feature">
-          <span class="pd__feature-label">${f.label}</span>
-          <span class="pd__feature-value">${f.value}</span>
-        </div>`);
-        });
-        */
+        /* ─────────────────────────────────────────────
+           STOCK EN TIEMPO REAL — Supabase
+           ───────────────────────────────────────────── */
+        const SUPABASE_URL      = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
+        const LOW_STOCK_THRESHOLD = 5;   // ≤ this = "Últimas unidades"
+        const PRODUCT_NAME = 'MANTA';    // must match `nombre` column in Supabase
 
-        /* ── Gallery state ─────────────────────────── */
-        let currentImgs = [...prod.defaultImgs];
+        /* stockMap: "color|talla" → integer */
+        let stockMap = {};
+        let stockLoaded = false;
+
+        function getSb() {
+            // Reuse auth.js client if available, otherwise create a new one
+            if (window.YOSSICO_AUTH && window.YOSSICO_AUTH.getSb) return window.YOSSICO_AUTH.getSb();
+            return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        async function fetchMantaStock() {
+            try {
+                const { data, error } = await getSb()
+                    .from('productos')
+                    .select('color, talla, stock')
+                    .eq('nombre', PRODUCT_NAME);
+
+                if (error) {
+                    console.warn('[manta stock] error:', error.message);
+                    hideStockStatus();
+                    return;
+                }
+
+                stockMap = {};
+                data.forEach(r => {
+                    stockMap[`${r.color}|${r.talla}`] = Number(r.stock);
+                });
+
+                stockLoaded = true;
+                updateSizeButtons();
+                updateColorSwatches();
+            } catch (e) {
+                console.warn('[manta stock] exception:', e);
+                hideStockStatus();
+            }
+        }
+
+        function getStock(colorKey, talla) {
+            const key = `${colorKey}|${talla}`;
+            return key in stockMap ? stockMap[key] : null;
+        }
+
+        /* Update all 3 size buttons for the currently active color */
+        function updateSizeButtons() {
+            const sizeButtons = sizesContainer.querySelectorAll('.pd__size-btn');
+            const addBtn      = document.getElementById('pd-add-cart');
+
+            sizeButtons.forEach(btn => {
+                const talla = btn.textContent.trim();
+                const stock = getStock(activeColorKey, talla);
+
+                // Reset all state classes
+                btn.classList.remove('out-of-stock', 'low-stock');
+                btn.disabled = false;
+                btn.title = '';
+
+                if (stock === null) {
+                    // Not in DB: treat as available (graceful degradation)
+                    return;
+                }
+
+                if (stock <= 0) {
+                    btn.classList.add('out-of-stock');
+                    btn.disabled = true;
+                    btn.title = 'Agotado';
+                    // If this size was selected, deselect it
+                    if (btn.classList.contains('selected')) {
+                        btn.classList.remove('selected');
+                        selectedSize = '';
+                        if (addBtn) {
+                            addBtn.style.opacity = '0.6';
+                            document.getElementById('pd-add-text').textContent = 'Selecciona tu talla';
+                        }
+                    }
+                } else if (stock <= LOW_STOCK_THRESHOLD) {
+                    btn.classList.add('low-stock');
+                    btn.title = `Últimas ${stock} unidades`;
+                }
+            });
+
+            // Update status row based on the selected size
+            updateStockStatusRow();
+        }
+
+        /* Update the status pill below the size buttons */
+        function updateStockStatusRow() {
+            const statusEl = document.getElementById('pd-stock-status');
+            if (!statusEl) return;
+
+            if (!stockLoaded) {
+                setStatus(statusEl, 'is-loading', 'Consultando disponibilidad…');
+                return;
+            }
+
+            if (!selectedSize) {
+                // Show summary: if ANY size available show green
+                const sizes = ['S','M','L'];
+                const totals = sizes.map(t => getStock(activeColorKey, t) ?? 99);
+                const totalStock = totals.reduce((a, b) => a + b, 0);
+                const allOut = totals.every(s => s <= 0);
+                if (allOut) {
+                    setStatus(statusEl, 'is-out', 'Agotado en este color');
+                } else {
+                    // Show nothing when no size selected (clean UI)
+                    statusEl.className = 'pd__stock-status';
+                    statusEl.innerHTML = '';
+                }
+                return;
+            }
+
+            const stock = getStock(activeColorKey, selectedSize);
+            if (stock === null) {
+                statusEl.className = 'pd__stock-status';
+                statusEl.innerHTML = '';
+                return;
+            }
+            if (stock <= 0) {
+                setStatus(statusEl, 'is-out', 'Agotado en esta talla');
+            } else if (stock <= LOW_STOCK_THRESHOLD) {
+                setStatus(statusEl, 'is-low', `Últimas ${stock} unidades`);
+            } else {
+                setStatus(statusEl, 'is-ok', 'Disponible');
+            }
+        }
+
+        function setStatus(el, cls, text) {
+            el.className = `pd__stock-status ${cls}`;
+            el.innerHTML = `<span class="pd__stock-dot"></span><span>${text}</span>`;
+        }
+
+        function hideStockStatus() {
+            const el = document.getElementById('pd-stock-status');
+            if (el) { el.className = 'pd__stock-status'; el.innerHTML = ''; }
+        }
+
+        /* Update color swatches: dim + stripe if all sizes are 0 for that color */
+        function updateColorSwatches() {
+            colorsContainer.querySelectorAll('.pd__color-swatch').forEach(swatch => {
+                const colorKey = swatch.dataset.color;
+                const sizes    = ['S','M','L'];
+                const allOut   = sizes.every(t => {
+                    const s = getStock(colorKey, t);
+                    return s !== null && s <= 0;
+                });
+                swatch.classList.toggle('color-out-of-stock', allOut);
+            });
+        }
+
+        /* ── Gallery ────────────────────────────── */
         let currentSlide = 0;
+        let currentImgs  = prod.defaultImgs;
 
         function buildGallery(imgs) {
-            const main = document.getElementById('pd-gallery-main');
+            const main   = document.getElementById('pd-gallery-main');
             const thumbs = document.getElementById('pd-thumbs');
 
-            // Remove existing slides/thumbs (keep nav buttons)
-            main.querySelectorAll('.pd__slide').forEach(el => el.remove());
+            // Keep nav buttons
+            const prevBtn = main.querySelector('#pd-prev');
+            const nextBtn = main.querySelector('#pd-next');
+
+            // Remove old slides
+            main.querySelectorAll('.pd__slide').forEach(s => s.remove());
             thumbs.innerHTML = '';
+            currentSlide = 0;
 
             imgs.forEach((src, i) => {
-                // Full slide
                 const slide = document.createElement('div');
                 slide.className = `pd__slide${i === 0 ? ' active' : ''}`;
-                slide.innerHTML = `<img loading="lazy" src="${src}" alt="${prod.name} — vista ${i + 1}" ${(i === 0 || i === 2) ? 'class="contain-img"' : ''}>`;
-                main.insertBefore(slide, main.querySelector('.pd__gall-btn--prev'));
+                slide.innerHTML = `<img src="${src}" alt="${prod.name} vista ${i+1}">`;
+                main.insertBefore(slide, prevBtn);
 
-                // Thumbnail
-                const thumb = document.createElement('div');
+                const thumb = document.createElement('img');
+                thumb.src = src;
                 thumb.className = `pd__thumb${i === 0 ? ' active' : ''}`;
-                thumb.innerHTML = `<img loading="lazy" src="${src}" alt="Miniatura ${i + 1}">`;
                 thumb.addEventListener('click', () => goToSlide(i));
                 thumbs.appendChild(thumb);
             });
-
-            currentSlide = 0;
         }
 
         function goToSlide(idx) {
-            const slides = document.querySelectorAll('.pd__slide');
-            const thumbs = document.querySelectorAll('.pd__thumb');
-            slides.forEach((s, i) => s.classList.toggle('active', i === idx));
-            thumbs.forEach((t, i) => t.classList.toggle('active', i === idx));
+            document.querySelectorAll('.pd__slide').forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            document.querySelectorAll('.pd__thumb').forEach((t, i) => {
+                t.classList.toggle('active', i === idx);
+            });
             currentSlide = idx;
         }
 
@@ -996,22 +1209,23 @@
         document.getElementById('pd-prev').addEventListener('click', () => advSlide(-1));
         document.getElementById('pd-next').addEventListener('click', () => advSlide(1));
 
-        // Initial build
         buildGallery(prod.defaultImgs);
 
-        /* ── Color swatches ───────────────────────── */
+        /* ── Color swatches ────────────────────────── */
         const colorsContainer = document.getElementById('pd-colors');
-        const colorNameEl = document.getElementById('pd-color-name');
-        let activeColorKey = prod.colors[0].key;
+        const colorNameEl     = document.getElementById('pd-color-name');
+        let activeColorKey    = prod.colors[0].key;
 
         colorNameEl.textContent = prod.colors[0].label;
 
         prod.colors.forEach((c, i) => {
             const btn = document.createElement('button');
-            btn.className = `pd__color-swatch${i === 0 ? ' selected' : ''}`;
+            btn.className    = `pd__color-swatch${i === 0 ? ' selected' : ''}`;
             btn.style.background = c.hex;
-            btn.title = c.label;
+            btn.title        = c.label;
+            btn.dataset.color = c.key;   // needed for stock lookup
             btn.setAttribute('aria-label', c.label);
+
             btn.addEventListener('click', () => {
                 colorsContainer.querySelectorAll('.pd__color-swatch').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
@@ -1019,58 +1233,64 @@
                 colorNameEl.textContent = c.label;
                 currentImgs = c.imgs;
                 buildGallery(c.imgs);
+
+                // Deselect size & refresh stock UI
+                sizesContainer.querySelectorAll('.pd__size-btn').forEach(b => b.classList.remove('selected'));
+                selectedSize = '';
+                const addBtn = document.getElementById('pd-add-cart');
+                if (addBtn) {
+                    addBtn.style.opacity = '0.6';
+                    document.getElementById('pd-add-text').textContent = 'Selecciona tu talla';
+                }
+                if (stockLoaded) updateSizeButtons();
             });
             colorsContainer.appendChild(btn);
         });
 
         /* ── Size buttons ─────────────────────────── */
         const sizesContainer = document.getElementById('pd-sizes');
-        let selectedSize = '';
+        let selectedSize     = '';
 
         sizesContainer.querySelectorAll('.pd__size-btn').forEach(btn => {
             btn.addEventListener('click', () => {
+                if (btn.disabled) return;
                 sizesContainer.querySelectorAll('.pd__size-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 selectedSize = btn.textContent.trim();
-                
-                // Update Add to Cart button state
-                const addBtn = document.getElementById('pd-add-cart');
+
+                const addBtn  = document.getElementById('pd-add-cart');
                 const addText = document.getElementById('pd-add-text');
                 if (addBtn && addText) {
                     addBtn.style.opacity = '1';
-                    addText.textContent = 'Agregar al carrito';
+                    addText.textContent  = 'Agregar al carrito';
                 }
+                updateStockStatusRow();
             });
         });
 
-        /* ── WhatsApp link ────────────────────────── */
-        const waEl = document.getElementById('pd-wa');
-        waEl.href = `https://wa.me/573127300661?text=${prod.wa}`;
+        /* ── WhatsApp ───────────────────────────── */
+        document.getElementById('pd-wa').href =
+            `https://wa.me/573127300661?text=${prod.wa}`;
 
-        /* ── Quantity logic ───────────────────────── */
+        /* ── Quantity ───────────────────────────── */
         const qtyMinus = document.getElementById('qty-minus');
-        const qtyPlus = document.getElementById('qty-plus');
+        const qtyPlus  = document.getElementById('qty-plus');
         const qtyInput = document.getElementById('qty-input');
-        
+
         qtyMinus.addEventListener('click', () => {
-            let val = parseInt(qtyInput.value);
-            if (val > 1) {
-                qtyInput.value = val - 1;
-            }
+            let v = parseInt(qtyInput.value);
+            if (v > 1) qtyInput.value = v - 1;
         });
-        
         qtyPlus.addEventListener('click', () => {
-            let val = parseInt(qtyInput.value);
-            if (val < 10) {
-                qtyInput.value = val + 1;
-            }
+            let v = parseInt(qtyInput.value);
+            if (v < 10) qtyInput.value = v + 1;
         });
 
-        /* ── Accordion logic ──────────────────────── */
+        /* ── Accordions ─────────────────────────── */
         document.querySelectorAll('.pd__accordion-trigger').forEach(trigger => {
             trigger.addEventListener('click', () => {
                 const isExpanded = trigger.classList.contains('expanded');
-                const content = trigger.nextElementSibling;
+                const content    = trigger.nextElementSibling;
                 if (isExpanded) {
                     trigger.classList.remove('expanded');
                     content.style.maxHeight = '0px';
@@ -1081,28 +1301,34 @@
             });
         });
 
-        /* ── Add to cart ──────────────────────────── */
+        /* ── Add to cart ────────────────────────── */
         document.getElementById('pd-add-cart').addEventListener('click', () => {
             if (!selectedSize) {
                 sizesContainer.classList.add('shake');
                 setTimeout(() => sizesContainer.classList.remove('shake'), 500);
                 return;
             }
-            
             const qty = parseInt(qtyInput.value);
-            // Use shared addToCart from cart.js (it doesn't natively support qty argument, 
-            // but we add it multiple times or just ignore for now if cart.js handles it simply)
-            // Ideally cart.js supports quantity, but for now we loop.
             for (let i = 0; i < qty; i++) {
                 addToCart({
-                    name: `${prod.name} (${colorNameEl.textContent})`,
-                    size: selectedSize,
+                    name:  `${prod.name} (${colorNameEl.textContent})`,
+                    size:  selectedSize,
                     price: prod.price,
-                    img: currentImgs[0],
-                    line: prod.line,
+                    img:   currentImgs[0],
+                    line:  prod.line,
                 });
             }
         });
+
+        /* ── Bootstrap stock ─────────────────────── */
+        // Wait for Supabase to be ready before fetching
+        if (typeof window.supabase !== 'undefined') {
+            fetchMantaStock();
+        } else {
+            document.addEventListener('DOMContentLoaded', fetchMantaStock);
+        }
+        // Refresh every 90 seconds
+        setInterval(fetchMantaStock, 90_000);
     </script>
 </body>
 
