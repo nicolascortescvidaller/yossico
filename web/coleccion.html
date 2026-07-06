@@ -12,7 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=102">
+    <link rel="stylesheet" href="styles.v2.css?v=103">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         /* ── Layout ── */
@@ -94,7 +94,18 @@
             object-fit: cover;
             object-position: top center;
             display: block;
-            transition: transform 0.4s ease;
+            transition: transform 0.4s ease, opacity 0.35s ease;
+        }
+
+        /* Shimmer skeleton while lazy image loads */
+        .gallery__slide img[data-src] {
+            background: linear-gradient(90deg, #f4f4f4 25%, #e8e8e8 50%, #f4f4f4 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         .gallery:hover .gallery__slide img {
@@ -862,11 +873,11 @@
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20OSLO%20de%20YOSSICO"
                     data-imgs="img/oslo_black_front.webp,img/oslo_black_half.webp,img/oslo_black_back.webp,img/oslo_black_labels.webp">
                     <div class="gallery__track">
-<div class="gallery__slide"><img loading="lazy" src="img/oslo_black_front.webp" alt="Set OSLO — Vista frontal"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/oslo_black_half.webp" alt="Set OSLO — Detalle top"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/oslo_black_back.webp" alt="Set OSLO — Vista de espalda"></div>
+<div class="gallery__slide"><img loading="lazy" src="img/oslo_black_front.webp" loading="eager" alt="Set OSLO — Vista frontal"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/oslo_black_half.webp" alt="Set OSLO — Detalle top"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/oslo_black_back.webp" alt="Set OSLO — Vista de espalda"></div>
                     
-                        <div class="gallery__slide"><img loading="lazy" src="img/oslo_black_labels.webp" alt="Etiquetas"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/oslo_black_labels.webp" alt="Etiquetas"></div>
                     </div>
                     <div class="gallery__expand-hint"><span>Ver detalle</span></div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
@@ -927,10 +938,10 @@
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20MILAN%20de%20YOSSICO"
                     data-imgs="img/milan_front.webp,img/milan_detail.webp,img/milan_back.webp,img/milan_black_labels.webp">
                     <div class="gallery__track">
-                        <div class="gallery__slide"><img loading="lazy" src="img/milan_front.webp" alt="Set MILAN — Cuerpo completo frontal"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/milan_detail.webp" alt="Set MILAN — Detalle top y etiqueta"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/milan_back.webp" alt="Set MILAN — Vista de espalda y caída"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/milan_black_labels.webp" alt="Set MILAN — Etiquetas"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/milan_front.webp" alt="Set MILAN — Cuerpo completo frontal"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/milan_detail.webp" alt="Set MILAN — Detalle top y etiqueta"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/milan_back.webp" alt="Set MILAN — Vista de espalda y caída"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/milan_black_labels.webp" alt="Set MILAN — Etiquetas"></div>
                     </div>
                     <div class="gallery__expand-hint"><span>Ver detalle</span></div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
@@ -986,10 +997,10 @@
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20KYOTO%20de%20YOSSICO"
                     data-imgs="img/kyoto_front.webp,img/kyoto_detail.webp,img/kyoto_back.webp,img/kyoto_navy_labels.webp">
                     <div class="gallery__track">
-                        <div class="gallery__slide"><img loading="lazy" src="img/kyoto_front.webp" alt="Set KYOTO — Cuerpo completo frontal"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/kyoto_detail.webp" alt="Set KYOTO — Detalle top y etiqueta"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/kyoto_back.webp" alt="Set KYOTO — Vista de espalda y caída"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/kyoto_navy_labels.webp" alt="Set KYOTO — Etiquetas"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/kyoto_front.webp" alt="Set KYOTO — Cuerpo completo frontal"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/kyoto_detail.webp" alt="Set KYOTO — Detalle top y etiqueta"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/kyoto_back.webp" alt="Set KYOTO — Vista de espalda y caída"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/kyoto_navy_labels.webp" alt="Set KYOTO — Etiquetas"></div>
                     </div>
                     <div class="gallery__expand-hint"><span>Ver detalle</span></div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
@@ -1044,11 +1055,11 @@
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20LIMA%20de%20YOSSICO"
                     data-imgs="img/lima_black_front.webp,img/lima_black_half.webp,img/lima_black_back.webp,img/lima_black_labels.webp">
                     <div class="gallery__track">
-<div class="gallery__slide"><img loading="lazy" src="img/lima_black_front.webp" alt="Set LIMA — Vista frontal"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/lima_black_half.webp" alt="Set LIMA — Detalle top"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/lima_black_back.webp" alt="Set LIMA — Vista de espalda"></div>
+<div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/lima_black_front.webp" alt="Set LIMA — Vista frontal"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/lima_black_half.webp" alt="Set LIMA — Detalle top"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/lima_black_back.webp" alt="Set LIMA — Vista de espalda"></div>
                     
-                        <div class="gallery__slide"><img loading="lazy" src="img/lima_black_labels.webp" alt="Etiquetas"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/lima_black_labels.webp" alt="Etiquetas"></div>
                     </div>
                     <div class="gallery__expand-hint"><span>Ver detalle</span></div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
@@ -1107,15 +1118,15 @@
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20BOGOTÁ%20de%20YOSSICO"
                     data-imgs="img/bogota_navy_front.webp,img/bogota_navy_half.webp,img/bogota_navy_back.webp,img/bogota_navy_side.webp,img/bogota_navy_closeup.webp">
                     <div class="gallery__track">
-                        <div class="gallery__slide active"><img loading="lazy" src="img/bogota_navy_front.webp" alt="Set BOGOTÁ — Azul Marino Frontal">
+                        <div class="gallery__slide active"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/bogota_navy_front.webp" alt="Set BOGOTÁ — Azul Marino Frontal">
                         </div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_half.webp" alt="Set BOGOTÁ — Azul Marino Medio">
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/bogota_navy_half.webp" alt="Set BOGOTÁ — Azul Marino Medio">
                         </div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_back.webp" alt="Set BOGOTÁ — Azul Marino Espalda">
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/bogota_navy_back.webp" alt="Set BOGOTÁ — Azul Marino Espalda">
                         </div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_side.webp" alt="Set BOGOTÁ — Azul Marino Perfil">
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/bogota_navy_side.webp" alt="Set BOGOTÁ — Azul Marino Perfil">
                         </div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/bogota_navy_closeup.webp" alt="Set BOGOTÁ — Azul Marino Detalles">
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/bogota_navy_closeup.webp" alt="Set BOGOTÁ — Azul Marino Detalles">
                         </div>
                     </div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
@@ -1171,18 +1182,18 @@
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Set%20MANTA%20de%20YOSSICO"
                     data-imgs="img/manta_navy_1.webp,img/manta_navy_2.webp,img/manta_navy_3.webp,img/manta_navy_4.webp,img/manta_navy_5.webp,img/manta_navy_labels.webp">
                     <div class="gallery__track">
-<div class="gallery__slide active"><img loading="lazy" src="img/manta_navy_1.webp" alt="Set MANTA — Azul Marino">
+<div class="gallery__slide active"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/manta_navy_1.webp" alt="Set MANTA — Azul Marino">
                         </div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/manta_navy_2.webp" alt="Set MANTA — Azul Marino">
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/manta_navy_2.webp" alt="Set MANTA — Azul Marino">
                         </div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/manta_navy_3.webp" alt="Set MANTA — Azul Marino">
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/manta_navy_3.webp" alt="Set MANTA — Azul Marino">
                         </div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/manta_navy_4.webp" alt="Set MANTA — Azul Marino">
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/manta_navy_4.webp" alt="Set MANTA — Azul Marino">
                         </div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/manta_navy_5.webp" alt="Set MANTA — Azul Marino">
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/manta_navy_5.webp" alt="Set MANTA — Azul Marino">
                         </div>
                     
-                        <div class="gallery__slide"><img loading="lazy" src="img/manta_navy_labels.webp" alt="Etiquetas"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/manta_navy_labels.webp" alt="Etiquetas"></div>
                     </div>
                     <button class="gallery__btn gallery__btn--prev" aria-label="Anterior">
                         <svg viewBox="0 0 24 24">
@@ -1267,10 +1278,10 @@
                     data-wa="Hola,%20quiero%20información%20sobre%20el%20Hoodie%20de%20YOSSICO"
                     data-imgs="img/capa-hoodie.webp,img/capa-hoodie-azul.webp">
                     <div class="gallery__track">
-                        <div class="gallery__slide active"><img loading="lazy" src="img/capa-hoodie.webp"
+                        <div class="gallery__slide active"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/capa-hoodie.webp"
                                 alt="Hoodie YOSSICO — Vista frontal">
                         </div>
-                        <div class="gallery__slide"><img loading="lazy" src="img/capa-hoodie-azul.webp"
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/capa-hoodie-azul.webp"
                                 alt="Hoodie YOSSICO — Azul Marino">
                         </div>
                     </div>
@@ -1520,12 +1531,45 @@
     </aside>
 
     <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/stock.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/stock.js" defer></script>
     <script src="cart.js"></script>
     <script>
+        /* ── True Lazy Loading via IntersectionObserver ── */
+        (function () {
+            // Activates images with data-src when their card enters the viewport
+            const lazyLoad = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const card = entry.target;
+                    card.querySelectorAll('img[data-src]').forEach(img => {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    });
+                    observer.unobserve(card);
+                });
+            };
+
+            const observer = new IntersectionObserver(lazyLoad, {
+                rootMargin: '200px 0px',  // Start loading 200px before card enters viewport
+                threshold: 0
+            });
+
+            // Observe every product card
+            document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
+
+            // Fallback for browsers without IntersectionObserver (very rare)
+            if (!('IntersectionObserver' in window)) {
+                document.querySelectorAll('img[data-src]').forEach(img => {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                });
+            }
+        })();
+
         /* ── Filter ── */
+
         const filterBtns = document.querySelectorAll('.filter-btn');
         const cards = document.querySelectorAll('.product-card[data-line]');
         
