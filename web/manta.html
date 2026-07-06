@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=102">
+    <link rel="stylesheet" href="styles.v2.css?v=104">
     <style>
         /* ── Product Detail Layout ─────────────────────── */
         .pd {
@@ -501,7 +501,8 @@
 
         /* ── Low stock size ─────────────────────────── */
         .pd__size-btn.low-stock {
-            border-color: #c8a96e;
+            border-color: #c0392b !important;
+            color: #c0392b !important;
         }
         .pd__size-btn.low-stock::before {
             content: '';
@@ -510,7 +511,26 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: #c8a96e;
+            background: #c0392b;
+        }
+        .pd__size-btn.low-stock:hover {
+            background: #fff0ee !important;
+            border-color: #c0392b !important;
+            color: #c0392b !important;
+        }
+
+        /* Stock label inside size button */
+        .pd__size-btn .stock-label {
+            display: block;
+            font-size: 7px;
+            letter-spacing: 0;
+            line-height: 1;
+            margin-top: 2px;
+            color: #c0392b;
+            font-weight: 500;
+        }
+        .pd__size-btn.out-of-stock .stock-label {
+            color: #bbb;
         }
 
         /* ── Stock status row ───────────────────────── */
@@ -533,8 +553,8 @@
         }
         .pd__stock-status.is-ok .pd__stock-dot       { background: #3d9970; }
         .pd__stock-status.is-ok span                  { color: #3d9970; }
-        .pd__stock-status.is-low .pd__stock-dot      { background: #c8a96e; }
-        .pd__stock-status.is-low span                { color: #c8a96e; }
+        .pd__stock-status.is-low .pd__stock-dot      { background: #c0392b; }
+        .pd__stock-status.is-low span                { color: #c0392b; }
         .pd__stock-status.is-out .pd__stock-dot      { background: #bbb; }
         .pd__stock-status.is-out span                { color: #bbb; }
         .pd__stock-status.is-loading .pd__stock-dot  { background: #ddd; animation: pulse 1.2s infinite; }
@@ -801,9 +821,9 @@
             <!-- Size selector (Moved above color) -->
             <div class="pd__selector-label">Talla</div>
             <div class="pd__sizes" id="pd-sizes">
-                <button class="pd__size-btn" style="position:relative;">S</button>
-                <button class="pd__size-btn" style="position:relative;">M</button>
-                <button class="pd__size-btn" style="position:relative;">L</button>
+                <button class="pd__size-btn" data-size="S" style="position:relative;">S</button>
+                <button class="pd__size-btn" data-size="M" style="position:relative;">M</button>
+                <button class="pd__size-btn" data-size="L" style="position:relative;">L</button>
             </div>
             <!-- Stock status indicator (updated in real-time) -->
             <div class="pd__stock-status is-loading" id="pd-stock-status">
@@ -1028,7 +1048,7 @@
 
         async function fetchMantaStock() {
             try {
-                console.log('[manta stock] fetching...');
+                console.log('[manta stock] fetching from Supabase...');
                 const { data, error } = await getSb()
                     .from('productos')
                     .select('color, talla, stock')
@@ -1039,18 +1059,33 @@
                     hideStockStatus();
                     return;
                 }
-                console.log('[manta stock] rows received:', data);
+                console.log('[manta stock] raw rows from DB:', JSON.stringify(data));
+
                 if (!data || data.length === 0) {
-                    console.warn('[manta stock] No rows for MANTA — verify nombre="MANTA" exists in productos table');
+                    console.warn('[manta stock] Zero rows returned. Check nombre="MANTA" in productos table.');
                     hideStockStatus();
                     return;
                 }
 
+                // ── KEY FIX: DB stores color as display label (e.g. "Azul Marino")
+                //            but JS uses color key (e.g. "azul-oscuro").
+                //            Build a map from label→key using prod.colors.
+                const labelToKey = {};
+                prod.colors.forEach(c => {
+                    labelToKey[c.label.toLowerCase().trim()] = c.key;
+                });
+                console.log('[manta stock] label→key map:', labelToKey);
+
                 stockMap = {};
                 data.forEach(r => {
-                    stockMap[`${r.color}|${r.talla}`] = Number(r.stock);
+                    const dbLabel   = (r.color || '').toLowerCase().trim();
+                    const colorKey  = labelToKey[dbLabel] || dbLabel; // fallback: use label as-is
+                    const mapKey    = `${colorKey}|${r.talla}`;
+                    stockMap[mapKey] = Number(r.stock);
+                    console.log(`[manta stock] mapped "${r.color}" → "${colorKey}" | ${r.talla} = ${r.stock}`);
                 });
 
+                console.log('[manta stock] final stockMap:', stockMap);
                 stockLoaded = true;
                 updateSizeButtons();
                 updateColorSwatches();
@@ -1062,31 +1097,66 @@
 
         function getStock(colorKey, talla) {
             const key = `${colorKey}|${talla}`;
-            return key in stockMap ? stockMap[key] : null;
+            const val = stockMap[key];
+            return (val !== undefined) ? val : null;
         }
 
         function updateSizeButtons() {
             const addBtn = document.getElementById('pd-add-cart');
             sizesContainer.querySelectorAll('.pd__size-btn').forEach(btn => {
-                const talla = btn.textContent.trim();
-                const stock = getStock(activeColorKey, talla);
-                btn.classList.remove('out-of-stock', 'low-stock');
-                btn.disabled = false;
-                btn.title    = '';
+                const talla     = (btn.dataset.size || btn.textContent).trim();
+                const stock     = getStock(activeColorKey, talla);
+                const prevLabel = btn.querySelector('.stock-label');
+                if (prevLabel) prevLabel.remove();
 
-                if (stock === null) return;
+                // Reset all inline overrides + classes
+                btn.classList.remove('out-of-stock', 'low-stock');
+                btn.removeAttribute('disabled');
+                btn.style.cssText  = '';
+                btn.title          = '';
+
+                console.log(`[manta stock] ${activeColorKey}|${talla} = ${stock}`);
+
+                if (stock === null) {
+                    // Not in DB → show as available (graceful degradation)
+                    return;
+                }
+
                 if (stock <= 0) {
+                    // ── AGOTADO ─────────────────────────────────
                     btn.classList.add('out-of-stock');
                     btn.disabled = true;
                     btn.title    = 'Agotado';
+                    btn.style.color           = '#bbb';
+                    btn.style.borderColor     = '#ddd';
+                    btn.style.background      = '#fafafa';
+                    btn.style.cursor          = 'not-allowed';
+                    btn.style.textDecoration  = 'line-through';
+                    btn.style.pointerEvents   = 'none';
                     if (btn.classList.contains('selected')) {
                         btn.classList.remove('selected');
                         selectedSize = '';
-                        if (addBtn) { addBtn.style.opacity = '0.6'; document.getElementById('pd-add-text').textContent = 'Selecciona tu talla'; }
+                        if (addBtn) {
+                            addBtn.style.opacity = '0.6';
+                            document.getElementById('pd-add-text').textContent = 'Selecciona tu talla';
+                        }
                     }
+
                 } else if (stock <= LOW_STOCK_THRESHOLD) {
+                    // ── ÚLTIMAS UNIDADES ─────────────────────────
                     btn.classList.add('low-stock');
                     btn.title = `Últimas ${stock} unidades`;
+                    btn.style.borderColor = '#c0392b';
+                    btn.style.color       = '#c0392b';
+
+                    const lbl = document.createElement('span');
+                    lbl.className   = 'stock-label';
+                    lbl.textContent = `Últimas ${stock}`;
+                    lbl.style.cssText = 'display:block;font-size:7px;letter-spacing:0;line-height:1;margin-top:2px;color:#c0392b;';
+                    btn.appendChild(lbl);
+                } else {
+                    // ── DISPONIBLE ───────────────────────────────
+                    // Normal state — no special styling needed
                 }
             });
             updateStockStatusRow();
