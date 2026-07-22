@@ -11,12 +11,12 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=105">
+    <link rel="stylesheet" href="styles.v2.css?v=106">
     <style>
         /* ── Product Detail Layout ─────────────────────── */
         .pd {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 57fr 43fr;
             min-height: calc(100vh - 72px);
             padding-top: 72px;
         }
@@ -26,10 +26,10 @@
             position: sticky;
             top: 72px;
             height: calc(100vh - 72px);
-            background: var(--gray-bg);
+            background: #f2f2f0;
             overflow: hidden;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
         }
 
         .pd__gallery-main {
@@ -54,14 +54,13 @@
         .pd__slide img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            object-position: top center;
+            object-fit: contain;
+            object-position: center center;
             display: block;
         }
 
         .pd__slide img.contain-img {
             object-fit: contain;
-            background: #dcdcdc;
         }
 
         /* Gallery nav arrows */
@@ -104,33 +103,43 @@
             right: 16px;
         }
 
-        /* Thumbnail strip */
+        /* Thumbnail strip — vertical on desktop, horizontal on mobile */
         .pd__thumbs {
             display: flex;
-            gap: 8px;
-            padding: 14px 20px;
-            background: var(--gray-bg);
-            overflow-x: auto;
+            flex-direction: column;
+            gap: 6px;
+            padding: 20px 12px;
+            background: #f2f2f0;
+            overflow-y: auto;
+            overflow-x: hidden;
             scrollbar-width: none;
+            width: 74px;
+            flex-shrink: 0;
+            align-items: center;
+            border-right: 1px solid rgba(0,0,0,0.06);
         }
 
-        .pd__thumbs::-webkit-scrollbar {
-            display: none;
-        }
+        .pd__thumbs::-webkit-scrollbar { display: none; }
 
         .pd__thumb {
-            width: 60px;
-            height: 76px;
+            width: 52px;
+            height: 66px;
             flex-shrink: 0;
             overflow: hidden;
             border: 2px solid transparent;
             cursor: none;
-            transition: border-color 0.2s;
-            background: #ddd;
+            transition: border-color 0.2s, opacity 0.2s;
+            background: #e6e6e4;
+            opacity: 0.65;
         }
 
         .pd__thumb.active {
             border-color: var(--black);
+            opacity: 1;
+        }
+
+        .pd__thumb:hover {
+            opacity: 1;
         }
 
         .pd__thumb img {
@@ -143,10 +152,13 @@
 
         /* ── Right: Product Info ───────────────────────── */
         .pd__info {
-            padding: 64px 56px 80px;
+            padding: 52px 52px 80px 48px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            height: calc(100vh - 72px);
+            position: sticky;
+            top: 72px;
         }
 
         .pd__back {
@@ -667,6 +679,16 @@
             margin-bottom: 8px;
         }
 
+        /* ── Tablet ─────────────────────────────────── */
+        @media (max-width: 1200px) {
+            .pd {
+                grid-template-columns: 55fr 45fr;
+            }
+            .pd__info {
+                padding: 48px 40px 80px 40px;
+            }
+        }
+
         /* ── Mobile ──────────────────────────────────── */
         @media (max-width: 900px) {
             .pd {
@@ -674,15 +696,45 @@
                 padding-top: 72px;
             }
 
+            /* Thumbs go horizontal below the image on mobile */
             .pd__gallery {
                 position: relative;
                 top: 0;
-                height: 60vw;
-                min-height: 320px;
+                height: auto;
+                flex-direction: column;
+            }
+
+            .pd__gallery-main {
+                height: 92vw;
+                max-height: 540px;
+                min-height: 360px;
+            }
+
+            .pd__thumbs {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                width: 100%;
+                height: auto;
+                padding: 10px 14px;
+                gap: 8px;
+                align-items: flex-start;
+                border-right: none;
+                border-top: 1px solid rgba(0,0,0,0.06);
+            }
+
+            .pd__thumb {
+                width: 52px;
+                height: 66px;
+                flex-shrink: 0;
             }
 
             .pd__info {
                 padding: 40px 24px 60px;
+                height: auto;
+                position: relative;
+                top: 0;
             }
 
             .pd__name {
@@ -747,10 +799,11 @@
 
         <!-- Left: Gallery -->
         <div class="pd__gallery" id="pd-gallery">
-            <a href="coleccion.html" class="pd__back" style="margin: 24px 24px 16px 24px; align-self: flex-start;">
-                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                Volver a la colección
-            </a>
+            <!-- Vertical thumbnail strip -->
+            <div class="pd__thumbs" id="pd-thumbs">
+                <!-- thumbnails injected by JS -->
+            </div>
+            <!-- Main image area -->
             <div class="pd__gallery-main" id="pd-gallery-main">
                 <!-- slides injected by JS -->
                 <button class="pd__gall-btn pd__gall-btn--prev" id="pd-prev" aria-label="Anterior">
@@ -764,14 +817,15 @@
                     </svg>
                 </button>
             </div>
-            <div class="pd__thumbs" id="pd-thumbs">
-                <!-- thumbnails injected by JS -->
-            </div>
         </div>
 
         <!-- Right: Info -->
         <div class="pd__info" id="pd-info">
 
+            <a href="coleccion.html" class="pd__back" style="margin-bottom: 28px;">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                Volver a la colección
+            </a>
             <div class="pd__breadcrumb">
                 <a href="coleccion.html">Colección</a>
                 <span class="pd__breadcrumb-sep">›</span>
