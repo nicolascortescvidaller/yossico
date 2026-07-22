@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=106">
+    <link rel="stylesheet" href="styles.v2.css?v=107">
     <style>
         /* ── Product Detail Layout ─────────────────────── */
         .pd {
@@ -19,17 +19,22 @@
             grid-template-columns: 57fr 43fr;
             min-height: calc(100vh - 72px);
             padding-top: 72px;
+            align-items: start; /* gallery and info align to top */
         }
 
         /* ── Left: Gallery ─────────────────────────────── */
         .pd__gallery {
             position: sticky;
             top: 72px;
-            height: calc(100vh - 72px);
+            /* Square-ish: limit height to approximately gallery width so 1:1 images show fully */
+            /* Gallery takes 57% of viewport minus nav, capped at near-square proportions */
+            height: min(calc(100vh - 72px), calc(0.52 * 100vw));
+            min-height: 500px;
             background: #f2f2f0;
-            overflow: hidden;
             display: flex;
             flex-direction: row;
+            align-items: stretch;
+            overflow: hidden;
         }
 
         .pd__gallery-main {
@@ -52,11 +57,13 @@
         }
 
         .pd__slide img {
+            /* Photos are 1:1. Use contain so full model is always visible. */
             width: 100%;
             height: 100%;
             object-fit: contain;
             object-position: center center;
             display: block;
+            /* Prevent upscaling beyond the natural size */
         }
 
         .pd__slide img.contain-img {
@@ -705,9 +712,10 @@
             }
 
             .pd__gallery-main {
-                height: 92vw;
-                max-height: 540px;
-                min-height: 360px;
+                /* 1:1 images: make the visible area square on mobile */
+                height: calc(100vw - 74px); /* approx square minus thumb width */
+                max-height: 480px;
+                min-height: 320px;
             }
 
             .pd__thumbs {
