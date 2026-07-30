@@ -172,8 +172,8 @@ body.cursor-hover .cursor-ring {
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 0 60px 4px 60px;
-  height: 96px;
+  padding: 0 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
