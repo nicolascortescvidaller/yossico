@@ -220,12 +220,16 @@
       }
     }
 
-    /* ── Countdown ────────────────────────────────────────────── */
+    /* ── Countdown (pre-hero banner) ──────────────────────────── */
     .countdown-section {
       background: var(--black);
       color: var(--white);
-      padding: 72px 48px;
-      text-align: center;
+      /* sits right below the navbar, does NOT span full width */
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
       position: relative;
       overflow: hidden;
     }
@@ -233,20 +237,29 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 60% 60% at 50% 100%, rgba(255,255,255,0.04) 0%, transparent 70%);
+      background: radial-gradient(ellipse 80% 120% at 50% 100%, rgba(255,255,255,0.03) 0%, transparent 70%);
       pointer-events: none;
     }
     .countdown__eyebrow {
       font-family: var(--font-body);
-      font-size: 10px;
-      letter-spacing: 4px;
+      font-size: 9px;
+      letter-spacing: 3px;
       color: rgba(255,255,255,0.45);
       text-transform: uppercase;
-      margin: 0 0 40px;
+      margin: 0;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    /* Thin vertical divider between label and numbers */
+    .countdown__divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,0.15);
+      flex-shrink: 0;
     }
     .countdown__units {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
       gap: 0;
     }
@@ -254,51 +267,51 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      padding: 0 40px;
+      gap: 2px;
+      padding: 0 18px;
     }
     .countdown__num {
       font-family: var(--font-heading);
-      font-size: clamp(56px, 9vw, 108px);
+      font-size: clamp(22px, 2.4vw, 34px);
       font-weight: 300;
       line-height: 1;
-      letter-spacing: -2px;
+      letter-spacing: -0.5px;
       color: var(--white);
       min-width: 2ch;
       display: inline-block;
       transition: transform 0.15s ease;
     }
     .countdown__num.tick {
-      transform: translateY(-4px);
+      transform: translateY(-3px);
     }
     .countdown__label {
       font-family: var(--font-body);
-      font-size: 9px;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,0.4);
+      font-size: 7px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.35);
       text-transform: uppercase;
     }
     .countdown__sep {
       font-family: var(--font-heading);
-      font-size: clamp(40px, 6vw, 72px);
+      font-size: clamp(18px, 2vw, 26px);
       color: rgba(255,255,255,0.18);
       line-height: 1;
-      padding-top: 8px;
+      padding-bottom: 10px;
       user-select: none;
     }
-    @media (max-width: 600px) {
-      .countdown-section { padding: 48px 16px; }
-      .countdown__units {
+    @media (max-width: 768px) {
+      .countdown-section {
+        padding: 16px 24px;
+        gap: 16px;
         flex-wrap: wrap;
-        gap: 16px 0;
-        justify-content: center;
       }
+      .countdown__divider { display: none; }
       .countdown__unit { padding: 0 10px; }
-      .countdown__num { font-size: clamp(36px, 12vw, 64px); }
-      .countdown__sep { font-size: 22px; padding-top: 4px; }
+      .countdown__num { font-size: clamp(20px, 6vw, 28px); }
+      .countdown__sep { font-size: 16px; padding-bottom: 8px; }
     }
     @media (max-width: 380px) {
-      .countdown__unit { padding: 0 8px; }
+      .countdown__unit { padding: 0 7px; }
     }
 
     /* ── Drops Section ───────────────────────────────────────── */
@@ -757,6 +770,38 @@
   </nav>
 
   <!-- ── Hero ───────────────────────────────────────────────── -->
+  <!-- ── Countdown — pre-hero, full width, compact ─────────── -->
+  <section class="countdown-section" id="countdown-section">
+    <p class="countdown__eyebrow">DROP 01 — APERTURA</p>
+    <div class="countdown__divider" aria-hidden="true"></div>
+    <div class="countdown__units" id="countdown-units">
+      <div class="countdown__unit">
+        <span class="countdown__num" id="cd-weeks">00</span>
+        <span class="countdown__label">SEMANAS</span>
+      </div>
+      <div class="countdown__sep" aria-hidden="true">·</div>
+      <div class="countdown__unit">
+        <span class="countdown__num" id="cd-days">00</span>
+        <span class="countdown__label">DÍAS</span>
+      </div>
+      <div class="countdown__sep" aria-hidden="true">·</div>
+      <div class="countdown__unit">
+        <span class="countdown__num" id="cd-hours">00</span>
+        <span class="countdown__label">HORAS</span>
+      </div>
+      <div class="countdown__sep" aria-hidden="true">·</div>
+      <div class="countdown__unit">
+        <span class="countdown__num" id="cd-minutes">00</span>
+        <span class="countdown__label">MINUTOS</span>
+      </div>
+      <div class="countdown__sep" aria-hidden="true">·</div>
+      <div class="countdown__unit">
+        <span class="countdown__num" id="cd-seconds">00</span>
+        <span class="countdown__label">SEGUNDOS</span>
+      </div>
+    </div>
+  </section>
+
   <section class="hero">
     <div class="hero__left">
 
@@ -791,70 +836,6 @@
     </div>
   </section>
 
-  <!-- ── Ticker ─────────────────────────────────────────────── -->
-  <!-- TICKER BARRA NEGRA - DESACTIVADO TEMPORALMENTE -->
-  <!--
-  <div class="ticker">
-    <div class="ticker__track">
-      <span class="ticker__item">Uniformes Médicos</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Scrubs Premium</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Gorros Quirúrgicos</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Colombia</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Diseñados para perdurar</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Wear your calling</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Uniformes Médicos</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Scrubs Premium</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Gorros Quirúrgicos</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Colombia</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Diseñados para perdurar</span>
-      <span class="ticker__sep">·</span>
-      <span class="ticker__item">Wear your calling</span>
-      <span class="ticker__sep">·</span>
-    </div>
-  </div>
-  -->
-
-  <!-- ── Countdown ──────────────────────────────────────────── -->
-  <section class="countdown-section" id="countdown-section">
-    <p class="countdown__eyebrow">DROP 01 — APERTURA</p>
-    <div class="countdown__units" id="countdown-units">
-      <div class="countdown__unit">
-        <span class="countdown__num" id="cd-weeks">00</span>
-        <span class="countdown__label">SEMANAS</span>
-      </div>
-      <div class="countdown__sep" aria-hidden="true">·</div>
-      <div class="countdown__unit">
-        <span class="countdown__num" id="cd-days">00</span>
-        <span class="countdown__label">DÍAS</span>
-      </div>
-      <div class="countdown__sep" aria-hidden="true">·</div>
-      <div class="countdown__unit">
-        <span class="countdown__num" id="cd-hours">00</span>
-        <span class="countdown__label">HORAS</span>
-      </div>
-      <div class="countdown__sep" aria-hidden="true">·</div>
-      <div class="countdown__unit">
-        <span class="countdown__num" id="cd-minutes">00</span>
-        <span class="countdown__label">MINUTOS</span>
-      </div>
-      <div class="countdown__sep" aria-hidden="true">·</div>
-      <div class="countdown__unit">
-        <span class="countdown__num" id="cd-seconds">00</span>
-        <span class="countdown__label">SEGUNDOS</span>
-      </div>
-    </div>
-  </section>
-
   <!-- ── Drops ──────────────────────────────────────────────── -->
   <section class="drops">
 
@@ -875,27 +856,20 @@
     <!-- Right: editorial body -->
     <div class="drops__right reveal" data-delay="2">
       <div class="drops__body">
-        <p>YOSSICO no funciona como una marca de uniforme tradicional. No tenemos un catálogo abierto que puedas
-          consultar en cualquier momento y recibir al día siguiente. En cambio, lanzamos colecciones por drops:
-          ediciones disponibles en períodos específicos del año, con cantidades limitadas.</p>
+        <p>YOSSICO no opera como una marca tradicional. Lanzamos por drops: colecciones disponibles en ventanas específicas del año, en cantidades que no se repiten.</p>
 
         <div class="drops__pull">
           "Cuando se acaba, se acaba."
         </div>
 
-        <p>Algunos modelos regresan temporada tras temporada, pero solo durante su ventana de disponibilidad. Otros son
-          ediciones únicas que, una vez agotadas, dan paso a algo nuevo. En ambos casos, la regla es la misma.</p>
-
-        <p>Este modelo no es una limitación, es una decisión. Creemos que lo que vale la pena tiene su momento, y que
-          una prenda que no está disponible todo el tiempo se cuida más, se aprecia más, se usa con más orgullo.</p>
+        <p>Algunos modelos regresan. Otros no. En ambos casos, la regla es la misma: cada prenda tiene su momento, y quien la elige lo sabe.</p>
 
         <p>Queremos que cada persona que vista YOSSICO lo haga porque eligió estar ahí.</p>
       </div>
 
-      <div class="drops__cta-block">
-        <span class="drops__cta-label">Suscríbete para el próximo drop</span>
-        <a href="#" class="btn btn--primary" data-open-sub>Notificarme</a>
-        <a href="coleccion.html" class="btn-link">Ver colección actual →</a>
+      <div class="drops__cta-block" style="flex-direction: column; align-items: flex-start; gap: 16px;">
+        <a href="coleccion.html" class="btn btn--primary" style="padding: 18px 40px; letter-spacing: 3px; font-size: 10px;">VER COLECCIÓN DISPONIBLE →</a>
+        <button class="drops__subscribe-link" data-open-sub style="background: none; border: none; cursor: none; padding: 0; font-family: var(--font-body); font-size: 11px; letter-spacing: 0.5px; color: var(--gray); text-decoration: underline; text-underline-offset: 3px;">Suscríbete para el próximo drop</button>
       </div>
     </div>
 
