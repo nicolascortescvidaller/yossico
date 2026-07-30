@@ -19,7 +19,10 @@
       display: grid;
       grid-template-columns: 60fr 40fr;
       min-height: 100vh;
-      padding-top: 72px;
+      /* No padding-top needed: countdown (sticky) sits above in flow,
+         and body content already starts below the fixed header via
+         the countdown's margin-top on first load. */
+      padding-top: 0;
     }
 
     .hero__left {
@@ -221,16 +224,28 @@
     }
 
     /* ── Countdown (pre-hero banner) ──────────────────────────── */
+    /* ── CSS layout vars ─────────────────────────────────────── */
+    :root {
+      --barra-h: 41px;    /* #barra-envio-gratis fixed height          */
+      --nav-h: 96px;      /* .nav fixed height                          */
+      --fixed-top: 137px; /* barra + nav = total fixed header           */
+    }
+
     .countdown-section {
       background: var(--black);
       color: var(--white);
-      /* sits right below the navbar, does NOT span full width */
-      padding: 20px 48px;
+      padding: 16px 48px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 40px;
-      position: relative;
+      /* Sticky: stays just below the fixed navbar while page scrolls */
+      position: sticky;
+      top: var(--fixed-top);   /* 41px barra + 96px nav = 137px */
+      z-index: 998;            /* below nav (1000) and barra (1002)     */
+      /* Push initial position below the fixed header so it's visible on load */
+      margin-top: var(--fixed-top);
+      width: 100%;
       overflow: hidden;
     }
     .countdown-section::before {
@@ -300,15 +315,22 @@
       user-select: none;
     }
     @media (max-width: 768px) {
+      :root {
+        /* mobile nav is shorter (typically 72px) and barra may wrap */
+        --nav-h: 72px;
+        --fixed-top: 113px; /* 41px barra + 72px nav */
+      }
       .countdown-section {
-        padding: 16px 24px;
-        gap: 16px;
+        padding: 14px 20px;
+        gap: 12px;
         flex-wrap: wrap;
+        top: var(--fixed-top);
+        margin-top: var(--fixed-top);
       }
       .countdown__divider { display: none; }
       .countdown__unit { padding: 0 10px; }
-      .countdown__num { font-size: clamp(20px, 6vw, 28px); }
-      .countdown__sep { font-size: 16px; padding-bottom: 8px; }
+      .countdown__num { font-size: clamp(18px, 5.5vw, 26px); }
+      .countdown__sep { font-size: 15px; padding-bottom: 8px; }
     }
     @media (max-width: 380px) {
       .countdown__unit { padding: 0 7px; }
