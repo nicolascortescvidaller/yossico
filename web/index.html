@@ -231,6 +231,26 @@
       --fixed-top: 101px; /* barra(41) + nav(60) = total fixed header    */
     }
 
+    /* ── Barra Envío Gratis ──────────────────────────────────── */
+    #barra-envio-gratis {
+      background-color: #000000;
+      color: #FFFFFF;
+      text-align: center;
+      padding: 0 16px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      width: 100%;
+      height: 41px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
     .countdown-section {
       background: var(--black);
       color: var(--white);
@@ -319,6 +339,17 @@
         /* mobile nav is same 60px, barra stays 41px */
         --nav-h: 60px;
         --fixed-top: 101px; /* 41px barra + 60px nav */
+      }
+      #barra-envio-gratis {
+        font-size: 11px;
+        padding: 0 10px;
+        letter-spacing: 0;
+      }
+      .hide-mobile { display: none !important; }
+      
+      .nav__logo {
+        font-size: 18px !important;
+        letter-spacing: 3px !important;
       }
       .countdown-section {
         flex-direction: column;
