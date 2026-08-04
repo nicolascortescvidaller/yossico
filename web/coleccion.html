@@ -1777,11 +1777,15 @@
                 if (toDetail) {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (pid === 'manta') {
-                        navigateTo('manta.html');
-                    } else {
-                        navigateTo(`producto.html?id=${pid}`);
-                    }
+                    const pdpUrls = {
+                        manta:  'manta.html',
+                        oslo:   'oslo.html',
+                        lima:   'lima.html',
+                        milan:  'milan.html',
+                        kyoto:  'kyoto.html',
+                        bogota: 'bogota.html'
+                    };
+                    navigateTo(pdpUrls[pid] || `producto.html?id=${pid}`);
                 } else {
                     openModal(gallery);
                 }
@@ -1810,11 +1814,15 @@
                         el.addEventListener('click', e => {
                             e.preventDefault();
                             e.stopPropagation();
-                            if (pid === 'manta') {
-                                navigateTo('manta.html');
-                            } else {
-                                navigateTo(`producto.html?id=${pid}`);
-                            }
+                            const pdpUrls = {
+                                manta:  'manta.html',
+                                oslo:   'oslo.html',
+                                lima:   'lima.html',
+                                milan:  'milan.html',
+                                kyoto:  'kyoto.html',
+                                bogota: 'bogota.html'
+                            };
+                            navigateTo(pdpUrls[pid] || `producto.html?id=${pid}`);
                         });
                     }
                 });
