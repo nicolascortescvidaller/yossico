@@ -491,23 +491,42 @@
     .drops__decorative-arrow {
       position: absolute;
       top: 50%;
-      left: -170px;
+      left: -270px;
       transform: translateY(-50%);
-      width: 150px;
+      width: 250px;
       height: 60px;
       pointer-events: none;
       z-index: 0;
     }
     .drops__decorative-arrow .draw-path {
-      stroke-dasharray: 200;
-      stroke-dashoffset: 200;
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
     }
     .drops__right.is-visible .drops__decorative-arrow .draw-path {
-      animation: drawDecorativeArrow 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-      animation-delay: 0.7s;
+      animation: drawDecorativeArrowLoop 3.5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+      animation-delay: 0.5s;
     }
-    @keyframes drawDecorativeArrow {
-      to { stroke-dashoffset: 0; }
+    @keyframes drawDecorativeArrowLoop {
+      0% {
+        stroke-dashoffset: 300;
+        opacity: 1;
+      }
+      35% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+      75% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+      85% {
+        stroke-dashoffset: 0;
+        opacity: 0; /* fade out smoothly */
+      }
+      100% {
+        stroke-dashoffset: 300;
+        opacity: 0; /* reset position while invisible */
+      }
     }
     @media (max-width: 1000px) {
       .drops__decorative-arrow { display: none; }
@@ -981,9 +1000,9 @@
         
         <!-- Flecha animada (Desktop) -->
         <div class="drops__decorative-arrow">
-          <svg width="150" height="60" viewBox="0 0 150 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path class="draw-path" d="M 0,30 C 40,50 100,50 145,30" stroke="#555" stroke-width="1.2" stroke-linecap="round"/>
-            <path class="draw-path" d="M 135,22 L 145,30 L 135,38" stroke="#555" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg width="250" height="60" viewBox="0 0 250 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path class="draw-path" d="M 0,30 C 80,60 170,60 240,30" stroke="#555" stroke-width="1.2" stroke-linecap="round"/>
+            <path class="draw-path" d="M 230,22 L 240,30 L 230,38" stroke="#555" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
 
