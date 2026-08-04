@@ -468,7 +468,49 @@
       display: flex;
       align-items: center;
       gap: 32px;
+      position: relative;
       flex-wrap: wrap;
+    }
+
+    /* ── Drops CTA & Arrow ── */
+    .drops__main-cta {
+      transition: transform 0.3s var(--ease-out), background 0.3s, color 0.3s !important;
+    }
+    .drops__main-cta:hover {
+      transform: scale(1.02);
+    }
+    .drops__main-cta .arrow-icon {
+      display: inline-block;
+      transition: transform 0.3s var(--ease-out);
+      margin-left: 2px;
+    }
+    .drops__main-cta:hover .arrow-icon {
+      transform: translateX(4px);
+    }
+
+    .drops__decorative-arrow {
+      position: absolute;
+      top: 50%;
+      left: -170px;
+      transform: translateY(-50%);
+      width: 150px;
+      height: 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .drops__decorative-arrow .draw-path {
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+    }
+    .drops__right.is-visible .drops__decorative-arrow .draw-path {
+      animation: drawDecorativeArrow 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      animation-delay: 0.7s;
+    }
+    @keyframes drawDecorativeArrow {
+      to { stroke-dashoffset: 0; }
+    }
+    @media (max-width: 1000px) {
+      .drops__decorative-arrow { display: none; }
     }
 
     .drops__cta-label {
@@ -936,7 +978,18 @@
       </div>
 
       <div class="drops__cta-block" style="flex-direction: column; align-items: flex-start; gap: 16px;">
-        <a href="coleccion.html" class="btn btn--primary" style="padding: 18px 40px; letter-spacing: 3px; font-size: 10px;">VER COLECCIÓN DISPONIBLE →</a>
+        
+        <!-- Flecha animada (Desktop) -->
+        <div class="drops__decorative-arrow">
+          <svg width="150" height="60" viewBox="0 0 150 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path class="draw-path" d="M 0,30 C 40,50 100,50 145,30" stroke="#555" stroke-width="1.2" stroke-linecap="round"/>
+            <path class="draw-path" d="M 135,22 L 145,30 L 135,38" stroke="#555" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <a href="coleccion.html" class="btn btn--primary drops__main-cta" style="padding: 20px 48px; letter-spacing: 3px; font-size: 11px;">
+          VER COLECCIÓN DISPONIBLE <span class="arrow-icon">→</span>
+        </a>
         <button class="drops__subscribe-link" data-open-sub style="background: none; border: none; cursor: none; padding: 0; font-family: var(--font-body); font-size: 11px; letter-spacing: 0.5px; color: var(--gray); text-decoration: underline; text-underline-offset: 3px;">Suscríbete para el próximo drop</button>
       </div>
     </div>
