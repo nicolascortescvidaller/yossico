@@ -355,6 +355,15 @@
             const { error: rpcError } = await sb.rpc('decrementar_stock', { items: stockItems });
             if (rpcError) console.warn('[checkout] decrementar_stock:', rpcError.message);
 
+            /* Marcar código de descuento como usado */
+            if (dcode) {
+              const { error: usedError } = await sb
+                .from('subscribers')
+                .update({ used: true })
+                .eq('discount_code', dcode);
+              if (usedError) console.warn('[checkout] mark used error:', usedError.message);
+            }
+
           } catch (e) {
             console.error('[checkout] background error:', e);
           }

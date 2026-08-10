@@ -13,7 +13,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="styles.v2.css?v=102">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         body {
             background: #ffffff;
@@ -311,6 +311,63 @@
                 padding: 80px 24px;
             }
         }
+
+        /* ── Success Popup ───────────────────────────────── */
+        .success-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            background: rgba(0, 0, 0, 0.55);
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+        .success-overlay.open {
+            display: flex;
+        }
+        .success-modal {
+            background: #ffffff;
+            padding: 52px 48px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: successFadeIn 0.3s ease;
+        }
+        @keyframes successFadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .success-modal__title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 28px;
+            color: var(--black);
+            margin-bottom: 16px;
+        }
+        .success-modal__text {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 1.8;
+            margin-bottom: 36px;
+        }
+        .success-modal__btn {
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            padding: 14px 36px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .success-modal__btn:hover { background: #333; }
     </style>
 </head>
 
@@ -541,10 +598,7 @@
         document.addEventListener('DOMContentLoaded', function () {
 
             const SUPABASE_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
-            const SUPABASE_ANON_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
-
-            // Usar el cliente global de Supabase cargado por el CDN en el <head>
-            const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const EDGE_FN_URL = `${SUPABASE_URL}/functions/v1/submit-lead`;
 
             const form = document.getElementById('embajadoras-form');
             const submitBtn = document.getElementById('submit-btn');
@@ -591,13 +645,21 @@
                 };
 
                 try {
-                    const { error } = await sb
-                        .from('embajadoras_leads')
-                        .insert([payload]);
+                    // Verificación server-side de Turnstile via Edge Function (igual que institucional.html)
+                    const res = await fetch(EDGE_FN_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            table: 'embajadoras_leads',
+                            turnstileToken: turnstileToken,
+                            payload: payload
+                        })
+                    });
 
-                    if (error) {
-                        console.error('[Embajadoras] Error de Supabase:', JSON.stringify(error));
-                        throw new Error(error.message || 'Error al guardar la postulación.');
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        throw new Error(data.error || 'Error al guardar la postulación.');
                     }
 
                     console.log('[Embajadoras] Inserción exitosa.');
