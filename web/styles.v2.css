@@ -803,7 +803,7 @@ body.cursor-hover .cursor-ring {
 
 /* ── Page Header (inner pages) ─────────────────────────────── */
 .page-header {
-  padding: 20px 60px 40px;
+  padding: 125px 60px 40px; /* top: barra-envio(41) + nav(60) + respiro(24) */
   background: transparent;
   border-bottom: 1px solid var(--border);
 }
