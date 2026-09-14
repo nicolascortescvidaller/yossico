@@ -476,7 +476,7 @@ async function verificarPin(pin) {
     
     cargarStock();
     renderPedidos(data);
-  } else {
+  } catch (err) {
     mostrarToast("Contraseña incorrecta", "err");
     adminPin = null;
     sessionStorage.removeItem("admin_pin");
