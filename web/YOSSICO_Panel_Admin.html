@@ -18,6 +18,25 @@
   .header-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--blanco);letter-spacing:8px}
   .header-sub{font-size:.65rem;color:#888;letter-spacing:4px;text-transform:uppercase;margin-top:2px}
   .header-right{display:flex;align-items:center;gap:1rem}
+  /* CAMPANA */
+  .bell-wrap{position:relative}
+  .bell-btn{background:none;border:none;cursor:pointer;color:#aaa;padding:.4rem;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:color .2s,background .2s;position:relative}
+  .bell-btn:hover{color:var(--blanco);background:rgba(255,255,255,.1)}
+  .bell-badge{position:absolute;top:-2px;right:-2px;background:var(--rojo);color:var(--blanco);font-size:.6rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;font-family:'Montserrat',sans-serif;border:2px solid var(--negro)}
+  @keyframes ring{0%,100%{transform:rotate(0)}15%{transform:rotate(15deg)}30%{transform:rotate(-12deg)}45%{transform:rotate(10deg)}60%{transform:rotate(-8deg)}75%{transform:rotate(5deg)}}
+  .bell-btn.ring{animation:ring .6s ease}
+  .notif-panel{position:absolute;top:calc(100% + 12px);right:0;width:340px;background:var(--blanco);border:1px solid var(--grisCl);box-shadow:0 8px 32px rgba(0,0,0,.18);z-index:500;display:none;max-height:480px;overflow:hidden;flex-direction:column}
+  .notif-panel.open{display:flex}
+  .notif-header{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1rem;border-bottom:1px solid var(--grisCl);font-size:.65rem;letter-spacing:3px;text-transform:uppercase;font-weight:500;flex-shrink:0}
+  #notif-lista{overflow-y:auto;max-height:400px}
+  .notif-empty{text-align:center;padding:2rem 1rem;color:var(--grisMed);font-size:.8rem;letter-spacing:1px}
+  .notif-item{padding:.85rem 1rem;border-bottom:1px solid var(--grisCl);cursor:pointer;transition:background .15s}
+  .notif-item:hover{background:var(--grisF)}
+  .notif-item.nueva{border-left:3px solid var(--verde);background:#F0FAF5}
+  .notif-item .ni-nombre{font-size:.82rem;font-weight:500;margin-bottom:.2rem}
+  .notif-item .ni-detalle{font-size:.72rem;color:var(--grisMed);margin-bottom:.2rem}
+  .notif-item .ni-total{font-size:.82rem;font-weight:500;color:var(--verde)}
+  .notif-item .ni-hora{font-size:.65rem;color:#bbb;float:right;margin-top:.1rem}
   /* TABS */
   .tabs{display:flex;border-bottom:2px solid var(--grisCl);background:var(--blanco);padding:0 2rem;overflow-x:auto}
   .tab-btn{padding:.9rem 1.2rem;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:500;border:none;background:none;cursor:pointer;color:var(--grisMed);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap}
@@ -127,6 +146,24 @@
     <div class="header-sub">Panel de Administración</div>
   </div>
   <div class="header-right">
+    <!-- CAMPANA DE NOTIFICACIONES -->
+    <div class="bell-wrap" id="bell-wrap" style="display:none">
+      <button class="bell-btn" id="bell-btn" onclick="toggleNotifPanel()" aria-label="Notificaciones">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span class="bell-badge" id="bell-badge" style="display:none">0</span>
+      </button>
+      <!-- PANEL DESPLEGABLE -->
+      <div class="notif-panel" id="notif-panel">
+        <div class="notif-header">
+          <span>Pedidos nuevos</span>
+          <button onclick="limpiarNotificaciones()" style="background:none;border:none;color:var(--grisMed);cursor:pointer;font-size:.7rem;font-family:inherit;letter-spacing:1px">LIMPIAR</button>
+        </div>
+        <div id="notif-lista"><div class="notif-empty">Sin notificaciones nuevas</div></div>
+      </div>
+    </div>
     <span id="usuario-info" class="header-sub" style="color:#555"></span>
     <button class="btn btn-gris btn-sm" id="btn-logout" onclick="cerrarSesion()" style="display:none">Salir</button>
   </div>
@@ -336,6 +373,7 @@ async function verificarPin(pin) {
     actualizarResumen();
     aplicarFiltros();
     cargarStock();
+    iniciarCampana();
   } catch (err) {
     mostrarToast("Contraseña incorrecta", "err");
     adminPin = null;
@@ -598,6 +636,150 @@ function fCOP(n){return"$"+parseInt(n||0).toLocaleString("es-CO");}
 function dHoy(){return new Date().toISOString().slice(0,10);}
 function descargarCSV(csv,nombre){const b=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=nombre;a.click();URL.revokeObjectURL(u);}
 function mostrarToast(msg,tipo="ok"){const t=document.getElementById("toast");t.textContent=msg;t.className=`toast show toast-${tipo}`;setTimeout(()=>t.classList.remove("show"),3500);}
+
+// ══════════════════════════════════════════════════════════
+// 🔔 CAMPANA DE NOTIFICACIONES (polling cada 30s)
+// ══════════════════════════════════════════════════════════
+let notifInterval     = null;
+let notificaciones    = [];  // historial de pedidos nuevos
+let ultimoIdVisto     = null;  // ID del último pedido conocido al iniciar
+
+function iniciarCampana() {
+  document.getElementById("bell-wrap").style.display = "flex";
+  // Guardar el ID del pedido más reciente como "punto de partida"
+  if (todosPedidos.length > 0) {
+    ultimoIdVisto = todosPedidos[0].created_at; // usamos fecha del más reciente
+  }
+  // Poll cada 30 segundos
+  notifInterval = setInterval(pollPedidosNuevos, 30000);
+}
+
+async function pollPedidosNuevos() {
+  const { data, error } = await sb.rpc("admin_get_pedidos", { pin: adminPin });
+  if (error || !data) return;
+
+  // Detectar pedidos nuevos (los que no estaban antes)
+  const anteriores = new Set(todosPedidos.map(p => p.id));
+  const nuevos = data.filter(p => !anteriores.has(p.id));
+
+  if (nuevos.length > 0) {
+    // Actualizar la lista global
+    todosPedidos = data;
+    actualizarResumen();
+    aplicarFiltros();
+
+    // Añadir al historial de notificaciones
+    nuevos.forEach(p => notificaciones.unshift({ ...p, visto: false }));
+
+    // Actualizar badge
+    const noVistos = notificaciones.filter(n => !n.visto).length;
+    actualizarBadge(noVistos);
+
+    // Animar la campana
+    animarCampana();
+
+    // Sonido suave
+    tocarSonido();
+
+    // Renderizar el panel
+    renderNotifPanel();
+  }
+}
+
+function actualizarBadge(count) {
+  const badge = document.getElementById("bell-badge");
+  if (count > 0) {
+    badge.textContent = count > 9 ? "9+" : count;
+    badge.style.display = "flex";
+  } else {
+    badge.style.display = "none";
+  }
+}
+
+function animarCampana() {
+  const btn = document.getElementById("bell-btn");
+  btn.classList.remove("ring");
+  void btn.offsetWidth; // forzar reflow para reiniciar animación
+  btn.classList.add("ring");
+  setTimeout(() => btn.classList.remove("ring"), 700);
+}
+
+function tocarSonido() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.4);
+  } catch(e) { /* silencio si el navegador no lo soporta */ }
+}
+
+function toggleNotifPanel() {
+  const panel = document.getElementById("notif-panel");
+  const isOpen = panel.classList.contains("open");
+
+  if (isOpen) {
+    panel.classList.remove("open");
+  } else {
+    // Marcar todos como vistos al abrir
+    notificaciones.forEach(n => n.visto = true);
+    actualizarBadge(0);
+    renderNotifPanel();
+    panel.classList.add("open");
+  }
+}
+
+// Cerrar panel al hacer clic fuera
+document.addEventListener("click", e => {
+  const wrap = document.getElementById("bell-wrap");
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById("notif-panel")?.classList.remove("open");
+  }
+});
+
+function renderNotifPanel() {
+  const lista = document.getElementById("notif-lista");
+  if (notificaciones.length === 0) {
+    lista.innerHTML = '<div class="notif-empty">Sin notificaciones nuevas</div>';
+    return;
+  }
+
+  lista.innerHTML = notificaciones.map(n => {
+    const prendas = (n.items||[]).map(i => `${i.nombre||""} T${i.talla||""}`).join(", ") || "-";
+    const hora = new Date(n.created_at).toLocaleTimeString("es-CO", { hour:"2-digit", minute:"2-digit" });
+    const fecha = new Date(n.created_at).toLocaleDateString("es-CO", { day:"2-digit", month:"2-digit" });
+    return `
+      <div class="notif-item${!n.visto ? " nueva" : ""}" onclick="irAPedido('${n.id}')">
+        <span class="ni-hora">${hora} · ${fecha}</span>
+        <div class="ni-nombre">${n.cliente_nombre || "Cliente"}</div>
+        <div class="ni-detalle">${prendas}</div>
+        <div class="ni-total">${fCOP(n.total)}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function irAPedido(id) {
+  // Ir a la tab de pedidos y resaltar el pedido
+  document.getElementById("notif-panel").classList.remove("open");
+  document.querySelector('.tab-btn').click(); // ir a tab Pedidos
+  document.getElementById("filtro-fecha").value = "todos";
+  document.getElementById("filtro-estado").value = "";
+  document.getElementById("filtro-buscar").value = "";
+  aplicarFiltros();
+}
+
+function limpiarNotificaciones() {
+  notificaciones = [];
+  actualizarBadge(0);
+  renderNotifPanel();
+}
 </script>
 </body>
 </html>
