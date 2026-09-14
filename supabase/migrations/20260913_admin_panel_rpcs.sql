@@ -85,3 +85,20 @@ END;
 $$;
 
 GRANT EXECUTE ON FUNCTION admin_actualizar_pedido(uuid, text, text) TO anon;
+
+-- 3. Ver Suscriptoras (con PIN)
+CREATE OR REPLACE FUNCTION admin_get_suscriptoras(pin text)
+RETURNS SETOF subscribers
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF pin != 'yossico2025' THEN
+    RAISE EXCEPTION 'Acceso denegado: PIN incorrecto';
+  END IF;
+  RETURN QUERY SELECT * FROM subscribers ORDER BY created_at DESC;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION admin_get_suscriptoras(text) TO anon;
