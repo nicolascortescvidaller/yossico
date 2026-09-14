@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOSSICO · Panel de Ventas</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --negro:    #111111;
+    --blanco:   #FFFFFF;
+    --grisF:    #F5F4F1;
+    --grisCl:   #E8E6E2;
+    --grisMed:  #8A8A8A;
+    --verde:    #2D6A4F;
+    --verdeCl:  #D8F0E4;
+    --rojo:     #C0392B;
+    --rojoCl:   #FDECEA;
+    --azul:     #1A5276;
+    --azulCl:   #D6EAF8;
+    --naranja:  #CA6F1E;
+    --naranjaCl:#FDEBD0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    background: var(--grisF);
+    color: var(--negro);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--negro);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--blanco);
+    letter-spacing: 8px;
+  }
+  .header-sub {
+    font-size: .7rem;
+    color: #555;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ── LOGIN ── */
+  .login-card {
+    background: var(--blanco);
+    border: 1px solid var(--grisCl);
+    padding: 2.5rem;
+    max-width: 400px;
+    margin: 4rem auto;
+    text-align: center;
+  }
+  .login-card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    margin-bottom: .5rem;
+  }
+  .login-card p { color: var(--grisMed); font-size: .85rem; margin-bottom: 1.5rem; }
+
+  /* ── STOCK RÁPIDO ── */
+  .stock-section {
+    background: var(--blanco);
+    border: 1px solid var(--grisCl);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .section-title {
+    font-size: .65rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--grisMed);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: .75rem;
+  }
+  .stock-item {
+    border: 1px solid var(--grisCl);
+    padding: .75rem;
+    background: var(--grisF);
+  }
+  .stock-sku { font-size: .7rem; color: var(--grisMed); letter-spacing: 2px; text-transform: uppercase; }
+  .stock-nombre { font-size: .9rem; font-weight: 400; margin: .2rem 0; }
+  .stock-color { font-size: .75rem; color: var(--grisMed); margin-bottom: .5rem; }
+  .stock-tallas { display: flex; gap: .5rem; }
+  .talla-badge {
+    flex: 1;
+    text-align: center;
+    padding: .25rem .4rem;
+    font-size: .75rem;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .talla-ok   { border-color: var(--verde); color: var(--verde); background: var(--verdeCl); }
+  .talla-bajo { border-color: var(--naranja); color: var(--naranja); background: var(--naranjaCl); }
+  .talla-cero { border-color: var(--rojo); color: var(--rojo); background: var(--rojoCl); }
+
+  /* ── FORMULARIO VENTA ── */
+  .form-card {
+    background: var(--blanco);
+    border: 1px solid var(--grisCl);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .form-grid.tres { grid-template-columns: 1fr 1fr 1fr; }
+  .form-full { grid-column: 1 / -1; }
+
+  .form-group { display: flex; flex-direction: column; gap: .35rem; }
+  .form-group label { font-size: .65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--grisMed); font-weight: 500; }
+  .form-group input,
+  .form-group select {
+    border: 1px solid var(--grisCl);
+    background: var(--grisF);
+    padding: .6rem .75rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .85rem;
+    font-weight: 300;
+    color: var(--negro);
+    outline: none;
+    transition: border-color .2s;
+  }
+  .form-group input:focus,
+  .form-group select:focus { border-color: var(--negro); background: var(--blanco); }
+
+  /* ── EFECTIVO BADGE ── */
+  .efectivo-banner {
+    background: var(--naranjaCl);
+    border: 1px solid var(--naranja);
+    padding: .75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: .8rem;
+    color: var(--naranja);
+    display: none;
+  }
+  .efectivo-banner.visible { display: block; }
+  .efectivo-check {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .75rem;
+    background: var(--naranjaCl);
+    border: 1px solid var(--naranja);
+    margin-top: .5rem;
+    cursor: pointer;
+  }
+  .efectivo-check input { width: auto; margin: 0; }
+  .efectivo-check label { font-size: .8rem; color: var(--naranja); cursor: pointer; text-transform: none; letter-spacing: 0; }
+
+  /* ── BOTONES ── */
+  .btn {
+    padding: .75rem 1.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: opacity .2s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn-negro { background: var(--negro); color: var(--blanco); }
+  .btn-verde { background: var(--verde); color: var(--blanco); }
+  .btn-gris  { background: var(--grisCl); color: var(--negro); }
+  .btn-full  { width: 100%; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 1.5rem;
+    font-size: .85rem;
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: all .3s;
+    pointer-events: none;
+    z-index: 999;
+    max-width: 320px;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast-ok  { background: var(--negro); color: var(--blanco); }
+  .toast-err { background: var(--rojo); color: var(--blanco); }
+
+  /* ── PEDIDOS RECIENTES ── */
+  .tabla-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+  thead th {
+    background: var(--negro);
+    color: var(--blanco);
+    padding: .6rem .75rem;
+    text-align: left;
+    font-size: .65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  tbody tr:nth-child(even) { background: var(--grisF); }
+  tbody td { padding: .55rem .75rem; border-bottom: 1px solid var(--grisCl); }
+  .badge {
+    display: inline-block;
+    padding: .15rem .5rem;
+    font-size: .65rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+  .badge-prep { background: var(--naranjaCl); color: var(--naranja); }
+  .badge-env  { background: var(--azulCl); color: var(--azul); }
+  .badge-ent  { background: var(--verdeCl); color: var(--verde); }
+  .badge-ef   { background: var(--naranjaCl); color: var(--naranja); border: 1px solid var(--naranja); }
+
+  /* ── LOADING ── */
+  .loading { text-align: center; padding: 2rem; color: var(--grisMed); font-size: .8rem; letter-spacing: 2px; }
+
+  /* ── UTILS ── */
+  .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .hidden { display: none !important; }
+  .mt1 { margin-top: 1rem; }
+
+  @media (max-width: 600px) {
+    .form-grid, .form-grid.tres { grid-template-columns: 1fr; }
+    .stock-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-logo">YOSSICO</div>
+    <div class="header-sub">Panel de Ventas</div>
+  </div>
+  <div id="usuario-info" class="header-sub" style="color:#555"></div>
+</div>
+
+<!-- ═══════ LOGIN ═══════ -->
+<div id="login-screen" class="main">
+  <div class="login-card">
+    <h2>Acceso</h2>
+    <p>Ingresa la contraseña del panel de ventas</p>
+    <div class="form-group" style="margin-bottom:1rem">
+      <label>Contraseña</label>
+      <input type="password" id="input-pass" placeholder="••••••••">
+    </div>
+    <button class="btn btn-negro btn-full" onclick="login()">Entrar</button>
+  </div>
+</div>
+
+<!-- ═══════ PANEL PRINCIPAL ═══════ -->
+<div id="panel" class="main hidden">
+
+  <!-- Stock rápido -->
+  <div class="stock-section">
+    <div class="flex-between">
+      <div class="section-title">Stock en tiempo real</div>
+      <button class="btn btn-gris" onclick="cargarStock()" style="padding:.4rem .8rem;font-size:.65rem">↻ Actualizar</button>
+    </div>
+    <div id="stock-grid" class="stock-grid">
+      <div class="loading">Cargando inventario...</div>
+    </div>
+  </div>
+
+  <!-- Formulario nueva venta -->
+  <div class="form-card">
+    <div class="section-title" style="margin-bottom:1.25rem">Registrar nueva venta</div>
+
+    <!-- DATOS DEL CLIENTE -->
+    <div class="section-title" style="margin-bottom:.75rem; color: var(--negro)">Datos del cliente</div>
+    <div class="form-grid" style="margin-bottom:1rem">
+      <div class="form-group">
+        <label>Nombre completo *</label>
+        <input type="text" id="f-nombre" placeholder="María Rodríguez">
+      </div>
+      <div class="form-group">
+        <label>Cédula</label>
+        <input type="text" id="f-cedula" placeholder="52345678">
+      </div>
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="f-correo" placeholder="maria@email.com">
+      </div>
+      <div class="form-group">
+        <label>Teléfono *</label>
+        <input type="text" id="f-telefono" placeholder="3001234567">
+      </div>
+      <div class="form-group">
+        <label>Ciudad</label>
+        <input type="text" id="f-ciudad" placeholder="Bogotá">
+      </div>
+      <div class="form-group">
+        <label>Dirección de envío</label>
+        <input type="text" id="f-direccion" placeholder="Calle 123 #45-67">
+      </div>
+    </div>
+
+    <!-- DATOS DEL PEDIDO -->
+    <div class="section-title" style="margin-bottom:.75rem; color: var(--negro)">Datos del pedido</div>
+    <div class="form-grid tres" style="margin-bottom:1rem">
+      <div class="form-group">
+        <label>Línea *</label>
+        <select id="f-linea" onchange="filtrarSKUs()">
+          <option value="">Seleccionar...</option>
+          <option>SIGNATURE</option>
+          <option>ESSENTIALS</option>
+          <option>CORE</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>SKU / Modelo *</label>
+        <select id="f-sku">
+          <option value="">Primero selecciona línea</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Color</label>
+        <input type="text" id="f-color" placeholder="Se llena automático">
+      </div>
+      <div class="form-group">
+        <label>Talla *</label>
+        <select id="f-talla">
+          <option value="">Seleccionar...</option>
+          <option>S</option>
+          <option>M</option>
+          <option>L</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Cantidad</label>
+        <input type="number" id="f-cantidad" value="1" min="1">
+      </div>
+      <div class="form-group">
+        <label>Descuento</label>
+        <select id="f-descuento">
+          <option>Sin descuento</option>
+          <option>10% Efectivo</option>
+          <option>10% Primera compra</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-grid" style="margin-bottom:1rem">
+      <div class="form-group">
+        <label>Valor total (COP) *</label>
+        <input type="number" id="f-valor" placeholder="269900">
+      </div>
+      <div class="form-group">
+        <label>Método de pago *</label>
+        <select id="f-pago" onchange="checkEfectivo()">
+          <option value="">Seleccionar...</option>
+          <option>Transferencia</option>
+          <option>Nequi</option>
+          <option>Daviplata</option>
+          <option>PSE</option>
+          <option>Tarjeta</option>
+          <option>Efectivo</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- BANNER EFECTIVO -->
+    <div class="efectivo-banner" id="efectivo-banner">
+      ⚠️ <strong>Pago en efectivo:</strong> El pedido se registrará como <em>"Efectivo - Pendiente confirmar"</em>.
+      El stock NO se descontará hasta que confirmes la recepción del pago manualmente en Google Sheets.
+    </div>
+
+    <!-- STOCK DISPONIBLE preview -->
+    <div id="stock-preview" style="margin-bottom:1rem; display:none">
+      <div style="font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--grisMed);margin-bottom:.35rem">Stock disponible para esta selección</div>
+      <div id="stock-preview-nums" style="display:flex;gap:.75rem"></div>
+    </div>
+
+    <div class="flex-between mt1">
+      <button class="btn btn-gris" onclick="limpiarFormulario()">Limpiar</button>
+      <button class="btn btn-negro" onclick="registrarVenta()">Registrar venta →</button>
+    </div>
+  </div>
+
+  <!-- Pedidos del día -->
+  <div class="form-card">
+    <div class="flex-between">
+      <div class="section-title">Pedidos registrados hoy</div>
+      <span id="contador-hoy" style="font-size:.75rem;color:var(--grisMed)"></span>
+    </div>
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th># Pedido</th>
+            <th>Cliente</th>
+            <th>SKU</th>
+            <th>Talla</th>
+            <th>Valor</th>
+            <th>Pago</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-pedidos">
+          <tr><td colspan="7" class="loading">Los pedidos de hoy aparecerán aquí</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /panel -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+
+<!-- DEPENDENCIAS SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+
+<script>
+let adminPin = sessionStorage.getItem("admin_pin") || null;
+let sb;
+let stockData = [];
+
+document.addEventListener("DOMContentLoaded", () => {
+  sb = window.YOSSICO_AUTH.getSb();
+  if (adminPin) {
+    verificarPin(adminPin);
+  }
+});
+
+// ── LOGIN ────────────────────────────────────────────────
+async function login() {
+  const pass = document.getElementById("input-pass").value;
+  await verificarPin(pass);
+}
+
+document.getElementById("input-pass").addEventListener("keydown", e => {
+  if (e.key === "Enter") login();
+});
+
+async function verificarPin(pin) {
+  try {
+    const { data, error } = await sb.rpc('admin_get_pedidos', { pin: pin });
+    if (error) throw error;
+    
+    // Login exitoso
+    adminPin = pin;
+    sessionStorage.setItem("admin_pin", adminPin);
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("panel").classList.remove("hidden");
+    document.getElementById("usuario-info").textContent = "Admin";
+    
+    cargarStock();
+    renderPedidos(data);
+  } else {
+    mostrarToast("Contraseña incorrecta", "err");
+    adminPin = null;
+    sessionStorage.removeItem("admin_pin");
+  }
+}
+
+// ── CARGAR PEDIDOS ───────────────────────────────────────
+async function cargarPedidos() {
+  const tbody = document.getElementById("tabla-pedidos");
+  tbody.innerHTML = '<tr><td colspan="7" class="loading">Cargando pedidos...</td></tr>';
+  
+  const { data, error } = await sb.rpc('admin_get_pedidos', { pin: adminPin });
+  if (error) {
+    mostrarToast("Error cargando pedidos", "err");
+    return;
+  }
+  renderPedidos(data);
+}
+
+function renderPedidos(pedidos) {
+  const tbody = document.getElementById("tabla-pedidos");
+  document.getElementById("contador-hoy").textContent = `${pedidos.length} pedidos históricos`;
+  
+  if (pedidos.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="loading">No hay pedidos registrados</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = pedidos.map(p => {
+    let primerSKU = "Varios";
+    let primerTalla = "-";
+    if (p.items && p.items.length > 0) {
+      primerSKU = p.items[0].nombre;
+      primerTalla = p.items[0].talla;
+    }
+    
+    const est = (p.estado || "").toLowerCase();
+    const isCancelado = est.includes("cancelado");
+    const isPagado = est.includes("pagado") || est.includes("completado");
+    const statusClass = isCancelado ? 'err' : isPagado ? 'ok' : 'warn';
+    
+    return `
+      <tr>
+        <td><small>${p.id.split('-')[0]}</small></td>
+        <td>${p.cliente_nombre}<br><small>${p.cliente_telefono || ''}</small></td>
+        <td>${primerSKU}</td>
+        <td>${primerTalla}</td>
+        <td>$${parseInt(p.total).toLocaleString('es-CO')}</td>
+        <td>-</td>
+        <td>
+          <span class="toast-${statusClass}" style="padding:4px 8px;border-radius:4px;font-size:0.8em;display:inline-block;margin-bottom:4px;">${p.estado}</span><br>
+          <select onchange="cambiarEstadoPedido('${p.id}', this.value)" style="font-size:0.8em;padding:2px">
+            <option value="">Mover a...</option>
+            <option value="Pagado">✅ Pagado</option>
+            <option value="Pendiente">⏳ Pendiente</option>
+            <option value="Cancelado">❌ Cancelado</option>
+          </select>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function cambiarEstadoPedido(id, nuevoEstado) {
+  if (!nuevoEstado) return;
+  
+  if (nuevoEstado === "Cancelado") {
+    if (!confirm("¿Seguro que deseas cancelar? El stock será devuelto automáticamente.")) {
+      cargarPedidos();
+      return;
+    }
+  }
+  
+  const { error } = await sb.rpc('admin_actualizar_pedido', { 
+    p_id: id, 
+    p_nuevo_estado: nuevoEstado, 
+    pin: adminPin 
+  });
+  
+  if (error) {
+    mostrarToast("Error actualizando: " + error.message, "err");
+  } else {
+    mostrarToast("Pedido actualizado", "ok");
+    cargarPedidos();
+    cargarStock();
+  }
+}
+
+// ── CARGAR STOCK ─────────────────────────────────────────
+async function cargarStock() {
+  const grid = document.getElementById("stock-grid");
+  grid.innerHTML = '<div class="loading">Actualizando stock...</div>';
+
+  try {
+    const { data, error } = await sb.from('productos').select('*');
+    if (error) throw error;
+    
+    stockData = data;
+    
+    const agrupado = {};
+    data.forEach(item => {
+      const key = `${item.nombre}|${item.color}`;
+      if (!agrupado[key]) agrupado[key] = { nombre: item.nombre, color: item.color, stock_s: 0, stock_m: 0, stock_l: 0 };
+      if (item.talla === 'S') agrupado[key].stock_s = item.stock;
+      if (item.talla === 'M') agrupado[key].stock_m = item.stock;
+      if (item.talla === 'L') agrupado[key].stock_l = item.stock;
+    });
+    
+    renderStock(Object.values(agrupado));
+    filtrarSKUs();
+  } catch (err) {
+    grid.innerHTML = `<div class="loading" style="color:var(--rojo)">Error stock: ${err.message}</div>`;
+  }
+}
+
+function renderStock(stock) {
+  const grid = document.getElementById("stock-grid");
+  grid.innerHTML = stock.map(item => {
+    const badge = (n, label) => {
+      const cls = n === 0 ? "talla-cero" : n <= 3 ? "talla-bajo" : "talla-ok";
+      return `<div class="talla-badge ${cls}">${label}<br><strong>${n}</strong></div>`;
+    };
+    return `
+      <div class="stock-item">
+        <div class="stock-nombre"><strong>${item.nombre}</strong></div>
+        <div class="stock-color" style="font-size:0.8rem;color:var(--grisMed);margin-bottom:8px">${item.color}</div>
+        <div class="stock-tallas">
+          ${badge(item.stock_s, "S")}
+          ${badge(item.stock_m, "M")}
+          ${badge(item.stock_l, "L")}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+// ── FORMULARIO MANUAL (POS) ──────────────────────────────
+function filtrarSKUs() {
+  // Ignoramos f-linea y mostramos todos los SKUs disponibles en la DB
+  const sel = document.getElementById("f-sku");
+  sel.innerHTML = '<option value="">Seleccionar Prenda...</option>';
+  
+  const nombresUnicos = [...new Set(stockData.map(s => s.nombre))].sort();
+  nombresUnicos.forEach(nombre => {
+    const opt = document.createElement("option");
+    opt.value = nombre;
+    opt.textContent = nombre;
+    sel.appendChild(opt);
+  });
+}
+
+function autoColor() {
+  const nombre = document.getElementById("f-sku").value;
+  const match = stockData.find(s => s.nombre === nombre);
+  if (match) {
+    document.getElementById("f-color").value = match.color;
+  }
+  actualizarStockPreview();
+}
+
+document.getElementById("f-sku").addEventListener("change", autoColor);
+document.getElementById("f-color").addEventListener("input", actualizarStockPreview);
+document.getElementById("f-talla").addEventListener("change", actualizarStockPreview);
+
+function actualizarStockPreview() {
+  const n = document.getElementById("f-sku").value;
+  const c = document.getElementById("f-color").value;
+  const t = document.getElementById("f-talla").value;
+  
+  const prev = document.getElementById("stock-preview");
+  const nums = document.getElementById("stock-preview-nums");
+  
+  if (!n || !t) {
+    prev.style.display = "none";
+    return;
+  }
+  
+  const match = stockData.find(s => s.nombre === n && (c ? s.color.includes(c) : true) && s.talla === t);
+  
+  if (match) {
+    prev.style.display = "block";
+    const qty = match.stock;
+    const cls = qty === 0 ? "talla-cero" : qty <= 3 ? "talla-bajo" : "talla-ok";
+    nums.innerHTML = `<div class="talla-badge ${cls}" style="padding:.3rem .75rem">${match.talla}: <strong>${qty}</strong> disponibles</div>`;
+  } else {
+    prev.style.display = "none";
+  }
+}
+
+function checkEfectivo() {
+  const pago = document.getElementById("f-pago").value;
+  const banner = document.getElementById("efectivo-banner");
+  if (pago === "Efectivo") banner.classList.add("visible");
+  else banner.classList.remove("visible");
+}
+
+async function registrarVenta() {
+  const nombre = document.getElementById("f-nombre").value.trim() || "Cliente POS";
+  const telefono = document.getElementById("f-telefono").value.trim() || "N/A";
+  const sku = document.getElementById("f-sku").value;
+  const color = document.getElementById("f-color").value.trim() || '-';
+  const talla = document.getElementById("f-talla").value;
+  const cantidad = parseInt(document.getElementById("f-cantidad").value) || 1;
+  const valor = document.getElementById("f-valor").value;
+  const pago = document.getElementById("f-pago").value;
+
+  if (!sku || !talla || !valor || !pago) {
+    mostrarToast("Completa SKU, Talla, Valor y Pago", "err");
+    return;
+  }
+
+  const items = [{
+    nombre: sku,
+    color: color,
+    talla: talla,
+    qty: cantidad,
+    price: parseInt(valor)
+  }];
+  
+  const estado = (pago === "Efectivo") ? "Efectivo - Pendiente" : "Pagado - " + pago;
+
+  // Insertar en Supabase
+  const { error } = await sb.from('pedidos').insert([{
+    cliente_nombre: nombre,
+    cliente_telefono: telefono,
+    cliente_ciudad: "Venta Manual (POS)",
+    cliente_direccion: "N/A",
+    items: items,
+    total: parseInt(valor),
+    estado: estado,
+    drop_numero: "Admin POS"
+  }]);
+
+  if (error) {
+    mostrarToast("Error guardando pedido", "err");
+    return;
+  }
+  
+  // Descontar stock
+  await sb.rpc('decrementar_stock', { items: items });
+  
+  mostrarToast("Venta registrada con éxito", "ok");
+  limpiarFormulario();
+  cargarPedidos();
+  cargarStock();
+}
+
+function limpiarFormulario() {
+  document.getElementById("f-nombre").value = "";
+  document.getElementById("f-telefono").value = "";
+  document.getElementById("f-sku").value = "";
+  document.getElementById("f-color").value = "";
+  document.getElementById("f-talla").selectedIndex = 0;
+  document.getElementById("f-cantidad").value = 1;
+  document.getElementById("f-valor").value = "";
+  document.getElementById("f-pago").selectedIndex = 0;
+  document.getElementById("f-linea").selectedIndex = 0;
+  document.getElementById("f-descuento").selectedIndex = 0;
+  document.getElementById("stock-preview").style.display = "none";
+  checkEfectivo();
+}
+
+// ── UTILIDADES ───────────────────────────────────────────
+function mostrarToast(msg, tipo = "ok") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast show " + (tipo === "err" ? "toast-err" : tipo === "warn" ? "toast-warn" : "toast-ok");
+  setTimeout(() => t.classList.remove("show"), 3500);
+}
+</script>
+</body>
+</html>
