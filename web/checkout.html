@@ -55,6 +55,19 @@
     .ck-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; gap:16px; text-align:center; }
     .ck-empty p { font-family:var(--font-display); font-weight:300; font-size:28px; color:var(--black); }
     .ck-empty a { font-family:var(--font-body); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--black); text-decoration:underline; text-underline-offset:4px; }
+    /* Payment method options */
+    .ck-payment-methods { display:flex; flex-direction:column; gap:10px; }
+    .ck-pay-option { display:flex; align-items:flex-start; gap:14px; padding:14px 16px; border:1px solid var(--border); cursor:pointer; transition:border-color .2s; }
+    .ck-pay-option input[type="radio"] { margin-top:3px; accent-color:#111; flex-shrink:0; }
+    .ck-pay-option--selected { border-color:#111; }
+    .ck-pay-option:hover { border-color:#888; }
+    .ck-pay-option__body { flex:1; }
+    .ck-pay-option__title { display:flex; align-items:center; gap:8px; font-family:var(--font-body); font-size:11px; font-weight:400; letter-spacing:1px; color:var(--black); margin-bottom:4px; }
+    .ck-pay-option__title svg { flex-shrink:0; opacity:.6; }
+    .ck-pay-option__desc { font-family:var(--font-body); font-size:9px; color:var(--gray); letter-spacing:.5px; line-height:1.6; }
+    .ck-pay-badge { font-size:8px; letter-spacing:1.5px; text-transform:uppercase; padding:2px 7px; border-radius:2px; font-weight:500; }
+    .ck-pay-badge--soon { background:#F5F4F1; color:#8A8A8A; border:1px solid #E0DFDB; }
+    .ck-pay-badge--active { background:#D8F0E4; color:#2D6A4F; border:1px solid #2D6A4F; }
     @media(max-width:860px){
       .ck-body { grid-template-columns:1fr; }
       .ck-summary { padding:96px 24px 40px; border-right:none; border-bottom:1px solid var(--border); }
@@ -224,23 +237,55 @@
             <p class="ck-discount-msg" id="ck-discount-msg"></p>
           </div>
 
-          <!-- Wompi placeholder -->
-          <div class="ck-payment-placeholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.2" stroke-linecap="round">
-              <rect x="2" y="5" width="20" height="14" rx="2"/>
-              <line x1="2" y1="10" x2="22" y2="10"/>
-            </svg>
-            <div class="ck-payment-placeholder__text">
-              <strong>Pago digital — Próximamente</strong>
-              Wompi · Tarjeta débito/crédito · Nequi · PSE
-            </div>
+
+          <!-- ══════════════════════════════════════════════════════
+               SECCIÓN DE PAGO — Lista para activar con Wompi
+               ══════════════════════════════════════════════════════
+               Para activar pagos digitales:
+               1. Corre la migración: supabase/migrations/20260921_wompi_campos.sql
+               2. Despliega las Edge Functions: generar-pago-wompi y wompi-webhook
+               3. Agrega los secrets en Supabase: WOMPI_PUBLIC_KEY, WOMPI_INTEGRITY_KEY, WOMPI_EVENTS_KEY
+               4. Cambia WOMPI_ACTIVO = true en el script de abajo
+               ═══════════════════════════════════════════════════ -->
+
+          <!-- Selector de método de pago -->
+          <div class="ck-payment-methods" id="ck-payment-methods" style="margin:28px 0 0">
+            <p style="font-family:var(--font-body);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:16px">Método de pago</p>
+
+            <label class="ck-pay-option" id="opt-wompi">
+              <input type="radio" name="metodo-pago" value="wompi" id="radio-wompi">
+              <div class="ck-pay-option__body">
+                <div class="ck-pay-option__title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                  Pago digital
+                  <span class="ck-pay-badge ck-pay-badge--soon" id="wompi-badge">Próximamente</span>
+                </div>
+                <div class="ck-pay-option__desc">Tarjeta débito / crédito · Nequi · PSE · Bancolombia</div>
+              </div>
+            </label>
+
+            <label class="ck-pay-option ck-pay-option--selected" id="opt-whatsapp">
+              <input type="radio" name="metodo-pago" value="whatsapp" id="radio-whatsapp" checked>
+              <div class="ck-pay-option__body">
+                <div class="ck-pay-option__title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  Pedir por WhatsApp
+                  <span class="ck-pay-badge ck-pay-badge--active">Disponible</span>
+                </div>
+                <div class="ck-pay-option__desc">Confirma tu pedido y coordina el pago directamente con el equipo YOSSICO</div>
+              </div>
+            </label>
           </div>
 
-          <button class="ck-submit" id="ck-confirm">
+          <!-- Wompi Widget (se inyecta aquí cuando esté activo) -->
+          <div id="wompi-btn-container" style="margin-top:20px;display:none"></div>
+
+          <!-- Botón WhatsApp (se oculta cuando Wompi esté activo y seleccionado) -->
+          <button class="ck-submit" id="ck-confirm" style="margin-top:20px">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             Confirmar pedido por WhatsApp
           </button>
-          <p class="ck-legal">Al confirmar, serás redirigido a WhatsApp para finalizar tu pedido con el equipo YOSSICO.</p>
+          <p class="ck-legal" id="ck-legal-txt">Al confirmar, serás redirigido a WhatsApp para finalizar tu pedido con el equipo YOSSICO.</p>
         </div>`;
 
       /* Discount apply */
@@ -378,6 +423,128 @@
       document.addEventListener('DOMContentLoaded', ckInit);
     } else {
       ckInit();
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       WOMPI — Lógica de integración
+       ══════════════════════════════════════════════════════════
+       Para activar: cambiar WOMPI_ACTIVO a true y desplegar
+       las Edge Functions generar-pago-wompi y wompi-webhook.
+       ═══════════════════════════════════════════════════════ */
+
+    const WOMPI_ACTIVO = false; // ← Cambiar a true cuando estén los secrets listos
+
+    const SUPABASE_URL_CK = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+
+    // Inicializar selector de método de pago (una vez renderizado el checkout)
+    function initMetodoPago() {
+      const radioWompi    = document.getElementById('radio-wompi');
+      const radioWA       = document.getElementById('radio-whatsapp');
+      const optWompi      = document.getElementById('opt-wompi');
+      const optWA         = document.getElementById('opt-whatsapp');
+      const btnWA         = document.getElementById('ck-confirm');
+      const contenedorW   = document.getElementById('wompi-btn-container');
+      const legalTxt      = document.getElementById('ck-legal-txt');
+      const wompisBadge   = document.getElementById('wompi-badge');
+
+      if (!radioWompi) return;
+
+      // Si Wompi está activo, habilitar la opción
+      if (WOMPI_ACTIVO) {
+        wompisBadge.textContent  = 'Disponible';
+        wompisBadge.className    = 'ck-pay-badge ck-pay-badge--active';
+        radioWompi.disabled      = false;
+        optWompi.style.opacity   = '1';
+      } else {
+        radioWompi.disabled      = true;
+        optWompi.style.opacity   = '.5';
+        optWompi.style.cursor    = 'not-allowed';
+      }
+
+      // Cambio entre métodos
+      [radioWompi, radioWA].forEach(r => r.addEventListener('change', () => {
+        const esWompi = radioWompi.checked;
+        optWompi.classList.toggle('ck-pay-option--selected', esWompi);
+        optWA.classList.toggle('ck-pay-option--selected',   !esWompi);
+
+        if (esWompi && WOMPI_ACTIVO) {
+          btnWA.style.display        = 'none';
+          contenedorW.style.display  = 'block';
+          legalTxt.textContent       = 'Serás redirigido al portal seguro de Wompi para completar tu pago.';
+          cargarBotonWompi();
+        } else {
+          btnWA.style.display        = '';
+          contenedorW.style.display  = 'none';
+          legalTxt.textContent       = 'Al confirmar, serás redirigido a WhatsApp para finalizar tu pedido con el equipo YOSSICO.';
+        }
+      }));
+    }
+
+    /* Genera la firma de integridad en el servidor y renderiza el widget de Wompi */
+    async function cargarBotonWompi() {
+      const contenedor = document.getElementById('wompi-btn-container');
+      contenedor.innerHTML = '<p style="font-size:10px;color:#8A8A8A;letter-spacing:1px">Cargando pasarela de pago...</p>';
+
+      try {
+        // 1. Insertar el pedido en Supabase para obtener su ID
+        //    (igual que el flujo WhatsApp, pero sin abrir WhatsApp)
+        const sbCk   = window.supabase.createClient(SUPABASE_URL_CK, 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19');
+        const items  = getCart();
+        const total  = items.reduce((s, i) => s + i.price * i.qty, 0);
+
+        const { data: pedido, error: pedidoErr } = await sbCk.from('pedidos').insert([{
+          cliente_nombre:   document.getElementById('ck-name')?.value?.trim()  || 'Cliente Web',
+          cliente_telefono: document.getElementById('ck-tel')?.value?.trim()   || '',
+          cliente_ciudad:   document.getElementById('ck-city')?.value?.trim()  || '',
+          cliente_direccion:document.getElementById('ck-address')?.value?.trim()|| '',
+          items,
+          total,
+          estado:           'Pendiente - Wompi',
+          metodo_pago:      'wompi',
+          drop_numero:      'Drop 1',
+        }]).select('id').single();
+
+        if (pedidoErr) throw pedidoErr;
+
+        // 2. Pedir la firma a la Edge Function
+        const sigRes = await fetch(`${SUPABASE_URL_CK}/functions/v1/generar-pago-wompi`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pedidoId: pedido.id, totalCOP: total }),
+        });
+        const sig = await sigRes.json();
+        if (sig.error) throw new Error(sig.error);
+
+        // 3. Descontar stock (igual que flujo WhatsApp)
+        sbCk.rpc('decrementar_stock', { items }).then(({ error }) => {
+          if (error) console.warn('[wompi] decrementar_stock:', error.message);
+        });
+
+        // 4. Renderizar el widget de Wompi
+        contenedor.innerHTML = '';
+        const script = document.createElement('script');
+        script.src = 'https://checkout.wompi.co/widget.js';
+        script.setAttribute('data-render',             'button');
+        script.setAttribute('data-public-key',         sig.publicKey);
+        script.setAttribute('data-currency',           sig.currency);
+        script.setAttribute('data-amount-in-cents',    sig.amountCents);
+        script.setAttribute('data-reference',          sig.referencia);
+        script.setAttribute('data-signature:integrity',sig.firma);
+        script.setAttribute('data-redirect-url',       sig.redirectUrl);
+        contenedor.appendChild(script);
+
+      } catch (err) {
+        console.error('[wompi] error al cargar botón:', err);
+        contenedor.innerHTML = `<p style="font-size:10px;color:#C0392B;letter-spacing:1px">Error al cargar la pasarela de pago. Intenta de nuevo o usa WhatsApp.</p>`;
+      }
+    }
+
+    // Monkey-patch ckInit para que llame a initMetodoPago tras renderizar
+    const _ckInitOrig = ckInit;
+    function ckInit() {
+      _ckInitOrig();
+      // Esperar un tick para que el DOM del checkout esté listo
+      setTimeout(initMetodoPago, 50);
     }
   </script>
   <!-- Auth loaded AFTER checkout script so it doesn't race with ckInit -->
