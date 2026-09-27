@@ -242,7 +242,11 @@
       </button>
       <button class="tab-btn" onclick="cambiarTab('descuentos',this)">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
-        Descuentos
+        Códigos de Descuento
+      </button>
+      <button class="tab-btn" onclick="cambiarTab('crear-descuento',this)">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+        Crear Código
       </button>
       <button class="tab-btn" onclick="cambiarTab('clientes',this)">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -476,56 +480,54 @@
     </div><!-- /tab-stats -->
 
     <!-- TAB DESCUENTOS -->
+    <!-- TAB CÓDIGOS DE DESCUENTO (Lista) -->
     <div id="tab-descuentos" class="tab-content">
-      <div class="stats-row">
-        <!-- Columna Izquierda: Formulario -->
-        <div class="stats-card">
-          <div class="stats-card__title">Crear Nuevo Código</div>
-          <div class="form-grid" style="margin-top:1rem">
-            <div>
-              <label>Beneficiario (Nombre/Campaña)</label>
-              <input type="text" id="desc-nombre" class="input-form" placeholder="Ej: Maria Lopez o InfluencerX">
-            </div>
-            <div>
-              <label>Porcentaje (%)</label>
-              <input type="number" id="desc-pct" class="input-form" value="10" min="5" max="50">
-            </div>
-            <div>
-              <label>Código personalizado (Opcional)</label>
-              <input type="text" id="desc-codigo" class="input-form" placeholder="Ej: MARIA10 (Vacío = automático)" style="text-transform:uppercase">
-            </div>
-          </div>
-          <button class="btn btn-negro mt1" onclick="crearDescuentoManual()">Crear código →</button>
-          
-          <div id="desc-resultado" style="display:none;margin-top:1rem;padding:1rem;background:var(--grisF);border:1px solid var(--grisCl);text-align:center">
-            <div style="font-size:.7rem;color:var(--grisMed);text-transform:uppercase;letter-spacing:2px;margin-bottom:.5rem">Código Generado</div>
-            <div id="desc-codigo-texto" style="font-family:monospace;font-size:1.2rem;letter-spacing:3px;font-weight:600;color:var(--negro)"></div>
+      <div class="form-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+          <div class="section-title" style="margin:0;font-size:1.1rem">Códigos Activos & Usados</div>
+          <div class="filtros-bar" style="margin:0">
+            <select id="filtro-desc-estado" onchange="renderDescuentosLista()" style="min-width:200px">
+              <option value="todos">Todos los códigos</option>
+              <option value="disponibles">Solo Disponibles</option>
+              <option value="usados">Solo Usados</option>
+            </select>
           </div>
         </div>
-
-        <!-- Columna Derecha: Lista -->
-        <div class="stats-card stats-card--lg">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-            <div class="stats-card__title" style="margin:0">Códigos Activos & Usados</div>
-            <div class="filtros-bar" style="margin:0">
-              <select id="filtro-desc-estado" onchange="renderDescuentosLista()">
-                <option value="todos">Todos los códigos</option>
-                <option value="disponibles">Disponibles</option>
-                <option value="usados">Usados</option>
-              </select>
-            </div>
-          </div>
-          <div class="table-container" style="max-height:400px;overflow-y:auto">
-            <table class="table">
-              <thead><tr><th>Beneficiario</th><th>Código</th><th>Estado</th><th>Acción</th></tr></thead>
-              <tbody id="tabla-descuentos">
-                <!-- Rellenado por JS -->
-              </tbody>
-            </table>
-          </div>
+        <div class="tabla-wrap">
+          <table class="table" style="width:100%">
+            <thead><tr><th>Beneficiario</th><th>Código Personalizado</th><th>Estado</th><th>Acción</th></tr></thead>
+            <tbody id="tabla-descuentos">
+              <!-- Rellenado por JS -->
+            </tbody>
+          </table>
         </div>
       </div>
     </div><!-- /tab-descuentos -->
+
+    <!-- TAB CREAR CÓDIGO -->
+    <div id="tab-crear-descuento" class="tab-content">
+      <div class="form-card" style="max-width:700px;margin:0 auto">
+        <div class="section-title" style="margin-bottom:1.5rem;font-size:1.1rem">Crear Nuevo Código de Descuento</div>
+        <div class="form-group" style="margin-bottom:1.2rem">
+          <label>Beneficiario (Nombre/Campaña)</label>
+          <input type="text" id="desc-nombre" class="input-form" placeholder="Ej: Maria Lopez o InfluencerX" style="width:100%">
+        </div>
+        <div class="form-group" style="margin-bottom:1.2rem">
+          <label>Porcentaje de Descuento (%)</label>
+          <input type="number" id="desc-pct" class="input-form" value="10" min="5" max="50" style="width:100%">
+        </div>
+        <div class="form-group" style="margin-bottom:2rem">
+          <label>Código personalizado (Opcional)</label>
+          <input type="text" id="desc-codigo" class="input-form" placeholder="Ej: MARIA10 (Si lo dejas vacío, se genera uno automático)" style="text-transform:uppercase;width:100%">
+        </div>
+        <button class="btn btn-negro btn-full" onclick="crearDescuentoManual()" style="padding:.8rem;font-size:.75rem">Crear código →</button>
+        
+        <div id="desc-resultado" style="display:none;margin-top:2rem;padding:2rem;background:var(--grisF);border:1px solid var(--grisCl);text-align:center">
+          <div style="font-size:.75rem;color:var(--grisMed);text-transform:uppercase;letter-spacing:2px;margin-bottom:.5rem">Código Generado Exitosamente</div>
+          <div id="desc-codigo-texto" style="font-family:monospace;font-size:1.5rem;letter-spacing:3px;font-weight:600;color:var(--negro)"></div>
+        </div>
+      </div>
+    </div><!-- /tab-crear-descuento -->
 
     <!-- TAB CLIENTES -->
     <div id="tab-clientes" class="tab-content">
