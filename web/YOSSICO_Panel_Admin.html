@@ -134,6 +134,19 @@
   .hidden{display:none!important}
   .mt1{margin-top:1rem}
   .dgap{display:flex;gap:.5rem}
+  /* ESTADÍSTICAS */
+  .stats-row{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem}
+  .stats-card{background:var(--blanco);border:1px solid var(--grisCl);padding:1.25rem 1.5rem}
+  .stats-card--lg{}
+  .stats-card__title{font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--grisMed);font-weight:500;margin-bottom:1rem}
+  .stats-bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem}
+  .stats-bar-label{font-size:.78rem;min-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stats-bar-track{flex:1;height:6px;background:var(--grisCl);border-radius:3px;overflow:hidden}
+  .stats-bar-fill{height:100%;border-radius:3px;background:var(--negro);transition:width .4s}
+  .stats-bar-val{font-size:.75rem;font-weight:500;min-width:80px;text-align:right;white-space:nowrap}
+  .stock-alert-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--grisCl);font-size:.8rem}
+  .stock-alert-row:last-child{border-bottom:none}
+  @media(max-width:768px){.stats-row{grid-template-columns:1fr}}
   @media(max-width:768px){.resumen-grid{grid-template-columns:1fr 1fr}.form-grid,.form-grid.tres{grid-template-columns:1fr}.stock-grid{grid-template-columns:1fr 1fr}}
   @media(max-width:480px){.resumen-grid,.stock-grid{grid-template-columns:1fr}}
 </style>
@@ -189,6 +202,7 @@
     <button class="tab-btn" onclick="cambiarTab('stock',this)">📦 Inventario</button>
     <button class="tab-btn" onclick="cambiarTab('pos',this)">🛒 Venta Manual</button>
     <button class="tab-btn" onclick="cambiarTab('suscriptoras',this)">💌 Suscriptoras</button>
+    <button class="tab-btn" onclick="cambiarTab('stats',this)">📊 Estadísticas</button>
   </div>
 
   <div class="main">
@@ -315,6 +329,70 @@
       </div>
     </div>
 
+
+    <!-- TAB ESTADÍSTICAS -->
+    <div id="tab-stats" class="tab-content">
+
+      <!-- Selector de período -->
+      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap">
+        <div class="section-title" style="margin-bottom:0">Período</div>
+        <select id="stats-periodo" class="filtros-bar" style="margin:0;padding:.5rem .75rem;border:1px solid var(--grisCl);background:var(--grisF);font-family:inherit;font-size:.8rem;outline:none" onchange="renderStats()">
+          <option value="7">Últimos 7 días</option>
+          <option value="14" selected>Últimos 14 días</option>
+          <option value="30">Últimos 30 días</option>
+          <option value="0">Histórico completo</option>
+        </select>
+        <button class="btn btn-gris btn-sm" onclick="renderStats()">↻ Actualizar</button>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="resumen-grid">
+        <div class="resumen-card verde"><div class="rlabel">Ingresos período</div><div class="rvalor" id="sk-ingresos">—</div><div class="rsub" id="sk-ingresos-sub"></div></div>
+        <div class="resumen-card azul"><div class="rlabel">Pedidos período</div><div class="rvalor" id="sk-pedidos">—</div><div class="rsub" id="sk-pedidos-sub"></div></div>
+        <div class="resumen-card naranja"><div class="rlabel">Ticket promedio</div><div class="rvalor" id="sk-ticket">—</div><div class="rsub">por pedido pagado</div></div>
+        <div class="resumen-card rojo"><div class="rlabel">Suscriptoras</div><div class="rvalor" id="sk-subs">—</div><div class="rsub">inscritas al drop</div></div>
+      </div>
+
+      <!-- Fila 1: línea diaria + dona estados -->
+      <div class="stats-row">
+        <div class="stats-card stats-card--lg">
+          <div class="stats-card__title">Pedidos e ingresos por día</div>
+          <div style="position:relative;height:230px"><canvas id="chart-linea"></canvas></div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-card__title">Pedidos por estado</div>
+          <div style="position:relative;height:195px"><canvas id="chart-estados"></canvas></div>
+          <div id="chart-estados-leyenda" style="margin-top:.75rem;font-size:.72rem;display:flex;flex-direction:column;gap:.3rem"></div>
+        </div>
+      </div>
+
+      <!-- Fila 2: top prendas + métodos de pago -->
+      <div class="stats-row">
+        <div class="stats-card stats-card--lg">
+          <div class="stats-card__title">Top prendas más vendidas (unidades)</div>
+          <div style="position:relative;height:230px"><canvas id="chart-prendas"></canvas></div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-card__title">Método de pago</div>
+          <div style="position:relative;height:195px"><canvas id="chart-metodos"></canvas></div>
+          <div id="chart-metodos-leyenda" style="margin-top:.75rem;font-size:.72rem;display:flex;flex-direction:column;gap:.3rem"></div>
+        </div>
+      </div>
+
+      <!-- Fila 3: ingresos por prenda + stock crítico -->
+      <div class="stats-row">
+        <div class="stats-card stats-card--lg">
+          <div class="stats-card__title">Ingresos por prenda (COP)</div>
+          <div id="tabla-ingresos-prenda" style="margin-top:.75rem"></div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-card__title">⚠️ Alertas de stock</div>
+          <div id="lista-stock-critico" style="margin-top:.75rem"></div>
+        </div>
+      </div>
+
+    </div><!-- /tab-stats -->
+
   </div>
 </div>
 
@@ -336,6 +414,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script src="js/auth.js"></script>
 <script>
 let adminPin = sessionStorage.getItem("admin_pin") || null;
@@ -779,6 +858,317 @@ function limpiarNotificaciones() {
   notificaciones = [];
   actualizarBadge(0);
   renderNotifPanel();
+}
+
+// ══════════════════════════════════════════════════════════
+// 📊 ESTADÍSTICAS — Motor de gráficas con Chart.js
+// ══════════════════════════════════════════════════════════
+let charts = {}; // referencias a instancias de Chart.js para destruirlas al re-renderizar
+
+const COLORES = {
+  negro:   '#111111',
+  verde:   '#2D6A4F',
+  verdeCl: '#D8F0E4',
+  azul:    '#1A5276',
+  azulCl:  '#D6EAF8',
+  naranja: '#CA6F1E',
+  naranjaCl:'#FDEBD0',
+  rojo:    '#C0392B',
+  rojoCl:  '#FDECEA',
+  gris:    '#E8E6E2',
+};
+
+// Hook en cambiarTab para activar stats
+const _cambiarTabOrig = cambiarTab;
+function cambiarTab(tab, btn) {
+  _cambiarTabOrig(tab, btn);
+  if (tab === 'stats') {
+    if (todasSubs.length === 0) {
+      cargarSuscriptoras().then(() => renderStats());
+    } else {
+      renderStats();
+    }
+  }
+}
+
+function renderStats() {
+  const dias = parseInt(document.getElementById('stats-periodo')?.value || '14');
+  const ahora = new Date();
+  const desde = dias === 0 ? new Date(0) : new Date(ahora.getTime() - dias * 86400000);
+
+  const pedidosFiltrados = todosPedidos.filter(p => new Date(p.created_at) >= desde);
+
+  renderKPIs(pedidosFiltrados);
+  renderChartLinea(pedidosFiltrados, dias);
+  renderChartEstados(pedidosFiltrados);
+  renderChartPrendas(pedidosFiltrados);
+  renderChartMetodos(pedidosFiltrados);
+  renderIngresosProenda(pedidosFiltrados);
+  renderStockCritico();
+}
+
+// ── KPIs ─────────────────────────────────────────────────
+function renderKPIs(pedidos) {
+  const pagados = pedidos.filter(p => esPagado(p.estado));
+  const total   = pagados.reduce((s, p) => s + parseFloat(p.total || 0), 0);
+  const ticket  = pagados.length ? total / pagados.length : 0;
+
+  document.getElementById('sk-ingresos').textContent     = fCOP(total);
+  document.getElementById('sk-ingresos-sub').textContent = `${pagados.length} pedidos pagados`;
+  document.getElementById('sk-pedidos').textContent      = pedidos.length;
+  document.getElementById('sk-pedidos-sub').textContent  = `${pagados.length} pagados · ${pedidos.filter(p=>esPendiente(p.estado)).length} pendientes`;
+  document.getElementById('sk-ticket').textContent       = fCOP(ticket);
+  document.getElementById('sk-subs').textContent         = todasSubs.length;
+}
+
+// ── GRÁFICA LÍNEA: pedidos e ingresos por día ─────────────
+function renderChartLinea(pedidos, dias) {
+  const etiquetas = [];
+  const contPedidos = [];
+  const ingresos    = [];
+
+  const hoy = new Date();
+  const rango = dias === 0 ? 30 : dias; // si es histórico mostramos 30 días
+
+  for (let i = rango - 1; i >= 0; i--) {
+    const d = new Date(hoy);
+    d.setDate(hoy.getDate() - i);
+    const label = d.toLocaleDateString('es-CO', { day:'2-digit', month:'2-digit' });
+    etiquetas.push(label);
+
+    const del_dia = pedidos.filter(p => {
+      const pd = new Date(p.created_at);
+      return pd.toDateString() === d.toDateString();
+    });
+    contPedidos.push(del_dia.length);
+    ingresos.push(del_dia.filter(p=>esPagado(p.estado)).reduce((s,p)=>s+parseFloat(p.total||0),0));
+  }
+
+  destruirChart('chart-linea');
+  const ctx = document.getElementById('chart-linea')?.getContext('2d');
+  if (!ctx) return;
+
+  charts['chart-linea'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: etiquetas,
+      datasets: [
+        {
+          label: 'Pedidos',
+          data: contPedidos,
+          borderColor: COLORES.negro,
+          backgroundColor: 'rgba(17,17,17,.06)',
+          borderWidth: 2,
+          fill: true,
+          tension: .35,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Ingresos (COP)',
+          data: ingresos,
+          borderColor: COLORES.verde,
+          backgroundColor: 'rgba(45,106,79,.08)',
+          borderWidth: 2,
+          fill: true,
+          tension: .35,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          yAxisID: 'y1',
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { display: true, position: 'top', labels: { font: { size: 10, family: 'Montserrat' }, boxWidth: 12, padding: 12 } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 9, family: 'Montserrat' }, maxRotation: 0 } },
+        y: { position: 'left', grid: { color: '#F0EEE9' }, ticks: { font: { size: 9, family: 'Montserrat' }, stepSize: 1 }, title: { display: true, text: 'Pedidos', font: { size: 9, family: 'Montserrat' } } },
+        y1: { position: 'right', grid: { display: false }, ticks: { font: { size: 9, family: 'Montserrat' }, callback: v => '$' + (v/1000).toFixed(0) + 'k' }, title: { display: true, text: 'Ingresos', font: { size: 9, family: 'Montserrat' } } },
+      },
+    },
+  });
+}
+
+// ── GRÁFICA DONA: estados ─────────────────────────────────
+function renderChartEstados(pedidos) {
+  const grupos = { 'Pagado': 0, 'Pendiente': 0, 'Cancelado': 0 };
+  pedidos.forEach(p => {
+    if (esPagado(p.estado))    grupos['Pagado']++;
+    else if (esCancelado(p.estado)) grupos['Cancelado']++;
+    else grupos['Pendiente']++;
+  });
+
+  destruirChart('chart-estados');
+  const ctx = document.getElementById('chart-estados')?.getContext('2d');
+  if (!ctx) return;
+
+  const labels = Object.keys(grupos);
+  const vals   = Object.values(grupos);
+  const colors = [COLORES.verde, COLORES.naranja, COLORES.rojo];
+
+  charts['chart-estados'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: vals, backgroundColor: colors, borderWidth: 2, borderColor: '#fff', hoverOffset: 6 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}` } } },
+      cutout: '65%',
+    },
+  });
+
+  // Leyenda manual
+  const leg = document.getElementById('chart-estados-leyenda');
+  if (leg) {
+    leg.innerHTML = labels.map((l, i) => `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="display:flex;align-items:center;gap:.4rem">
+          <span style="width:10px;height:10px;border-radius:50%;background:${colors[i]};display:inline-block"></span>${l}
+        </span>
+        <strong>${vals[i]}</strong>
+      </div>`).join('');
+  }
+}
+
+// ── GRÁFICA BARRAS HORIZONTALES: top prendas ─────────────
+function renderChartPrendas(pedidos) {
+  const conteo = {};
+  pedidos.forEach(p => {
+    (p.items || []).forEach(i => {
+      const key = i.nombre || 'Sin nombre';
+      conteo[key] = (conteo[key] || 0) + (i.qty || 1);
+    });
+  });
+
+  const sorted = Object.entries(conteo).sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+  destruirChart('chart-prendas');
+  const ctx = document.getElementById('chart-prendas')?.getContext('2d');
+  if (!ctx) return;
+
+  charts['chart-prendas'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sorted.map(([k]) => k.length > 22 ? k.slice(0, 22) + '…' : k),
+      datasets: [{
+        data: sorted.map(([,v]) => v),
+        backgroundColor: COLORES.negro,
+        borderRadius: 3,
+        barThickness: 14,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} unidades` } } },
+      scales: {
+        x: { grid: { color: '#F0EEE9' }, ticks: { font: { size: 9, family: 'Montserrat' }, stepSize: 1 } },
+        y: { grid: { display: false }, ticks: { font: { size: 9, family: 'Montserrat' } } },
+      },
+    },
+  });
+}
+
+// ── GRÁFICA DONA: métodos de pago ────────────────────────
+function renderChartMetodos(pedidos) {
+  const conteo = {};
+  pedidos.forEach(p => {
+    const metodo = p.metodo_pago || 'WhatsApp';
+    const label  = metodo.replace('whatsapp','WhatsApp').replace('wompi','Wompi');
+    conteo[label] = (conteo[label] || 0) + 1;
+  });
+
+  const labels = Object.keys(conteo);
+  const vals   = Object.values(conteo);
+  const colors = [COLORES.negro, COLORES.verde, COLORES.azul, COLORES.naranja, COLORES.rojo];
+
+  destruirChart('chart-metodos');
+  const ctx = document.getElementById('chart-metodos')?.getContext('2d');
+  if (!ctx) return;
+
+  charts['chart-metodos'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: vals, backgroundColor: colors.slice(0,labels.length), borderWidth: 2, borderColor: '#fff', hoverOffset: 6 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      cutout: '65%',
+    },
+  });
+
+  const leg = document.getElementById('chart-metodos-leyenda');
+  if (leg) {
+    leg.innerHTML = labels.map((l, i) => `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="display:flex;align-items:center;gap:.4rem">
+          <span style="width:10px;height:10px;border-radius:50%;background:${colors[i]||'#ccc'};display:inline-block"></span>${l}
+        </span>
+        <strong>${vals[i]}</strong>
+      </div>`).join('');
+  }
+}
+
+// ── TABLA: ingresos por prenda ────────────────────────────
+function renderIngresosProenda(pedidos) {
+  const conteo = {};
+  pedidos.filter(p => esPagado(p.estado)).forEach(p => {
+    (p.items || []).forEach(i => {
+      const key = i.nombre || 'Sin nombre';
+      if (!conteo[key]) conteo[key] = { uds: 0, total: 0 };
+      conteo[key].uds   += (i.qty || 1);
+      conteo[key].total += (i.price || 0) * (i.qty || 1);
+    });
+  });
+
+  const sorted = Object.entries(conteo).sort((a,b) => b[1].total - a[1].total);
+  const maxVal = sorted[0]?.[1].total || 1;
+
+  const el = document.getElementById('tabla-ingresos-prenda');
+  if (!el) return;
+
+  if (!sorted.length) { el.innerHTML = '<div class="loading">Sin datos en este período</div>'; return; }
+
+  el.innerHTML = sorted.map(([nombre, { uds, total }]) => `
+    <div class="stats-bar-row">
+      <div class="stats-bar-label" title="${nombre}">${nombre}</div>
+      <div class="stats-bar-track"><div class="stats-bar-fill" style="width:${Math.round(total/maxVal*100)}%"></div></div>
+      <div class="stats-bar-val">${fCOP(total)} · <span style="color:var(--grisMed)">${uds} uds</span></div>
+    </div>`).join('');
+}
+
+// ── LISTA: alertas de stock crítico ───────────────────────
+function renderStockCritico() {
+  const el = document.getElementById('lista-stock-critico');
+  if (!el) return;
+
+  const bajos   = stockData.filter(p => p.stock <= 2 && p.stock > 0);
+  const agotado = stockData.filter(p => p.stock === 0);
+
+  if (!bajos.length && !agotado.length) {
+    el.innerHTML = '<div style="font-size:.8rem;color:var(--verde);padding:.5rem 0">✅ Todo el inventario en buen estado</div>';
+    return;
+  }
+
+  el.innerHTML = [
+    ...agotado.map(p => `
+      <div class="stock-alert-row">
+        <span>${p.nombre} · ${p.color} · T${p.talla}</span>
+        <span style="background:var(--rojoCl);color:var(--rojo);font-size:.65rem;padding:2px 7px;font-weight:500">AGOTADO</span>
+      </div>`),
+    ...bajos.map(p => `
+      <div class="stock-alert-row">
+        <span>${p.nombre} · ${p.color} · T${p.talla}</span>
+        <span style="background:var(--naranjaCl);color:var(--naranja);font-size:.65rem;padding:2px 7px;font-weight:500">${p.stock} unid.</span>
+      </div>`),
+  ].join('');
+}
+
+// ── Destruir chart anterior si existe ────────────────────
+function destruirChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
 }
 </script>
 </body>
