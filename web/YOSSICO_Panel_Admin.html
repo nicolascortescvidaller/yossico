@@ -186,9 +186,7 @@
     <div class="header-sub" style="color:var(--grisMed);font-size:.65rem;letter-spacing:4px;text-transform:uppercase;margin:0">Panel de Administración</div>
   </div>
   <div style="text-align:center;flex:1">
-    <div class="header-logo" style="display:inline-flex;align-items:center;justify-content:center;">
-      <img src="img/yossico-logo.png" alt="YOSSICO" style="height:22px; filter: brightness(0); object-fit: contain;">
-    </div>
+    <div class="header-logo" style="font-size: 1.6rem; font-weight: 300; letter-spacing: -1px; color: var(--negro); font-family: 'Montserrat', sans-serif;">YOSSICO</div>
   </div>
   <div class="header-right" style="width:240px;justify-content:flex-end">
     <!-- CAMPANA DE NOTIFICACIONES -->
@@ -699,18 +697,19 @@
     <!-- TAB COTIZADOR B2B -->
     <div id="tab-b2b" class="tab-content">
       <div class="form-card">
-        <div class="section-title" style="margin-bottom:1.5rem;font-size:1.1rem">Generador de Cotizaciones Institucionales</div>
         
         <!-- Formulario Oculto en impresión -->
-        <div id="b2b-form-area" class="no-print" style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div id="b2b-form-area" class="no-print">
+          <div class="section-title" style="margin-bottom:1.5rem;font-size:1.1rem">Generador de Cotizaciones Institucionales</div>
           
-          <!-- Lado Izquierdo: Datos Cliente -->
-          <div>
-            <div style="font-weight:bold; margin-bottom:1rem;">Datos del Cliente / Clínica</div>
-            <div class="form-group">
-              <label>Razón Social o Nombre</label>
-              <input type="text" id="b2b-empresa" class="input-form" placeholder="[ NOMBRE EMPRESA/CLIENTE ]" value="Clínica Sanitas S.A.">
-            </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Lado Izquierdo: Datos Cliente -->
+            <div>
+              <div style="font-weight:bold; margin-bottom:1rem;">Datos del Cliente / Clínica</div>
+              <div class="form-group">
+                <label>Razón Social o Nombre</label>
+                <input type="text" id="b2b-empresa" class="input-form" placeholder="[ NOMBRE EMPRESA/CLIENTE ]" value="Clínica Sanitas S.A.">
+              </div>
             <div class="form-group">
               <label>NIT o Documento</label>
               <input type="text" id="b2b-nit" class="input-form" placeholder="[ NIT DE LA EMPRESA ]" value="NIT: 900.123.456-7">
@@ -740,6 +739,13 @@
               <button class="btn btn-negro" onclick="b2bGenerarImpresion()" style="margin-top:1rem; font-size:1rem; padding:0.5rem 1.5rem;">🖨️ Generar Cotización PDF</button>
             </div>
           </div>
+          </div><!-- /grid -->
+        </div>
+
+        <!-- Botones de Control de Impresión (Fuera de la vista de impresión) -->
+        <div id="b2b-print-controls" class="no-print" style="display:none; justify-content:flex-end; gap:1rem; margin-bottom:1.5rem; padding:1rem; background:#f5f5f5; border-radius:8px;">
+          <button class="btn btn-gris" onclick="document.getElementById('b2b-print-view').style.display='none'; document.getElementById('b2b-print-controls').style.display='none'; document.getElementById('b2b-form-area').style.display='block';">← Volver a Editar</button>
+          <button class="btn btn-negro" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
         </div>
 
         <!-- Vista del PDF (Print View) -->
@@ -802,12 +808,6 @@
                 <span>+57 321 9937221</span> | <span>HOLA@YOSSICO.COM</span> | <span>WWW.YOSSICO.COM</span>
               </div>
             </div>
-          </div>
-          
-          <!-- Botones de Control de Impresión -->
-          <div class="no-print" style="position:absolute; top: -50px; right: 0; display:flex; gap:1rem;">
-            <button class="btn btn-gris" onclick="document.getElementById('b2b-print-view').style.display='none'; document.getElementById('b2b-form-area').style.display='grid';">← Volver a Editar</button>
-            <button class="btn btn-negro" onclick="window.print()">Imprimir / Guardar PDF</button>
           </div>
         </div>
       </div>
@@ -2248,11 +2248,11 @@ function b2bAgregarItem() {
   div.style.display = 'flex';
   div.style.gap = '0.5rem';
   div.innerHTML = `
-    <input type="text" class="input-form b2b-item-sku" placeholder="SKU" style="width:70px">
-    <input type="text" class="input-form b2b-item-desc" placeholder="Descripción" style="flex:1">
-    <input type="number" class="input-form b2b-item-qty" placeholder="Cant." value="1" min="1" style="width:60px">
-    <input type="number" class="input-form b2b-item-price" placeholder="Precio Und." style="width:100px">
-    <button class="btn btn-gris btn-sm" onclick="this.parentElement.remove()" style="padding:0 0.5rem">X</button>
+    <input type="text" class="input-form b2b-item-sku" placeholder="SKU" style="width:90px;font-size:0.8rem">
+    <input type="text" class="input-form b2b-item-desc" placeholder="Descripción de la prenda" style="flex:1;font-size:0.8rem">
+    <input type="number" class="input-form b2b-item-qty" placeholder="Cant." value="1" min="1" style="width:70px;font-size:0.8rem">
+    <input type="number" class="input-form b2b-item-price" placeholder="Precio COP" style="width:130px;font-size:0.8rem">
+    <button class="btn btn-gris btn-sm" onclick="this.parentElement.remove()" style="padding:0 0.8rem;font-size:0.8rem">X</button>
   `;
   container.appendChild(div);
 }
@@ -2308,6 +2308,7 @@ function b2bGenerarImpresion() {
 
   document.getElementById('b2b-form-area').style.display = 'none';
   document.getElementById('b2b-print-view').style.display = 'block';
+  document.getElementById('b2b-print-controls').style.display = 'flex';
 }
 
 // Inicializar B2B con un item vacío
