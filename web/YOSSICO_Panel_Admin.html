@@ -542,27 +542,53 @@
           <button class="btn btn-negro btn-sm" onclick="exportarFinanzasCSV()">⬇ Descargar Reporte</button>
         </div>
 
-        <div class="resumen-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
+        <div class="resumen-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1rem;">
           <div class="resumen-card verde" style="background:#f9fdfa; border-color:#e0f2e9">
             <div class="rlabel">Ingresos Brutos Reales</div>
             <div class="rvalor" id="fin-ingresos">$0</div>
-            <div class="rsub">Total de pedidos pagados</div>
+            <div class="rsub">Total de ventas cobradas</div>
           </div>
           <div class="resumen-card naranja" style="background:#fffaf5; border-color:#fcecdb">
-            <div class="rlabel">Costos de Producción Estimados</div>
+            <div class="rlabel">Costos Totales (Prod + OPEX)</div>
             <div class="rvalor" id="fin-costos">$0</div>
-            <div class="rsub">Basado en el costo del inventario</div>
+            <div class="rsub">Costo de telas + Gastos operativos</div>
           </div>
           <div class="resumen-card azul" style="background:#f4f9ff; border-color:#ddecff">
-            <div class="rlabel">Utilidad Neta Estimada</div>
+            <div class="rlabel">Utilidad Neta del Negocio</div>
             <div class="rvalor" id="fin-utilidad" style="color:var(--azul)">$0</div>
-            <div class="rsub" id="fin-margen">Margen: 0%</div>
+            <div class="rsub" id="fin-margen">Margen Neto Global: 0%</div>
           </div>
         </div>
 
-        <div style="font-size:0.8rem;color:var(--grisMed);margin-bottom:1rem;line-height:1.5">
-          Este módulo cruza los pedidos "Pagados" con el <b>Costo de Producción</b> que le asignaste a cada prenda en la pestaña Inventario.<br>
-          <i>Nota: Si modificas el costo de una prenda hoy, afectará el cálculo histórico de utilidad de esa prenda.</i>
+        <!-- Módulo de Punto de Equilibrio -->
+        <div id="fin-breakeven-container" style="display:none; margin-bottom: 2rem; padding: 1.5rem; background: #fff4f4; border: 1px solid #fbdada; border-radius: 8px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-size:0.75rem; color:#d32f2f; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem">📉 Operando en Pérdida (Recuperación de Inversión)</div>
+              <div style="font-size:1.1rem; color:#000; font-weight:300;">Falta recuperar <strong id="fin-breakeven-monto" style="font-weight:600; color:#d32f2f">...</strong> para llegar al Punto de Equilibrio.</div>
+              <div style="font-size:0.85rem; color:#666; margin-top:0.5rem; max-width:80%;">
+                Con tu margen bruto promedio actual del <strong id="fin-breakeven-margen">...%</strong>, necesitas generar aproximadamente <strong id="fin-breakeven-ventas">...</strong> en ventas brutas para cubrir esta inversión inicial.
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.75rem; color:#666; margin-bottom:0.3rem">Prendas estimadas a vender:</div>
+              <div id="fin-breakeven-unidades" style="font-size:2rem; font-weight:bold; color:#000; line-height:1;">...</div>
+              <div style="font-size:0.7rem; color:#999; margin-top:0.2rem">unidades</div>
+            </div>
+          </div>
+          
+          <div style="margin-top:1.5rem; width:100%; height:8px; background:#fbdada; border-radius:4px; overflow:hidden; position:relative;">
+            <div id="fin-breakeven-barra" style="position:absolute; left:0; top:0; height:100%; background:#d32f2f; width:0%; transition: width 0.5s;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:0.4rem; font-size:0.7rem; color:#999;">
+            <span id="fin-breakeven-progress-txt">0% recuperado</span>
+            <span>Meta de Ventas</span>
+          </div>
+        </div>
+        
+        <div id="fin-success-container" style="display:none; margin-bottom: 2rem; padding: 1.5rem; background: #f2fce6; border: 1px solid #d3eeb1; border-radius: 8px;">
+           <div style="font-size:0.75rem; color:#33691e; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem">📈 Negocio Rentable</div>
+           <div style="font-size:1.1rem; color:#000; font-weight:300;">¡Has superado el punto de equilibrio! Tu operación es 100% rentable.</div>
         </div>
 
         <table class="tabla-admin">
@@ -571,12 +597,13 @@
               <th>Top Prendas Rentables</th>
               <th style="text-align:center">Cant. Vendida</th>
               <th style="text-align:right">Ingresos Brutos</th>
-              <th style="text-align:right">Costo Total</th>
-              <th style="text-align:right">Utilidad Neta</th>
+              <th style="text-align:right">Costo Producción</th>
+              <th style="text-align:right">Margen Bruto</th>
+              <th style="text-align:right">Utilidad Bruta</th>
             </tr>
           </thead>
           <tbody id="tabla-finanzas-prendas">
-            <tr><td colspan="5" class="loading">Cargando...</td></tr>
+            <tr><td colspan="6" class="loading">Cargando...</td></tr>
           </tbody>
         </table>
 
@@ -1653,24 +1680,75 @@ function renderFinanzas(pedidos) {
   const costosTotales = costosTotalesProd + totalOpex;
 
   const utilidadNeta = ingresosBrutos - costosTotales;
-  const margen = ingresosBrutos > 0 ? ((utilidadNeta / ingresosBrutos) * 100).toFixed(1) : 0;
+  const margenNeto = ingresosBrutos > 0 ? ((utilidadNeta / ingresosBrutos) * 100).toFixed(1) : 0;
+  
+  // Margen Bruto Promedio (Sin OPEX)
+  const utilidadBrutaTotal = ingresosBrutos - costosTotalesProd;
+  const margenBrutoPromedio = ingresosBrutos > 0 ? (utilidadBrutaTotal / ingresosBrutos) : 0;
 
   document.getElementById('fin-ingresos').textContent = fCOP(ingresosBrutos);
-  document.getElementById('fin-costos').textContent = fCOP(costosTotales); // Incluye Producción + OPEX
+  document.getElementById('fin-costos').textContent = fCOP(costosTotales);
   document.getElementById('fin-utilidad').textContent = fCOP(utilidadNeta);
-  document.getElementById('fin-margen').textContent = `Margen Nivel Empresa: ${margen}%`;
+  document.getElementById('fin-utilidad').style.color = utilidadNeta < 0 ? 'var(--rojo)' : 'var(--azul)';
+  document.getElementById('fin-margen').textContent = `Margen Neto Global: ${margenNeto}%`;
 
+  // --- Lógica de Punto de Equilibrio ---
+  const beContainer = document.getElementById('fin-breakeven-container');
+  const suContainer = document.getElementById('fin-success-container');
+  
+  if (utilidadNeta < 0) {
+    beContainer.style.display = 'block';
+    suContainer.style.display = 'none';
+    
+    const faltante = Math.abs(utilidadNeta);
+    document.getElementById('fin-breakeven-monto').textContent = fCOP(faltante);
+    document.getElementById('fin-breakeven-margen').textContent = (margenBrutoPromedio * 100).toFixed(1);
+    
+    // Cuánto falta vender = Faltante / Margen Bruto
+    let ventasNecesarias = 0;
+    if (margenBrutoPromedio > 0) ventasNecesarias = faltante / margenBrutoPromedio;
+    document.getElementById('fin-breakeven-ventas').textContent = fCOP(ventasNecesarias);
+    
+    // Unidades necesarias (Ticket promedio de la utilidad)
+    let unidadesNecesarias = 0;
+    const totalPrendasVendidas = Object.values(prendasRenta).reduce((acc, curr) => acc + curr.q, 0);
+    if (totalPrendasVendidas > 0 && utilidadBrutaTotal > 0) {
+      const utilidadBrutaPromedioPorPrenda = utilidadBrutaTotal / totalPrendasVendidas;
+      unidadesNecesarias = Math.ceil(faltante / utilidadBrutaPromedioPorPrenda);
+    }
+    document.getElementById('fin-breakeven-unidades').textContent = unidadesNecesarias > 0 ? unidadesNecesarias : 'N/A';
+    
+    // Barra de progreso (Inversión Recuperada)
+    // Asumimos que OPEX = Inversión Inicial a recuperar
+    let pctRecuperado = 0;
+    if (totalOpex > 0) pctRecuperado = Math.min(100, Math.max(0, (utilidadBrutaTotal / totalOpex) * 100));
+    document.getElementById('fin-breakeven-barra').style.width = pctRecuperado + '%';
+    document.getElementById('fin-breakeven-progress-txt').textContent = pctRecuperado.toFixed(1) + '% de la inversión recuperada';
+    
+  } else if (totalOpex > 0 && utilidadNeta >= 0) {
+    beContainer.style.display = 'none';
+    suContainer.style.display = 'block';
+  } else {
+    beContainer.style.display = 'none';
+    suContainer.style.display = 'none';
+  }
+
+  // --- Lógica Tabla Top Prendas ---
   const sorted = Object.entries(prendasRenta).sort((a,b) => (b[1].ingresos - b[1].costos) - (a[1].ingresos - a[1].costos));
   const tbody = document.getElementById('tabla-finanzas-prendas');
-  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--grisMed)">No hay datos de ventas pagadas</td></tr>'; }
+  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--grisMed)">No hay datos de ventas pagadas</td></tr>'; }
   else {
     tbody.innerHTML = sorted.map(([k, v]) => {
       const pUtilidad = v.ingresos - v.costos;
+      const pMargen = v.ingresos > 0 ? ((pUtilidad / v.ingresos) * 100).toFixed(1) : 0;
       return `<tr>
         <td><strong>${k}</strong></td>
         <td style="text-align:center">${v.q}</td>
         <td style="text-align:right">${fCOP(v.ingresos)}</td>
         <td style="text-align:right;color:var(--naranja)">${fCOP(v.costos)}</td>
+        <td style="text-align:right;font-size:0.75rem;">
+          <span style="background:#e0f2e9;color:#2e7d32;padding:0.2rem 0.4rem;border-radius:4px;">${pMargen}%</span>
+        </td>
         <td style="text-align:right;color:var(--verde);font-weight:600">${fCOP(pUtilidad)}</td>
       </tr>`;
     }).join('');
