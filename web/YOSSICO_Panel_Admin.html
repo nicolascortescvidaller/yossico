@@ -262,6 +262,43 @@
         </div>
         <div id="stock-grid" class="stock-grid"><div class="loading">Cargando inventario...</div></div>
       </div>
+
+      <!-- Agregar nueva prenda -->
+      <div class="stock-section" style="margin-top:1rem">
+        <div class="flex-between" style="cursor:pointer;margin-bottom:0" onclick="toggleAgregarPrenda()">
+          <div class="section-title" style="margin-bottom:0">+ Agregar nueva prenda</div>
+          <span id="toggle-agregar-icon" style="font-size:.8rem;color:var(--grisMed)">▼</span>
+        </div>
+        <div id="form-agregar-prenda" style="display:none;margin-top:1rem">
+          <div class="form-grid" style="margin-bottom:1rem">
+            <div class="form-group">
+              <label>Nombre de la prenda</label>
+              <input type="text" id="np-nombre" placeholder="Ej: Blusa Canalé">
+            </div>
+            <div class="form-group">
+              <label>Color</label>
+              <input type="text" id="np-color" placeholder="Ej: Negro">
+            </div>
+          </div>
+          <div class="form-grid tres" style="margin-bottom:1.25rem">
+            <div class="form-group">
+              <label>Stock talla S</label>
+              <input type="number" id="np-s" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label>Stock talla M</label>
+              <input type="number" id="np-m" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label>Stock talla L</label>
+              <input type="number" id="np-l" min="0" value="0">
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end">
+            <button class="btn btn-negro" onclick="crearPrenda()">Agregar prenda →</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- TAB POS -->
@@ -527,12 +564,24 @@ function renderPedidos(pedidos) {
       <td style="font-size:.75rem;max-width:180px;word-break:break-word">${prendas}</td>
       <td><strong>${fCOP(p.total)}</strong></td>
       <td>${badgeEst(p.estado)}</td>
-      <td><select class="estado-select" onchange="cambiarEstado('${p.id}',this.value,this)">
-        <option value="">Mover a...</option>
-        <option value="Pagado">✅ Pagado</option>
-        <option value="Pendiente">⏳ Pendiente</option>
-        <option value="Cancelado">❌ Cancelado</option>
-      </select></td>
+      <td>
+        <select class="estado-select" onchange="cambiarEstado('${p.id}',this.value,this)">
+          <option value="">Mover a...</option>
+          <option value="Pagado">✅ Pagado</option>
+          <option value="Pendiente">⏳ Pendiente</option>
+          <option value="Cancelado">❌ Cancelado</option>
+        </select>
+        <div style="margin-top:.4rem;display:flex;gap:.3rem">
+          <input type="text" placeholder="Guía" value="${p.numero_guia||''}"
+            style="font-size:.65rem;padding:.2rem .4rem;border:1px solid var(--grisCl);width:90px;font-family:inherit"
+            id="guia-${p.id}">
+          <button onclick="guardarGuia('${p.id}')"
+            style="font-size:.6rem;padding:.2rem .5rem;background:var(--negro);color:var(--blanco);border:none;cursor:pointer;font-family:inherit">✓</button>
+        </div>
+        <div style="font-size:.65rem;color:var(--grisMed);margin-top:.2rem" id="empresa-${p.id}">
+          ${p.empresa_envio ? '📦 ' + p.empresa_envio : ''}
+        </div>
+      </td>
     </tr>`;
   }).join("");
 }
@@ -1170,6 +1219,70 @@ function renderStockCritico() {
 function destruirChart(id) {
   if (charts[id]) { charts[id].destroy(); delete charts[id]; }
 }
+
+// ══════════════════════════════════════════════════════════
+// ➕ TAREA 3: Agregar nueva prenda al inventario
+// ══════════════════════════════════════════════════════════
+function toggleAgregarPrenda() {
+  const form = document.getElementById('form-agregar-prenda');
+  const icon = document.getElementById('toggle-agregar-icon');
+  const visible = form.style.display !== 'none';
+  form.style.display = visible ? 'none' : 'block';
+  icon.textContent = visible ? '▼' : '▲';
+}
+
+async function crearPrenda() {
+  const nombre = document.getElementById('np-nombre').value.trim();
+  const color  = document.getElementById('np-color').value.trim();
+  const stocks = {
+    S: parseInt(document.getElementById('np-s').value) || 0,
+    M: parseInt(document.getElementById('np-m').value) || 0,
+    L: parseInt(document.getElementById('np-l').value) || 0,
+  };
+  if (!nombre || !color) { mostrarToast('Completa nombre y color', 'err'); return; }
+
+  // Comprobar si ya existe una prenda con ese nombre+color
+  const existe = stockData.some(p => p.nombre === nombre && p.color === color);
+  if (existe) { mostrarToast('Ya existe una prenda con ese nombre y color', 'warn'); return; }
+
+  const rows = ['S', 'M', 'L'].map(talla => ({ nombre, color, talla, stock: stocks[talla] }));
+  const { error } = await sb.from('productos').insert(rows);
+  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
+
+  mostrarToast('Prenda agregada ✓', 'ok');
+
+  // Limpiar campos
+  document.getElementById('np-nombre').value = '';
+  document.getElementById('np-color').value  = '';
+  document.getElementById('np-s').value = '0';
+  document.getElementById('np-m').value = '0';
+  document.getElementById('np-l').value = '0';
+
+  // Cerrar formulario
+  document.getElementById('form-agregar-prenda').style.display = 'none';
+  document.getElementById('toggle-agregar-icon').textContent = '▼';
+
+  // Recargar inventario
+  cargarStock();
+}
+
+// ══════════════════════════════════════════════════════════
+// 📦 TAREA 4: Guardar guía de envío
+// ══════════════════════════════════════════════════════════
+async function guardarGuia(id) {
+  const guia = document.getElementById('guia-' + id)?.value.trim();
+  if (!guia) return;
+  // Auto-detectar empresa por formato del número
+  const empresa = (guia.startsWith('1') || guia.startsWith('0')) ? 'Coordinadora' : 'Servientrega';
+  const { error } = await sb.rpc('admin_actualizar_envio', {
+    p_id: id, p_guia: guia, p_empresa: empresa, pin: adminPin
+  });
+  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
+  mostrarToast('Guía guardada ✓', 'ok');
+  const el = document.getElementById('empresa-' + id);
+  if (el) el.textContent = '📦 ' + empresa;
+}
+
 </script>
 </body>
 </html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido confirmado — YOSSICO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.v2.css?v=105">
+  <style>
+    /* ── Gracias page ── */
+    .grc-page {
+      min-height: 100vh;
+      background: #FFFFFF;
+    }
+    .grc-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 140px 40px 80px;
+    }
+
+    /* Tag / eyebrow */
+    .grc-tag {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    /* Status badge */
+    .grc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      border-radius: 2px;
+      margin-bottom: 32px;
+    }
+    .grc-badge--approved {
+      background: #D8F0E4;
+      color: #2D6A4F;
+      border: 1px solid #2D6A4F;
+    }
+    .grc-badge--pending {
+      background: #FFF8E1;
+      color: #7B5800;
+      border: 1px solid #D4A017;
+    }
+    .grc-badge--whatsapp {
+      background: #D8F0E4;
+      color: #2D6A4F;
+      border: 1px solid #2D6A4F;
+    }
+
+    /* Main heading */
+    .grc-title {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 40px;
+      color: var(--black);
+      line-height: 1.15;
+      margin: 0 0 8px;
+    }
+    .grc-title em {
+      font-style: italic;
+      color: #555;
+    }
+    .grc-sub {
+      font-family: var(--font-body);
+      font-weight: 200;
+      font-size: 13px;
+      color: var(--gray);
+      letter-spacing: 0.5px;
+      line-height: 1.7;
+      margin: 0 0 48px;
+    }
+
+    /* Divider */
+    .grc-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 32px 0;
+    }
+
+    /* Order summary */
+    .grc-section-label {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 20px;
+      display: block;
+    }
+    .grc-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .grc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .grc-item:last-child {
+      border-bottom: none;
+    }
+    .grc-item__left {}
+    .grc-item__name {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--black);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .grc-item__meta {
+      font-family: var(--font-body);
+      font-weight: 200;
+      font-size: 10px;
+      color: var(--gray);
+      letter-spacing: 0.5px;
+    }
+    .grc-item__price {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--black);
+      white-space: nowrap;
+    }
+
+    /* Total row */
+    .grc-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 20px 0 0;
+    }
+    .grc-total__label {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .grc-total__value {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 32px;
+      color: var(--black);
+    }
+
+    /* Info block */
+    .grc-info {
+      background: #F8F8F8;
+      border: 1px solid var(--border);
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .grc-info__line {
+      font-family: var(--font-body);
+      font-weight: 200;
+      font-size: 12px;
+      color: #444;
+      letter-spacing: 0.3px;
+      line-height: 1.8;
+      margin: 0;
+    }
+    .grc-info__line strong {
+      font-weight: 400;
+      color: var(--black);
+    }
+    .grc-info__wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--black);
+      text-decoration: none;
+      border-bottom: 1px solid var(--black);
+      padding-bottom: 1px;
+    }
+
+    /* Pedido ID */
+    .grc-pedido-id {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--gray);
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* Generic thank you */
+    .grc-generic {
+      text-align: center;
+      padding: 60px 0;
+    }
+    .grc-generic .grc-title {
+      font-size: 48px;
+    }
+    .grc-generic .grc-sub {
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* CTA buttons */
+    .grc-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .grc-btn {
+      padding: 16px 32px;
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .grc-btn--primary {
+      background: var(--black);
+      color: var(--white);
+    }
+    .grc-btn--primary:hover {
+      background: #222;
+    }
+    .grc-btn--secondary {
+      background: transparent;
+      color: var(--black);
+      border: 1px solid var(--border);
+    }
+    .grc-btn--secondary:hover {
+      border-color: var(--black);
+    }
+
+    @media (max-width: 600px) {
+      .grc-wrap {
+        padding: 120px 24px 60px;
+      }
+      .grc-title {
+        font-size: 28px;
+      }
+      .grc-actions {
+        flex-direction: column;
+      }
+      .grc-btn {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Barra envío gratis -->
+<div id="barra-envio-gratis" style="background-color:#000000; color:#FFFFFF; text-align:center; padding:10px 16px; font-size:13px; letter-spacing:0.08em; width:100%; position:fixed; top:0; left:0; z-index:1002;">
+  Envío gratis en compras superiores a $450.000 &nbsp;·&nbsp; Exclusivo para Colombia <span style="display:inline-block; width:14px; height:10px; vertical-align:middle; margin-left:6px; box-shadow:0 0 1px rgba(255,255,255,0.4);"><div style="height:50%;background:#FCD116;"></div><div style="height:25%;background:#003893;"></div><div style="height:25%;background:#CE1126;"></div></span>
+</div>
+
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<nav class="nav">
+  <a href="index.html" class="nav__logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="YOSSICO">
+      <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111" stroke-width="1"/>
+      <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111" stroke-width="0.4"/>
+      <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    YOSSICO
+  </a>
+  <ul class="nav__links">
+    <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+      <div class="nav__dropdown-menu">
+        <a href="coleccion.html?linea=essentials">Essentials</a>
+        <a href="coleccion.html?linea=signature">Signature</a>
+        <a href="coleccion.html?linea=core">Core</a>
+        <div class="nav__dropdown-divider"></div>
+        <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
+      </div>
+    </li>
+    <li><a href="acronimo.html">El Acrónimo</a></li>
+    <li><a href="historia.html">Historia</a></li>
+    <li><a href="nosotros.html">Nosotros</a></li>
+    <li><a href="contacto.html">Contacto</a></li>
+  </ul>
+  <div class="nav__actions">
+    <a class="cart-icon-btn" id="cart-open" aria-label="Carrito" tabindex="0" role="button">
+      <span class="cart-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="cart-badge" id="cart-badge">0</span>
+      </span>
+    </a>
+  </div>
+</nav>
+
+<!-- ── Main content ── -->
+<div class="grc-page">
+  <div class="grc-wrap" id="grc-content">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- Cart drawer (shared) -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<aside class="cart-drawer" id="cart-drawer" aria-label="Carrito">
+  <div class="cart-drawer__header">
+    <span class="cart-drawer__title">Tu Pedido</span>
+    <button class="cart-drawer__close" id="cart-close" aria-label="Cerrar"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="cart-drawer__body" id="cart-body"></div>
+  <div class="cart-drawer__footer" id="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total-price">$0 COP</span></div>
+    <a href="#" id="cart-checkout" class="cart-checkout" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Pedir por WhatsApp
+    </a>
+  </div>
+</aside>
+
+<script src="script.js"></script>
+<script src="cart.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ── Helpers ── */
+  function fmtPrice(n) {
+    return '$' + Math.round(Number(n)).toLocaleString('es-CO') + ' COP';
+  }
+
+  function getUrlParams() {
+    const p = new URLSearchParams(window.location.search);
+    return {
+      id: p.get('id') || '',
+      reference: p.get('reference') || '',
+      status: (p.get('status') || '').toUpperCase(),
+      amount_in_cents: p.get('amount_in_cents') || ''
+    };
+  }
+
+  /* ── Badge HTML ── */
+  function badgeHtml(type) {
+    if (type === 'approved') {
+      return '<span class="grc-badge grc-badge--approved">&#10003;&nbsp; Pago confirmado</span>';
+    }
+    if (type === 'pending') {
+      return '<span class="grc-badge grc-badge--pending">&#8987;&nbsp; Pago en verificación</span>';
+    }
+    if (type === 'whatsapp') {
+      return '<span class="grc-badge grc-badge--whatsapp">&#10003;&nbsp; Pedido recibido</span>';
+    }
+    return '';
+  }
+
+  /* ── Items HTML ── */
+  function itemsHtml(items) {
+    if (!items || !items.length) return '';
+    return items.map(function (it) {
+      var qty = it.qty || it.cantidad || 1;
+      var size = it.talla || it.size || '';
+      var price = it.precio || it.price || 0;
+      var name = it.nombre || it.name || it.producto || '';
+      return [
+        '<div class="grc-item">',
+        '  <div class="grc-item__left">',
+        '    <span class="grc-item__name">' + name + '</span>',
+        '    <span class="grc-item__meta">',
+        (size ? 'Talla ' + size : '') + (qty > 1 ? (size ? ' &nbsp;·&nbsp; ' : '') + 'x' + qty : ''),
+        '    </span>',
+        '  </div>',
+        '  <span class="grc-item__price">' + fmtPrice(price * qty) + '</span>',
+        '</div>'
+      ].join('');
+    }).join('');
+  }
+
+  /* ── Render with order data ── */
+  function renderWithData(data, mode) {
+    // mode: 'session' | 'wompi' | 'generic'
+    var nombre = data.nombre || '';
+    var firstName = nombre.split(' ')[0] || 'cliente';
+    var items = data.items || [];
+    var total = data.total || 0;
+    var ciudad = data.ciudad || '';
+    var tel = data.tel || '';
+    var pedidoId = data.pedido_id || data.reference || '';
+    var wompiStatus = data.wompi_status || '';
+
+    // Determine badge type
+    var badge = '';
+    if (mode === 'wompi') {
+      badge = (wompiStatus === 'APPROVED') ? badgeHtml('approved') : badgeHtml('pending');
+    } else if (mode === 'session') {
+      badge = badgeHtml('whatsapp');
+    }
+
+    // Total from Wompi amount_in_cents if available and no session total
+    if (mode === 'wompi' && data.amount_in_cents && !data.total) {
+      total = Number(data.amount_in_cents) / 100;
+    }
+
+    var html = [
+      '<span class="grc-tag">YOSSICO · Confirmación de pedido</span>',
+      badge,
+      '<h1 class="grc-title">Gracias,<br><em>' + firstName + '.</em></h1>',
+      '<p class="grc-sub">',
+      (wompiStatus === 'APPROVED')
+        ? 'Tu pago fue procesado con éxito. Recibirás pronto los detalles de tu envío.'
+        : 'Tu pedido ha sido recibido y está siendo procesado. Te contactaremos para coordinar el envío.',
+      '</p>',
+    ].join('');
+
+    // Order summary block (only if we have items or a total)
+    if (items.length || total) {
+      html += '<div class="grc-divider"></div>';
+      html += '<span class="grc-section-label">Resumen del pedido</span>';
+
+      if (items.length) {
+        html += '<div class="grc-items">' + itemsHtml(items) + '</div>';
+      }
+
+      if (total) {
+        html += [
+          '<div class="grc-total">',
+          '  <span class="grc-total__label">Total</span>',
+          '  <span class="grc-total__value">' + fmtPrice(total) + '</span>',
+          '</div>'
+        ].join('');
+      }
+    }
+
+    // Info block
+    var contactLine = 'Te contactaremos pronto para confirmar el envío.';
+    if (tel) {
+      contactLine = 'Te contactaremos a tu WhatsApp&nbsp;<strong>' + tel + '</strong>&nbsp;para coordinar el envío.';
+    }
+
+    html += [
+      '<div class="grc-info">',
+      '  <p class="grc-info__line">' + contactLine + '</p>',
+      '  <a href="https://wa.me/573219937221" target="_blank" rel="noopener" class="grc-info__wa">',
+      '    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">',
+      '      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>',
+      '    </svg>',
+      '    +57 321 993 7221',
+      '  </a>',
+    ].join('');
+
+    if (pedidoId) {
+      html += '<span class="grc-pedido-id">Ref. ' + pedidoId + '</span>';
+    }
+    html += '</div>';
+
+    // CTA buttons
+    html += [
+      '<div class="grc-actions">',
+      '  <a href="coleccion.html" class="grc-btn grc-btn--primary">Seguir comprando →</a>',
+      '  <a href="index.html" class="grc-btn grc-btn--secondary">Ir al inicio</a>',
+      '</div>'
+    ].join('');
+
+    document.getElementById('grc-content').innerHTML = html;
+  }
+
+  /* ── Render generic (no data at all) ── */
+  function renderGeneric() {
+    var html = [
+      '<div class="grc-generic">',
+      '  <span class="grc-tag">YOSSICO</span>',
+      '  <h1 class="grc-title">Gracias<br><em>por tu pedido.</em></h1>',
+      '  <p class="grc-sub">',
+      '    Tu pedido ha sido recibido. Te contactaremos pronto a través de WhatsApp',
+      '    para coordinar todos los detalles del envío.',
+      '  </p>',
+      '  <a href="https://wa.me/573219937221" target="_blank" rel="noopener" class="grc-info__wa" style="margin:0 auto 40px;">',
+      '    +57 321 993 7221',
+      '  </a>',
+      '  <div class="grc-actions" style="justify-content:center;">',
+      '    <a href="coleccion.html" class="grc-btn grc-btn--primary">Seguir comprando →</a>',
+      '    <a href="index.html" class="grc-btn grc-btn--secondary">Ir al inicio</a>',
+      '  </div>',
+      '</div>'
+    ].join('');
+    document.getElementById('grc-content').innerHTML = html;
+  }
+
+  /* ── Main logic ── */
+  function init() {
+    // 1. Try sessionStorage first
+    var raw = null;
+    try { raw = sessionStorage.getItem('yossico_ultimo_pedido'); } catch (e) {}
+
+    if (raw) {
+      try {
+        var data = JSON.parse(raw);
+        renderWithData(data, 'session');
+        // Optionally clear after reading to avoid stale data on refresh
+        // sessionStorage.removeItem('yossico_ultimo_pedido');
+        return;
+      } catch (e) {
+        console.warn('[gracias] Error parsing sessionStorage data:', e);
+      }
+    }
+
+    // 2. Try Wompi URL params
+    var params = getUrlParams();
+    if (params.status) {
+      var wompiData = {
+        reference: params.reference,
+        amount_in_cents: params.amount_in_cents,
+        wompi_status: params.status
+      };
+      renderWithData(wompiData, 'wompi');
+      return;
+    }
+
+    // 3. No data at all → generic
+    renderGeneric();
+  }
+
+  // Run after DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
