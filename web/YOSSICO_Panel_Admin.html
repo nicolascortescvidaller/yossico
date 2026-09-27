@@ -64,17 +64,17 @@
   .tab-content { display: none; }
   .tab-content.active { display: block; }
   /* MAIN */
-  .main { flex: 1; max-width: 1100px; margin: 0; padding: 2.5rem 3rem; overflow-y: auto; }
+  .main { flex: 1; max-width: 1400px; margin: 0; padding: 3.5rem 4rem; overflow-y: auto; }
   /* LOGIN */
   .login-card{background:var(--blanco);border:1px solid var(--grisCl);padding:2.5rem;max-width:400px;margin:4rem auto;text-align:center}
   .login-card h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:.5rem}
   .login-card p{color:var(--grisMed);font-size:.85rem;margin-bottom:1.5rem}
   /* RESUMEN */
-  .resumen-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
-  .resumen-card{background:var(--blanco);border:1px solid var(--grisCl);padding:1.25rem 1.5rem}
-  .resumen-card .rlabel{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--grisMed);font-weight:500;margin-bottom:.5rem}
-  .resumen-card .rvalor{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;line-height:1}
-  .resumen-card .rsub{font-size:.7rem;color:var(--grisMed);margin-top:.25rem}
+  .resumen-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:2.5rem}
+  .resumen-card{background:var(--blanco);border:1px solid var(--grisCl);padding:1.75rem 2rem}
+  .resumen-card .rlabel{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--grisMed);font-weight:500;margin-bottom:.75rem}
+  .resumen-card .rvalor{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:400;line-height:1}
+  .resumen-card .rsub{font-size:.75rem;color:var(--grisMed);margin-top:.4rem}
   .resumen-card.verde{border-left:3px solid var(--verde)}
   .resumen-card.naranja{border-left:3px solid var(--naranja)}
   .resumen-card.rojo{border-left:3px solid var(--rojo)}
@@ -107,7 +107,7 @@
   .modal-row input{flex:1;border:1px solid var(--grisCl);padding:.5rem .75rem;font-family:inherit;font-size:.9rem}
   .modal-actions{display:flex;gap:.75rem;margin-top:1.5rem}
   /* FORM */
-  .form-card{background:var(--blanco);border:1px solid var(--grisCl);padding:1.5rem;margin-bottom:1.5rem}
+  .form-card{background:var(--blanco);border:1px solid var(--grisCl);padding:2rem 2.5rem;margin-bottom:2rem}
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
   .form-grid.tres{grid-template-columns:1fr 1fr 1fr}
   .form-group{display:flex;flex-direction:column;gap:.35rem}
@@ -115,7 +115,7 @@
   .form-group input,.form-group select{border:1px solid var(--grisCl);background:var(--grisF);padding:.6rem .75rem;font-family:'Montserrat',sans-serif;font-size:.85rem;font-weight:300;color:var(--negro);outline:none;transition:border-color .2s}
   .form-group input:focus,.form-group select:focus{border-color:var(--negro);background:var(--blanco)}
   /* FILTROS */
-  .filtros-bar{display:flex;gap:.75rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap}
+  .filtros-bar{display:flex;gap:1rem;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap}
   .filtros-bar input,.filtros-bar select{border:1px solid var(--grisCl);background:var(--grisF);padding:.5rem .75rem;font-family:inherit;font-size:.8rem;color:var(--negro);outline:none}
   .filtros-bar input:focus,.filtros-bar select:focus{border-color:var(--negro)}
   .filtros-bar input[type="text"]{flex:1;min-width:180px}
@@ -128,11 +128,11 @@
   .btn-sm{padding:.35rem .75rem;font-size:.6rem}
   /* TABLA */
   .tabla-wrap{overflow-x:auto}
-  table{width:100%;border-collapse:collapse;font-size:.8rem}
-  thead th{background:var(--negro);color:var(--blanco);padding:.6rem .75rem;text-align:left;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;font-weight:500}
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  thead th{background:var(--negro);color:var(--blanco);padding:1rem 1.25rem;text-align:left;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;font-weight:500}
   tbody tr:nth-child(even){background:var(--grisF)}
   tbody tr:hover{background:#EEECEA}
-  tbody td{padding:.55rem .75rem;border-bottom:1px solid var(--grisCl);vertical-align:middle}
+  tbody td{padding:1.25rem 1.25rem;border-bottom:1px solid var(--grisCl);vertical-align:top;line-height:1.5}
   .badge{display:inline-block;padding:.15rem .5rem;font-size:.62rem;font-weight:500;letter-spacing:1px;border-radius:2px}
   .badge-pend{background:var(--naranjaCl);color:var(--naranja)}
   .badge-pag{background:var(--verdeCl);color:var(--verde)}
@@ -286,8 +286,8 @@
         </div>
         <div class="tabla-wrap">
           <table>
-            <thead><tr><th># Pedido</th><th>Fecha</th><th>Cliente</th><th>Prendas</th><th>Total</th><th>Estado</th><th>Mover a</th></tr></thead>
-            <tbody id="tabla-pedidos"><tr><td colspan="7" class="loading">Cargando...</td></tr></tbody>
+            <thead><tr><th># Pedido</th><th>Fecha</th><th>Cliente</th><th>Prendas</th><th>Total</th><th>Estado</th><th>Logística</th><th>Notas Internas</th></tr></thead>
+            <tbody id="tabla-pedidos"><tr><td colspan="8" class="loading">Cargando...</td></tr></tbody>
           </table>
         </div>
         <div style="font-size:.7rem;color:var(--grisMed);margin-top:.75rem" id="contador-pedidos"></div>
@@ -661,7 +661,7 @@ function actualizarResumen() {
 
 // ── PEDIDOS
 async function cargarPedidos() {
-  document.getElementById("tabla-pedidos").innerHTML = '<tr><td colspan="7" class="loading">Cargando...</td></tr>';
+  document.getElementById("tabla-pedidos").innerHTML = '<tr><td colspan="8" class="loading">Cargando...</td></tr>';
   const { data, error } = await sb.rpc("admin_get_pedidos", { pin: adminPin });
   if (error) { mostrarToast("Error: " + error.message, "err"); return; }
   todosPedidos = data || [];
@@ -694,7 +694,7 @@ function badgeEst(e) {
 
 function renderPedidos(pedidos) {
   document.getElementById("contador-pedidos").textContent = `Mostrando ${pedidos.length} de ${todosPedidos.length} pedidos`;
-  if (!pedidos.length) { document.getElementById("tabla-pedidos").innerHTML = '<tr><td colspan="7" class="loading">Sin resultados</td></tr>'; return; }
+  if (!pedidos.length) { document.getElementById("tabla-pedidos").innerHTML = '<tr><td colspan="8" class="loading">Sin resultados</td></tr>'; return; }
   document.getElementById("tabla-pedidos").innerHTML = pedidos.map(p => {
     const fecha = new Date(p.created_at).toLocaleDateString("es-CO",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
     const prendas = (p.items||[]).map(i => `${i.nombre||""} T${i.talla||""} x${i.qty||1}`).join(", ")||"-";
@@ -706,33 +706,33 @@ function renderPedidos(pedidos) {
       <td><strong>${fCOP(p.total)}</strong></td>
       <td>${badgeEst(p.estado)}</td>
       <td>
-        <select class="estado-select" onchange="cambiarEstado('${p.id}',this.value,this)">
+        <select class="estado-select" style="margin-bottom:.5rem;width:100%" onchange="cambiarEstado('${p.id}',this.value,this)">
           <option value="">Mover a...</option>
           <option value="Pagado">✅ Pagado</option>
           <option value="Pendiente">⏳ Pendiente</option>
           <option value="Cancelado">❌ Cancelado</option>
         </select>
-        <div style="margin-top:.4rem;display:flex;gap:.3rem">
-          <input type="text" placeholder="Guía" value="${p.numero_guia||''}"
-            style="font-size:.65rem;padding:.2rem .4rem;border:1px solid var(--grisCl);width:90px;font-family:inherit"
+        <div style="display:flex;gap:.3rem">
+          <input type="text" placeholder="Guía de envío" value="${p.numero_guia||''}"
+            style="font-size:.7rem;padding:.3rem .5rem;border:1px solid var(--grisCl);width:110px;font-family:inherit"
             id="guia-${p.id}">
           <button onclick="guardarGuia('${p.id}')"
-            style="font-size:.6rem;padding:.2rem .5rem;background:var(--negro);color:var(--blanco);border:none;cursor:pointer;font-family:inherit">✓</button>
+            style="font-size:.7rem;padding:.3rem .5rem;background:var(--negro);color:var(--blanco);border:none;cursor:pointer;font-family:inherit">✓</button>
         </div>
-        <div style="font-size:.65rem;color:var(--grisMed);margin-top:.2rem" id="empresa-${p.id}">
+        <div style="font-size:.65rem;color:var(--grisMed);margin-top:.3rem" id="empresa-${p.id}">
           ${p.empresa_envio ? '📦 ' + p.empresa_envio : ''}
         </div>
-        <div style="margin-top:.4rem">
-          <textarea 
-            id="nota-${p.id}" 
-            placeholder="Nota interna..." 
-            style="font-size:.65rem;padding:.3rem;border:1px solid var(--grisCl);width:100%;resize:none;height:40px;font-family:inherit;color:var(--negro);"
-            >${p.nota_interna || ''}</textarea>
-          <button onclick="guardarNota('${p.id}')" 
-            style="font-size:.6rem;padding:.15rem .5rem;background:var(--grisMed);color:var(--blanco);border:none;cursor:pointer;font-family:inherit;margin-top:.2rem">
-            Guardar nota
-          </button>
-        </div>
+      </td>
+      <td>
+        <textarea 
+          id="nota-${p.id}" 
+          placeholder="Añadir nota interna..." 
+          style="font-size:.7rem;padding:.4rem;border:1px solid var(--grisCl);width:100%;min-width:140px;resize:none;height:55px;font-family:inherit;color:var(--negro);margin-bottom:.3rem;background:var(--blanco);"
+          >${p.nota_interna || ''}</textarea>
+        <button onclick="guardarNota('${p.id}')" 
+          style="font-size:.65rem;padding:.3rem .6rem;background:var(--grisMed);color:var(--blanco);border:none;cursor:pointer;font-family:inherit;width:100%;transition:background .2s;" onmouseover="this.style.background='var(--negro)'" onmouseout="this.style.background='var(--grisMed)'">
+          Guardar nota
+        </button>
       </td>
     </tr>`;
   }).join("");
