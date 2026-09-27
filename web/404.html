@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página no encontrada — YOSSICO</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.v2.css?v=105">
+  <style>
+    .grc-page { min-height: 100vh; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 140px 20px 80px; }
+    .grc-tag { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #8a8a8a; display: block; margin-bottom: 20px; font-family: 'Montserrat', sans-serif; font-weight: 500; }
+    .grc-title { font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 300; color: #111111; line-height: 1.1; margin: 0 0 16px; letter-spacing: -1px; }
+    .grc-sub { font-size: 14px; color: #666; line-height: 1.6; max-width: 400px; margin: 0 auto 40px; font-weight: 300; }
+    .grc-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .grc-btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 32px; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; text-decoration: none; font-weight: 500; transition: all 0.3s ease; }
+    .grc-btn--primary { background: #111111; color: #ffffff; border: 1px solid #111111; }
+    .grc-btn--primary:hover { background: #333333; color: #ffffff; }
+    .grc-btn--secondary { background: transparent; color: #111111; border: 1px solid #dddbd7; }
+    .grc-btn--secondary:hover { border-color: #111111; }
+  </style>
+</head>
+<body class="grc-page">
+  <!-- Top Banner -->
+  <div class="top-banner">
+    <p>ENVÍO GRATIS A TODA COLOMBIA EN COMPRAS SUPERIORES A $300.000 COP</p>
+  </div>
+
+  <!-- Nav -->
+  <nav class="navbar" style="position: fixed; top: 30px; width: 100%; z-index: 100; background: #fff; border-bottom: 1px solid #f0eeea;">
+    <div class="nav-left">
+      <ul class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li class="dropdown">
+          <a href="coleccion.html">Colección</a>
+          <div class="dropdown-content">
+            <div class="dropdown-grid">
+              <div class="dropdown-col">
+                <a href="coleccion.html#essentials" class="col-title">Essentials</a>
+                <a href="kyoto.html">Conjunto Kyoto</a>
+                <a href="lima.html">Conjunto Lima</a>
+                <a href="bogota.html">Conjunto Bogotá</a>
+              </div>
+              <div class="dropdown-col">
+                <a href="coleccion.html#signature" class="col-title">Signature</a>
+                <a href="milan.html">Conjunto Milán</a>
+              </div>
+              <div class="dropdown-col">
+                <a href="coleccion.html#core" class="col-title">Core</a>
+                <a href="oslo.html">Conjunto Oslo</a>
+              </div>
+              <div class="dropdown-col">
+                <a href="coleccion.html#capas" class="col-title">Capas</a>
+                <a href="manta.html">Buzo Manta</a>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="acronimo.html">El Acrónimo</a></li>
+      </ul>
+    </div>
+    
+    <div class="nav-center">
+      <a href="index.html" class="logo">YOSSICO</a>
+    </div>
+
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="contacto.html">Contacto</a></li>
+        <li>
+          <a href="#" class="cart-icon" id="cart-toggle-btn">
+            Carrito (<span class="cart-count">0</span>)
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div style="margin-top: -60px;">
+    <span class="grc-tag">Error 404</span>
+    <h1 class="grc-title">Página no<br><em>encontrada.</em></h1>
+    <p class="grc-sub">Puede que esta página haya sido movida o ya no exista.</p>
+    <div class="grc-actions">
+      <a href="index.html" class="grc-btn grc-btn--primary">Ir al inicio →</a>
+      <a href="coleccion.html" class="grc-btn grc-btn--secondary">Ver colección</a>
+    </div>
+  </div>
+
+  <script src="js/cart.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
