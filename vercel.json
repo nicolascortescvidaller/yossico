@@ -1,6 +1,5 @@
 {
   "outputDirectory": "web",
-  "cleanUrls": true,
   "redirects": [
     {
       "source": "/index.html",
