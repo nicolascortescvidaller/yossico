@@ -28,6 +28,11 @@
     --verde:#2D6A4F;--verdeCl:#D8F0E4;--rojo:#C0392B;--rojoCl:#FDECEA;
     --azul:#1A5276;--azulCl:#D6EAF8;--naranja:#CA6F1E;--naranjaCl:#FDEBD0;
   }
+  body.dark-mode {
+    --negro:#F5F4F1;--blanco:#1A1A1A;--grisF:#121212;--grisCl:#333333;--grisMed:#8A8A8A;
+    --verde:#4ADE80;--verdeCl:#154026;--rojo:#F87171;--rojoCl:#4F1B1B;
+    --azul:#60A5FA;--azulCl:#1B344D;--naranja:#FB923C;--naranjaCl:#4D2A12;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Montserrat',sans-serif;font-weight:300;background:var(--grisF);color:var(--negro);min-height:100vh}
   /* HEADER */
@@ -189,6 +194,12 @@
     <div class="header-logo" style="font-size: 1.6rem; font-weight: 300; letter-spacing: -1px; color: var(--negro); font-family: 'Montserrat', sans-serif;">YOSSICO</div>
   </div>
   <div class="header-right" style="width:240px;justify-content:flex-end">
+    <!-- MODO OSCURO -->
+    <button class="bell-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Cambiar tema" style="margin-right: 0.5rem">
+      <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
     <!-- CAMPANA DE NOTIFICACIONES -->
     <div class="bell-wrap" id="bell-wrap" style="display:none">
       <button class="bell-btn" id="bell-btn" onclick="toggleNotifPanel()" aria-label="Notificaciones">
@@ -2500,7 +2511,25 @@ function b2bGenerarImpresion() {
 // Inicializar B2B con un item vacío
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(b2bAgregarItem, 1000);
+  
+  // Theme logic
+  if (localStorage.getItem('yossico_admin_theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('theme-icon').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
+  }
 });
+
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  const icon = document.getElementById('theme-icon');
+  if (isDark) {
+    localStorage.setItem('yossico_admin_theme', 'dark');
+    icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
+  } else {
+    localStorage.setItem('yossico_admin_theme', 'light');
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+  }
+}
 </script>
 </body>
 </html>
