@@ -31,15 +31,15 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Montserrat',sans-serif;font-weight:300;background:var(--grisF);color:var(--negro);min-height:100vh}
   /* HEADER */
-  .header{background:var(--negro);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-  .header-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--blanco);letter-spacing:8px}
-  .header-sub{font-size:.65rem;color:#888;letter-spacing:4px;text-transform:uppercase;margin-top:2px}
+  .header{background:var(--blanco);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--grisCl)}
+  .header-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--negro);letter-spacing:8px}
+  .header-sub{font-size:.65rem;color:var(--grisMed);letter-spacing:4px;text-transform:uppercase;margin-top:2px;font-weight:400}
   .header-right{display:flex;align-items:center;gap:1rem}
   /* CAMPANA */
   .bell-wrap{position:relative}
-  .bell-btn{background:none;border:none;cursor:pointer;color:#aaa;padding:.4rem;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:color .2s,background .2s;position:relative}
-  .bell-btn:hover{color:var(--blanco);background:rgba(255,255,255,.1)}
-  .bell-badge{position:absolute;top:-2px;right:-2px;background:var(--rojo);color:var(--blanco);font-size:.6rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;font-family:'Montserrat',sans-serif;border:2px solid var(--negro)}
+  .bell-btn{background:none;border:none;cursor:pointer;color:var(--negro);padding:.4rem;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all .2s;position:relative}
+  .bell-btn:hover{background:var(--grisCl)}
+  .bell-badge{position:absolute;top:-2px;right:-2px;background:var(--rojo);color:var(--blanco);font-size:.6rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;font-family:'Montserrat',sans-serif;border:2px solid var(--blanco)}
   @keyframes ring{0%,100%{transform:rotate(0)}15%{transform:rotate(15deg)}30%{transform:rotate(-12deg)}45%{transform:rotate(10deg)}60%{transform:rotate(-8deg)}75%{transform:rotate(5deg)}}
   .bell-btn.ring{animation:ring .6s ease}
   .notif-panel{position:absolute;top:calc(100% + 12px);right:0;width:340px;background:var(--blanco);border:1px solid var(--grisCl);box-shadow:0 8px 32px rgba(0,0,0,.18);z-index:500;display:none;max-height:480px;overflow:hidden;flex-direction:column}
@@ -199,7 +199,7 @@
       </div>
     </div>
     <span id="usuario-info" class="header-sub" style="color:#555"></span>
-    <button class="btn btn-gris btn-sm" id="btn-logout" onclick="cerrarSesion()" style="display:none">Salir</button>
+    <button class="btn btn-negro btn-sm" id="btn-logout" onclick="cerrarSesion()" style="display:none">Salir</button>
   </div>
 </div>
 
@@ -706,31 +706,31 @@ function renderPedidos(pedidos) {
       <td><strong>${fCOP(p.total)}</strong></td>
       <td>${badgeEst(p.estado)}</td>
       <td>
-        <select class="estado-select" style="margin-bottom:.5rem;width:100%" onchange="cambiarEstado('${p.id}',this.value,this)">
-          <option value="">Mover a...</option>
-          <option value="Pagado">✅ Pagado</option>
-          <option value="Pendiente">⏳ Pendiente</option>
-          <option value="Cancelado">❌ Cancelado</option>
+        <select class="estado-select" style="margin-bottom:.5rem;width:100%;padding:.4rem;font-size:.7rem;font-family:inherit;border:1px solid var(--grisCl);background:var(--grisF);outline:none;cursor:pointer;" onchange="cambiarEstado('${p.id}',this.value,this)">
+          <option value="">Cambiar estado...</option>
+          <option value="Pagado">Pagado</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Cancelado">Cancelado</option>
         </select>
         <div style="display:flex;gap:.3rem">
           <input type="text" placeholder="Guía de envío" value="${p.numero_guia||''}"
-            style="font-size:.7rem;padding:.3rem .5rem;border:1px solid var(--grisCl);width:110px;font-family:inherit"
+            style="flex:1;font-size:.7rem;padding:.4rem .6rem;border:1px solid var(--grisCl);font-family:inherit;min-width:0;outline:none;"
             id="guia-${p.id}">
           <button onclick="guardarGuia('${p.id}')"
-            style="font-size:.7rem;padding:.3rem .5rem;background:var(--negro);color:var(--blanco);border:none;cursor:pointer;font-family:inherit">✓</button>
+            style="font-size:.7rem;padding:.4rem .75rem;background:var(--negro);color:var(--blanco);border:none;cursor:pointer;font-family:inherit">✓</button>
         </div>
-        <div style="font-size:.65rem;color:var(--grisMed);margin-top:.3rem" id="empresa-${p.id}">
-          ${p.empresa_envio ? '📦 ' + p.empresa_envio : ''}
+        <div style="font-size:.65rem;color:var(--grisMed);margin-top:.4rem;text-transform:uppercase;letter-spacing:1px;" id="empresa-${p.id}">
+          ${p.empresa_envio ? p.empresa_envio : ''}
         </div>
       </td>
       <td>
         <textarea 
           id="nota-${p.id}" 
           placeholder="Añadir nota interna..." 
-          style="font-size:.7rem;padding:.4rem;border:1px solid var(--grisCl);width:100%;min-width:140px;resize:none;height:55px;font-family:inherit;color:var(--negro);margin-bottom:.3rem;background:var(--blanco);"
+          style="font-size:.7rem;padding:.5rem;border:1px solid var(--grisCl);width:100%;min-width:160px;resize:none;height:65px;font-family:inherit;color:var(--negro);margin-bottom:.4rem;background:var(--blanco);outline:none;line-height:1.4;"
           >${p.nota_interna || ''}</textarea>
         <button onclick="guardarNota('${p.id}')" 
-          style="font-size:.65rem;padding:.3rem .6rem;background:var(--grisMed);color:var(--blanco);border:none;cursor:pointer;font-family:inherit;width:100%;transition:background .2s;" onmouseover="this.style.background='var(--negro)'" onmouseout="this.style.background='var(--grisMed)'">
+          style="font-size:.65rem;padding:.4rem .6rem;background:var(--grisMed);color:var(--blanco);border:none;cursor:pointer;font-family:inherit;width:100%;letter-spacing:1px;text-transform:uppercase;transition:background .2s;" onmouseover="this.style.background='var(--negro)'" onmouseout="this.style.background='var(--grisMed)'">
           Guardar nota
         </button>
       </td>
