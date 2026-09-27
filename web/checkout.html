@@ -212,6 +212,10 @@
             <label for="ck-tel">Teléfono / WhatsApp</label>
             <input id="ck-tel" type="tel" placeholder="+57 300 000 0000" autocomplete="tel">
           </div>
+          <div class="ck-field ck-field--optional">
+            <label for="ck-email">Correo electrónico</label>
+            <input id="ck-email" type="email" placeholder="para recibir confirmación" autocomplete="email">
+          </div>
           <div class="ck-field">
             <label for="ck-ciudad">Ciudad</label>
             <input id="ck-ciudad" type="text" placeholder="Bogotá, Medellín..." autocomplete="address-level2">
@@ -321,10 +325,10 @@
         }
       });
 
-      /* Confirm → WhatsApp (sync) + Supabase INSERT/stock (background) */
       document.getElementById('ck-confirm').addEventListener('click', () => {
         const nombre  = document.getElementById('ck-nombre').value.trim();
         const tel     = document.getElementById('ck-tel').value.trim();
+        const email   = document.getElementById('ck-email')?.value.trim() || '';
         const ciudad  = document.getElementById('ck-ciudad').value.trim();
         const dir     = document.getElementById('ck-dir').value.trim();
         const notas   = document.getElementById('ck-notas').value.trim();
@@ -337,9 +341,15 @@
 
         const finalTotal = t * (1 - discountPct / 100);
 
-        /* ── 1. Construir URL de WhatsApp ────────────────────────
-           Este bloque es 100% sincrónico → el navegador lo trata
-           como gesto directo del usuario y NO bloquea el popup.  */
+        /* ── 1. Guardar datos para gracias.html ────────────────── */
+        sessionStorage.setItem('yossico_ultimo_pedido', JSON.stringify({
+          nombre, tel, email, ciudad, items,
+          total: finalTotal,
+          codigo_descuento: dcode || null,
+          origen: 'whatsapp',
+        }));
+
+        /* ── 2. Construir URL de WhatsApp (sincrónico) ─────────── */
         let waMsg = 'Hola YOSSICO, quiero confirmar mi pedido:%0A%0A';
         items.forEach(i => {
           waMsg += `▸ ${i.name} | ${i.line || ''} | Talla ${i.size} | ×${i.qty} | ${fmtPrice(i.price * i.qty)}%0A`;
@@ -355,8 +365,7 @@
         /* Abrir WhatsApp de forma sincrónica — antes de cualquier await */
         window.open(`https://wa.me/${WA_NUMBER}?text=${waMsg}`, '_blank');
 
-        /* ── 2. Supabase en background (fire-and-forget) ─────────
-           No bloqueamos UI ni WhatsApp. Si falla, solo logueamos. */
+        /* ── 3. Supabase en background (fire-and-forget) ─────── */
         (async () => {
           try {
             const sb = window.supabase.createClient(
@@ -369,12 +378,13 @@
               color:  i.color || '',
               talla:  i.size,
               qty:    i.qty,
-              precio: i.price
+              price:  i.price
             }));
 
-            const { error: insertError } = await sb.from('pedidos').insert({
+            const { data: pedidoInsertado, error: insertError } = await sb.from('pedidos').insert({
               cliente_nombre:    nombre,
               cliente_telefono:  tel || null,
+              cliente_email:     email || null,
               cliente_ciudad:    ciudad,
               cliente_direccion: dir,
               items:             itemsForDb,
@@ -382,11 +392,17 @@
               estado:            'pendiente',
               codigo_descuento:  dcode || null,
               drop_numero:       'Drop 1'
-            });
+            }).select('id').single();
 
             if (insertError) {
               console.error('[checkout] INSERT pedido error:', insertError.message);
-              return;
+            } else {
+              /* Actualizar sessionStorage con el ID real del pedido */
+              try {
+                const stored = JSON.parse(sessionStorage.getItem('yossico_ultimo_pedido') || '{}');
+                stored.pedido_id = pedidoInsertado?.id;
+                sessionStorage.setItem('yossico_ultimo_pedido', JSON.stringify(stored));
+              } catch(_) {}
             }
 
             /* Decrementar stock */
@@ -396,20 +412,37 @@
               talla:  i.size,
               qty:    i.qty
             }));
-
             const { error: rpcError } = await sb.rpc('decrementar_stock', { items: stockItems });
             if (rpcError) console.warn('[checkout] decrementar_stock:', rpcError.message);
 
-            /* Marcar código de descuento como usado (RPC con SECURITY DEFINER para bypassear RLS) */
+            /* Marcar código de descuento como usado */
             if (dcode) {
               const { error: usedError } = await sb.rpc('marcar_descuento_usado', { codigo: dcode });
               if (usedError) console.warn('[checkout] mark used error:', usedError.message);
+            }
+
+            /* Email de confirmación (solo si hay email) */
+            if (email) {
+              fetch('https://mgzevtcipwfpqgolmpwm.supabase.co/functions/v1/email-confirmacion-pedido', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  pedidoId: pedidoInsertado?.id,
+                  nombre, email, tel, ciudad,
+                  items: itemsForDb,
+                  total: finalTotal,
+                  codigo_descuento: dcode || null,
+                })
+              }).catch(err => console.warn('[checkout] email-confirmacion:', err));
             }
 
           } catch (e) {
             console.error('[checkout] background error:', e);
           }
         })();
+
+        /* ── 4. Redirigir a gracias.html ──────────────────────── */
+        setTimeout(() => { window.location.href = 'gracias.html'; }, 800);
       });
     }
 
