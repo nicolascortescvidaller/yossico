@@ -863,7 +863,13 @@ function renderPedidos(pedidos) {
             style="font-size:.7rem;padding:.4rem .75rem;background:var(--negro);color:var(--blanco);border:none;cursor:pointer;font-family:inherit">✓</button>
         </div>
         <div style="font-size:.65rem;color:var(--grisMed);margin-top:.4rem;text-transform:uppercase;letter-spacing:1px;" id="empresa-${p.id}">
-          ${p.empresa_envio ? p.empresa_envio : ''}
+          ${p.empresa_envio ? `<span style="display:block;margin-bottom:0.3rem">📦 ${p.empresa_envio}</span>` : ''}
+          ${p.numero_guia ? `
+            <div style="display:flex; gap:0.3rem;">
+              <button onclick="rastrearGuia('${p.empresa_envio}','${p.numero_guia}')" style="flex:1; background:#f4f4f4;border:1px solid #ddd;padding:0.25rem;font-size:0.6rem;cursor:pointer;border-radius:2px;">📍 Rastrear</button>
+              <button onclick="enviarGuiaWA('${p.id}')" style="flex:1; background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;padding:0.25rem;font-size:0.6rem;cursor:pointer;border-radius:2px;">💬 Notificar</button>
+            </div>
+          ` : ''}
         </div>
       </td>
       <td>
@@ -938,6 +944,37 @@ function imprimirRotulo(id) {
     </body></html>
   `);
   v.document.close();
+}
+
+function rastrearGuia(empresa, guia) {
+  if (!guia) return;
+  const emp = (empresa || '').toLowerCase();
+  if (emp.includes('coordinadora')) {
+    window.open(`https://www.coordinadora.com/rastreo/rastreo-de-guias/detalle-de-la-guia/?guia=${guia}`, '_blank');
+  } else if (emp.includes('servientrega')) {
+    window.open(`https://www.servientrega.com/wps/portal/rastreo-envio`, '_blank'); // Requiere input manual usualmente
+  } else if (emp.includes('interrapidisimo')) {
+    window.open(`https://www.interrapidisimo.com/sigue-tu-envio/?guia=${guia}`, '_blank');
+  } else {
+    mostrarToast("No se reconoce la URL de la empresa. Copia la guía manualmente.", "warn");
+  }
+}
+
+function enviarGuiaWA(id) {
+  const p = todosPedidos.find(x => x.id === id);
+  if(!p || !p.cliente_telefono || !p.numero_guia) return;
+  
+  let tel = p.cliente_telefono.replace(/\D/g,'');
+  if(!tel.startsWith('57') && tel.length === 10) tel = '57' + tel;
+  
+  const nombreCorto = (p.cliente_nombre || 'Hermosa').split(' ')[0];
+  const urlRastreo = (p.empresa_envio||'').toLowerCase().includes('coordinadora') 
+    ? `https://www.coordinadora.com/rastreo/rastreo-de-guias/detalle-de-la-guia/?guia=${p.numero_guia}`
+    : 'en la página de ' + p.empresa_envio;
+
+  const mensaje = `Hola ${nombreCorto} ✨%0A%0A¡Tu pedido de YOSSICO ya va en camino! 🚀%0A%0A📦 Transportadora: *${p.empresa_envio || 'Nuestra transportadora'}*%0A🔖 Número de Guía: *${p.numero_guia}*%0A%0APuedes rastrearlo aquí:%0A${urlRastreo}%0A%0A¡Gracias por tu compra!`;
+  
+  window.open(`https://wa.me/${tel}?text=${mensaje}`, '_blank');
 }
 
 function recuperarVenta(id) {
