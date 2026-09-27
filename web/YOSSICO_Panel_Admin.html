@@ -203,6 +203,8 @@
     <button class="tab-btn" onclick="cambiarTab('pos',this)">🛒 Venta Manual</button>
     <button class="tab-btn" onclick="cambiarTab('suscriptoras',this)">💌 Suscriptoras</button>
     <button class="tab-btn" onclick="cambiarTab('stats',this)">📊 Estadísticas</button>
+    <button class="tab-btn" onclick="cambiarTab('descuentos',this)">🏷️ Descuentos</button>
+    <button class="tab-btn" onclick="cambiarTab('clientes',this)">👥 Clientes</button>
   </div>
 
   <div class="main">
@@ -430,6 +432,90 @@
 
     </div><!-- /tab-stats -->
 
+    <!-- TAB DESCUENTOS -->
+    <div id="tab-descuentos" class="tab-content">
+      <div class="stats-row">
+        <!-- Columna Izquierda: Formulario -->
+        <div class="stats-card">
+          <div class="stats-card__title">Crear Nuevo Código</div>
+          <div class="form-grid" style="margin-top:1rem">
+            <div>
+              <label>Beneficiario (Nombre/Campaña)</label>
+              <input type="text" id="desc-nombre" class="input-form" placeholder="Ej: Maria Lopez o InfluencerX">
+            </div>
+            <div>
+              <label>Porcentaje (%)</label>
+              <input type="number" id="desc-pct" class="input-form" value="10" min="5" max="50">
+            </div>
+            <div>
+              <label>Código personalizado (Opcional)</label>
+              <input type="text" id="desc-codigo" class="input-form" placeholder="Ej: MARIA10 (Vacío = automático)" style="text-transform:uppercase">
+            </div>
+          </div>
+          <button class="btn btn-negro mt1" onclick="crearDescuentoManual()">Crear código →</button>
+          
+          <div id="desc-resultado" style="display:none;margin-top:1rem;padding:1rem;background:var(--grisF);border:1px solid var(--grisCl);text-align:center">
+            <div style="font-size:.7rem;color:var(--grisMed);text-transform:uppercase;letter-spacing:2px;margin-bottom:.5rem">Código Generado</div>
+            <div id="desc-codigo-texto" style="font-family:monospace;font-size:1.2rem;letter-spacing:3px;font-weight:600;color:var(--negro)"></div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Lista -->
+        <div class="stats-card stats-card--lg">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <div class="stats-card__title" style="margin:0">Códigos Activos & Usados</div>
+            <div class="filtros-bar" style="margin:0">
+              <select id="filtro-desc-estado" onchange="renderDescuentosLista()">
+                <option value="todos">Todos los códigos</option>
+                <option value="disponibles">Disponibles</option>
+                <option value="usados">Usados</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-container" style="max-height:400px;overflow-y:auto">
+            <table class="table">
+              <thead><tr><th>Beneficiario</th><th>Código</th><th>Estado</th><th>Acción</th></tr></thead>
+              <tbody id="tabla-descuentos">
+                <!-- Rellenado por JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-descuentos -->
+
+    <!-- TAB CLIENTES -->
+    <div id="tab-clientes" class="tab-content">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.5rem">
+        <div>
+          <div class="section-title" style="margin-bottom:0">Base de Clientes (CRM)</div>
+          <div style="font-size:.7rem;color:var(--grisMed);margin-top:.4rem" id="clientes-resumen">Cargando...</div>
+        </div>
+        <div class="filtros-bar" style="margin:0">
+          <input type="text" id="filtro-cliente-buscar" placeholder="🔍 Buscar nombre/tel..." oninput="filtrarClientes()" style="width:200px">
+          <button class="btn btn-gris btn-sm" onclick="cargarClientes()">↻ Actualizar</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Contacto</th>
+              <th>Ciudad</th>
+              <th>Pedidos</th>
+              <th>Última Compra</th>
+              <th style="min-width:200px">Total Gastado (COP)</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-clientes">
+            <tr><td colspan="6" class="loading">Cargando clientes...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /tab-clientes -->
+
   </div>
 </div>
 
@@ -580,6 +666,17 @@ function renderPedidos(pedidos) {
         </div>
         <div style="font-size:.65rem;color:var(--grisMed);margin-top:.2rem" id="empresa-${p.id}">
           ${p.empresa_envio ? '📦 ' + p.empresa_envio : ''}
+        </div>
+        <div style="margin-top:.4rem">
+          <textarea 
+            id="nota-${p.id}" 
+            placeholder="Nota interna..." 
+            style="font-size:.65rem;padding:.3rem;border:1px solid var(--grisCl);width:100%;resize:none;height:40px;font-family:inherit;color:var(--negro);"
+            >${p.nota_interna || ''}</textarea>
+          <button onclick="guardarNota('${p.id}')" 
+            style="font-size:.6rem;padding:.15rem .5rem;background:var(--grisMed);color:var(--blanco);border:none;cursor:pointer;font-family:inherit;margin-top:.2rem">
+            Guardar nota
+          </button>
         </div>
       </td>
     </tr>`;
@@ -932,11 +1029,13 @@ const _cambiarTabOrig = cambiarTab;
 function cambiarTab(tab, btn) {
   _cambiarTabOrig(tab, btn);
   if (tab === 'stats') {
-    if (todasSubs.length === 0) {
-      cargarSuscriptoras().then(() => renderStats());
-    } else {
-      renderStats();
-    }
+    if (todasSubs.length === 0) cargarSuscriptoras().then(() => renderStats());
+    else renderStats();
+  } else if (tab === 'descuentos') {
+    if (todasSubs.length === 0) cargarSuscriptoras().then(() => renderDescuentosLista());
+    else renderDescuentosLista();
+  } else if (tab === 'clientes') {
+    if (!window.todosClientes) cargarClientes();
   }
 }
 
@@ -1283,6 +1382,175 @@ async function guardarGuia(id) {
   if (el) el.textContent = '📦 ' + empresa;
 }
 
+// ── NOTAS INTERNAS
+async function guardarNota(id) {
+  const nota = document.getElementById('nota-' + id)?.value?.trim() || '';
+  const { error } = await sb.rpc('admin_actualizar_nota', { p_id: id, p_nota: nota, pin: adminPin });
+  if (error) mostrarToast('Error: ' + error.message, 'err');
+  else mostrarToast('Nota guardada ✓', 'ok');
+}
+
+// ── DESCUENTOS (CREAR Y LISTAR)
+async function crearDescuentoManual() {
+  const nombre = document.getElementById('desc-nombre').value.trim();
+  const pct = parseInt(document.getElementById('desc-pct').value) || 10;
+  let codigo = document.getElementById('desc-codigo').value.trim().toUpperCase();
+
+  if (!nombre) { mostrarToast('Ingresa un beneficiario', 'err'); return; }
+
+  // Generar código automático si no se ingresó uno
+  if (!codigo) {
+    const sufijo = Array.from({length:4}, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
+    codigo = `YOSSICO-PROMO-${sufijo}`;
+  }
+
+  // Verificar si ya existe el código
+  const existe = todasSubs.some(s => s.discount_code === codigo);
+  if (existe) { mostrarToast('Este código ya existe', 'err'); return; }
+
+  // Insertar en Supabase (asumiendo que discount_pct no existe, guardamos solo código)
+  // NOTA: Para bypassear RLS en inserción, normalmente anon puede insertar, pero si RLS está cerrado
+  // tendríamos que usar un RPC. Aquí probamos la inserción estándar porque subscribers permitía anon insert.
+  const { error } = await sb.from('subscribers').insert([{
+    name: nombre,
+    discount_code: codigo,
+    used: false
+  }]);
+
+  if (error) {
+    mostrarToast('Error al crear código: ' + error.message, 'err');
+    return;
+  }
+
+  // Éxito
+  document.getElementById('desc-nombre').value = '';
+  document.getElementById('desc-codigo').value = '';
+  document.getElementById('desc-resultado').style.display = 'block';
+  document.getElementById('desc-codigo-texto').textContent = codigo;
+  mostrarToast('Código creado', 'ok');
+
+  // Recargar la lista
+  await cargarSuscriptoras();
+  renderDescuentosLista();
+}
+
+function renderDescuentosLista() {
+  const filtro = document.getElementById('filtro-desc-estado')?.value || 'todos';
+  let filtrados = todasSubs.filter(s => s.discount_code); // Solo los que tengan código
+
+  if (filtro === 'disponibles') filtrados = filtrados.filter(s => !s.used);
+  if (filtro === 'usados') filtrados = filtrados.filter(s => s.used);
+
+  const tbody = document.getElementById('tabla-descuentos');
+  if (!tbody) return;
+
+  if (filtrados.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="loading">No hay códigos</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtrados.map(s => {
+    return `<tr>
+      <td>${s.name || '-'}</td>
+      <td><code style="font-weight:600">${s.discount_code}</code></td>
+      <td>
+        ${s.used 
+          ? '<span style="background:var(--grisCl);color:var(--grisMed);padding:2px 6px;border-radius:2px;font-size:.7rem">Usado</span>'
+          : '<span style="background:var(--verdeCl);color:var(--verde);padding:2px 6px;border-radius:2px;font-size:.7rem">Disponible</span>'
+        }
+      </td>
+      <td>
+        ${!s.used 
+          ? `<button class="btn btn-gris btn-sm" onclick="marcarDescuentoLista('${s.discount_code}')">Marcar Usado</button>`
+          : '-'
+        }
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function marcarDescuentoLista(codigo) {
+  if (!confirm(`¿Marcar ${codigo} como usado?`)) return;
+  const { error } = await sb.rpc('marcar_descuento_usado', { codigo });
+  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
+  
+  mostrarToast('Código marcado como usado', 'ok');
+  await cargarSuscriptoras();
+  renderDescuentosLista();
+}
+
+// ── CLIENTES (CRM)
+window.todosClientes = null;
+
+async function cargarClientes() {
+  const tbody = document.getElementById('tabla-clientes');
+  if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="loading">Cargando clientes...</td></tr>';
+  
+  const { data, error } = await sb.rpc('admin_get_clientes', { pin: adminPin });
+  if (error) {
+    console.error(error);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="loading" style="color:var(--rojo)">Error: ${error.message}</td></tr>`;
+    return;
+  }
+  
+  window.todosClientes = data || [];
+  
+  // Calcular resumen
+  const totalGasto = window.todosClientes.reduce((acc, c) => acc + parseFloat(c.total_gastado || 0), 0);
+  const gastoPromedio = window.todosClientes.length ? totalGasto / window.todosClientes.length : 0;
+  
+  document.getElementById('clientes-resumen').textContent = 
+    `${window.todosClientes.length} clientes · Gasto promedio: ${fCOP(gastoPromedio)}`;
+
+  renderClientes();
+}
+
+function filtrarClientes() { renderClientes(); }
+
+function renderClientes() {
+  const query = (document.getElementById('filtro-cliente-buscar')?.value || '').toLowerCase();
+  
+  const filtrados = (window.todosClientes || []).filter(c => {
+    return (c.cliente_nombre || '').toLowerCase().includes(query) ||
+           (c.cliente_telefono || '').includes(query);
+  });
+
+  const tbody = document.getElementById('tabla-clientes');
+  if (!tbody) return;
+
+  if (filtrados.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="loading">Sin clientes encontrados</td></tr>';
+    return;
+  }
+
+  // Max gasto para la barra
+  const maxGastado = filtrados.length ? Math.max(...filtrados.map(c => parseFloat(c.total_gastado || 0))) : 1;
+
+  tbody.innerHTML = filtrados.map(c => {
+    const fecha = c.ultimo_pedido ? new Date(c.ultimo_pedido).toLocaleDateString("es-CO") : '-';
+    const gastado = parseFloat(c.total_gastado || 0);
+    const pct = Math.max(1, Math.round((gastado / maxGastado) * 100));
+
+    return `<tr>
+      <td><strong>${c.cliente_nombre || 'Sin nombre'}</strong></td>
+      <td style="font-size:.75rem">
+        ${c.cliente_telefono || ''}<br>
+        <span style="color:var(--grisMed)">${c.cliente_email || ''}</span>
+      </td>
+      <td style="font-size:.75rem">${c.ciudades || '-'}</td>
+      <td>${c.total_pedidos}</td>
+      <td style="font-size:.75rem">${fecha}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <div style="flex:1;background:var(--grisCl);height:4px;border-radius:2px">
+            <div style="background:var(--negro);height:100%;border-radius:2px;width:${pct}%"></div>
+          </div>
+          <strong style="font-size:.8rem">${fCOP(gastado)}</strong>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
 </script>
 </body>
 </html>
