@@ -956,6 +956,11 @@ function cambiarTab(tab, btn) {
     else renderDescuentosLista();
   } else if (tab === 'clientes') {
     if (!window.todosClientes) cargarClientes();
+  } else if (tab === 'finanzas') {
+    // Bug Fix #1: Cargar gastos y renderizar finanzas al entrar en la pestaña
+    cargarGastos();
+  } else if (tab === 'envios') {
+    renderEnvios();
   }
 }
 
@@ -1047,7 +1052,8 @@ function renderEnvios() {
   const filtro = document.getElementById("filtro-envios-estado").value;
   
   // Filtrar solo los que ya están Pagados (los cancelados o pendientes no se envían)
-  let base = todosPedidos.filter(p => p.estado === 'Pagado');
+  // Bug Fix #4: usar esPagado() para ser case-insensitive y consistente con el resto del panel
+  let base = todosPedidos.filter(p => esPagado(p.estado));
   
   if (filtro === 'pendientes') base = base.filter(p => !p.numero_guia);
   if (filtro === 'enviados') base = base.filter(p => p.numero_guia);
@@ -1690,13 +1696,11 @@ function renderFinanzas(pedidos) {
     });
   });
 
-  // Filtrar Gastos Fijos (OPEX) según la fecha de los pedidos
-  const dias = parseInt(document.getElementById('stats-periodo')?.value || '14');
-  const ahora = new Date();
-  const desde = dias === 0 ? new Date(0) : new Date(ahora.getTime() - dias * 86400000);
+  // Bug Fix #2: Los gastos operativos en Finanzas son SIEMPRE acumulados totales,
+  // no filtrados por el período de la pestaña de Estadísticas.
+  // todosGastos ya viene cargado con todos los registros desde cargarGastos().
+  const totalOpex = todosGastos.reduce((acc, g) => acc + parseFloat(g.monto || 0), 0);
   
-  const gastosFiltrados = todosGastos.filter(g => new Date(g.fecha) >= desde);
-  const totalOpex = gastosFiltrados.reduce((acc, g) => acc + parseFloat(g.monto), 0);
   const costosTotales = costosTotalesProd + totalOpex;
 
   const utilidadNeta = ingresosBrutos - costosTotales;
@@ -1713,16 +1717,34 @@ function renderFinanzas(pedidos) {
     return 250000; // fallback
   };
 
+  // Bug Fix #3: Calcular precio real promedio por prenda desde los pedidos históricos
+  const preciosReales = {};
+  todosPedidos.forEach(p => {
+    (p.items || []).forEach(item => {
+      if (!preciosReales[item.nombre]) preciosReales[item.nombre] = { suma: 0, q: 0 };
+      if (item.price && parseFloat(item.price) > 0) {
+        preciosReales[item.nombre].suma += parseFloat(item.price);
+        preciosReales[item.nombre].q += 1;
+      }
+    });
+  });
+  const getPrecioReal = (nombre) => {
+    const r = preciosReales[nombre];
+    if (r && r.q > 0) return r.suma / r.q; // promedio de ventas reales
+    return preciosEstimados(nombre); // fallback al hardcoded si no hay ventas
+  };
+
   const modelosUnicos = {};
   stockData.forEach(s => {
     if (!modelosUnicos[s.nombre]) {
-      const pVenta = preciosEstimados(s.nombre);
+      const pVenta = getPrecioReal(s.nombre);
       const cProd = parseFloat(s.costo_produccion || 0);
       modelosUnicos[s.nombre] = { 
         precio: pVenta, 
         costo: cProd, 
         utilidad: pVenta - cProd,
-        margen: cProd > 0 ? ((pVenta - cProd) / pVenta) : (pVenta > 0 ? 1 : 0)
+        margen: pVenta > 0 ? ((pVenta - cProd) / pVenta) : 0,
+        fuentePrecio: preciosReales[s.nombre]?.q > 0 ? 'real' : 'estimado'
       };
     }
   });
@@ -1821,16 +1843,21 @@ function renderFinanzas(pedidos) {
 
   // --- Lógica Tabla Unit Economics (Catálogo) ---
   const tCat = document.getElementById('tabla-finanzas-catalogo');
-  if(!Object.keys(modelosUnicos).length) tCat.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--grisMed)">Catálogo vacío</td></tr>';
+  if(!Object.keys(modelosUnicos).length) tCat.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--grisMed)">Sin prendas en catálogo. Primero agrega productos en la pestaña Inventario y asígnales un costo de producción.</td></tr>';
   else {
     tCat.innerHTML = Object.entries(modelosUnicos).map(([nombre, m]) => {
       const mPct = (m.margen * 100).toFixed(1);
+      const mColor = m.margen >= 0.5 ? '#2e7d32' : m.margen >= 0.3 ? '#e65100' : '#c62828';
+      const mBg = m.margen >= 0.5 ? '#e0f2e9' : m.margen >= 0.3 ? '#fff3e0' : '#ffebee';
+      const precioLabel = m.fuentePrecio === 'real' 
+        ? `${fCOP(m.precio)} <span style="font-size:0.65rem;color:#2e7d32">(real)</span>` 
+        : `${fCOP(m.precio)} <span style="font-size:0.65rem;color:#999">(est.)</span>`;
       return `<tr>
         <td><strong>${nombre}</strong></td>
-        <td style="text-align:right">${fCOP(m.precio)}</td>
+        <td style="text-align:right">${precioLabel}</td>
         <td style="text-align:right;color:var(--naranja)">${fCOP(m.costo)}</td>
         <td style="text-align:right;color:var(--verde);font-weight:600">${fCOP(m.utilidad)}</td>
-        <td style="text-align:right;font-size:0.75rem;"><span style="background:#e0f2e9;color:#2e7d32;padding:0.2rem 0.4rem;border-radius:4px;">${mPct}%</span></td>
+        <td style="text-align:right;font-size:0.75rem;"><span style="background:${mBg};color:${mColor};padding:0.2rem 0.4rem;border-radius:4px;font-weight:600">${mPct}%</span></td>
       </tr>`;
     }).join('');
   }
