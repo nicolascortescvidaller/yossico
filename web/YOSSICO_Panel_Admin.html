@@ -437,8 +437,9 @@
       </div>
 
       <!-- KPI Cards -->
-      <div class="resumen-grid">
+      <div class="resumen-grid" style="grid-template-columns: repeat(5, 1fr)">
         <div class="resumen-card verde"><div class="rlabel">Ingresos período</div><div class="rvalor" id="sk-ingresos">—</div><div class="rsub" id="sk-ingresos-sub"></div></div>
+        <div class="resumen-card verde"><div class="rlabel">Utilidad Estimada</div><div class="rvalor" id="sk-utilidad">—</div><div class="rsub">ingresos - costos</div></div>
         <div class="resumen-card azul"><div class="rlabel">Pedidos período</div><div class="rvalor" id="sk-pedidos">—</div><div class="rsub" id="sk-pedidos-sub"></div></div>
         <div class="resumen-card naranja"><div class="rlabel">Ticket promedio</div><div class="rvalor" id="sk-ticket">—</div><div class="rsub">por pedido pagado</div></div>
         <div class="resumen-card rojo"><div class="rlabel">Suscriptoras</div><div class="rvalor" id="sk-subs">—</div><div class="rsub">inscritas al drop</div></div>
@@ -795,17 +796,25 @@ function exportarCSV() {
     const qtyTotal = (p.items||[]).reduce((s,i)=>s+(i.qty||1), 0);
     const prendas = (p.items||[]).map(i=>`${i.nombre||""} T${i.talla||""} x${i.qty||1}`).join(" | ");
     
-    // Estimación contable básica si no hay campo formal
+    // Estimación contable básica
     const total = parseFloat(p.total) || 0;
-    
+    let costoEstimado = 0;
+    (p.items || []).forEach(item => {
+      const prodEnStock = stockData.find(s => s.nombre === item.nombre && s.color === item.color);
+      if (prodEnStock && prodEnStock.costo_produccion) costoEstimado += parseFloat(prodEnStock.costo_produccion) * (item.qty || 1);
+    });
+
     return [
       p.id, p.created_at, p.cliente_nombre, p.cliente_telefono, p.cliente_email, p.cliente_ciudad, p.cliente_direccion,
-      qtyTotal, prendas, "", "", "", p.codigo_descuento, total,
+      qtyTotal, prendas, costoEstimado, total + (p.codigo_descuento ? 0 : 0), "", p.codigo_descuento, total,
       p.metodo_pago || "Wompi", p.wompi_id, p.wompi_estado || p.estado, p.estado,
       p.empresa_envio, p.numero_guia, p.nota_interna
     ].map(v=>`"${String(v||"").replace(/"/g,'""')}"`);
   });
-  descargarCSV([cols,...rows].map(r=>r.join(",")).join("\n"), `yossico-contabilidad-${dHoy()}.csv`);
+  
+  // Agregar BOM para Excel y separar con punto y coma (;)
+  const csvContent = "\uFEFF" + [cols,...rows].map(r=>r.join(";")).join("\n");
+  descargarCSV(csvContent, `yossico-contabilidad-${dHoy()}.csv`);
   mostrarToast("Reporte contable exportado ✓","ok");
 }
 
@@ -1179,8 +1188,20 @@ function renderKPIs(pedidos) {
   const total   = pagados.reduce((s, p) => s + parseFloat(p.total || 0), 0);
   const ticket  = pagados.length ? total / pagados.length : 0;
 
+  // Calcular Costos Estimados basados en stockData actual (costo_produccion)
+  let costosTotales = 0;
+  pagados.forEach(p => {
+    (p.items || []).forEach(item => {
+      const prodEnStock = stockData.find(s => s.nombre === item.nombre && s.color === item.color);
+      const costoUnitario = prodEnStock && prodEnStock.costo_produccion ? parseFloat(prodEnStock.costo_produccion) : 0;
+      costosTotales += costoUnitario * (item.qty || 1);
+    });
+  });
+  const utilidad = total - costosTotales;
+
   document.getElementById('sk-ingresos').textContent     = fCOP(total);
   document.getElementById('sk-ingresos-sub').textContent = `${pagados.length} pedidos pagados`;
+  document.getElementById('sk-utilidad').textContent     = fCOP(utilidad);
   document.getElementById('sk-pedidos').textContent      = pedidos.length;
   document.getElementById('sk-pedidos-sub').textContent  = `${pagados.length} pagados · ${pedidos.filter(p=>esPendiente(p.estado)).length} pendientes`;
   document.getElementById('sk-ticket').textContent       = fCOP(ticket);
@@ -1511,33 +1532,45 @@ async function guardarNota(id) {
 // ── DESCUENTOS (CREAR Y LISTAR)
 async function crearDescuentoManual() {
   const nombre = document.getElementById('desc-nombre').value.trim();
-  const pct = parseInt(document.getElementById('desc-pct').value) || 10;
+  const tipo = document.getElementById('desc-tipo').value;
+  const valor = parseFloat(document.getElementById('desc-pct').value) || 0;
   let codigo = document.getElementById('desc-codigo').value.trim().toUpperCase();
 
   if (!nombre) { mostrarToast('Ingresa un beneficiario', 'err'); return; }
 
   // Generar código automático si no se ingresó uno
   if (!codigo) {
+    const prefijo = tipo === 'envio' ? 'ENVIO' : tipo === 'efectivo' ? 'EFEC' : 'PROMO';
     const sufijo = Array.from({length:4}, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
-    codigo = `YOSSICO-PROMO-${sufijo}`;
+    codigo = `YOSSICO-${prefijo}-${sufijo}`;
   }
 
   // Verificar si ya existe el código
   const existe = todasSubs.some(s => s.discount_code === codigo);
   if (existe) { mostrarToast('Este código ya existe', 'err'); return; }
 
-  // Insertar en Supabase (asumiendo que discount_pct no existe, guardamos solo código)
-  // NOTA: Para bypassear RLS en inserción, normalmente anon puede insertar, pero si RLS está cerrado
-  // tendríamos que usar un RPC. Aquí probamos la inserción estándar porque subscribers permitía anon insert.
-  const { error } = await sb.from('subscribers').insert([{
+  // Insertar en Supabase
+  const insertData = {
     name: nombre,
     discount_code: codigo,
-    used: false
-  }]);
+    used: false,
+    discount_type: tipo,
+    discount_val: valor
+  };
+
+  const { error } = await sb.from('subscribers').insert([insertData]);
 
   if (error) {
-    mostrarToast('Error al crear código: ' + error.message, 'err');
-    return;
+    // Fallback por si no han corrido la migración SQL de discount_type/val
+    if (error.message.includes('discount_type') || error.message.includes('column')) {
+      const { error: err2 } = await sb.from('subscribers').insert([{
+        name: nombre, discount_code: codigo, used: false
+      }]);
+      if (err2) { mostrarToast('Error al crear código: ' + err2.message, 'err'); return; }
+      mostrarToast('Código básico creado (Falta SQL para tipos avanzados)', 'warn');
+    } else {
+      mostrarToast('Error al crear código: ' + error.message, 'err'); return;
+    }
   }
 
   // Éxito
@@ -1545,7 +1578,7 @@ async function crearDescuentoManual() {
   document.getElementById('desc-codigo').value = '';
   document.getElementById('desc-resultado').style.display = 'block';
   document.getElementById('desc-codigo-texto').textContent = codigo;
-  mostrarToast('Código creado', 'ok');
+  if (!error) mostrarToast('Código creado', 'ok');
 
   // Recargar la lista
   await cargarSuscriptoras();

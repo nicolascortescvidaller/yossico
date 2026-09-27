@@ -333,10 +333,42 @@
           if (data.usado) {
             msg.style.color = '#c0392b'; msg.textContent = 'Este código ya fue utilizado.'; msg.style.display = 'block'; return;
           }
-          discountPct = 10;
-          const newTotal = t * (1 - discountPct / 100);
-          document.getElementById('ck-total-display').textContent = fmtPrice(newTotal) + ' (−10%)';
-          msg.style.color = '#27ae60'; msg.textContent = '¡Código aplicado! 10% de descuento.'; msg.style.display = 'block';
+          
+          const dType = data.tipo || 'porcentaje';
+          const dVal = parseFloat(data.valor) || 10;
+          
+          let newTotal = t;
+          let labelDesc = '';
+          
+          if (dType === 'porcentaje') {
+            discountPct = dVal;
+            newTotal = t * (1 - (discountPct / 100));
+            labelDesc = `−${discountPct}%`;
+          } else if (dType === 'monto') {
+            newTotal = Math.max(0, t - dVal);
+            labelDesc = `−${fmtPrice(dVal)}`;
+          } else if (dType === 'envio') {
+            newTotal = t; // Asumimos que el total ya es de las prendas, el envío gratis se refleja en el resumen
+            labelDesc = `Envío Gratis`;
+          } else if (dType === 'efectivo') {
+            newTotal = t; // El pago en efectivo puede ser solo informativo o aplicar un descuento (ej 5%) si así se configuró en el panel
+            if (dVal > 0 && dVal <= 100) {
+              newTotal = t * (1 - (dVal / 100));
+              labelDesc = `−${dVal}% (Pago en Efectivo)`;
+            } else {
+              labelDesc = `Válido para Pago Efectivo`;
+            }
+          }
+
+          document.getElementById('ck-total-display').textContent = fmtPrice(newTotal) + ` (${labelDesc})`;
+          msg.style.color = '#27ae60'; 
+          msg.textContent = `¡Código aplicado! ${labelDesc}`; 
+          msg.style.display = 'block';
+          
+          // Actualizamos variables globales para el momento de pagar
+          finalTotal = newTotal;
+          discountPct = dType === 'porcentaje' ? dVal : 0; // Para el mensaje WA
+          
         } catch (err) {
           console.warn('Discount validation error:', err);
           msg.style.color = '#c0392b'; msg.textContent = 'Error al validar. Intenta de nuevo.'; msg.style.display = 'block';
@@ -372,7 +404,7 @@
         items.forEach(i => {
           waMsg += `▸ ${i.name} | ${i.line || ''} | Talla ${i.size} | ×${i.qty} | ${fmtPrice(i.price * i.qty)}%0A`;
         });
-        if (discountPct) waMsg += `%0ACódigo: ${dcode} (−${discountPct}%)%0A`;
+        if (dcode) waMsg += `%0ACódigo: ${dcode}%0A`;
         waMsg += `%0A*Total: ${fmtPrice(finalTotal)}*%0A`;
         waMsg += `%0ANombre: ${nombre}`;
         if (tel)   waMsg += `%0ATeléfono: ${tel}`;
