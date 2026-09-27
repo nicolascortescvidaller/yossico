@@ -571,7 +571,18 @@ function cambiarTab(tab, btn) {
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.getElementById("tab-" + tab).classList.add("active");
   btn.classList.add("active");
-  if (tab === "suscriptoras" && todasSubs.length === 0) cargarSuscriptoras();
+  
+  if (tab === "suscriptoras" && todasSubs.length === 0) {
+    cargarSuscriptoras();
+  } else if (tab === 'stats') {
+    if (todasSubs.length === 0) cargarSuscriptoras().then(() => renderStats());
+    else renderStats();
+  } else if (tab === 'descuentos') {
+    if (todasSubs.length === 0) cargarSuscriptoras().then(() => renderDescuentosLista());
+    else renderDescuentosLista();
+  } else if (tab === 'clientes') {
+    if (!window.todosClientes) cargarClientes();
+  }
 }
 
 // ── LOGIN
@@ -1041,20 +1052,7 @@ const COLORES = {
   gris:    '#E8E6E2',
 };
 
-// Hook en cambiarTab para activar stats
-const _cambiarTabOrig = cambiarTab;
-function cambiarTab(tab, btn) {
-  _cambiarTabOrig(tab, btn);
-  if (tab === 'stats') {
-    if (todasSubs.length === 0) cargarSuscriptoras().then(() => renderStats());
-    else renderStats();
-  } else if (tab === 'descuentos') {
-    if (todasSubs.length === 0) cargarSuscriptoras().then(() => renderDescuentosLista());
-    else renderDescuentosLista();
-  } else if (tab === 'clientes') {
-    if (!window.todosClientes) cargarClientes();
-  }
-}
+// Hook en cambiarTab para activar stats (movido arriba)
 
 function renderStats() {
   const dias = parseInt(document.getElementById('stats-periodo')?.value || '14');
