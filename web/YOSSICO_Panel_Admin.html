@@ -591,15 +591,29 @@
   </div><!-- /admin-wrapper -->
 </div>
 
-<!-- MODAL EDITAR STOCK -->
+<!-- MODAL EDITAR PRODUCTO -->
 <div class="modal-overlay" id="modal-stock">
   <div class="modal">
-    <h3 id="modal-titulo">Editar stock</h3>
+    <h3 id="modal-titulo">Configurar Producto</h3>
     <div style="font-size:.75rem;color:var(--grisMed);margin-bottom:1.5rem" id="modal-sub"></div>
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1.5rem">
+      <div>
+        <label style="font-size:.7rem;color:var(--grisMed);display:block;margin-bottom:.3rem">Costo Producción ($)</label>
+        <input type="number" id="modal-costo" class="input-form" min="0" style="width:100%;font-size:.7rem;padding:.4rem">
+      </div>
+      <div>
+        <label style="font-size:.7rem;color:var(--grisMed);display:block;margin-bottom:.3rem">URL de Imagen</label>
+        <input type="text" id="modal-img" class="input-form" placeholder="https://..." style="width:100%;font-size:.7rem;padding:.4rem">
+      </div>
+    </div>
+
+    <div style="font-size:.75rem;color:var(--negro);margin-bottom:.5rem;font-weight:600">Stock por talla</div>
     <div class="modal-row"><label>S</label><input type="number" id="modal-s" min="0"></div>
     <div class="modal-row"><label>M</label><input type="number" id="modal-m" min="0"></div>
     <div class="modal-row"><label>L</label><input type="number" id="modal-l" min="0"></div>
-    <div class="modal-actions">
+    
+    <div class="modal-actions" style="margin-top:1.5rem">
       <button class="btn btn-gris" onclick="cerrarModalStock()">Cancelar</button>
       <button class="btn btn-negro" onclick="guardarStock()">Guardar cambios</button>
     </div>
@@ -776,14 +790,23 @@ async function cambiarEstado(id, nuevoEstado, sel) {
 
 function exportarCSV() {
   if (!todosPedidos.length) { mostrarToast("Sin pedidos para exportar","warn"); return; }
-  const cols = ["ID","Fecha","Cliente","Teléfono","Ciudad","Prendas","Total","Estado","Descuento"];
+  const cols = ["ID","Fecha","Cliente","Teléfono","Email","Ciudad","Dirección","Prendas Totales","Descripción Prendas","Costo Estimado","Subtotal","Descuento","Código Descuento","Total Pagado","Pasarela / Método","ID Transacción","Estado Pago","Estado Logístico","Empresa Envío","Número Guía","Notas Internas"];
   const rows = todosPedidos.map(p => {
+    const qtyTotal = (p.items||[]).reduce((s,i)=>s+(i.qty||1), 0);
     const prendas = (p.items||[]).map(i=>`${i.nombre||""} T${i.talla||""} x${i.qty||1}`).join(" | ");
-    return [p.id,p.created_at,p.cliente_nombre,p.cliente_telefono,p.cliente_ciudad,prendas,p.total,p.estado,p.codigo_descuento||""]
-      .map(v=>`"${String(v||"").replace(/"/g,'""')}"`);
+    
+    // Estimación contable básica si no hay campo formal
+    const total = parseFloat(p.total) || 0;
+    
+    return [
+      p.id, p.created_at, p.cliente_nombre, p.cliente_telefono, p.cliente_email, p.cliente_ciudad, p.cliente_direccion,
+      qtyTotal, prendas, "", "", "", p.codigo_descuento, total,
+      p.metodo_pago || "Wompi", p.wompi_id, p.wompi_estado || p.estado, p.estado,
+      p.empresa_envio, p.numero_guia, p.nota_interna
+    ].map(v=>`"${String(v||"").replace(/"/g,'""')}"`);
   });
-  descargarCSV([cols,...rows].map(r=>r.join(",")).join("\n"), `yossico-pedidos-${dHoy()}.csv`);
-  mostrarToast("CSV exportado ✓","ok");
+  descargarCSV([cols,...rows].map(r=>r.join(",")).join("\n"), `yossico-contabilidad-${dHoy()}.csv`);
+  mostrarToast("Reporte contable exportado ✓","ok");
 }
 
 // ── INVENTARIO
@@ -804,7 +827,14 @@ function renderStock() {
   const grupos = {};
   stockData.forEach(item => {
     const key = `${item.nombre}|${item.color}`;
-    if (!grupos[key]) grupos[key]={nombre:item.nombre,color:item.color,s:0,m:0,l:0,bajo:false};
+    if (!grupos[key]) grupos[key] = {
+      nombre: item.nombre,
+      color: item.color,
+      s: 0, m: 0, l: 0,
+      bajo: false,
+      costo: item.costo_produccion || 0,
+      img: item.imagen_url || ''
+    };
     if (item.talla==="S") grupos[key].s=item.stock;
     if (item.talla==="M") grupos[key].m=item.stock;
     if (item.talla==="L") grupos[key].l=item.stock;
@@ -813,11 +843,17 @@ function renderStock() {
   const badge=(n,t)=>{const c=n===0?"talla-cero":n<=2?"talla-bajo":"talla-ok";return`<div class="talla-badge ${c}">${t}<br><strong>${n}</strong></div>`;};
   grid.innerHTML = Object.values(grupos).map(g=>`
     <div class="stock-item${g.bajo?" agotando":""}">
-      <div class="stock-nombre"><strong>${g.nombre}</strong></div>
-      <div class="stock-color">${g.color}</div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start">
+        <div>
+          <div class="stock-nombre"><strong>${g.nombre}</strong></div>
+          <div class="stock-color">${g.color}</div>
+        </div>
+        ${g.img ? `<img src="${g.img}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid var(--grisCl)">` : ''}
+      </div>
       ${g.bajo?'<div style="font-size:.65rem;color:var(--naranja);margin-bottom:.4rem">⚠️ Stock crítico</div>':""}
+      <div style="font-size:.65rem; color:var(--grisMed); margin-bottom:.5rem">Costo unitario: ${fCOP(g.costo)}</div>
       <div class="stock-tallas">${badge(g.s,"S")}${badge(g.m,"M")}${badge(g.l,"L")}</div>
-      <button class="btn-editar-stock" onclick="abrirModal('${encodeURIComponent(g.nombre)}','${encodeURIComponent(g.color)}',${g.s},${g.m},${g.l})">✏ Editar stock</button>
+      <button class="btn-editar-stock" onclick="abrirModal('${encodeURIComponent(g.nombre)}','${encodeURIComponent(g.color)}',${g.s},${g.m},${g.l},${g.costo},'${encodeURIComponent(g.img)}')">✏ Configurar producto</button>
     </div>`).join("")||'<div class="loading">Sin productos</div>';
 }
 
@@ -831,14 +867,16 @@ function chkStockBajo() {
   } else al.classList.remove("visible");
 }
 
-function abrirModal(nEnc,cEnc,s,m,l) {
-  const nombre=decodeURIComponent(nEnc), color=decodeURIComponent(cEnc);
+function abrirModal(nEnc,cEnc,s,m,l,costo,imgEnc) {
+  const nombre=decodeURIComponent(nEnc), color=decodeURIComponent(cEnc), img = imgEnc ? decodeURIComponent(imgEnc) : '';
   stockEditTarget={nombre,color};
-  document.getElementById("modal-titulo").textContent=nombre;
-  document.getElementById("modal-sub").textContent=color;
+  document.getElementById("modal-titulo").textContent="Configurar Producto";
+  document.getElementById("modal-sub").textContent=nombre + " · " + color;
   document.getElementById("modal-s").value=s;
   document.getElementById("modal-m").value=m;
   document.getElementById("modal-l").value=l;
+  document.getElementById("modal-costo").value=costo||0;
+  document.getElementById("modal-img").value=img;
   document.getElementById("modal-stock").classList.add("visible");
 }
 function cerrarModalStock() { document.getElementById("modal-stock").classList.remove("visible"); stockEditTarget=null; }
@@ -848,13 +886,23 @@ async function guardarStock() {
   if (!stockEditTarget) return;
   const {nombre,color}=stockEditTarget;
   const vals={S:parseInt(document.getElementById("modal-s").value)||0,M:parseInt(document.getElementById("modal-m").value)||0,L:parseInt(document.getElementById("modal-l").value)||0};
+  const costo=parseInt(document.getElementById("modal-costo").value)||0;
+  const img=document.getElementById("modal-img").value.trim();
+  
   let err=0;
   for (const [talla,stock] of Object.entries(vals)) {
-    const {error}=await sb.from("productos").update({stock,updated_at:new Date().toISOString()}).eq("nombre",nombre).eq("color",color).eq("talla",talla);
-    if(error)err++;
+    // Intentar actualizar stock y metadatos. Si la columna costo_produccion no existe, dará error
+    const {error}=await sb.from("productos").update({stock, costo_produccion: costo, imagen_url: img, updated_at:new Date().toISOString()}).eq("nombre",nombre).eq("color",color).eq("talla",talla);
+    if(error) {
+      // Fallback si no existen las columnas de costo/img en la base de datos (por si no han ejecutado migraciones)
+      const {error: errFallback} = await sb.from("productos").update({stock, updated_at:new Date().toISOString()}).eq("nombre",nombre).eq("color",color).eq("talla",talla);
+      if(errFallback) err++;
+      else err = -1; // Flag para advertir de las columnas faltantes
+    }
   }
-  if(err) mostrarToast("Error parcial al guardar","warn");
-  else { mostrarToast("Stock actualizado ✓","ok"); cerrarModalStock(); cargarStock(); }
+  if(err > 0) mostrarToast("Error parcial al guardar","warn");
+  else if(err === -1) { mostrarToast("Stock actualizado. (Falta correr script SQL para guardar costo/imagen)","warn"); cerrarModalStock(); cargarStock(); }
+  else { mostrarToast("Producto actualizado ✓","ok"); cerrarModalStock(); cargarStock(); }
 }
 
 // ── POS
