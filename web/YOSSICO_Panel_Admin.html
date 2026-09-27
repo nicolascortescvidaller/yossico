@@ -534,6 +534,47 @@
             <tr><td colspan="5" class="loading">Cargando...</td></tr>
           </tbody>
         </table>
+
+        <!-- GASTOS OPERATIVOS (OPEX) -->
+        <div style="margin-top: 3rem; border-top: 1px solid var(--grisCl); padding-top: 2rem;">
+          <div class="section-title" style="margin-bottom:1rem;font-size:1rem">Gastos Operativos (Fijos / Publicidad / Empaques)</div>
+          <div style="display:grid; grid-template-columns: 1fr 2fr 1fr auto; gap: 1rem; align-items: end; margin-bottom: 2rem;">
+            <div>
+              <label style="font-size:0.7rem;color:var(--grisMed)">Categoría</label>
+              <select id="opex-categoria" class="input-form" style="width:100%">
+                <option value="Publicidad">Publicidad (Ads)</option>
+                <option value="Empaques">Empaques / Branding</option>
+                <option value="Software">Software / Pasarelas</option>
+                <option value="Logistica">Logística (Fletes asumidos)</option>
+                <option value="Nomina">Nómina / Operación</option>
+                <option value="Otros">Otros</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.7rem;color:var(--grisMed)">Descripción (Opcional)</label>
+              <input type="text" id="opex-desc" class="input-form" placeholder="Ej: Pauta Meta Ads Sep" style="width:100%">
+            </div>
+            <div>
+              <label style="font-size:0.7rem;color:var(--grisMed)">Monto (COP)</label>
+              <input type="number" id="opex-monto" class="input-form" placeholder="Ej: 500000" style="width:100%">
+            </div>
+            <button class="btn btn-negro" onclick="agregarGastoFijo()" style="height:35px">Registrar Gasto</button>
+          </div>
+
+          <table class="tabla-admin">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th style="text-align:right">Monto</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-gastos-operativos">
+              <tr><td colspan="4" class="loading">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div><!-- /tab-finanzas -->
 
@@ -680,7 +721,7 @@
 <script src="js/auth.js"></script>
 <script>
 let adminPin = sessionStorage.getItem("admin_pin") || null;
-let sb, stockData = [], todosPedidos = [], todasSubs = [], stockEditTarget = null;
+let sb, stockData = [], todosPedidos = [], todasSubs = [], todosGastos = [], stockEditTarget = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   sb = window.YOSSICO_AUTH.getSb();
@@ -725,6 +766,7 @@ async function verificarPin(pin) {
     actualizarResumen();
     aplicarFiltros();
     cargarStock();
+    cargarGastos();
     iniciarCampana();
   } catch (err) {
     mostrarToast("Contraseña incorrecta", "err");
@@ -799,7 +841,13 @@ function renderPedidos(pedidos) {
       <td><strong>${p.cliente_nombre||""}</strong><br><span style="font-size:.7rem;color:var(--grisMed)">${p.cliente_telefono||""}</span></td>
       <td style="font-size:.75rem;max-width:180px;word-break:break-word">${prendas}</td>
       <td><strong>${fCOP(p.total)}</strong></td>
-      <td>${badgeEst(p.estado)}</td>
+      <td>
+        ${badgeEst(p.estado)}
+        <div style="margin-top:0.8rem; display:flex; flex-direction:column; gap:0.4rem;">
+          <button onclick="imprimirRotulo('${p.id}')" style="background:#f4f4f4;border:1px solid #ddd;padding:0.3rem;font-size:0.65rem;cursor:pointer;border-radius:3px;font-family:inherit;">🖨️ Imprimir Rótulo</button>
+          ${esPendiente(p.estado) ? `<button onclick="recuperarVenta('${p.id}')" style="background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;padding:0.3rem;font-size:0.65rem;cursor:pointer;border-radius:3px;font-family:inherit;">💬 Recuperar</button>` : ''}
+        </div>
+      </td>
       <td>
         <select class="estado-select" style="margin-bottom:.5rem;width:100%;padding:.4rem;font-size:.7rem;font-family:inherit;border:1px solid var(--grisCl);background:var(--grisF);outline:none;cursor:pointer;" onchange="cambiarEstado('${p.id}',this.value,this)">
           <option value="">Cambiar estado...</option>
@@ -839,6 +887,70 @@ async function cambiarEstado(id, nuevoEstado, sel) {
   const { error } = await sb.rpc("admin_actualizar_pedido", { p_id: id, p_nuevo_estado: nuevoEstado, pin: adminPin });
   if (error) { mostrarToast("Error: " + error.message, "err"); sel.value=""; }
   else { mostrarToast("Pedido → " + nuevoEstado, "ok"); cargarPedidos(); cargarStock(); }
+}
+function imprimirRotulo(id) {
+  const p = todosPedidos.find(x => x.id === id);
+  if(!p) return;
+  const prendas = (p.items||[]).map(i => `${i.nombre} T${i.talla} x${i.qty}`).join(", ");
+  
+  const v = window.open('', '_blank');
+  v.document.write(`
+    <html><head><title>Rótulo - ${p.id.split('-')[0]}</title>
+    <style>
+      body { font-family: sans-serif; padding: 2rem; margin: 0; color: #000; }
+      .label { border: 2px solid #000; width: 10cm; height: 15cm; padding: 1.5rem; box-sizing: border-box; margin: 0 auto; position: relative; }
+      .logo { font-size: 1.5rem; letter-spacing: 3px; font-weight: bold; margin-bottom: 2rem; border-bottom: 2px solid #000; padding-bottom: 1rem; text-align: center; }
+      .row { margin-bottom: 1rem; }
+      .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #555; }
+      .val { font-size: 1.1rem; font-weight: bold; }
+      .footer { position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem; font-size: 0.7rem; text-align: center; border-top: 1px solid #ccc; padding-top: 1rem; }
+    </style></head>
+    <body onload="window.print(); setTimeout(()=>window.close(), 500)">
+      <div class="label">
+        <div class="logo">YOSSICO</div>
+        
+        <div class="row">
+          <div class="lbl">Destinatario</div>
+          <div class="val" style="font-size:1.3rem">${p.cliente_nombre || '-'}</div>
+        </div>
+        
+        <div class="row">
+          <div class="lbl">Teléfono</div>
+          <div class="val">${p.cliente_telefono || '-'}</div>
+        </div>
+        
+        <div class="row">
+          <div class="lbl">Dirección de Entrega</div>
+          <div class="val">${p.cliente_direccion || '-'}</div>
+          <div class="val" style="margin-top:0.3rem">${p.cliente_ciudad || '-'}</div>
+        </div>
+
+        <div class="row" style="margin-top:2rem">
+          <div class="lbl">Contenido del paquete</div>
+          <div class="val" style="font-size:0.9rem; font-weight:normal;">${prendas}</div>
+        </div>
+        
+        <div class="footer">
+          Pedido #${p.id.split('-')[0]}<br>
+          Remitente: YOSSICO - Bogotá, Colombia
+        </div>
+      </div>
+    </body></html>
+  `);
+  v.document.close();
+}
+
+function recuperarVenta(id) {
+  const p = todosPedidos.find(x => x.id === id);
+  if(!p || !p.cliente_telefono) { mostrarToast("El cliente no dejó número de teléfono", "warn"); return; }
+  
+  let tel = p.cliente_telefono.replace(/\D/g,'');
+  if(!tel.startsWith('57') && tel.length === 10) tel = '57' + tel; // Asumir Colombia
+  
+  const nombreCorto = (p.cliente_nombre || 'Hermosa').split(' ')[0];
+  const mensaje = `Hola ${nombreCorto}, ¿cómo estás? Soy del equipo YOSSICO ✨.%0A%0ANotamos que dejaste tu pedido en espera. ¿Tuviste algún inconveniente con el pago o la selección de la talla? Estamos aquí para ayudarte a terminarlo sin problemas.`;
+  
+  window.open(`https://wa.me/${tel}?text=${mensaje}`, '_blank');
 }
 
 function exportarCSV() {
@@ -1262,54 +1374,107 @@ function renderKPIs(pedidos) {
 }
 
 // ── RENTABILIDAD & FINANZAS ──────────────────────────────
+async function cargarGastos() {
+  const { data, error } = await sb.from("gastos_operativos").select("*").order("fecha", { ascending: false });
+  if (!error && data) todosGastos = data;
+  renderGastosLista();
+  if (todosPedidos.length) renderFinanzas(todosPedidos); // refresca rentabilidad total
+}
+
 function renderFinanzas(pedidos) {
   const pagados = pedidos.filter(p => esPagado(p.estado));
   const ingresosBrutos = pagados.reduce((s, p) => s + parseFloat(p.total || 0), 0);
   
-  let costosTotales = 0;
-  const prendasRenta = {}; // Agrupar por nombre+color
+  let costosTotalesProd = 0;
+  const prendasRenta = {};
 
   pagados.forEach(p => {
     (p.items || []).forEach(item => {
       const key = `${item.nombre} · ${item.color}`;
       if (!prendasRenta[key]) prendasRenta[key] = { q:0, ingresos:0, costos:0 };
       
-      const prodEnStock = stockData.find(s => s.nombre === item.nombre && s.color === item.color);
-      const costoUni = prodEnStock && prodEnStock.costo_produccion ? parseFloat(prodEnStock.costo_produccion) : 0;
+      // Usa el costo unitario congelado del pedido, o el del catálogo como fallback
+      let costoUni = parseFloat(item.costo_unitario || 0);
+      if (!costoUni) {
+        const prodEnStock = stockData.find(s => s.nombre === item.nombre && s.color === item.color);
+        costoUni = prodEnStock && prodEnStock.costo_produccion ? parseFloat(prodEnStock.costo_produccion) : 0;
+      }
       
-      const subIngreso = parseFloat(item.price || 0) * (item.qty || 1); // aproximado (no incluye decuentos globales exactos)
+      const subIngreso = parseFloat(item.price || 0) * (item.qty || 1);
       const subCosto = costoUni * (item.qty || 1);
       
       prendasRenta[key].q += (item.qty || 1);
       prendasRenta[key].ingresos += subIngreso;
       prendasRenta[key].costos += subCosto;
-      costosTotales += subCosto;
+      costosTotalesProd += subCosto;
     });
   });
+
+  // Filtrar Gastos Fijos (OPEX) según la fecha de los pedidos
+  const dias = parseInt(document.getElementById('stats-periodo')?.value || '14');
+  const ahora = new Date();
+  const desde = dias === 0 ? new Date(0) : new Date(ahora.getTime() - dias * 86400000);
+  
+  const gastosFiltrados = todosGastos.filter(g => new Date(g.fecha) >= desde);
+  const totalOpex = gastosFiltrados.reduce((acc, g) => acc + parseFloat(g.monto), 0);
+  const costosTotales = costosTotalesProd + totalOpex;
 
   const utilidadNeta = ingresosBrutos - costosTotales;
   const margen = ingresosBrutos > 0 ? ((utilidadNeta / ingresosBrutos) * 100).toFixed(1) : 0;
 
-  // Actualizar Cards
   document.getElementById('fin-ingresos').textContent = fCOP(ingresosBrutos);
-  document.getElementById('fin-costos').textContent = fCOP(costosTotales);
+  document.getElementById('fin-costos').textContent = fCOP(costosTotales); // Incluye Producción + OPEX
   document.getElementById('fin-utilidad').textContent = fCOP(utilidadNeta);
-  document.getElementById('fin-margen').textContent = `Margen: ${margen}%`;
+  document.getElementById('fin-margen').textContent = `Margen Nivel Empresa: ${margen}%`;
 
-  // Renderizar Tabla (Top rentables)
   const sorted = Object.entries(prendasRenta).sort((a,b) => (b[1].ingresos - b[1].costos) - (a[1].ingresos - a[1].costos));
-  
   const tbody = document.getElementById('tabla-finanzas-prendas');
-  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--grisMed)">No hay datos de ventas pagadas en este periodo</td></tr>'; return; }
+  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--grisMed)">No hay datos de ventas pagadas</td></tr>'; }
+  else {
+    tbody.innerHTML = sorted.map(([k, v]) => {
+      const pUtilidad = v.ingresos - v.costos;
+      return `<tr>
+        <td><strong>${k}</strong></td>
+        <td style="text-align:center">${v.q}</td>
+        <td style="text-align:right">${fCOP(v.ingresos)}</td>
+        <td style="text-align:right;color:var(--naranja)">${fCOP(v.costos)}</td>
+        <td style="text-align:right;color:var(--verde);font-weight:600">${fCOP(pUtilidad)}</td>
+      </tr>`;
+    }).join('');
+  }
+}
 
-  tbody.innerHTML = sorted.map(([k, v]) => {
-    const pUtilidad = v.ingresos - v.costos;
+async function agregarGastoFijo() {
+  const categoria = document.getElementById('opex-categoria').value.trim();
+  const descripcion = document.getElementById('opex-desc').value.trim();
+  const monto = parseFloat(document.getElementById('opex-monto').value);
+
+  if (!categoria || !monto) { mostrarToast("Categoría y monto obligatorios", "err"); return; }
+
+  const { error } = await sb.from('gastos_operativos').insert([{ categoria, descripcion, monto }]);
+  if (error) { mostrarToast("Error al guardar: " + error.message, "err"); return; }
+  
+  mostrarToast("Gasto agregado ✓", "ok");
+  document.getElementById('opex-categoria').value = '';
+  document.getElementById('opex-desc').value = '';
+  document.getElementById('opex-monto').value = '';
+  cargarGastos();
+}
+
+function renderGastosLista() {
+  const tbody = document.getElementById('tabla-gastos-operativos');
+  if(!tbody) return; // Si no estamos en la tab, evitamos errores
+  
+  if (!todosGastos.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--grisMed)">No hay gastos registrados</td></tr>';
+    return;
+  }
+  tbody.innerHTML = todosGastos.map(g => {
     return `<tr>
-      <td><strong>${k}</strong></td>
-      <td style="text-align:center">${v.q}</td>
-      <td style="text-align:right">${fCOP(v.ingresos)}</td>
-      <td style="text-align:right;color:var(--naranja)">${fCOP(v.costos)}</td>
-      <td style="text-align:right;color:var(--verde);font-weight:600">${fCOP(pUtilidad)}</td>
+      <td style="font-size:0.7rem;color:var(--grisMed)">${g.fecha.split('T')[0]}</td>
+      <td><strong>${g.categoria}</strong></td>
+      <td>${g.descripcion || ''}</td>
+      <td style="text-align:right;color:var(--rojo)">${fCOP(g.monto)}</td>
     </tr>`;
   }).join('');
 }
@@ -1323,15 +1488,20 @@ function exportarFinanzasCSV() {
     (p.items || []).forEach(item => {
       const key = `${item.nombre} · ${item.color}`;
       if (!prendasRenta[key]) prendasRenta[key] = { q:0, ingresos:0, costos:0 };
-      const prodEnStock = stockData.find(s => s.nombre === item.nombre && s.color === item.color);
-      const costoUni = prodEnStock && prodEnStock.costo_produccion ? parseFloat(prodEnStock.costo_produccion) : 0;
+      
+      let costoUni = parseFloat(item.costo_unitario || 0);
+      if (!costoUni) {
+        const prodEnStock = stockData.find(s => s.nombre === item.nombre && s.color === item.color);
+        costoUni = prodEnStock && prodEnStock.costo_produccion ? parseFloat(prodEnStock.costo_produccion) : 0;
+      }
+
       prendasRenta[key].q += (item.qty || 1);
       prendasRenta[key].ingresos += parseFloat(item.price || 0) * (item.qty || 1);
       prendasRenta[key].costos += costoUni * (item.qty || 1);
     });
   });
 
-  const cols = ["Prenda", "Cant. Vendida", "Ingresos Brutos Estimados", "Costo Total Produccion", "Utilidad Neta", "Margen %"];
+  const cols = ["Prenda", "Cant. Vendida", "Ingresos Brutos Estimados", "Costo Produccion Directo", "Utilidad Producto", "Margen Bruto %"];
   const rows = Object.entries(prendasRenta).map(([k, v]) => {
     const pUtilidad = v.ingresos - v.costos;
     const margen = v.ingresos > 0 ? ((pUtilidad / v.ingresos) * 100).toFixed(1) : 0;
