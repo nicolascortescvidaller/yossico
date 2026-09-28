@@ -75,7 +75,7 @@ BEGIN
 
     -- También normalizar el campo de precio: el frontend usa 'precio' pero 
     -- el panel de finanzas busca 'price'. Copiar ambos para compatibilidad.
-    IF elem ? 'precio' AND NOT elem ? 'price' THEN
+    IF (elem->>'precio') IS NOT NULL AND (elem->>'price') IS NULL THEN
       p_precio := (elem->>'precio')::numeric;
       elem := jsonb_set(elem, '{price}', to_jsonb(p_precio));
     END IF;
@@ -99,12 +99,13 @@ CREATE TRIGGER tr_congelar_costos
 -- FIX 3: Normalizar el campo 'price' en pedidos EXISTENTES
 -- (Los pedidos ya guardados usan 'precio', el panel de finanzas
 --  busca 'price'. Actualizar los existentes para coherencia.)
+-- Nota: se evita el operador ? (conflicto con parámetros en algunos clientes)
 -- ──────────────────────────────────────────────────────────
 UPDATE pedidos
 SET items = (
   SELECT jsonb_agg(
     CASE
-      WHEN elem ? 'precio' AND NOT elem ? 'price'
+      WHEN (elem->>'precio') IS NOT NULL AND (elem->>'price') IS NULL
       THEN jsonb_set(elem, '{price}', elem->'precio')
       ELSE elem
     END
@@ -114,3 +115,4 @@ SET items = (
 WHERE items IS NOT NULL
   AND jsonb_typeof(items) = 'array'
   AND items::text NOT LIKE '%"price"%';
+
