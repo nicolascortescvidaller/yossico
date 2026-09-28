@@ -697,6 +697,93 @@
           </div>
         </div>
 
+
+        <!-- CONFIGURACIÓN DE PARÁMETROS FINANCIEROS -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; margin-bottom:2rem;">
+          
+          <!-- Panel de Parámetros Editables -->
+          <div style="background:#fafafa; border:1px solid var(--grisCl); border-radius:8px; padding:1.2rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+              <div class="rlabel" style="font-size:0.7rem; letter-spacing:2px; text-transform:uppercase;">Parámetros del Negocio</div>
+              <button onclick="guardarParametrosFinancieros()" class="btn btn-negro btn-sm" style="font-size:0.6rem; padding:0.25rem 0.75rem;">Actualizar</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-size:0.75rem; font-weight:600;">Comisión Wompi / Pagos Online</div>
+                  <div style="font-size:0.65rem; color:var(--grisMed);">Se aplica solo a transacciones digitales</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.3rem;">
+                  <input type="number" id="param-wompi" value="3" min="0" max="10" step="0.1" style="width:55px; padding:0.3rem; border:1px solid var(--grisCl); text-align:center; font-family:inherit; font-size:0.85rem; border-radius:4px;">
+                  <span style="font-size:0.75rem; color:var(--grisMed);">%</span>
+                </div>
+              </div>
+              <div style="height:1px; background:var(--grisCl);"></div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-size:0.75rem; font-weight:600;">IVA Aplicable</div>
+                  <div style="font-size:0.65rem; color:var(--grisMed);">Si vendes a empresas o emites factura</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.3rem;">
+                  <input type="number" id="param-iva" value="19" min="0" max="30" step="0.5" style="width:55px; padding:0.3rem; border:1px solid var(--grisCl); text-align:center; font-family:inherit; font-size:0.85rem; border-radius:4px;">
+                  <span style="font-size:0.75rem; color:var(--grisMed);">%</span>
+                </div>
+              </div>
+              <div style="height:1px; background:var(--grisCl);"></div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-size:0.75rem; font-weight:600;">Provisión para Devoluciones</div>
+                  <div style="font-size:0.65rem; color:var(--grisMed);">Reserva automática sobre ingresos brutos</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.3rem;">
+                  <input type="number" id="param-dev" value="5" min="0" max="20" step="0.5" style="width:55px; padding:0.3rem; border:1px solid var(--grisCl); text-align:center; font-family:inherit; font-size:0.85rem; border-radius:4px;">
+                  <span style="font-size:0.75rem; color:var(--grisMed);">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ingresos por Método de Pago -->
+          <div style="background:#fafafa; border:1px solid var(--grisCl); border-radius:8px; padding:1.2rem;">
+            <div class="rlabel" style="font-size:0.7rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:1rem;">Ingresos por Método de Pago</div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;" id="fin-metodos-pago">
+              <div style="font-size:0.8rem; color:var(--grisMed);">Cargando...</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- MARGEN NETO REAL (con deducciones) -->
+        <div id="fin-margen-neto-real" style="background:var(--negro); color:var(--blanco); border-radius:8px; padding:1.5rem; margin-bottom:2rem; display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <div>
+              <div style="font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:#aaa; margin-bottom:0.3rem;">Utilidad Neta Real (post-deducciones)</div>
+              <div style="font-size:2rem; font-weight:700; font-family:'Cormorant Garamond', serif;" id="fin-utilidad-real">$0</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.65rem; letter-spacing:2px; color:#aaa; margin-bottom:0.3rem;">Margen Neto Real</div>
+              <div style="font-size:2rem; font-weight:700; font-family:'Cormorant Garamond', serif; color:#a8edaa;" id="fin-margen-real">0%</div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:0.75rem;">
+            <div style="background:rgba(255,255,255,0.08); border-radius:6px; padding:0.75rem;">
+              <div style="font-size:0.6rem; color:#aaa; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.25rem;">- Comisión Wompi</div>
+              <div style="font-size:1rem; font-weight:600;" id="fin-deduccion-wompi">$0</div>
+              <div style="font-size:0.6rem; color:#999; margin-top:0.2rem;" id="fin-deduccion-wompi-pct">3%</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.08); border-radius:6px; padding:0.75rem;">
+              <div style="font-size:0.6rem; color:#aaa; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.25rem;">- Provisión Devoluciones</div>
+              <div style="font-size:1rem; font-weight:600;" id="fin-deduccion-dev">$0</div>
+              <div style="font-size:0.6rem; color:#999; margin-top:0.2rem;" id="fin-deduccion-dev-pct">5%</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.08); border-radius:6px; padding:0.75rem;">
+              <div style="font-size:0.6rem; color:#aaa; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.25rem;">IVA Contenido</div>
+              <div style="font-size:1rem; font-weight:600;" id="fin-deduccion-iva">$0</div>
+              <div style="font-size:0.6rem; color:#999; margin-top:0.2rem;" id="fin-deduccion-iva-pct">19% sobre precio neto</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Módulo de Punto de Equilibrio -->
         <div id="fin-breakeven-container" style="display:none; margin-bottom: 2rem; padding: 1.5rem; background: #fff4f4; border: 1px solid #fbdada; border-radius: 8px;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -2223,7 +2310,40 @@ function renderFinanzas(pedidos) {
   document.getElementById('fin-costos').textContent = fCOP(costosTotales);
   document.getElementById('fin-utilidad').textContent = fCOP(utilidadNeta);
   document.getElementById('fin-utilidad').style.color = utilidadNeta < 0 ? 'var(--rojo)' : 'var(--azul)';
-  document.getElementById('fin-margen').textContent = `Margen Neto Global: ${margenNeto}%`;
+  document.getElementById('fin-margen').textContent = 'Margen Neto Global: ' + margenNeto + '%';
+
+  // ── MARGEN NETO REAL (con Wompi, Devoluciones, IVA) ──
+  renderMetodosPago(todosPedidos);
+  cargarParamsFinancieros();
+  const params = getParamsFinancieros();
+  
+  // Solo aplica Wompi a ingresos online (wompi_estado === 'APPROVED' o wompi_id presente)
+  const ingresoOnline = pagados.filter(p => p.wompi_id || p.wompi_estado === 'APPROVED').reduce((s, p) => s + parseFloat(p.total || 0), 0);
+  
+  const deduccionWompi = ingresoOnline * (params.wompi / 100);
+  const deduccionDev = ingresosBrutos * (params.dev / 100);
+  // IVA: el precio de venta ya lo incluye, así que IVA contenido = ingreso * (iva / (100+iva))
+  const ivaContenido = ingresosBrutos * (params.iva / (100 + params.iva));
+  
+  const totalDeducciones = deduccionWompi + deduccionDev; // IVA es informativo
+  const utilidadReal = utilidadNeta - totalDeducciones;
+  const margenReal = ingresosBrutos > 0 ? ((utilidadReal / ingresosBrutos) * 100).toFixed(1) : 0;
+  
+  const panelReal = document.getElementById('fin-margen-neto-real');
+  if (panelReal && ingresosBrutos > 0) {
+    panelReal.style.display = 'block';
+    document.getElementById('fin-utilidad-real').textContent = fCOP(utilidadReal);
+    document.getElementById('fin-margen-real').textContent = margenReal + '%';
+    document.getElementById('fin-margen-real').style.color = parseFloat(margenReal) < 0 ? '#ff6b6b' : '#a8edaa';
+    document.getElementById('fin-deduccion-wompi').textContent = fCOP(deduccionWompi);
+    document.getElementById('fin-deduccion-wompi-pct').textContent = params.wompi + '% de ventas online (' + fCOP(ingresoOnline) + ')';
+    document.getElementById('fin-deduccion-dev').textContent = fCOP(deduccionDev);
+    document.getElementById('fin-deduccion-dev-pct').textContent = params.dev + '% de ingresos brutos';
+    document.getElementById('fin-deduccion-iva').textContent = fCOP(ivaContenido);
+    document.getElementById('fin-deduccion-iva-pct').textContent = params.iva + '% contenido en precio';
+  } else if (panelReal) {
+    panelReal.style.display = 'none';
+  }
 
   // --- Lógica de Punto de Equilibrio ---
   const beContainer = document.getElementById('fin-breakeven-container');
