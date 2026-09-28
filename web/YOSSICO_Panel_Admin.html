@@ -1254,6 +1254,7 @@ function cambiarTab(tab, btn) {
   } else if (tab === 'finanzas') {
     // Bug Fix #1: Cargar gastos y renderizar finanzas al entrar en la pestaña
     cargarGastos();
+    actualizarSimulador(document.getElementById('sim-slider')?.value || 100);
   } else if (tab === 'envios') {
     renderEnvios();
   }
@@ -3044,7 +3045,7 @@ let chartPautaHist = null; let chartPautaPie = null;
 function renderPautaLista() {
   const tbody = document.getElementById("tabla-pauta");
   if(!tbody) return;
-  if(window.todaPauta.length === 0) { 
+  if((window.todaPauta || []).length === 0) { 
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--grisMed)">No hay registros de pauta. Registra tu primera campaña arriba.</td></tr>'; 
     return; 
   }
@@ -3249,7 +3250,28 @@ function actualizarSimulador(pctStr) {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: function(context) { return context.dataset.label + ': $' + context.raw.toLocaleString('es-CO'); } } } },
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.dataset.label;
+              const value = context.raw;
+              const modelName = context.label;
+              // Calculate units for this model using stored modelStats
+              const stats = modelStats[modelName];
+              let udsLabel = '';
+              if (stats && stats.ventas > 0) {
+                const udsModelo = stockData
+                  .filter(s => s.nombre === modelName && s.stock > 0)
+                  .reduce((acc, s) => acc + (s.stock * pct), 0);
+                if (udsModelo > 0) udsLabel = ` (${udsModelo.toFixed(0)} uds)`;
+              }
+              return label + ': $' + value.toLocaleString('es-CO') + udsLabel;
+            }
+          }
+        }
+      },
       scales: { y: { beginAtZero: true, ticks: { callback: function(value) { return '$' + (value/1000000).toFixed(1) + 'M'; } } } }
     }
   });
