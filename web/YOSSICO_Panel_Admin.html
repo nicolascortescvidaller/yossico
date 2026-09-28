@@ -842,8 +842,9 @@
               <th>Modelo (Prenda)</th>
               <th style="text-align:right">Precio Venta</th>
               <th style="text-align:right">Costo Producción</th>
-              <th style="text-align:right">Ganancia Unitaria</th>
+              <th style="text-align:right">Ganancia Bruta</th>
               <th style="text-align:right">Margen Bruto (%)</th>
+              <th style="text-align:right">Ganancia Neta</th>
               <th style="text-align:right">Margen Neto (%)</th>
             </tr>
           </thead>
@@ -2257,7 +2258,8 @@ function renderFinanzas(pedidos) {
   // NUEVO: Análisis de Catálogo y Unit Economics (Precios estimados por el sistema)
   const pre = { "Kyoto": 339900, "Oslo": 275900, "Milan": 339900, "Lima": 275900, "Manta": 229900, "Bogot": 229900, "Core": 229900, "Sudadera": 159400 };
   const preciosEstimados = (nombre) => {
-    for (let k in pre) { if(nombre.includes(k)) return pre[k]; }
+    const n = nombre.toUpperCase();
+    for (let k in pre) { if(n.includes(k.toUpperCase())) return pre[k]; }
     return 250000; // fallback
   };
 
@@ -2372,7 +2374,7 @@ function renderFinanzas(pedidos) {
   // --- Lógica Tabla Top Prendas (Histórico) ---
   const sorted = Object.entries(prendasRenta).sort((a,b) => (b[1].ingresos - b[1].costos) - (a[1].ingresos - a[1].costos));
   const tbody = document.getElementById('tabla-finanzas-prendas');
-  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--grisMed)">No hay datos de ventas pagadas para el período</td></tr>'; }
+  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--grisMed)">No hay datos de ventas pagadas para el período</td></tr>'; }
   else {
     tbody.innerHTML = sorted.map(([k, v]) => {
       const pUtilidad = v.ingresos - v.costos;
@@ -2393,7 +2395,7 @@ function renderFinanzas(pedidos) {
   
   // --- Lógica Tabla Unit Economics (Catálogo) ---
   const tCat = document.getElementById('tabla-finanzas-catalogo');
-  if(!Object.keys(modelosUnicos).length) tCat.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--grisMed)">Sin prendas en catálogo. Primero agrega productos en la pestaña Inventario y asígnales un costo de producción.</td></tr>';
+  if(!Object.keys(modelosUnicos).length) tCat.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--grisMed)">Sin prendas en catálogo. Primero agrega productos en la pestaña Inventario y asígnales un costo de producción.</td></tr>';
   else {
     const p = getParamsFinancieros();
     tCat.innerHTML = Object.entries(modelosUnicos).map(([nombre, m]) => {
@@ -2419,6 +2421,7 @@ function renderFinanzas(pedidos) {
         + '<td style="text-align:right;color:var(--naranja)">' + fCOP(m.costo) + '</td>'
         + '<td style="text-align:right;color:var(--verde);font-weight:600">' + fCOP(m.utilidad) + '</td>'
         + '<td style="text-align:right;font-size:0.75rem;"><span style="background:' + mBg + ';color:' + mColor + ';padding:0.2rem 0.4rem;border-radius:4px;font-weight:600">' + mPct + '%</span></td>'
+        + '<td style="text-align:right;color:#1565c0;font-weight:600">' + fCOP(utilidadNeta) + '</td>'
         + '<td style="text-align:right;font-size:0.75rem;"><span title="Wompi ' + p.wompi + '% (50% ventas) + Dev ' + p.dev + '% + IVA ' + p.iva + '% contenido" style="background:' + nBg + ';color:' + nColor + ';padding:0.2rem 0.4rem;border-radius:4px;font-weight:600">' + margenNeto.toFixed(1) + '%</span></td>'
         + '</tr>';
     }).join('');
@@ -3297,8 +3300,9 @@ function actualizarSimulador(pctStr) {
     const r = preciosReales[nombre];
     if (r && r.q > 0) return r.suma / r.q;
     // Hardcoded fallback logic directly here as it's self-contained
-    const pr = { "Kyoto": 339900, "Oslo": 275900, "Milan": 339900, "Lima": 275900, "Manta": 229900, "Bogot": 229900, "Core": 229900, "Sudadera": 159400, "KYOTO":339900, "OSLO":275900, "MILAN":339900, "LIMA":275900, "MANTA":229900 };
-    for (let k in pr) { if(nombre.includes(k)) return pr[k]; }
+    const pr = { "Kyoto": 339900, "Oslo": 275900, "Milan": 339900, "Lima": 275900, "Manta": 229900, "Bogot": 229900, "Core": 229900, "Sudadera": 159400 };
+    const n = nombre.toUpperCase();
+    for (let k in pr) { if(n.includes(k.toUpperCase())) return pr[k]; }
     return 250000;
   };
   
