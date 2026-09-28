@@ -2310,40 +2310,11 @@ function renderFinanzas(pedidos) {
   document.getElementById('fin-costos').textContent = fCOP(costosTotales);
   document.getElementById('fin-utilidad').textContent = fCOP(utilidadNeta);
   document.getElementById('fin-utilidad').style.color = utilidadNeta < 0 ? 'var(--rojo)' : 'var(--azul)';
-  document.getElementById('fin-margen').textContent = 'Margen Neto Global: ' + margenNeto + '%';
+  document.getElementById('fin-margen').textContent = 'Margen Neto: ' + margenNeto + '%';
+  // Hook: render payment methods and real net margin
+  try { renderMetodosPago(todosPedidos); } catch(e) { console.warn('renderMetodosPago', e); }
+  try { cargarParamsFinancieros(); renderMargenNetoReal(ingresosBrutos, utilidadNeta, pagados); } catch(e) { console.warn('renderMargenNetoReal', e); }
 
-  // ── MARGEN NETO REAL (con Wompi, Devoluciones, IVA) ──
-  renderMetodosPago(todosPedidos);
-  cargarParamsFinancieros();
-  const params = getParamsFinancieros();
-  
-  // Solo aplica Wompi a ingresos online (wompi_estado === 'APPROVED' o wompi_id presente)
-  const ingresoOnline = pagados.filter(p => p.wompi_id || p.wompi_estado === 'APPROVED').reduce((s, p) => s + parseFloat(p.total || 0), 0);
-  
-  const deduccionWompi = ingresoOnline * (params.wompi / 100);
-  const deduccionDev = ingresosBrutos * (params.dev / 100);
-  // IVA: el precio de venta ya lo incluye, así que IVA contenido = ingreso * (iva / (100+iva))
-  const ivaContenido = ingresosBrutos * (params.iva / (100 + params.iva));
-  
-  const totalDeducciones = deduccionWompi + deduccionDev; // IVA es informativo
-  const utilidadReal = utilidadNeta - totalDeducciones;
-  const margenReal = ingresosBrutos > 0 ? ((utilidadReal / ingresosBrutos) * 100).toFixed(1) : 0;
-  
-  const panelReal = document.getElementById('fin-margen-neto-real');
-  if (panelReal && ingresosBrutos > 0) {
-    panelReal.style.display = 'block';
-    document.getElementById('fin-utilidad-real').textContent = fCOP(utilidadReal);
-    document.getElementById('fin-margen-real').textContent = margenReal + '%';
-    document.getElementById('fin-margen-real').style.color = parseFloat(margenReal) < 0 ? '#ff6b6b' : '#a8edaa';
-    document.getElementById('fin-deduccion-wompi').textContent = fCOP(deduccionWompi);
-    document.getElementById('fin-deduccion-wompi-pct').textContent = params.wompi + '% de ventas online (' + fCOP(ingresoOnline) + ')';
-    document.getElementById('fin-deduccion-dev').textContent = fCOP(deduccionDev);
-    document.getElementById('fin-deduccion-dev-pct').textContent = params.dev + '% de ingresos brutos';
-    document.getElementById('fin-deduccion-iva').textContent = fCOP(ivaContenido);
-    document.getElementById('fin-deduccion-iva-pct').textContent = params.iva + '% contenido en precio';
-  } else if (panelReal) {
-    panelReal.style.display = 'none';
-  }
 
   // --- Lógica de Punto de Equilibrio ---
   const beContainer = document.getElementById('fin-breakeven-container');
@@ -3425,108 +3396,200 @@ function actualizarSimulador(pctStr) {
 
 
 
-// --- LÓGICA RMA / CAMBIOS ---
+
+
+
+
+
+
+
+// ── FINANCIAL PARAMETERS (localStorage)
+function getParamsFinancieros() {
+  return {
+    wompi: parseFloat(localStorage.getItem('fin_wompi') || '3'),
+    iva: parseFloat(localStorage.getItem('fin_iva') || '19'),
+    dev: parseFloat(localStorage.getItem('fin_dev') || '5'),
+  };
+}
+
+function cargarParamsFinancieros() {
+  const p = getParamsFinancieros();
+  ['wompi','iva','dev'].forEach(k => {
+    const el = document.getElementById('param-' + k);
+    if (el) el.value = p[k];
+  });
+}
+
+function guardarParametrosFinancieros() {
+  const vals = ['wompi','iva','dev'].map(k => {
+    const el = document.getElementById('param-' + k);
+    return el ? parseFloat(el.value) : null;
+  });
+  if (vals[0] !== null) localStorage.setItem('fin_wompi', vals[0]);
+  if (vals[1] !== null) localStorage.setItem('fin_iva', vals[1]);
+  if (vals[2] !== null) localStorage.setItem('fin_dev', vals[2]);
+  mostrarToast('Parámetros actualizados', 'ok');
+  cargarGastos();
+}
+
+function renderMetodosPago(pedidos) {
+  const container = document.getElementById('fin-metodos-pago');
+  if (!container) return;
+  const pagados = (pedidos || []).filter(p => esPagado(p.estado));
+  if (!pagados.length) {
+    container.innerHTML = '<div style="font-size:0.8rem;color:var(--grisMed)">Sin ventas pagadas aún.</div>';
+    return;
+  }
+  const metodos = {};
+  pagados.forEach(p => {
+    let label = 'Efectivo';
+    const m = (p.wompi_metodo || p.metodo_pago || '').toLowerCase();
+    if (p.wompi_id || p.wompi_estado === 'APPROVED') label = 'Wompi / Online';
+    else if (m.includes('tarjeta') || m.includes('card')) label = 'Tarjeta';
+    else if (m.includes('pse') || m.includes('transfer')) label = 'PSE / Transferencia';
+    if (!metodos[label]) metodos[label] = { total: 0, count: 0 };
+    metodos[label].total += parseFloat(p.total || 0);
+    metodos[label].count++;
+  });
+  const totalPagado = Object.values(metodos).reduce((s, m) => s + m.total, 0);
+  const colors = { 'Wompi / Online': '#1565c0', 'Tarjeta': '#6a1b9a', 'PSE / Transferencia': '#0277bd', 'Efectivo': '#2e7d32' };
+  container.innerHTML = Object.entries(metodos)
+    .sort((a, b) => b[1].total - a[1].total)
+    .map(([label, data]) => {
+      const pct = totalPagado > 0 ? ((data.total / totalPagado) * 100).toFixed(0) : 0;
+      const col = colors[label] || '#555';
+      return '<div style="margin-bottom:0.75rem">'
+        + '<div style="display:flex;justify-content:space-between;margin-bottom:0.25rem">'
+        + '<span style="font-size:0.75rem;font-weight:600">' + label + ' (' + data.count + ')</span>'
+        + '<span style="font-size:0.75rem;font-weight:700;color:' + col + '">' + fCOP(data.total) + '</span></div>'
+        + '<div style="width:100%;height:5px;background:var(--grisCl);border-radius:3px;overflow:hidden">'
+        + '<div style="width:' + pct + '%;height:100%;background:' + col + ';border-radius:3px"></div></div>'
+        + '<div style="font-size:0.65rem;color:var(--grisMed);text-align:right;margin-top:0.2rem">' + pct + '% del total</div>'
+        + '</div>';
+    }).join('');
+}
+
+function renderMargenNetoReal(ingresosBrutos, utilidadNeta, pagados) {
+  const panel = document.getElementById('fin-margen-neto-real');
+  if (!panel) return;
+  if (ingresosBrutos <= 0) { panel.style.display = 'none'; return; }
+  
+  const params = getParamsFinancieros();
+  const ingresoOnline = pagados.filter(p => p.wompi_id || p.wompi_estado === 'APPROVED').reduce((s, p) => s + parseFloat(p.total || 0), 0);
+  
+  const dedWompi = ingresoOnline * (params.wompi / 100);
+  const dedDev = ingresosBrutos * (params.dev / 100);
+  const ivaContenido = ingresosBrutos * (params.iva / (100 + params.iva));
+  const utilidadReal = utilidadNeta - dedWompi - dedDev;
+  const margenReal = ((utilidadReal / ingresosBrutos) * 100).toFixed(1);
+  
+  panel.style.display = 'block';
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setStyle = (id, prop, val) => { const el = document.getElementById(id); if (el) el.style[prop] = val; };
+  
+  setEl('fin-utilidad-real', fCOP(utilidadReal));
+  setEl('fin-margen-real', margenReal + '%');
+  setStyle('fin-margen-real', 'color', parseFloat(margenReal) < 0 ? '#ff6b6b' : '#a8edaa');
+  setEl('fin-deduccion-wompi', fCOP(dedWompi));
+  setEl('fin-deduccion-wompi-pct', params.wompi + '% de ventas online (' + fCOP(ingresoOnline) + ')');
+  setEl('fin-deduccion-dev', fCOP(dedDev));
+  setEl('fin-deduccion-dev-pct', params.dev + '% provisión sobre ingresos brutos');
+  setEl('fin-deduccion-iva', fCOP(ivaContenido));
+  setEl('fin-deduccion-iva-pct', params.iva + '% contenido en precio de venta');
+}
+
+// ── RMA / PROCESAR CAMBIO ──
 function abrirModalRMA(pedidoId) {
   const p = todosPedidos.find(x => x.id === pedidoId);
-  if (!p) return;
+  if (!p) { mostrarToast('Pedido no encontrado', 'err'); return; }
+  
+  const modal = document.getElementById('modal-rma');
+  if (!modal) { mostrarToast('Error: modal no encontrado', 'err'); return; }
+  
   document.getElementById('rma-pedido-id').value = pedidoId;
   
   const container = document.getElementById('rma-items-container');
   container.innerHTML = '';
   
-  (p.items || []).forEach((item, index) => {
-    const div = document.createElement('div');
-    div.style = "display:flex; align-items:center; gap:0.5rem; padding:0.5rem; border:1px solid var(--grisCl); border-radius:4px; background:var(--blanco);";
-    // Codificamos el value para evitar que las comillas simples/dobles rompan el HTML
-    const valObj = encodeURIComponent(JSON.stringify(item));
-    div.innerHTML = `
-      <input type="checkbox" id="rma-item-${index}" value="${valObj}">
-      <label for="rma-item-${index}" style="font-size:0.8rem; cursor:pointer; flex:1">
-        <strong>${item.nombre}</strong> ${item.color ? '- ' + item.color : ''} ${item.talla ? ' (Talla ' + item.talla + ')' : ''} x${item.qty || 1}
-      </label>
-    `;
-    container.appendChild(div);
-  });
+  const items = p.items || [];
+  if (!items.length) {
+    container.innerHTML = '<div style="padding:1rem;color:var(--grisMed);font-size:0.8rem">Este pedido no tiene prendas registradas.</div>';
+  } else {
+    items.forEach((item, i) => {
+      const div = document.createElement('label');
+      div.style.cssText = 'display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border:1px solid var(--grisCl);border-radius:6px;cursor:pointer;background:var(--blanco);';
+      const chk = document.createElement('input');
+      chk.type = 'checkbox';
+      chk.id = 'rma-chk-' + i;
+      chk.style.width = '16px';
+      chk.style.height = '16px';
+      chk.style.flexShrink = '0';
+      chk.dataset.nombre = item.nombre || '';
+      chk.dataset.talla = item.talla || '';
+      chk.dataset.qty = item.qty || 1;
+      const span = document.createElement('span');
+      span.style.fontSize = '0.8rem';
+      span.innerHTML = '<strong>' + (item.nombre || '') + '</strong>'
+        + (item.color ? ' — ' + item.color : '')
+        + (item.talla ? ' · Talla ' + item.talla : '')
+        + ' × ' + (item.qty || 1);
+      div.appendChild(chk);
+      div.appendChild(span);
+      container.appendChild(div);
+    });
+  }
   
-  document.getElementById('modal-rma').classList.remove('hidden');
+  modal.classList.remove('hidden');
 }
 
 function cerrarModalRMA() {
-  document.getElementById('modal-rma').classList.add('hidden');
+  const modal = document.getElementById('modal-rma');
+  if (modal) modal.classList.add('hidden');
 }
 
 async function ejecutarRMA() {
-  const checkboxes = document.querySelectorAll('input[id^="rma-item-"]:checked');
-  if (checkboxes.length === 0) {
-    mostrarToast("Selecciona al menos una prenda para reingresar.", "warn");
-    return;
-  }
+  const checks = document.querySelectorAll('#rma-items-container input[type=checkbox]:checked');
+  if (!checks.length) { mostrarToast('Selecciona al menos una prenda', 'warn'); return; }
+  if (!confirm('¿Reingresar ' + checks.length + ' prenda(s) al inventario?')) return;
   
-  if (!confirm(`¿Reingresar ${checkboxes.length} línea(s) al inventario?`)) return;
-  
-  const itemsAReingresar = Array.from(checkboxes).map(cb => JSON.parse(decodeURIComponent(cb.value)));
-  const pedidoId = document.getElementById('rma-pedido-id').value;
-  
-  let successCount = 0;
-  let failCount = 0;
-  
-  for (const item of itemsAReingresar) {
-    // Buscar en stockData el ID real
-    const prod = stockData.find(s => s.nombre.toUpperCase() === item.nombre.toUpperCase() && (s.talla||'').toUpperCase() === (item.talla||'').toUpperCase());
+  let ok = 0, err = 0;
+  for (const chk of checks) {
+    const nombre = chk.dataset.nombre;
+    const talla = chk.dataset.talla;
+    const qty = parseInt(chk.dataset.qty) || 1;
+    const prod = stockData.find(s => s.nombre.toUpperCase() === nombre.toUpperCase() && (s.talla || '').toUpperCase() === talla.toUpperCase());
     if (prod) {
-      const nuevaCant = prod.stock + (item.qty || 1);
-      const { error } = await sb.from('productos').update({ stock: nuevaCant }).eq('id', prod.id);
-      if (!error) successCount++;
-      else failCount++;
-    } else {
-      failCount++; // No se encontró en la BD local
-    }
+      const { error } = await sb.from('productos').update({ stock: prod.stock + qty }).eq('id', prod.id);
+      if (!error) { prod.stock += qty; ok++; } else err++;
+    } else { err++; }
   }
-  
-  // Opcional: Agregar una nota interna al pedido
-  const notaExtra = `[RMA] Reingreso de ${successCount} items al inventario el ${new Date().toLocaleDateString()}.`;
-  const p = todosPedidos.find(x => x.id === pedidoId);
-  const notaFinal = p.nota_interna ? p.nota_interna + '\n' + notaExtra : notaExtra;
-  await sb.rpc('admin_actualizar_nota', { p_id: pedidoId, p_nota: notaFinal, pin: adminPin });
   
   cerrarModalRMA();
-  
-  if (failCount === 0) {
-    mostrarToast(`Se reingresaron ${successCount} prendas al stock.`, "ok");
-  } else {
-    mostrarToast(`Se reingresaron ${successCount} prendas. Hubo ${failCount} errores.`, "warn");
-  }
-  
+  if (err === 0) mostrarToast('Reingresadas ' + ok + ' prenda(s) al inventario', 'ok');
+  else mostrarToast(ok + ' ok, ' + err + ' no encontradas en inventario', 'warn');
   cargarStock();
-  
-  // Recargar pedidos para que se vea la nueva nota interna
-  const { data } = await sb.rpc("admin_get_pedidos", { pin: adminPin });
-  if (data) todosPedidos = data;
-  renderPedidos();
 }
-
 </script>
+
 
 
 <!-- MODAL RMA / CAMBIOS -->
 <div id="modal-rma" class="modal-overlay hidden">
-  <div class="modal-content" style="max-width:520px">
+  <div class="modal-content" style="max-width:500px">
     <div class="modal-header">
-      <div style="font-family:'Cormorant Garamond', serif; font-size:1.4rem; font-weight:600;">Procesar Cambio / Devolución</div>
+      <div style="font-size:1.1rem;font-weight:600;">Procesar Cambio / Devolución</div>
       <button onclick="cerrarModalRMA()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;line-height:1;">&times;</button>
     </div>
     <div style="padding:1.5rem;">
-      <p style="font-size:0.8rem; color:var(--grisMed); margin-bottom:1.2rem; line-height:1.5;">
-        Selecciona las prendas devueltas. El stock se repondrá inmediatamente en el inventario.
+      <p style="font-size:0.8rem;color:var(--grisMed);margin-bottom:1.2rem;line-height:1.5;">
+        Selecciona las prendas devueltas. El stock se sumará de inmediato al inventario.
       </p>
       <input type="hidden" id="rma-pedido-id">
-      <div id="rma-items-container" style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1.5rem; max-height:250px; overflow-y:auto;">
-        <!-- Checkboxes generados por JS -->
+      <div id="rma-items-container" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.5rem;max-height:260px;overflow-y:auto;"></div>
+      <div style="font-size:0.75rem;color:#e65100;margin-bottom:1.2rem;background:#fff3e0;padding:0.75rem;border-radius:4px;border-left:3px solid #ffb74d;">
+        Si es un cambio de talla o modelo, crea un nuevo pedido manual tras reingresar.
       </div>
-      <div style="font-size:0.75rem; color:#e65100; margin-bottom:1.2rem; background:#fff3e0; padding:0.75rem 1rem; border-radius:4px; border-left:3px solid #ffb74d;">
-        Después de reingresar, crea un nuevo pedido manual si es un cambio de talla o modelo.
-      </div>
-      <button class="btn btn-negro" style="width:100%; padding:0.75rem;" onclick="ejecutarRMA()">Reingresar al Inventario</button>
+      <button class="btn btn-negro" style="width:100%;padding:0.75rem;" onclick="ejecutarRMA()">Reingresar al Inventario</button>
     </div>
   </div>
 </div>
