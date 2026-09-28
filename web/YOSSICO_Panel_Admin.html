@@ -1508,56 +1508,50 @@ function imprimirRotulosLote() {
 function imprimirRotulo(id) {
   const p = todosPedidos.find(x => x.id === id);
   if(!p) return;
-  const prendas = (p.items||[]).map(i => `${i.nombre} T${i.talla} x${i.qty}`).join(", ");
-  
-  const v = window.open('', '_blank');
-  v.document.write(`
-    <html><head><title>Rótulo - ${p.id.split('-')[0]}</title>
-    <style>
-      body { font-family: sans-serif; padding: 2rem; margin: 0; color: #000; }
-      .label { border: 2px solid #000; width: 10cm; height: 15cm; padding: 1.5rem; box-sizing: border-box; margin: 0 auto; position: relative; }
-      .logo { font-size: 1.5rem; letter-spacing: 3px; font-weight: bold; margin-bottom: 2rem; border-bottom: 2px solid #000; padding-bottom: 1rem; text-align: center; }
-      .row { margin-bottom: 1rem; }
-      .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #555; }
-      .val { font-size: 1.1rem; font-weight: bold; }
-      .footer { position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem; font-size: 0.7rem; text-align: center; border-top: 1px solid #ccc; padding-top: 1rem; }
-    </style></head>
-    <body onload="window.print(); setTimeout(()=>window.close(), 500)">
-      <div class="label">
-        <div class="logo">YOSSICO</div>
-        
-        <div class="row">
-          <div class="lbl">Destinatario</div>
-          <div class="val" style="font-size:1.3rem">${p.cliente_nombre || '-'}</div>
-        </div>
-        
-        <div class="row">
-          <div class="lbl">Teléfono</div>
-          <div class="val">${p.cliente_telefono || '-'}</div>
-        </div>
-        
-        <div class="row">
-          <div class="lbl">Dirección de Entrega</div>
-          <div class="val">${p.cliente_direccion || '-'}</div>
-          <div class="val" style="margin-top:0.3rem">${p.cliente_ciudad || '-'}</div>
-        </div>
-
-        <div class="row" style="margin-top:2rem">
-          <div class="lbl">Contenido del paquete</div>
-          <div class="val" style="font-size:0.9rem; font-weight:normal;">${prendas}</div>
-        </div>
-        
-        <div class="footer">
-          Pedido #${p.id.split('-')[0]}<br>
-          Remitente: YOSSICO - Bogotá, Colombia
-        </div>
-      </div>
-    
-
-</body></html>
-  `);
+  const prendas = (p.items||[]).map(i => '<div style="padding:0.3rem 0;border-bottom:1px solid #eee;font-size:0.8rem;">' + (i.nombre||'') + ' &mdash; Talla ' + (i.talla||'?') + ' &times; ' + (i.qty||1) + '</div>').join('');
+  const fecha = new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
+  const guiaHtml = p.numero_guia ? '<div style="margin-top:0.5rem;"><div class="lbl">Gu\u00eda</div><div class="val">' + (p.empresa_envio||'') + ' ' + p.numero_guia + '</div></div>' : '';
+  const v = window.open('','_blank','width=720,height=960');
+  const htmlContent = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rotulo YOSSICO</title>'
+    + '<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,sans-serif;background:#f0f0f0;display:flex;flex-direction:column;align-items:center;padding:2rem;gap:1rem;}'
+    + '.controls{display:flex;gap:.5rem;}.btn{padding:.5rem 1.5rem;font-size:.75rem;letter-spacing:1px;cursor:pointer;font-family:inherit;border:none;}'
+    + '.btn-print{background:#000;color:#fff;}.btn-close{background:#fff;color:#000;border:1px solid #000;}'
+    + '.label{background:#fff;width:10cm;border:2px solid #000;display:flex;flex-direction:column;}'
+    + '.header{background:#000;color:#fff;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;}'
+    + '.logo{font-size:1.3rem;letter-spacing:6px;font-weight:700;}.pid{font-family:monospace;font-size:1rem;font-weight:700;}'
+    + '.body{padding:1.2rem 1.5rem;flex:1;display:flex;flex-direction:column;gap:.9rem;}'
+    + '.lbl{font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:.2rem;}'
+    + '.val{font-size:.95rem;font-weight:600;color:#111;line-height:1.35;}.val-lg{font-size:1.2rem;font-weight:700;}'
+    + 'hr{border:none;border-top:1px solid #e0e0e0;}'
+    + '.footer{border-top:2px solid #000;padding:.75rem 1.5rem;font-size:.6rem;color:#555;display:flex;justify-content:space-between;}'
+    + '@media print{body{background:#fff;padding:0;}.controls{display:none;}}'
+    + '</style></head><body>'
+    + '<div class="controls"><button class="btn btn-print" onclick="window.print()">IMPRIMIR</button>'
+    + '<button class="btn btn-close" onclick="window.close()">CERRAR</button></div>'
+    + '<div class="label">'
+    + '<div class="header">'
+    + '<div><div class="logo">YOSSICO</div><div style="font-size:.55rem;color:#aaa;letter-spacing:3px;margin-top:2px;">R\u00d3TULO DE ENV\u00cdO</div></div>'
+    + '<div style="text-align:right"><div style="font-size:.55rem;color:#aaa;letter-spacing:1px;">PEDIDO</div>'
+    + '<div class="pid">#' + (p.id||'').split('-')[0].toUpperCase() + '</div></div></div>'
+    + '<div class="body">'
+    + '<div><div class="lbl">Destinatario</div><div class="val-lg">' + (p.cliente_nombre||'\u2014') + '</div></div>'
+    + '<hr>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">'
+    + '<div><div class="lbl">Tel\u00e9fono</div><div class="val">' + (p.cliente_telefono||'\u2014') + '</div></div>'
+    + '<div><div class="lbl">Ciudad</div><div class="val">' + (p.cliente_ciudad||'\u2014') + '</div></div></div>'
+    + '<div><div class="lbl">Direcci\u00f3n</div><div class="val">' + (p.cliente_direccion||'\u2014') + '</div></div>'
+    + '<hr>'
+    + '<div><div class="lbl" style="margin-bottom:.5rem;">Contenido del Paquete</div>' + prendas + '</div>'
+    + '<hr>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;">'
+    + '<div><div class="lbl">Fecha</div><div class="val" style="font-size:.75rem;">' + fecha + '</div></div>'
+    + guiaHtml + '</div></div>'
+    + '<div class="footer"><span>Remitente: <strong>YOSSICO</strong> \u2014 Bogot\u00e1, Colombia</span><span>yossico.com</span></div>'
+    + '</div></body></html>';
+  v.document.write(htmlContent);
   v.document.close();
 }
+
 
 function rastrearGuia(empresa, guia) {
   if (!guia) return;
