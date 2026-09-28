@@ -840,10 +840,11 @@
           <thead>
             <tr>
               <th>Modelo (Prenda)</th>
-              <th style="text-align:right">Precio Venta (Est.)</th>
+              <th style="text-align:right">Precio Venta</th>
               <th style="text-align:right">Costo Producción</th>
               <th style="text-align:right">Ganancia Unitaria</th>
               <th style="text-align:right">Margen Bruto (%)</th>
+              <th style="text-align:right">Margen Neto (%)</th>
             </tr>
           </thead>
           <tbody id="tabla-finanzas-catalogo">
@@ -2254,7 +2255,7 @@ function renderFinanzas(pedidos) {
   let margenBrutoPromedio = ingresosBrutos > 0 ? (utilidadBrutaTotal / ingresosBrutos) : 0;
 
   // NUEVO: Análisis de Catálogo y Unit Economics (Precios estimados por el sistema)
-  const pre = { "Kyoto": 275900, "Oslo": 339900, "Milan": 275900, "Core": 229900, "Sudadera": 159400 };
+  const pre = { "Kyoto": 339900, "Oslo": 275900, "Milan": 339900, "Lima": 275900, "Manta": 229900, "Bogot": 229900, "Core": 229900, "Sudadera": 159400 };
   const preciosEstimados = (nombre) => {
     for (let k in pre) { if(nombre.includes(k)) return pre[k]; }
     return 250000; // fallback
@@ -2392,22 +2393,34 @@ function renderFinanzas(pedidos) {
   
   // --- Lógica Tabla Unit Economics (Catálogo) ---
   const tCat = document.getElementById('tabla-finanzas-catalogo');
-  if(!Object.keys(modelosUnicos).length) tCat.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--grisMed)">Sin prendas en catálogo. Primero agrega productos en la pestaña Inventario y asígnales un costo de producción.</td></tr>';
+  if(!Object.keys(modelosUnicos).length) tCat.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--grisMed)">Sin prendas en catálogo. Primero agrega productos en la pestaña Inventario y asígnales un costo de producción.</td></tr>';
   else {
+    const p = getParamsFinancieros();
     tCat.innerHTML = Object.entries(modelosUnicos).map(([nombre, m]) => {
       const mPct = (m.margen * 100).toFixed(1);
       const mColor = m.margen >= 0.5 ? '#2e7d32' : m.margen >= 0.3 ? '#e65100' : '#c62828';
       const mBg = m.margen >= 0.5 ? '#e0f2e9' : m.margen >= 0.3 ? '#fff3e0' : '#ffebee';
-      const precioLabel = m.fuentePrecio === 'real' 
-        ? `${fCOP(m.precio)} <span style="font-size:0.65rem;color:#2e7d32">(real)</span>` 
-        : `${fCOP(m.precio)} <span style="font-size:0.65rem;color:var(--grisMed)">(est.)</span>`;
-      return `<tr>
-        <td><strong>${nombre}</strong></td>
-        <td style="text-align:right">${precioLabel}</td>
-        <td style="text-align:right;color:var(--naranja)">${fCOP(m.costo)}</td>
-        <td style="text-align:right;color:var(--verde);font-weight:600">${fCOP(m.utilidad)}</td>
-        <td style="text-align:right;font-size:0.75rem;"><span style="background:${mBg};color:${mColor};padding:0.2rem 0.4rem;border-radius:4px;font-weight:600">${mPct}%</span></td>
-      </tr>`;
+      const precioLabel = m.fuentePrecio === 'real'
+        ? fCOP(m.precio) + ' <span style="font-size:0.65rem;color:#2e7d32">(real)</span>'
+        : fCOP(m.precio) + ' <span style="font-size:0.65rem;color:var(--grisMed)">(est.)</span>';
+      
+      // Margen Neto: descontamos Wompi (solo si venta online, asumimos 50% online como promedio), devoluciones e IVA contenido
+      const wompiEfectivo = m.precio * (p.wompi / 100) * 0.5; // ~50% de ventas son online
+      const devProvision = m.precio * (p.dev / 100);
+      const ivaContenido = m.precio * (p.iva / (100 + p.iva));
+      const utilidadNeta = m.utilidad - wompiEfectivo - devProvision - ivaContenido;
+      const margenNeto = m.precio > 0 ? (utilidadNeta / m.precio) * 100 : 0;
+      const nColor = margenNeto >= 30 ? '#1565c0' : margenNeto >= 15 ? '#2e7d32' : margenNeto >= 0 ? '#e65100' : '#c62828';
+      const nBg = margenNeto >= 30 ? '#e3f2fd' : margenNeto >= 15 ? '#e0f2e9' : margenNeto >= 0 ? '#fff3e0' : '#ffebee';
+      
+      return '<tr>'
+        + '<td><strong>' + nombre + '</strong></td>'
+        + '<td style="text-align:right">' + precioLabel + '</td>'
+        + '<td style="text-align:right;color:var(--naranja)">' + fCOP(m.costo) + '</td>'
+        + '<td style="text-align:right;color:var(--verde);font-weight:600">' + fCOP(m.utilidad) + '</td>'
+        + '<td style="text-align:right;font-size:0.75rem;"><span style="background:' + mBg + ';color:' + mColor + ';padding:0.2rem 0.4rem;border-radius:4px;font-weight:600">' + mPct + '%</span></td>'
+        + '<td style="text-align:right;font-size:0.75rem;"><span title="Wompi ' + p.wompi + '% (50% ventas) + Dev ' + p.dev + '% + IVA ' + p.iva + '% contenido" style="background:' + nBg + ';color:' + nColor + ';padding:0.2rem 0.4rem;border-radius:4px;font-weight:600">' + margenNeto.toFixed(1) + '%</span></td>'
+        + '</tr>';
     }).join('');
   }
 }
@@ -3284,7 +3297,7 @@ function actualizarSimulador(pctStr) {
     const r = preciosReales[nombre];
     if (r && r.q > 0) return r.suma / r.q;
     // Hardcoded fallback logic directly here as it's self-contained
-    const pr = { "Kyoto": 275900, "Oslo": 339900, "Milan": 275900, "Core": 229900, "Sudadera": 159400, "KYOTO":275900, "OSLO":339900, "MILAN":275900 };
+    const pr = { "Kyoto": 339900, "Oslo": 275900, "Milan": 339900, "Lima": 275900, "Manta": 229900, "Bogot": 229900, "Core": 229900, "Sudadera": 159400, "KYOTO":339900, "OSLO":275900, "MILAN":339900, "LIMA":275900, "MANTA":229900 };
     for (let k in pr) { if(nombre.includes(k)) return pr[k]; }
     return 250000;
   };
