@@ -28,6 +28,13 @@
     --verde:#2D6A4F;--verdeCl:#D8F0E4;--rojo:#C0392B;--rojoCl:#FDECEA;
     --azul:#1A5276;--azulCl:#D6EAF8;--naranja:#CA6F1E;--naranjaCl:#FDEBD0;
   }
+  
+  body.dark-mode .resumen-card { background: var(--blanco) !important; border-color: var(--grisCl) !important; }
+  body.dark-mode .stock-section { background: var(--blanco) !important; border-color: var(--grisCl) !important; }
+  body.dark-mode #b2b-print-view { background: #FFFFFF !important; color: #333333 !important; }
+  body.dark-mode #b2b-print-view * { color: inherit; }
+  body.dark-mode #b2b-print-view .table-head { color: #0C4E57 !important; background: #EBF3F5 !important; }
+
   body.dark-mode {
     --negro:#F5F4F1;--blanco:#1A1A1A;--grisF:#121212;--grisCl:#333333;--grisMed:#8A8A8A;
     --verde:#4ADE80;--verdeCl:#154026;--rojo:#F87171;--rojoCl:#4F1B1B;
@@ -570,17 +577,17 @@
         </div>
 
         <div class="resumen-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1rem;">
-          <div class="resumen-card verde" style="background:#f9fdfa; border-color:#e0f2e9">
+          <div class="resumen-card verde" style="background:var(--blanco); border-color:#e0f2e9">
             <div class="rlabel">Ingresos Brutos Reales</div>
             <div class="rvalor" id="fin-ingresos">$0</div>
             <div class="rsub">Total de ventas cobradas</div>
           </div>
-          <div class="resumen-card naranja" style="background:#fffaf5; border-color:#fcecdb">
+          <div class="resumen-card naranja" style="background:var(--blanco); border-color:#fcecdb">
             <div class="rlabel">Costos Totales (Prod + OPEX)</div>
             <div class="rvalor" id="fin-costos">$0</div>
             <div class="rsub">Costo de telas + Gastos operativos</div>
           </div>
-          <div class="resumen-card azul" style="background:#f4f9ff; border-color:#ddecff">
+          <div class="resumen-card azul" style="background:var(--blanco); border-color:#ddecff">
             <div class="rlabel">Utilidad Neta del Negocio</div>
             <div class="rvalor" id="fin-utilidad" style="color:var(--azul)">$0</div>
             <div class="rsub" id="fin-margen">Margen Neto Global: 0%</div>
@@ -591,31 +598,31 @@
         <div id="fin-breakeven-container" style="display:none; margin-bottom: 2rem; padding: 1.5rem; background: #fff4f4; border: 1px solid #fbdada; border-radius: 8px;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
-              <div style="font-size:0.75rem; color:#d32f2f; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem">📉 Operando en Pérdida (Recuperación de Inversión)</div>
-              <div style="font-size:1.1rem; color:#000; font-weight:300;">Falta recuperar <strong id="fin-breakeven-monto" style="font-weight:600; color:#d32f2f">...</strong> para llegar al Punto de Equilibrio.</div>
-              <div style="font-size:0.85rem; color:#666; margin-top:0.5rem; max-width:80%;">
+              <div style="font-size:0.75rem; color:var(--rojo); font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem">📉 Operando en Pérdida (Recuperación de Inversión)</div>
+              <div style="font-size:1.1rem; color:var(--negro); font-weight:300;">Falta recuperar <strong id="fin-breakeven-monto" style="font-weight:600; color:var(--rojo)">...</strong> para llegar al Punto de Equilibrio.</div>
+              <div style="font-size:0.85rem; color:var(--grisMed); margin-top:0.5rem; max-width:80%;">
                 Con tu margen bruto promedio actual del <strong id="fin-breakeven-margen">...%</strong>, necesitas generar aproximadamente <strong id="fin-breakeven-ventas">...</strong> en ventas brutas para cubrir esta inversión inicial.
               </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:0.75rem; color:#666; margin-bottom:0.3rem">Prendas estimadas a vender:</div>
-              <div id="fin-breakeven-unidades" style="font-size:2rem; font-weight:bold; color:#000; line-height:1;">...</div>
-              <div style="font-size:0.7rem; color:#999; margin-top:0.2rem">unidades</div>
+              <div style="font-size:0.75rem; color:var(--grisMed); margin-bottom:0.3rem">Prendas estimadas a vender:</div>
+              <div id="fin-breakeven-unidades" style="font-size:2rem; font-weight:bold; color:var(--negro); line-height:1;">...</div>
+              <div style="font-size:0.7rem; color:var(--grisMed); margin-top:0.2rem">unidades</div>
             </div>
           </div>
           
-          <div style="margin-top:1.5rem; width:100%; height:8px; background:#fbdada; border-radius:4px; overflow:hidden; position:relative;">
-            <div id="fin-breakeven-barra" style="position:absolute; left:0; top:0; height:100%; background:#d32f2f; width:0%; transition: width 0.5s;"></div>
+          <div style="margin-top:1.5rem; width:100%; height:8px; background:var(--rojoCl); border-radius:4px; overflow:hidden; position:relative;">
+            <div id="fin-breakeven-barra" style="position:absolute; left:0; top:0; height:100%; background:var(--rojo); width:0%; transition: width 0.5s;"></div>
           </div>
-          <div style="display:flex; justify-content:space-between; margin-top:0.4rem; font-size:0.7rem; color:#999;">
+          <div style="display:flex; justify-content:space-between; margin-top:0.4rem; font-size:0.7rem; color:var(--grisMed);">
             <span id="fin-breakeven-progress-txt">0% recuperado</span>
             <span>Meta de Ventas</span>
           </div>
         </div>
         
         <div id="fin-success-container" style="display:none; margin-bottom: 2rem; padding: 1.5rem; background: #f2fce6; border: 1px solid #d3eeb1; border-radius: 8px;">
-           <div style="font-size:0.75rem; color:#33691e; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem">📈 Negocio Rentable</div>
-           <div style="font-size:1.1rem; color:#000; font-weight:300;">¡Has superado el punto de equilibrio! Tu operación es 100% rentable.</div>
+           <div style="font-size:0.75rem; color:var(--verde); font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem">📈 Negocio Rentable</div>
+           <div style="font-size:1.1rem; color:var(--negro); font-weight:300;">¡Has superado el punto de equilibrio! Tu operación es 100% rentable.</div>
         </div>
 
         <table class="tabla-admin">
@@ -660,7 +667,7 @@
           <div style="display:grid; grid-template-columns: 1fr 2fr 1fr auto; gap: 1rem; align-items: end; margin-bottom: 2rem;">
             <div>
               <label style="font-size:0.7rem;color:var(--grisMed)">Categoría</label>
-              <select id="opex-categoria" class="input-form" style="width:100%">
+              <select id="opex-categoria" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" style="width:100%">
                 <option value="Publicidad">Publicidad (Ads)</option>
                 <option value="Empaques">Empaques / Branding</option>
                 <option value="Software">Software / Pasarelas</option>
@@ -671,11 +678,11 @@
             </div>
             <div>
               <label style="font-size:0.7rem;color:var(--grisMed)">Descripción (Opcional)</label>
-              <input type="text" id="opex-desc" class="input-form" placeholder="Ej: Pauta Meta Ads Sep" style="width:100%">
+              <input type="text" id="opex-desc" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="Ej: Pauta Meta Ads Sep" style="width:100%">
             </div>
             <div>
               <label style="font-size:0.7rem;color:var(--grisMed)">Monto (COP)</label>
-              <input type="number" id="opex-monto" class="input-form" placeholder="Ej: 500000" style="width:100%">
+              <input type="number" id="opex-monto" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="Ej: 500000" style="width:100%">
             </div>
             <button class="btn btn-negro" onclick="agregarGastoFijo()" style="height:35px">Registrar Gasto</button>
           </div>
@@ -732,13 +739,13 @@
         
         <div class="form-group" style="margin-bottom:1.2rem">
           <label>Beneficiario (Nombre, Campaña o Condición)</label>
-          <input type="text" id="desc-nombre" class="input-form" placeholder="Ej: Pago en Efectivo, InfluencerX, Compensación" style="width:100%">
+          <input type="text" id="desc-nombre" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="Ej: Pago en Efectivo, InfluencerX, Compensación" style="width:100%">
         </div>
 
         <div class="form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:1.2rem">
           <div class="form-group">
             <label>Tipo de Beneficio</label>
-            <select id="desc-tipo" class="input-form" style="width:100%" onchange="document.getElementById('lbl-desc-valor').textContent = this.value === 'porcentaje' ? 'Porcentaje (%)' : 'Monto a descontar ($)'">
+            <select id="desc-tipo" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" style="width:100%" onchange="document.getElementById('lbl-desc-valor').textContent = this.value === 'porcentaje' ? 'Porcentaje (%)' : 'Monto a descontar ($)'">
               <option value="porcentaje">Porcentaje de Descuento (%)</option>
               <option value="monto">Monto Fijo de Descuento ($)</option>
               <option value="efectivo">Pago en Efectivo (Condicionado)</option>
@@ -747,18 +754,18 @@
           </div>
           <div class="form-group" id="group-desc-valor">
             <label id="lbl-desc-valor">Porcentaje (%)</label>
-            <input type="number" id="desc-pct" class="input-form" value="10" min="0" style="width:100%">
+            <input type="number" id="desc-pct" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" value="10" min="0" style="width:100%">
           </div>
         </div>
 
         <div class="form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:2rem">
           <div class="form-group">
             <label>Código personalizado (Opcional)</label>
-            <input type="text" id="desc-codigo" class="input-form" placeholder="Ej: EFECTIVO10" style="text-transform:uppercase;width:100%">
+            <input type="text" id="desc-codigo" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="Ej: EFECTIVO10" style="text-transform:uppercase;width:100%">
           </div>
           <div class="form-group">
             <label>Límite o Condición (Próximamente)</label>
-            <input type="text" class="input-form" placeholder="Ej: Solo compras > $200.000" disabled style="width:100%;background:var(--grisCl);cursor:not-allowed">
+            <input type="text" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="Ej: Solo compras > $200.000" disabled style="width:100%;background:var(--grisCl);cursor:not-allowed">
           </div>
         </div>
 
@@ -792,19 +799,19 @@
               <div style="font-weight:bold; margin-bottom:1rem;">Datos del Cliente / Clínica</div>
               <div class="form-group">
                 <label>Razón Social o Nombre</label>
-                <input type="text" id="b2b-empresa" class="input-form" placeholder="[ NOMBRE EMPRESA/CLIENTE ]" value="Clínica Sanitas S.A.">
+                <input type="text" id="b2b-empresa" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="[ NOMBRE EMPRESA/CLIENTE ]" value="Clínica Sanitas S.A.">
               </div>
             <div class="form-group">
               <label>NIT o Documento</label>
-              <input type="text" id="b2b-nit" class="input-form" placeholder="[ NIT DE LA EMPRESA ]" value="NIT: 900.123.456-7">
+              <input type="text" id="b2b-nit" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="[ NIT DE LA EMPRESA ]" value="NIT: 900.123.456-7">
             </div>
             <div class="form-group">
               <label>Correo Electrónico / Teléfono</label>
-              <input type="text" id="b2b-correo" class="input-form" placeholder="[ CORREO EMPRESA/CLIENTE ]" value="compras@sanitas.com">
+              <input type="text" id="b2b-correo" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="[ CORREO EMPRESA/CLIENTE ]" value="compras@sanitas.com">
             </div>
             <div class="form-group">
               <label>Fecha Cotización</label>
-              <input type="date" id="b2b-fecha" class="input-form">
+              <input type="date" id="b2b-fecha" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;">
             </div>
           </div>
           
@@ -819,7 +826,7 @@
             </div>
             
             <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid #eee; text-align:right;">
-              <div style="font-size:0.8rem; color:#666;">El IVA se calcula automáticamente (19%)</div>
+              <div style="font-size:0.8rem; color:var(--grisMed);">El IVA se calcula automáticamente (19%)</div>
               <button class="btn btn-negro" onclick="b2bGenerarImpresion()" style="margin-top:1rem; font-size:1rem; padding:0.5rem 1.5rem;">🖨️ Generar Cotización PDF</button>
             </div>
           </div>
@@ -859,7 +866,7 @@
                 <th style="padding: 0.6rem 1rem; text-align:right;">TOTAL</th>
               </tr>
             </thead>
-            <tbody id="b2b-print-tbody" style="color:#666;">
+            <tbody id="b2b-print-tbody" style="color:var(--grisMed);">
               <!-- JS Injects -->
             </tbody>
           </table>
@@ -945,11 +952,11 @@
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1.5rem">
       <div>
         <label style="font-size:.7rem;color:var(--grisMed);display:block;margin-bottom:.3rem">Costo Producción ($)</label>
-        <input type="number" id="modal-costo" class="input-form" min="0" style="width:100%;font-size:.7rem;padding:.4rem">
+        <input type="number" id="modal-costo" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" min="0" style="width:100%;font-size:.7rem;padding:.4rem">
       </div>
       <div>
         <label style="font-size:.7rem;color:var(--grisMed);display:block;margin-bottom:.3rem">URL de Imagen</label>
-        <input type="text" id="modal-img" class="input-form" placeholder="https://..." style="width:100%;font-size:.7rem;padding:.4rem">
+        <input type="text" id="modal-img" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="https://..." style="width:100%;font-size:.7rem;padding:.4rem">
       </div>
     </div>
 
@@ -2016,7 +2023,7 @@ function renderFinanzas(pedidos) {
       const mBg = m.margen >= 0.5 ? '#e0f2e9' : m.margen >= 0.3 ? '#fff3e0' : '#ffebee';
       const precioLabel = m.fuentePrecio === 'real' 
         ? `${fCOP(m.precio)} <span style="font-size:0.65rem;color:#2e7d32">(real)</span>` 
-        : `${fCOP(m.precio)} <span style="font-size:0.65rem;color:#999">(est.)</span>`;
+        : `${fCOP(m.precio)} <span style="font-size:0.65rem;color:var(--grisMed)">(est.)</span>`;
       return `<tr>
         <td><strong>${nombre}</strong></td>
         <td style="text-align:right">${precioLabel}</td>
@@ -2626,7 +2633,7 @@ function renderCotizaciones() {
   if (window.todasCotizaciones.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="loading" style="text-align:center">No hay cotizaciones guardadas</td></tr>'; return; }
   
   tbody.innerHTML = window.todasCotizaciones.map(c => {
-    let bdg = '<span style="background:#f4f4f4;color:#666;padding:2px 6px;border-radius:4px;font-size:0.7rem">Borrador</span>';
+    let bdg = '<span style="background:#f4f4f4;color:var(--grisMed);padding:2px 6px;border-radius:4px;font-size:0.7rem">Borrador</span>';
     if(c.estado === 'Aprobada') bdg = '<span style="background:#e8f5e9;color:#2e7d32;padding:2px 6px;border-radius:4px;font-size:0.7rem">Aprobada (Pedido)</span>';
     return `<tr>
       <td><strong>#${c.serial || ''}</strong></td>
