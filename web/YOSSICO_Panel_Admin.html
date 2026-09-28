@@ -337,7 +337,10 @@
       <div class="form-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
           <div class="section-title" style="margin:0;font-size:1.1rem">Logística y Despachos</div>
-          <div class="filtros-bar" style="margin:0">
+          
+          <div class="filtros-bar" style="margin:0; gap:0.5rem; display:flex;">
+            <button class="btn btn-negro" onclick="imprimirRotulosLote()" style="font-size:0.75rem; padding:0.4rem 0.8rem">🖨️ Imprimir Seleccionados</button>
+
             <select id="filtro-envios-estado" onchange="renderEnvios()">
               <option value="pendientes">⏳ Pendientes de Despacho</option>
               <option value="enviados">📦 Ya Despachados</option>
@@ -374,7 +377,20 @@
           <div class="section-title" style="margin-bottom:0">Inventario en tiempo real</div>
           <button class="btn btn-gris btn-sm" onclick="cargarStock()">↻ Actualizar</button>
         </div>
-        <div id="stock-grid" class="stock-grid"><div class="loading">Cargando inventario...</div></div>
+        
+      <!-- ÓRDENES DE PRODUCCIÓN -->
+      <div class="stock-section" style="margin-bottom:2rem; background:var(--blanco); padding:1rem; border:1px solid var(--grisCl); border-radius:4px;">
+        <div class="flex-between">
+          <div class="section-title" style="margin-bottom:0">Órdenes a Fábrica 🏭</div>
+          <button class="btn btn-gris btn-sm" onclick="nuevaOrdenProduccion()">+ Nueva Orden</button>
+        </div>
+        <table style="margin-top:1rem; width:100%">
+          <thead><tr><th>Modelo</th><th>Color</th><th>Talla</th><th>Cantidad</th><th>F. Esperada</th><th>Estado</th><th>Acción</th></tr></thead>
+          <tbody id="tabla-produccion"><tr><td colspan="7" class="loading">Cargando órdenes...</td></tr></tbody>
+        </table>
+      </div>
+
+<div id="stock-grid" class="stock-grid"><div class="loading">Cargando inventario...</div></div>
       </div>
 
       <!-- Agregar nueva prenda -->
@@ -687,7 +703,10 @@
       <div class="form-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
           <div class="section-title" style="margin:0;font-size:1.1rem">Códigos Activos & Usados</div>
-          <div class="filtros-bar" style="margin:0">
+          
+          <div class="filtros-bar" style="margin:0; gap:0.5rem; display:flex;">
+            <button class="btn btn-negro" onclick="imprimirRotulosLote()" style="font-size:0.75rem; padding:0.4rem 0.8rem">🖨️ Imprimir Seleccionados</button>
+
             <select id="filtro-desc-estado" onchange="renderDescuentosLista()" style="min-width:200px">
               <option value="todos">Todos los códigos</option>
               <option value="disponibles">Solo Disponibles</option>
@@ -759,6 +778,13 @@
         <!-- Formulario Oculto en impresión -->
         <div id="b2b-form-area" class="no-print">
           <div class="section-title" style="margin-bottom:1.5rem;font-size:1.1rem">Generador de Cotizaciones Institucionales</div>
+
+          <div class="section-title" style="margin-top:2rem;font-size:1.1rem">Historial de Cotizaciones</div>
+          <table style="width:100%">
+            <thead><tr><th>#</th><th>Cliente</th><th>Total</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="tabla-cotizaciones"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody>
+          </table>
+
           
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
             <!-- Lado Izquierdo: Datos Cliente -->
@@ -878,7 +904,10 @@
           <div class="section-title" style="margin-bottom:0">Base de Clientes (CRM)</div>
           <div style="font-size:.7rem;color:var(--grisMed);margin-top:.4rem" id="clientes-resumen">Cargando...</div>
         </div>
-        <div class="filtros-bar" style="margin:0">
+        
+          <div class="filtros-bar" style="margin:0; gap:0.5rem; display:flex;">
+            <button class="btn btn-negro" onclick="imprimirRotulosLote()" style="font-size:0.75rem; padding:0.4rem 0.8rem">🖨️ Imprimir Seleccionados</button>
+
           <input type="text" id="filtro-cliente-buscar" placeholder="🔍 Buscar nombre/tel..." oninput="filtrarClientes()" style="width:200px">
           <button class="btn btn-gris btn-sm" onclick="cargarClientes()">↻ Actualizar</button>
         </div>
@@ -993,6 +1022,8 @@ async function verificarPin(pin) {
     actualizarResumen();
     aplicarFiltros();
     cargarStock();
+    cargarProduccion();
+    cargarCotizaciones();
     cargarGastos();
     iniciarCampana();
   } catch (err) {
@@ -1073,7 +1104,7 @@ function renderEnvios() {
   
   tbody.innerHTML = base.map(p => {
     return `<tr>
-      <td><code style="font-size:.7rem">${(p.id||"").split("-")[0]}</code></td>
+      <td><input type="checkbox" class="chk-envio" value="${p.id}" style="margin-right:8px;"><code style="font-size:.7rem">${(p.id||"").split("-")[0]}</code></td>
       <td style="font-size:.75rem"><strong>${p.cliente_nombre||""}</strong><br>${p.cliente_ciudad||""}</td>
       <td style="font-size:.75rem">${p.empresa_envio||'<span style="color:var(--naranja)">Por definir</span>'}</td>
       <td style="font-size:.75rem">${p.numero_guia ? `<code>${p.numero_guia}</code>` : '<span style="color:var(--naranja)">Sin guía</span>'}</td>
@@ -1096,7 +1127,7 @@ function renderPedidos(pedidos) {
     const fecha = new Date(p.created_at).toLocaleDateString("es-CO",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
     const prendas = (p.items||[]).map(i => `${i.nombre||""} T${i.talla||""} x${i.qty||1}`).join(", ")||"-";
     return `<tr>
-      <td><code style="font-size:.7rem">${(p.id||"").split("-")[0]}</code></td>
+      <td><input type="checkbox" class="chk-envio" value="${p.id}" style="margin-right:8px;"><code style="font-size:.7rem">${(p.id||"").split("-")[0]}</code></td>
       <td style="font-size:.75rem">${fecha}</td>
       <td><strong>${p.cliente_nombre||""}</strong><br><span style="font-size:.7rem;color:var(--grisMed)">${p.cliente_telefono||""}</span></td>
       <td style="font-size:.75rem;max-width:180px;word-break:break-word">${prendas}</td>
@@ -1106,6 +1137,7 @@ function renderPedidos(pedidos) {
         <div style="margin-top:0.8rem; display:flex; flex-direction:column; gap:0.4rem;">
           <button onclick="imprimirRotulo('${p.id}')" style="background:#f4f4f4;border:1px solid #ddd;padding:0.3rem;font-size:0.65rem;cursor:pointer;border-radius:3px;font-family:inherit;">🖨️ Imprimir Rótulo</button>
           ${esPendiente(p.estado) ? `<button onclick="recuperarVenta('${p.id}')" style="background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;padding:0.3rem;font-size:0.65rem;cursor:pointer;border-radius:3px;font-family:inherit;">💬 Recuperar</button>` : ''}
+          <button onclick="abrirModalRMA(\'${p.id}\')" style="background:#fff3e0;color:#e65100;border:1px solid #ffcc80;padding:0.3rem;font-size:0.65rem;cursor:pointer;border-radius:3px;font-family:inherit;margin-top:0.3rem;display:block;width:100%">🔄 Cambio (RMA)</button>
         </div>
       </td>
       <td>
@@ -1152,8 +1184,39 @@ async function cambiarEstado(id, nuevoEstado, sel) {
   if (nuevoEstado === "Cancelado" && !confirm("¿Cancelar pedido?\n\nEl stock se devolverá automáticamente.")) { sel.value=""; return; }
   const { error } = await sb.rpc("admin_actualizar_pedido", { p_id: id, p_nuevo_estado: nuevoEstado, pin: adminPin });
   if (error) { mostrarToast("Error: " + error.message, "err"); sel.value=""; }
-  else { mostrarToast("Pedido → " + nuevoEstado, "ok"); cargarPedidos(); cargarStock(); }
+  else { mostrarToast("Pedido → " + nuevoEstado, "ok"); cargarPedidos(); cargarStock();
+    cargarProduccion();
+    cargarCotizaciones(); }
 }
+
+function imprimirRotulosLote() {
+  const checkboxes = document.querySelectorAll('.chk-envio:checked');
+  if (checkboxes.length === 0) { mostrarToast("Selecciona al menos un pedido", "warn"); return; }
+  
+  let ids = Array.from(checkboxes).map(c => c.value);
+  let htmlRotulos = '';
+  
+  ids.forEach(id => {
+    const p = todosPedidos.find(x => x.id === id);
+    if(!p) return;
+    const prendas = (p.items||[]).map(i => `${i.nombre} T${i.talla} x${i.qty}`).join(", ");
+    htmlRotulos += `
+      <div class="label" style="page-break-after: always; border: 2px solid #000; width: 10cm; height: 15cm; padding: 1.5rem; box-sizing: border-box; margin: 0 auto; position: relative;">
+        <div class="logo" style="font-size: 1.5rem; letter-spacing: 3px; font-weight: bold; margin-bottom: 2rem; border-bottom: 2px solid #000; padding-bottom: 1rem; text-align: center;">YOSSICO</div>
+        <div class="row" style="margin-bottom: 1rem;"><div class="lbl" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #555;">Destinatario</div><div class="val" style="font-size:1.3rem; font-weight: bold;">${p.cliente_nombre || '-'}</div></div>
+        <div class="row" style="margin-bottom: 1rem;"><div class="lbl" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #555;">Teléfono</div><div class="val" style="font-size: 1.1rem; font-weight: bold;">${p.cliente_telefono || '-'}</div></div>
+        <div class="row" style="margin-bottom: 1rem;"><div class="lbl" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #555;">Dirección</div><div class="val" style="font-size: 1.1rem; font-weight: bold;">${p.cliente_direccion || '-'}</div><div class="val" style="margin-top:0.3rem; font-size: 1.1rem; font-weight: bold;">${p.cliente_ciudad || '-'}</div></div>
+        <div class="row" style="margin-top:2rem"><div class="lbl" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #555;">Contenido</div><div class="val" style="font-size:0.9rem; font-weight:normal;">${prendas}</div></div>
+        <div class="footer" style="position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem; font-size: 0.7rem; text-align: center; border-top: 1px solid #ccc; padding-top: 1rem;">Pedido #${p.id.split('-')[0]}<br>Remitente: YOSSICO - Bogotá, Colombia</div>
+      </div>
+    `;
+  });
+  
+  const v = window.open('', '_blank');
+  v.document.write(`<html><head><title>Rótulos en Lote</title><style>body { font-family: sans-serif; margin: 0; color: #000; }</style></head><body onload="window.print(); setTimeout(()=>window.close(), 500)">${htmlRotulos}</body></html>`);
+  v.document.close();
+}
+
 function imprimirRotulo(id) {
   const p = todosPedidos.find(x => x.id === id);
   if(!p) return;
@@ -1280,6 +1343,73 @@ function exportarCSV() {
 }
 
 // ── INVENTARIO
+
+window.todasOrdenesProd = [];
+async function cargarProduccion() {
+  const tbody = document.getElementById('tabla-produccion');
+  if(!tbody) return;
+  const { data, error } = await sb.from('ordenes_produccion').select('*').order('created_at', { ascending: false });
+  if (error) { tbody.innerHTML = `<tr><td colspan="7" class="loading">Error: ${error.message}</td></tr>`; return; }
+  window.todasOrdenesProd = data || [];
+  renderProduccion();
+}
+
+function renderProduccion() {
+  const tbody = document.getElementById('tabla-produccion');
+  if (window.todasOrdenesProd.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="loading" style="text-align:center">Sin órdenes en fábrica</td></tr>'; return; }
+  
+  tbody.innerHTML = window.todasOrdenesProd.map(o => {
+    const estadoBadge = o.estado === 'entregado' ? '<span style="background:#e8f5e9;color:#2e7d32;padding:2px 6px;border-radius:4px;font-size:0.7rem">✅ Entregado</span>' :
+                        '<span style="background:#fff3e0;color:#e65100;padding:2px 6px;border-radius:4px;font-size:0.7rem">⏳ En Confección</span>';
+    return `<tr>
+      <td><strong>${o.modelo}</strong></td>
+      <td>${o.color}</td>
+      <td>${o.talla}</td>
+      <td>${o.cantidad} und.</td>
+      <td>${o.fecha_esperada || 'Sin fecha'}</td>
+      <td>${estadoBadge}</td>
+      <td>
+        ${o.estado === 'en_confeccion' ? `<button class="btn btn-gris btn-sm" onclick="marcarProdEntregada('${o.id}', '${o.modelo}', '${o.talla}', ${o.cantidad})">Recibir Stock</button>` : '-'}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function nuevaOrdenProduccion() {
+  const mod = prompt("Modelo (ej: OSLO):"); if(!mod) return;
+  const col = prompt("Color:"); if(!col) return;
+  const tal = prompt("Talla (S, M, L):"); if(!tal) return;
+  const cant = parseInt(prompt("Cantidad a fabricar:")); if(!cant) return;
+  const fecha = prompt("Fecha esperada (YYYY-MM-DD):");
+  
+  const { error } = await sb.from('ordenes_produccion').insert([{ modelo: mod, color: col, talla: tal, cantidad: cant, fecha_esperada: fecha }]);
+  if (error) mostrarToast(error.message, 'err');
+  else { mostrarToast("Orden creada", "ok"); cargarProduccion(); }
+}
+
+async function marcarProdEntregada(id, modelo, talla, cantidad) {
+  if(!confirm(`¿Marcar ${cantidad} und de ${modelo} Talla ${talla} como recibidas en inventario?`)) return;
+  
+  // 1. Marcar estado
+  await sb.from('ordenes_produccion').update({ estado: 'entregado' }).eq('id', id);
+  
+  // 2. Sumar stock
+  // This is a direct update, requires logic in BD or direct via REST since we have service_role?
+  // Let's do it via direct REST using the anon key (if we gave permissions) or via the stockData JS logic for now, 
+  // actually we can find the id in stockData and update it.
+  const prod = stockData.find(s => s.nombre.toUpperCase() === modelo.toUpperCase() && s.talla.toUpperCase() === talla.toUpperCase());
+  if (prod) {
+    const { error } = await sb.from('productos').update({ stock: prod.stock + cantidad }).eq('id', prod.id);
+    if(error) mostrarToast(error.message, 'err');
+    else { mostrarToast("Stock sumado", "ok"); cargarStock();
+    cargarProduccion();
+    cargarCotizaciones(); }
+  } else {
+    mostrarToast("No existe el producto base en inventario, crea la prenda primero", "warn");
+  }
+  cargarProduccion();
+}
+
 async function cargarStock() {
   const grid = document.getElementById("stock-grid");
   if (grid) grid.innerHTML = '<div class="loading">Cargando inventario...</div>';
@@ -1289,6 +1419,23 @@ async function cargarStock() {
   renderStock();
   filtrarSKUs();
   chkStockBajo();
+}
+
+
+function calcularDiasStock(nombre, color, talla, stock) {
+  if (stock === 0) return 0;
+  const hace30Dias = new Date(); hace30Dias.setDate(hace30Dias.getDate() - 30);
+  let ventasMes = 0;
+  todosPedidos.forEach(p => {
+    if (new Date(p.created_at) >= hace30Dias && (p.estado === 'Pagado' || p.estado === 'Pendiente')) {
+      (p.items || []).forEach(i => {
+        if (i.nombre === nombre && (i.talla||'').toUpperCase() === talla.toUpperCase()) ventasMes += (i.qty || 1);
+      });
+    }
+  });
+  if (ventasMes === 0) return 999;
+  const ritmoDiario = ventasMes / 30;
+  return Math.round(stock / ritmoDiario);
 }
 
 function renderStock() {
@@ -1371,8 +1518,12 @@ async function guardarStock() {
     }
   }
   if(err > 0) mostrarToast("Error parcial al guardar","warn");
-  else if(err === -1) { mostrarToast("Stock actualizado. (Falta correr script SQL para guardar costo/imagen)","warn"); cerrarModalStock(); cargarStock(); }
-  else { mostrarToast("Producto actualizado ✓","ok"); cerrarModalStock(); cargarStock(); }
+  else if(err === -1) { mostrarToast("Stock actualizado. (Falta correr script SQL para guardar costo/imagen)","warn"); cerrarModalStock(); cargarStock();
+    cargarProduccion();
+    cargarCotizaciones(); }
+  else { mostrarToast("Producto actualizado ✓","ok"); cerrarModalStock(); cargarStock();
+    cargarProduccion();
+    cargarCotizaciones(); }
 }
 
 // ── POS
@@ -1413,6 +1564,8 @@ async function registrarVenta() {
   await sb.rpc("decrementar_stock",{items});
   mostrarToast("Venta registrada ✓","ok");
   limpiarFormulario();cargarPedidos();cargarStock();
+    cargarProduccion();
+    cargarCotizaciones();
 }
 
 function limpiarFormulario() {
@@ -1513,7 +1666,8 @@ async function pollPedidosNuevos() {
 }
 
 function actualizarBadge(count) {
-  const badge = document.getElementById("bell-badge");
+  const diasStock = calcularDiasStock(s.nombre, s.color, s.talla, s.stock);
+      const badge = document.getElementById("bell-badge");
   if (count > 0) {
     badge.textContent = count > 9 ? "9+" : count;
     badge.style.display = "flex";
@@ -2237,6 +2391,8 @@ async function crearPrenda() {
 
   // Recargar inventario
   cargarStock();
+    cargarProduccion();
+    cargarCotizaciones();
 }
 
 // ══════════════════════════════════════════════════════════
@@ -2452,6 +2608,85 @@ function b2bAgregarItem() {
     <button class="btn btn-gris btn-sm" onclick="this.parentElement.remove()" style="padding:0 0.8rem;font-size:0.8rem">X</button>
   `;
   container.appendChild(div);
+}
+
+
+window.todasCotizaciones = [];
+async function cargarCotizaciones() {
+  const tbody = document.getElementById('tabla-cotizaciones');
+  if(!tbody) return;
+  const { data, error } = await sb.from('cotizaciones_b2b').select('*').order('created_at', { ascending: false });
+  if (error) { tbody.innerHTML = `<tr><td colspan="6" class="loading">Error: ${error.message}</td></tr>`; return; }
+  window.todasCotizaciones = data || [];
+  renderCotizaciones();
+}
+
+function renderCotizaciones() {
+  const tbody = document.getElementById('tabla-cotizaciones');
+  if (window.todasCotizaciones.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="loading" style="text-align:center">No hay cotizaciones guardadas</td></tr>'; return; }
+  
+  tbody.innerHTML = window.todasCotizaciones.map(c => {
+    let bdg = '<span style="background:#f4f4f4;color:#666;padding:2px 6px;border-radius:4px;font-size:0.7rem">Borrador</span>';
+    if(c.estado === 'Aprobada') bdg = '<span style="background:#e8f5e9;color:#2e7d32;padding:2px 6px;border-radius:4px;font-size:0.7rem">Aprobada (Pedido)</span>';
+    return `<tr>
+      <td><strong>#${c.serial || ''}</strong></td>
+      <td>${c.cliente_nombre}</td>
+      <td>${fCOP(c.total)}</td>
+      <td>${new Date(c.created_at).toLocaleDateString()}</td>
+      <td>${bdg}</td>
+      <td>
+        ${c.estado !== 'Aprobada' ? `<button class="btn btn-negro btn-sm" onclick="convertirCotizacionAPedido('${c.id}')">Convertir a Pedido 🚀</button>` : '-'}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function b2bGuardarCotizacion() {
+  const cliente = document.getElementById('b2b-print-empresa').textContent;
+  const nit = document.getElementById('b2b-print-nit').textContent;
+  
+  const trs = document.querySelectorAll('#b2b-print-tbody tr');
+  const items = [];
+  let subtotal = 0;
+  
+  trs.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if(tds.length >= 6) {
+      const p = parseFloat(tds[4].textContent.replace(/[^0-9]/g, '')) || 0;
+      const q = parseInt(tds[3].textContent) || 0;
+      items.push({ sku: tds[0].textContent, nombre: tds[1].textContent, qty: q, price: p });
+      subtotal += p * q;
+    }
+  });
+  
+  const total = subtotal * 1.19; // con IVA
+  
+  const { error } = await sb.from('cotizaciones_b2b').insert([{
+    cliente_nombre: cliente, nit: nit, items: items, subtotal: subtotal, total: total
+  }]);
+  
+  if(error) mostrarToast(error.message, 'err');
+  else {
+    mostrarToast("Cotización guardada", "ok");
+    document.getElementById('b2b-print-controls').style.display = 'none';
+    document.getElementById('b2b-form-area').style.display = 'block';
+    cargarCotizaciones();
+  }
+}
+
+async function convertirCotizacionAPedido(id) {
+  if(!confirm("¿Convertir esta cotización en un pedido real? Esto generará un pedido en estado Pagado y se reflejará en las finanzas y logística.")) return;
+  const { error } = await sb.rpc('admin_convertir_cotizacion_a_pedido', { p_cotizacion_id: id, pin: adminPin });
+  if (error) mostrarToast(error.message, 'err');
+  else {
+    mostrarToast("Convertido a pedido exitosamente ✓", "ok");
+    cargarCotizaciones();
+    // Refresh pedidos
+    const { data } = await sb.rpc("admin_get_pedidos", { pin: adminPin });
+    if(data) todosPedidos = data;
+    actualizarResumen();
+    renderPedidos();
+  }
 }
 
 function b2bGenerarImpresion() {
