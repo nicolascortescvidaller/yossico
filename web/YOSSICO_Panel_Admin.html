@@ -77,6 +77,23 @@
   .tab-content.active { display: block; }
   /* MAIN */
   .main { flex: 1; max-width: 1400px; margin: 0; padding: 3.5rem 4rem; overflow-y: auto; }
+  
+  .hover-module { transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s ease; }
+  .hover-module:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.06); z-index: 10; position: relative; }
+  
+  .info-tooltip { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: var(--grisCl); color: var(--negro); font-size: 0.6rem; font-weight: bold; cursor: help; margin-left: 0.3rem; }
+  
+  .dist-step { background: var(--blanco); border: 1px solid var(--grisCl); border-radius: 8px; padding: 1.2rem; margin-bottom: 0.8rem; display: flex; align-items: center; cursor: pointer; transition: all 0.2s; }
+  .dist-step:hover { border-color: var(--negro); }
+  .dist-step .step-number { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: bold; color: var(--grisMed); margin-right: 1.2rem; min-width: 25px; }
+  .dist-step .step-info { flex: 1; }
+  .dist-step .step-title { font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; color: var(--negro); }
+  .dist-step .step-desc { font-size: 0.7rem; color: var(--grisMed); margin-top: 0.2rem; }
+  .dist-step .step-value { font-weight: bold; font-size: 1.1rem; color: var(--negro); }
+  
+  .dist-details { display: none; padding: 1rem 1.2rem; background: var(--grisF); border-radius: 6px; margin-top: 0.5rem; border-left: 3px solid var(--negro); font-size: 0.75rem; color: var(--negro); }
+  .dist-step.open .dist-details { display: block; }
+
   /* LOGIN */
   .login-card{background:var(--blanco);border:1px solid var(--grisCl);padding:2.5rem;max-width:400px;margin:4rem auto;text-align:center}
   .login-card h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:.5rem}
@@ -276,9 +293,12 @@
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
         Pauta & Mkt
       </button>
-      <button class="tab-btn" onclick="cambiarTab('finanzas',this)">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        Rentabilidad
+      <button class="tab-btn" onclick="cambiarTab('finanzas',this)" style="justify-content: space-between;">
+        <div style="display:flex; align-items:center; gap:0.8rem;">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          Rentabilidad
+        </div>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.4;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
       </button>
       <button class="tab-btn" onclick="cambiarTab('descuentos',this)">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
@@ -304,13 +324,13 @@
     <!-- TAB PEDIDOS -->
     <div id="tab-pedidos" class="tab-content active">
       <div class="resumen-grid">
-        <div class="resumen-card verde"><div class="rlabel">Total vendido hoy</div><div class="rvalor" id="res-total">$0</div><div class="rsub" id="res-total-hist"></div></div>
-        <div class="resumen-card azul"><div class="rlabel">Pedidos hoy</div><div class="rvalor" id="res-phoy">0</div><div class="rsub" id="res-ptotal"></div></div>
-        <div class="resumen-card naranja"><div class="rlabel">Pendientes de pago</div><div class="rvalor" id="res-pend">0</div><div class="rsub">por confirmar</div></div>
-        <div class="resumen-card rojo"><div class="rlabel">Cancelados hoy</div><div class="rvalor" id="res-can">0</div><div class="rsub">stock devuelto</div></div>
+        <div class="resumen-card hover-module verde"><div class="rlabel">Total vendido hoy</div><div class="rvalor" id="res-total">$0</div><div class="rsub" id="res-total-hist"></div></div>
+        <div class="resumen-card hover-module azul"><div class="rlabel">Pedidos hoy</div><div class="rvalor" id="res-phoy">0</div><div class="rsub" id="res-ptotal"></div></div>
+        <div class="resumen-card hover-module naranja"><div class="rlabel">Pendientes de pago</div><div class="rvalor" id="res-pend">0</div><div class="rsub">por confirmar</div></div>
+        <div class="resumen-card hover-module rojo"><div class="rlabel">Cancelados hoy</div><div class="rvalor" id="res-can">0</div><div class="rsub">stock devuelto</div></div>
       </div>
 
-      <div class="form-card">
+      <div class="form-card hover-module">
         <div class="flex-between">
           <div class="section-title" style="margin-bottom:0">Todos los pedidos</div>
           <div class="dgap">
@@ -345,7 +365,7 @@
 
     <!-- TAB ENVÍOS / LOGÍSTICA -->
     <div id="tab-envios" class="tab-content">
-      <div class="form-card">
+      <div class="form-card hover-module">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
           <div class="section-title" style="margin:0;font-size:1.1rem">Logística y Despachos</div>
           
@@ -444,7 +464,7 @@
 
     <!-- TAB POS -->
     <div id="tab-pos" class="tab-content">
-      <div class="form-card">
+      <div class="form-card hover-module">
         <div class="section-title" style="margin-bottom:.75rem;color:var(--negro)">Datos del cliente</div>
         <div class="form-grid" style="margin-bottom:1rem">
           <div class="form-group"><label>Nombre completo</label><input type="text" id="f-nombre" placeholder="María Rodríguez"></div>
@@ -481,7 +501,7 @@
 
     <!-- TAB SUSCRIPTORAS -->
     <div id="tab-suscriptoras" class="tab-content">
-      <div class="form-card">
+      <div class="form-card hover-module">
         <div class="flex-between">
           <div class="section-title" style="margin-bottom:0">Suscriptoras del Drop</div>
           <div class="dgap">
@@ -525,11 +545,11 @@
 
       <!-- KPI Cards -->
       <div class="resumen-grid" style="grid-template-columns: repeat(5, 1fr)">
-        <div class="resumen-card verde"><div class="rlabel">Ingresos período</div><div class="rvalor" id="sk-ingresos">—</div><div class="rsub" id="sk-ingresos-sub"></div></div>
-        <div class="resumen-card verde"><div class="rlabel">Utilidad Estimada</div><div class="rvalor" id="sk-utilidad">—</div><div class="rsub">ingresos - costos</div></div>
-        <div class="resumen-card azul"><div class="rlabel">Pedidos período</div><div class="rvalor" id="sk-pedidos">—</div><div class="rsub" id="sk-pedidos-sub"></div></div>
-        <div class="resumen-card naranja"><div class="rlabel">Ticket promedio</div><div class="rvalor" id="sk-ticket">—</div><div class="rsub">por pedido pagado</div></div>
-        <div class="resumen-card rojo"><div class="rlabel">Suscriptoras</div><div class="rvalor" id="sk-subs">—</div><div class="rsub">inscritas al drop</div></div>
+        <div class="resumen-card hover-module verde"><div class="rlabel">Ingresos período</div><div class="rvalor" id="sk-ingresos">—</div><div class="rsub" id="sk-ingresos-sub"></div></div>
+        <div class="resumen-card hover-module verde"><div class="rlabel">Utilidad Estimada</div><div class="rvalor" id="sk-utilidad">—</div><div class="rsub">ingresos - costos</div></div>
+        <div class="resumen-card hover-module azul"><div class="rlabel">Pedidos período</div><div class="rvalor" id="sk-pedidos">—</div><div class="rsub" id="sk-pedidos-sub"></div></div>
+        <div class="resumen-card hover-module naranja"><div class="rlabel">Ticket promedio</div><div class="rvalor" id="sk-ticket">—</div><div class="rsub">por pedido pagado</div></div>
+        <div class="resumen-card hover-module rojo"><div class="rlabel">Suscriptoras</div><div class="rvalor" id="sk-subs">—</div><div class="rsub">inscritas al drop</div></div>
       </div>
 
       <!-- Fila 1: línea diaria + dona estados -->
@@ -577,7 +597,7 @@
 
     <!-- TAB PAUTA Y MARKETING -->
     <div id="tab-pauta" class="tab-content">
-      <div class="form-card">
+      <div class="form-card hover-module">
         <div class="flex-between" style="margin-bottom:1.5rem">
           <div class="section-title" style="margin:0">Dashboard de Marketing & Pauta 📣</div>
           <div class="rvalor" id="pauta-total-acumulado" style="font-size:1.2rem; color:var(--negro)">$0</div>
@@ -585,21 +605,21 @@
         
         <!-- KPIs de Marketing -->
         <div class="resumen-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 2rem;">
-          <div class="resumen-card" style="background:var(--blanco); border-color:var(--grisCl)">
+          <div class="resumen-card hover-module" style="background:var(--blanco); border-color:var(--grisCl)">
             <div class="rlabel">Inversión Total</div>
             <div class="rvalor" id="pt-kpi-inv" style="color:var(--naranja)">$0</div>
           </div>
-          <div class="resumen-card" style="background:var(--blanco); border-color:var(--grisCl)">
+          <div class="resumen-card hover-module" style="background:var(--blanco); border-color:var(--grisCl)">
             <div class="rlabel">ROAS (Retorno)</div>
             <div class="rvalor" id="pt-kpi-roas" style="color:var(--verde)">0x</div>
             <div class="rsub" style="font-size:0.65rem">Por cada $1 invertido, recuperas X</div>
           </div>
-          <div class="resumen-card" style="background:var(--blanco); border-color:var(--grisCl)">
+          <div class="resumen-card hover-module" style="background:var(--blanco); border-color:var(--grisCl)">
             <div class="rlabel">CAC (Costo Adquisición)</div>
             <div class="rvalor" id="pt-kpi-cac" style="color:var(--azul)">$0</div>
             <div class="rsub" style="font-size:0.65rem">Costo por cliente nuevo</div>
           </div>
-          <div class="resumen-card" style="background:var(--blanco); border-color:var(--grisCl)">
+          <div class="resumen-card hover-module" style="background:var(--blanco); border-color:var(--grisCl)">
             <div class="rlabel">% Sobre Ventas</div>
             <div class="rvalor" id="pt-kpi-pct" style="color:var(--negro)">0%</div>
             <div class="rsub" style="font-size:0.65rem">Ideal: 10% - 20%</div>
@@ -653,24 +673,24 @@
 
     <!-- TAB FINANZAS / RENTABILIDAD -->
     <div id="tab-finanzas" class="tab-content">
-      <div class="form-card">
+      <div class="form-card hover-module">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
           <div class="section-title" style="margin:0;font-size:1.1rem">Rentabilidad y Costos</div>
           <button class="btn btn-negro btn-sm" onclick="exportarFinanzasCSV()">⬇ Descargar Reporte</button>
         </div>
 
         <div class="resumen-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1rem;">
-          <div class="resumen-card verde" style="background:var(--blanco); border-color:#e0f2e9">
+          <div class="resumen-card hover-module verde" style="background:var(--blanco); border-color:#e0f2e9">
             <div class="rlabel">Ingresos Brutos Reales</div>
             <div class="rvalor" id="fin-ingresos">$0</div>
             <div class="rsub">Total de ventas cobradas</div>
           </div>
-          <div class="resumen-card naranja" style="background:var(--blanco); border-color:#fcecdb">
+          <div class="resumen-card hover-module naranja" style="background:var(--blanco); border-color:#fcecdb">
             <div class="rlabel">Costos Totales (Prod + OPEX)</div>
             <div class="rvalor" id="fin-costos">$0</div>
             <div class="rsub">Costo de telas + Gastos operativos</div>
           </div>
-          <div class="resumen-card azul" style="background:var(--blanco); border-color:#ddecff">
+          <div class="resumen-card hover-module azul" style="background:var(--blanco); border-color:#ddecff">
             <div class="rlabel">Utilidad Neta del Negocio</div>
             <div class="rvalor" id="fin-utilidad" style="color:var(--azul)">$0</div>
             <div class="rsub" id="fin-margen">Margen Neto Global: 0%</div>
@@ -786,7 +806,7 @@
         </div>
 
         <!-- SIMULADOR HIPOTÉTICOS -->
-        <div class="form-card" id="simulador-card" style="margin-top:2.5rem; background:var(--blanco); border:1px solid var(--grisCl); box-shadow:0 4px 12px rgba(0,0,0,0.05)">
+        <div class="form-card hover-module" id="simulador-card" style="margin-top:2.5rem; background:var(--blanco); border:1px solid var(--grisCl); box-shadow:0 4px 12px rgba(0,0,0,0.05)">
           <div class="section-title">Simulador de Escenarios (Venta de Inventario)</div>
           <div style="font-size:0.85rem; color:var(--grisMed); margin-bottom:1.5rem;">Descubre cuánto dinero ingresaría a tu cuenta si vendes el stock actual de fábrica.</div>
           
@@ -798,18 +818,18 @@
           </div>
           
           <div class="resumen-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
-            <div class="resumen-card" style="background:#f4f9ff; border:1px solid #ddecff">
+            <div class="resumen-card hover-module" style="background:#f4f9ff; border:1px solid #ddecff">
               <div class="rlabel" style="color:#0d47a1">Ventas Brutas Esperadas</div>
               <div class="rvalor" id="sim-ventas" style="color:#1565c0">$0</div>
               <div class="rsub" id="sim-ventas-uds" style="font-weight:600; color:#0d47a1; margin-top:0.2rem">0 unidades</div>
               <div class="rsub">Lo que pagarían los clientes</div>
             </div>
-            <div class="resumen-card" style="background:#fffaf5; border:1px solid #fcecdb">
+            <div class="resumen-card hover-module" style="background:#fffaf5; border:1px solid #fcecdb">
               <div class="rlabel" style="color:#e65100">Costo de la Mercancía</div>
               <div class="rvalor" id="sim-costos" style="color:#ef6c00">$0</div>
               <div class="rsub">Lo que costó producirla</div>
             </div>
-            <div class="resumen-card" style="background:#f9fdfa; border:1px solid #e0f2e9">
+            <div class="resumen-card hover-module" style="background:#f9fdfa; border:1px solid #e0f2e9">
               <div class="rlabel" style="color:#1b5e20">Utilidad Bruta Proyectada</div>
               <div class="rvalor" id="sim-utilidad" style="color:#2e7d32">$0</div>
               <div class="rsub">Ganancia antes de Opex/Pauta</div>
@@ -818,116 +838,124 @@
           <div style="position:relative;height:300px; width:100%"><canvas id="chart-simulador"></canvas></div>
 
           <!-- ESQUEMA DE DISTRIBUCIÓN DEL DROP -->
-          <div style="margin-top:3rem; border: 1px solid var(--negro); border-radius: 8px; overflow: hidden; background: #fafafa;">
-            <div style="background: var(--negro); color: var(--blanco); padding: 1rem 1.5rem; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; letter-spacing: 2px; font-weight: 600;">
-              CÓMO SE DISTRIBUYE EL DINERO EN ESTE ESCENARIO
-            </div>
+          <div style="margin-top:3rem;">
+            <div class="section-title" style="margin-bottom:0.5rem;">Cálculo de Utilidades y Reparto</div>
+            <div style="font-size:0.85rem; color:var(--grisMed); margin-bottom:1.5rem;">Desglose interactivo del flujo de caja. Haz clic en cada paso para ver la explicación matemática.</div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 1.5rem;">
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.5rem; align-items: start;">
               
-              <!-- Columna Izquierda: Steps 1-5 -->
-              <div style="display:flex; flex-direction:column; gap: 0.5rem; font-family: 'Montserrat', sans-serif;">
+              <!-- Columna Izquierda: Flujo de Caja -->
+              <div style="display:flex; flex-direction:column;">
                 
-                <!-- 1. Ingresos -->
-                <div style="display:flex; border:1px solid #e0e0e0; background:#f4f4f4; align-items:center;">
-                  <div style="background:#1a1a1a; color:#fff; padding:0.8rem 1.2rem; font-weight:bold; font-size:1.2rem; min-width:50px; text-align:center;">1</div>
-                  <div style="padding:0.5rem 1rem; flex:1;">
-                    <div style="font-size:0.85rem; font-weight:700;">INGRESOS POR VENTAS</div>
-                    <div style="font-size:0.7rem; color:#666; font-style:italic;">Precio de venta × unidades vendidas</div>
+                <div class="dist-step hover-module" onclick="this.classList.toggle('open')">
+                  <div class="step-number">1</div>
+                  <div class="step-info">
+                    <div class="step-title">INGRESOS POR VENTAS</div>
+                    <div class="step-desc">Total de dinero recaudado por ventas.</div>
+                    <div class="dist-details"><strong>Fórmula:</strong> Precio de venta unitario × Unidades simuladas.<br>Este es el monto bruto antes de descontar cualquier gasto.</div>
                   </div>
-                  <div id="dist-ingresos" style="padding:0.8rem 1rem; font-weight:bold; font-size:1.1rem; color:#1a1a1a;">$0</div>
+                  <div class="step-value" id="dist-ingresos">$0</div>
                 </div>
 
-                <!-- 2. Costo -->
-                <div style="display:flex; border:1px solid #ffcdd2; background:#ffebee; align-items:center;">
-                  <div style="background:#c62828; color:#fff; padding:0.8rem 1.2rem; font-weight:bold; font-size:1.2rem; min-width:50px; text-align:center;">2</div>
-                  <div style="padding:0.5rem 1rem; flex:1;">
-                    <div style="font-size:0.85rem; font-weight:700; color:#c62828;">MENOS: COSTO DEL PEDIDO</div>
-                    <div style="font-size:0.7rem; color:#b71c1c; font-style:italic;">Lo que costó producir el stock simulado</div>
+                <div class="dist-step hover-module" onclick="this.classList.toggle('open')">
+                  <div class="step-number">2</div>
+                  <div class="step-info">
+                    <div class="step-title" style="color:var(--rojo)">COSTO DEL PEDIDO</div>
+                    <div class="step-desc">Lo que costó fabricar y traer la mercancía.</div>
+                    <div class="dist-details"><strong>Fórmula:</strong> Costo de producción unitario × Unidades simuladas.<br>Incluye materiales, confección y extras fijos (como envíos desde Yiwu).</div>
                   </div>
-                  <div id="dist-costos" style="padding:0.8rem 1rem; font-weight:bold; font-size:1.1rem; color:#c62828;">$0</div>
+                  <div class="step-value" id="dist-costos" style="color:var(--rojo)">$0</div>
                 </div>
 
-                <!-- 3. Ganancia Neta -->
-                <div style="display:flex; border:1px solid #e0e0e0; background:#eeeeee; align-items:center;">
-                  <div style="background:#1a1a1a; color:#fff; padding:0.8rem 1.2rem; font-weight:bold; font-size:1.2rem; min-width:50px; text-align:center;">3</div>
-                  <div style="padding:0.5rem 1rem; flex:1;">
-                    <div style="font-size:0.85rem; font-weight:700;">= GANANCIA NETA DEL DROP</div>
-                    <div style="font-size:0.7rem; color:#666; font-style:italic;">El resultado real del negocio en este drop</div>
+                <div class="dist-step hover-module" onclick="this.classList.toggle('open')" style="background:var(--grisF);">
+                  <div class="step-number" style="color:var(--negro)">3</div>
+                  <div class="step-info">
+                    <div class="step-title">GANANCIA NETA DEL DROP</div>
+                    <div class="step-desc">El resultado real de la operación.</div>
+                    <div class="dist-details"><strong>Fórmula:</strong> Ingresos (1) - Costos (2).<br>Es el margen de contribución directo de los productos vendidos.</div>
                   </div>
-                  <div id="dist-neta" style="padding:0.8rem 1rem; font-weight:bold; font-size:1.1rem; color:#1a1a1a;">$0</div>
+                  <div class="step-value" id="dist-neta">$0</div>
                 </div>
 
-                <!-- 4. Retorno Garantizado -->
-                <div style="display:flex; border:1px solid #c8e6c9; background:#e8f5e9; align-items:center;">
-                  <div style="background:#2e7d32; color:#fff; padding:0.8rem 1.2rem; font-weight:bold; font-size:1.2rem; min-width:50px; text-align:center;">4</div>
-                  <div style="padding:0.5rem 1rem; flex:1;">
-                    <div style="font-size:0.85rem; font-weight:700; color:#2e7d32;">MENOS: RETORNO GARANTIZADO</div>
-                    <div style="font-size:0.7rem; color:#1b5e20; font-style:italic;">Monto fijo extraído primero</div>
+                <div class="dist-step hover-module" onclick="this.classList.toggle('open')" style="border-color:var(--verde);">
+                  <div class="step-number">4</div>
+                  <div class="step-info">
+                    <div class="step-title" style="color:var(--verde)">RETORNO GARANTIZADO</div>
+                    <div class="step-desc">Monto inicial que se extrae antes del reparto.</div>
+                    <div class="dist-details">
+                      Edita este valor según los términos con tus socios inversores. Este dinero sale limpio antes de dividir las ganancias.
+                      <div style="margin-top:0.5rem;" onclick="event.stopPropagation()">
+                        <input type="number" id="dist-retorno-input" value="10000000" step="500000" class="input-form" style="width:140px; text-align:right; border-color:var(--verde)" oninput="actualizarSimulador(document.getElementById('sim-slider').value)">
+                      </div>
+                    </div>
                   </div>
-                  <div style="padding:0.5rem 1rem;">
-                    <input type="number" id="dist-retorno-input" value="10000000" step="500000" style="width:110px; padding:0.3rem; border:1px solid #81c784; border-radius:4px; text-align:right; font-weight:bold; font-size:0.9rem;" oninput="actualizarSimulador(document.getElementById('sim-slider').value)">
-                  </div>
+                  <div class="step-value" style="color:var(--verde)">Variable</div>
                 </div>
 
-                <!-- 5. Ganancia Post-Retorno -->
-                <div style="display:flex; border:1px solid #e0e0e0; background:#f4f4f4; align-items:center;">
-                  <div style="background:#1a1a1a; color:#fff; padding:0.8rem 1.2rem; font-weight:bold; font-size:1.2rem; min-width:50px; text-align:center;">5</div>
-                  <div style="padding:0.5rem 1rem; flex:1;">
-                    <div style="font-size:0.85rem; font-weight:700;">= GANANCIA POST-RETORNO</div>
-                    <div style="font-size:0.7rem; color:#666; font-style:italic;">Base para calcular reinversión y reparto</div>
+                <div class="dist-step hover-module" onclick="this.classList.toggle('open')" style="background:var(--negro); color:var(--blanco); border:none;">
+                  <div class="step-number" style="color:var(--grisCl)">5</div>
+                  <div class="step-info">
+                    <div class="step-title" style="color:var(--blanco)">GANANCIA POST-RETORNO</div>
+                    <div class="step-desc" style="color:var(--grisCl)">Base líquida para calcular reinversión y reparto final.</div>
+                    <div class="dist-details" style="color:var(--blanco); border-color:var(--blanco); background:#222;"><strong>Fórmula:</strong> Ganancia Neta (3) - Retorno Garantizado (4).<br>Si la ganancia no supera el retorno, este valor es $0.</div>
                   </div>
-                  <div id="dist-post" style="padding:0.8rem 1rem; font-weight:bold; font-size:1.2rem; color:#1a1a1a;">$0</div>
+                  <div class="step-value" id="dist-post" style="color:var(--blanco)">$0</div>
                 </div>
 
               </div>
 
               <!-- Columna Derecha: División -->
-              <div style="border: 2px solid #1a1a1a; background: #fff; display:flex; flex-direction:column; font-family: 'Montserrat', sans-serif;">
-                <div style="text-align:center; padding:1.5rem; font-weight:bold; font-size:1.1rem; border-bottom: 2px solid #1a1a1a; font-family: 'Cormorant Garamond', serif; letter-spacing:1px;">
-                  GANANCIA POST-RETORNO<br>se divide así:
-                </div>
+              <div style="display:flex; flex-direction:column; gap:1.5rem;">
                 
-                <div style="padding:1.5rem; display:flex; flex-direction:column; gap:1.5rem; flex:1; background:#fdfdfd;">
+                <div style="padding:1.5rem; border:1px solid var(--grisCl); border-radius:8px; background:var(--blanco);" class="hover-module">
+                  <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1rem; border-bottom:1px solid var(--grisCl); padding-bottom:1rem;">
+                    <div>
+                      <div style="font-family:'Cormorant Garamond', serif; font-size:2.5rem; font-weight:bold; color:var(--azul); line-height:1;">30%</div>
+                      <div style="font-weight:700; font-size:0.8rem; letter-spacing:1px;">Fondo de Reinversión</div>
+                    </div>
+                    <div id="dist-reinv-total" style="font-size:1.4rem; font-weight:bold; color:var(--azul)">$0</div>
+                  </div>
                   
-                  <!-- 30% Reinversión -->
-                  <div style="border:1px solid #90caf9; border-radius:6px; overflow:hidden;">
-                    <div style="background:#e3f2fd; padding:1rem; display:flex; align-items:center; border-bottom:1px solid #90caf9;">
-                      <div style="font-size:2.2rem; font-weight:700; color:#1565c0; margin-right:1rem; font-family:'Cormorant Garamond', serif;">30%</div>
-                      <div>
-                        <div style="font-weight:700; color:#0d47a1; font-size:0.9rem;">REINVERSIÓN</div>
-                        <div style="font-size:0.75rem; color:#1565c0;">empresa</div>
-                      </div>
-                      <div id="dist-reinv-total" style="margin-left:auto; font-weight:bold; font-size:1.1rem; color:#1565c0;">$0</div>
+                  <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+                      <span style="color:var(--grisMed)">80% destinado al próximo Pedido</span>
+                      <span id="dist-reinv-ped" style="font-weight:600">$0</span>
                     </div>
-                    <div style="display:flex; background:#e8f5e9; font-size:0.75rem; font-weight:600;">
-                      <div style="flex:0.8; padding:0.5rem; text-align:center; color:#2e7d32; border-right:1px solid #a5d6a7;">80% → Pedido <br><span id="dist-reinv-ped">$0</span></div>
-                      <div style="flex:0.2; padding:0.5rem; text-align:center; color:#0277bd; background:#e1f5fe;">20% → Operación <br><span id="dist-reinv-op">$0</span></div>
+                    <div style="width:100%; height:4px; background:var(--grisF); border-radius:2px; overflow:hidden;"><div style="width:80%; height:100%; background:var(--azul);"></div></div>
+                    
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:0.5rem;">
+                      <span style="color:var(--grisMed)">20% destinado a Operación (Opex)</span>
+                      <span id="dist-reinv-op" style="font-weight:600">$0</span>
                     </div>
+                    <div style="width:100%; height:4px; background:var(--grisF); border-radius:2px; overflow:hidden;"><div style="width:20%; height:100%; background:var(--azul);"></div></div>
                   </div>
-
-                  <!-- 70% Repartible -->
-                  <div style="border:1px solid #a5d6a7; border-radius:6px; overflow:hidden;">
-                    <div style="background:#e8f5e9; padding:1rem; display:flex; align-items:center; border-bottom:1px solid #a5d6a7;">
-                      <div style="font-size:2.2rem; font-weight:700; color:#2e7d32; margin-right:1rem; font-family:'Cormorant Garamond', serif;">70%</div>
-                      <div>
-                        <div style="font-weight:700; color:#1b5e20; font-size:0.9rem;">REPARTIBLE</div>
-                        <div style="font-size:0.75rem; color:#2e7d32;">entre socios</div>
-                      </div>
-                      <div id="dist-rep-total" style="margin-left:auto; font-weight:bold; font-size:1.1rem; color:#2e7d32;">$0</div>
-                    </div>
-                    <div style="display:flex; background:#e8f5e9; font-size:0.75rem; font-weight:600;">
-                      <div style="flex:0.7; padding:0.5rem; text-align:center; color:#2e7d32; border-right:1px solid #a5d6a7;">70% → Nico <br><span id="dist-rep-nico">$0</span></div>
-                      <div style="flex:0.3; padding:0.5rem; text-align:center; color:#e65100; background:#fff3e0;">30% → Socio <br><span id="dist-rep-socio">$0</span></div>
-                    </div>
-                  </div>
-
                 </div>
-              </div>
 
-            </div>
-            <div style="text-align:center; padding: 0.8rem; background:#eaeaea; color:#666; font-size:0.75rem; font-style:italic; font-family: 'Montserrat', sans-serif;">
-              Este esquema aplica igual en los 3 escenarios — solo cambia el monto.
+                <div style="padding:1.5rem; border:1px solid var(--verde); border-radius:8px; background:#f9fdfa;" class="hover-module">
+                  <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1rem; border-bottom:1px solid #c8e6c9; padding-bottom:1rem;">
+                    <div>
+                      <div style="font-family:'Cormorant Garamond', serif; font-size:2.5rem; font-weight:bold; color:var(--verde); line-height:1;">70%</div>
+                      <div style="font-weight:700; font-size:0.8rem; letter-spacing:1px; color:var(--verde)">Utilidad Repartible</div>
+                    </div>
+                    <div id="dist-rep-total" style="font-size:1.4rem; font-weight:bold; color:var(--verde)">$0</div>
+                  </div>
+                  
+                  <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+                      <span style="color:var(--verde)">70% → Nico</span>
+                      <span id="dist-rep-nico" style="font-weight:bold; color:var(--verde)">$0</span>
+                    </div>
+                    <div style="width:100%; height:4px; background:#e8f5e9; border-radius:2px; overflow:hidden;"><div style="width:70%; height:100%; background:var(--verde);"></div></div>
+                    
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:0.5rem;">
+                      <span style="color:var(--verde)">30% → Socio</span>
+                      <span id="dist-rep-socio" style="font-weight:bold; color:var(--verde)">$0</span>
+                    </div>
+                    <div style="width:100%; height:4px; background:#e8f5e9; border-radius:2px; overflow:hidden;"><div style="width:30%; height:100%; background:var(--verde);"></div></div>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
 
@@ -940,7 +968,7 @@
     <!-- TAB DESCUENTOS -->
     <!-- TAB CÓDIGOS DE DESCUENTO (Lista) -->
     <div id="tab-descuentos" class="tab-content">
-      <div class="form-card">
+      <div class="form-card hover-module">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
           <div class="section-title" style="margin:0;font-size:1.1rem">Códigos Activos & Usados</div>
           
@@ -969,7 +997,7 @@
 
     <!-- TAB CREAR CÓDIGO -->
     <div id="tab-crear-descuento" class="tab-content">
-      <div class="form-card" style="max-width:700px;margin:0 auto">
+      <div class="form-card hover-module" style="max-width:700px;margin:0 auto">
         <div class="section-title" style="margin-bottom:1.5rem;font-size:1.1rem">Crear Nuevo Código de Descuento</div>
         
         <div class="form-group" style="margin-bottom:1.2rem">
@@ -1015,7 +1043,7 @@
 
     <!-- TAB COTIZADOR B2B -->
     <div id="tab-b2b" class="tab-content">
-      <div class="form-card">
+      <div class="form-card hover-module">
         
         <!-- Formulario Oculto en impresión -->
         <div id="b2b-form-area" class="no-print">
