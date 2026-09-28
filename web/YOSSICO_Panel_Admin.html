@@ -2080,52 +2080,6 @@ function renderFinanzas(pedidos) {
   }
 
   
-window.todaPauta = [];
-async function cargarPauta() {
-  const { data, error } = await sb.from("gastos_pauta").select("*").order("fecha", { ascending: false });
-  if(!error && data) window.todaPauta = data;
-  renderPautaLista();
-}
-function renderPautaLista() {
-  const tbody = document.getElementById("tabla-pauta");
-  if(!tbody) return;
-  if(window.todaPauta.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="loading">No hay registros de pauta</td></tr>'; return; }
-  
-  let sum = 0;
-  tbody.innerHTML = window.todaPauta.map(p => {
-    sum += parseFloat(p.monto||0);
-    const bdg = p.plataforma.includes('Meta') ? '<span style="background:#e3f2fd;color:#1565c0;padding:2px 6px;border-radius:4px;font-size:0.7rem">Meta</span>' : 
-                p.plataforma.includes('TikTok') ? '<span style="background:#000;color:#fff;padding:2px 6px;border-radius:4px;font-size:0.7rem">TikTok</span>' : 
-                p.plataforma.includes('Google') ? '<span style="background:#fff3e0;color:#e65100;padding:2px 6px;border-radius:4px;font-size:0.7rem">Google</span>' : 
-                `<span style="background:#f4f4f4;color:#666;padding:2px 6px;border-radius:4px;font-size:0.7rem">${p.plataforma}</span>`;
-    return `<tr>
-      <td>${new Date(p.fecha).toLocaleDateString()}</td>
-      <td>${bdg}</td>
-      <td><strong>${p.campana || '-'}</strong></td>
-      <td>${p.objetivo}</td>
-      <td style="text-align:right; font-weight:bold">${fCOP(p.monto)}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('pauta-total-acumulado').textContent = 'Inversión Total: ' + fCOP(sum);
-}
-async function guardarPauta() {
-  const plat = document.getElementById('pt-plataforma').value;
-  const obj = document.getElementById('pt-objetivo').value;
-  const mon = parseFloat(document.getElementById('pt-monto').value);
-  const camp = document.getElementById('pt-campana').value.trim();
-  if(!mon || !camp) { mostrarToast("Llena monto y campaña", "warn"); return; }
-  
-  const { error } = await sb.from('gastos_pauta').insert([{ plataforma: plat, objetivo: obj, monto: mon, campana: camp }]);
-  if(error) mostrarToast(error.message, 'err');
-  else {
-    mostrarToast("Pauta registrada", "ok");
-    document.getElementById('pt-monto').value = ''; document.getElementById('pt-campana').value = '';
-    cargarPauta();
-    // Refrescar finanzas para integrar costo
-    if (document.getElementById("tab-finanzas").classList.contains("active")) cargarGastos();
-  }
-}
-
   // --- Lógica Tabla Top Prendas (Histórico) ---
   const sorted = Object.entries(prendasRenta).sort((a,b) => (b[1].ingresos - b[1].costos) - (a[1].ingresos - a[1].costos));
   const tbody = document.getElementById('tabla-finanzas-prendas');
@@ -2148,87 +2102,6 @@ async function guardarPauta() {
   }
 
   
-let chartSim = null;
-function actualizarSimulador(pctStr) {
-  const pct = parseInt(pctStr) / 100;
-  document.getElementById('sim-slider-val').textContent = pctStr + '%';
-  
-  if(!stockData || stockData.length === 0) return;
-  
-  // Re-use logic for getting real prices
-  const preciosReales = {};
-  todosPedidos.forEach(p => {
-    (p.items || []).forEach(item => {
-      if (!preciosReales[item.nombre]) preciosReales[item.nombre] = { suma: 0, q: 0 };
-      if (item.price && parseFloat(item.price) > 0) {
-        preciosReales[item.nombre].suma += parseFloat(item.price);
-        preciosReales[item.nombre].q += 1;
-      }
-    });
-  });
-  
-  const getP = (nombre) => {
-    const r = preciosReales[nombre];
-    if (r && r.q > 0) return r.suma / r.q;
-    // Hardcoded fallback logic directly here as it's self-contained
-    const pr = { "Kyoto": 275900, "Oslo": 339900, "Milan": 275900, "Core": 229900, "Sudadera": 159400, "KYOTO":275900, "OSLO":339900, "MILAN":275900 };
-    for (let k in pr) { if(nombre.includes(k)) return pr[k]; }
-    return 250000;
-  };
-  
-  let totalVentas = 0;
-  let totalCostos = 0;
-  
-  // Group by model for the chart
-  const modelStats = {};
-  
-  stockData.forEach(s => {
-    if (s.stock > 0) {
-      const udsSimuladas = Math.round(s.stock * pct);
-      if (udsSimuladas > 0) {
-        const precio = getP(s.nombre);
-        const costo = parseFloat(s.costo_produccion || 0);
-        const ventasItem = precio * udsSimuladas;
-        const costosItem = costo * udsSimuladas;
-        
-        totalVentas += ventasItem;
-        totalCostos += costosItem;
-        
-        if (!modelStats[s.nombre]) modelStats[s.nombre] = { ventas:0, utilidad:0 };
-        modelStats[s.nombre].ventas += ventasItem;
-        modelStats[s.nombre].utilidad += (ventasItem - costosItem);
-      }
-    }
-  });
-  
-  document.getElementById('sim-ventas').textContent = fCOP(totalVentas);
-  document.getElementById('sim-costos').textContent = fCOP(totalCostos);
-  document.getElementById('sim-utilidad').textContent = fCOP(totalVentas - totalCostos);
-  
-  // Render Chart
-  const labels = Object.keys(modelStats);
-  const dataVentas = labels.map(l => modelStats[l].ventas);
-  const dataUtilidad = labels.map(l => modelStats[l].utilidad);
-  
-  if(chartSim) { chartSim.destroy(); }
-  const ctx = document.getElementById('chart-simulador').getContext('2d');
-  chartSim = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [
-        { label: 'Ingresos Proyectados', data: dataVentas, backgroundColor: '#1976d2', borderRadius: 4 },
-        { label: 'Utilidad Neta Esperada', data: dataUtilidad, backgroundColor: '#43a047', borderRadius: 4 }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: function(context) { return context.dataset.label + ': $' + context.raw.toLocaleString('es-CO'); } } } },
-      scales: { y: { beginAtZero: true, ticks: { callback: function(value) { return '$' + (value/1000000).toFixed(1) + 'M'; } } } }
-    }
-  });
-}
-
   // --- Lógica Tabla Unit Economics (Catálogo) ---
   const tCat = document.getElementById('tabla-finanzas-catalogo');
   if(!Object.keys(modelosUnicos).length) tCat.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--grisMed)">Sin prendas en catálogo. Primero agrega productos en la pestaña Inventario y asígnales un costo de producción.</td></tr>';
@@ -2991,6 +2864,135 @@ function toggleTheme() {
     icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
   }
 }
+window.todaPauta = [];
+async function cargarPauta() {
+  const { data, error } = await sb.from("gastos_pauta").select("*").order("fecha", { ascending: false });
+  if(!error && data) window.todaPauta = data;
+  renderPautaLista();
+}
+function renderPautaLista() {
+  const tbody = document.getElementById("tabla-pauta");
+  if(!tbody) return;
+  if(window.todaPauta.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="loading">No hay registros de pauta</td></tr>'; return; }
+  
+  let sum = 0;
+  tbody.innerHTML = window.todaPauta.map(p => {
+    sum += parseFloat(p.monto||0);
+    const bdg = p.plataforma.includes('Meta') ? '<span style="background:#e3f2fd;color:#1565c0;padding:2px 6px;border-radius:4px;font-size:0.7rem">Meta</span>' : 
+                p.plataforma.includes('TikTok') ? '<span style="background:#000;color:#fff;padding:2px 6px;border-radius:4px;font-size:0.7rem">TikTok</span>' : 
+                p.plataforma.includes('Google') ? '<span style="background:#fff3e0;color:#e65100;padding:2px 6px;border-radius:4px;font-size:0.7rem">Google</span>' : 
+                `<span style="background:#f4f4f4;color:#666;padding:2px 6px;border-radius:4px;font-size:0.7rem">${p.plataforma}</span>`;
+    return `<tr>
+      <td>${new Date(p.fecha).toLocaleDateString()}</td>
+      <td>${bdg}</td>
+      <td><strong>${p.campana || '-'}</strong></td>
+      <td>${p.objetivo}</td>
+      <td style="text-align:right; font-weight:bold">${fCOP(p.monto)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('pauta-total-acumulado').textContent = 'Inversión Total: ' + fCOP(sum);
+}
+async function guardarPauta() {
+  const plat = document.getElementById('pt-plataforma').value;
+  const obj = document.getElementById('pt-objetivo').value;
+  const mon = parseFloat(document.getElementById('pt-monto').value);
+  const camp = document.getElementById('pt-campana').value.trim();
+  if(!mon || !camp) { mostrarToast("Llena monto y campaña", "warn"); return; }
+  
+  const { error } = await sb.from('gastos_pauta').insert([{ plataforma: plat, objetivo: obj, monto: mon, campana: camp }]);
+  if(error) mostrarToast(error.message, 'err');
+  else {
+    mostrarToast("Pauta registrada", "ok");
+    document.getElementById('pt-monto').value = ''; document.getElementById('pt-campana').value = '';
+    cargarPauta();
+    // Refrescar finanzas para integrar costo
+    if (document.getElementById("tab-finanzas").classList.contains("active")) cargarGastos();
+  }
+}
+
+
+let chartSim = null;
+function actualizarSimulador(pctStr) {
+  const pct = parseInt(pctStr) / 100;
+  document.getElementById('sim-slider-val').textContent = pctStr + '%';
+  
+  if(!stockData || stockData.length === 0) return;
+  
+  // Re-use logic for getting real prices
+  const preciosReales = {};
+  todosPedidos.forEach(p => {
+    (p.items || []).forEach(item => {
+      if (!preciosReales[item.nombre]) preciosReales[item.nombre] = { suma: 0, q: 0 };
+      if (item.price && parseFloat(item.price) > 0) {
+        preciosReales[item.nombre].suma += parseFloat(item.price);
+        preciosReales[item.nombre].q += 1;
+      }
+    });
+  });
+  
+  const getP = (nombre) => {
+    const r = preciosReales[nombre];
+    if (r && r.q > 0) return r.suma / r.q;
+    // Hardcoded fallback logic directly here as it's self-contained
+    const pr = { "Kyoto": 275900, "Oslo": 339900, "Milan": 275900, "Core": 229900, "Sudadera": 159400, "KYOTO":275900, "OSLO":339900, "MILAN":275900 };
+    for (let k in pr) { if(nombre.includes(k)) return pr[k]; }
+    return 250000;
+  };
+  
+  let totalVentas = 0;
+  let totalCostos = 0;
+  
+  // Group by model for the chart
+  const modelStats = {};
+  
+  stockData.forEach(s => {
+    if (s.stock > 0) {
+      const udsSimuladas = Math.round(s.stock * pct);
+      if (udsSimuladas > 0) {
+        const precio = getP(s.nombre);
+        const costo = parseFloat(s.costo_produccion || 0);
+        const ventasItem = precio * udsSimuladas;
+        const costosItem = costo * udsSimuladas;
+        
+        totalVentas += ventasItem;
+        totalCostos += costosItem;
+        
+        if (!modelStats[s.nombre]) modelStats[s.nombre] = { ventas:0, utilidad:0 };
+        modelStats[s.nombre].ventas += ventasItem;
+        modelStats[s.nombre].utilidad += (ventasItem - costosItem);
+      }
+    }
+  });
+  
+  document.getElementById('sim-ventas').textContent = fCOP(totalVentas);
+  document.getElementById('sim-costos').textContent = fCOP(totalCostos);
+  document.getElementById('sim-utilidad').textContent = fCOP(totalVentas - totalCostos);
+  
+  // Render Chart
+  const labels = Object.keys(modelStats);
+  const dataVentas = labels.map(l => modelStats[l].ventas);
+  const dataUtilidad = labels.map(l => modelStats[l].utilidad);
+  
+  if(chartSim) { chartSim.destroy(); }
+  const ctx = document.getElementById('chart-simulador').getContext('2d');
+  chartSim = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Ingresos Proyectados', data: dataVentas, backgroundColor: '#1976d2', borderRadius: 4 },
+        { label: 'Utilidad Neta Esperada', data: dataUtilidad, backgroundColor: '#43a047', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: function(context) { return context.dataset.label + ': $' + context.raw.toLocaleString('es-CO'); } } } },
+      scales: { y: { beginAtZero: true, ticks: { callback: function(value) { return '$' + (value/1000000).toFixed(1) + 'M'; } } } }
+    }
+  });
+}
+
+
 </script>
 </body>
 </html>
