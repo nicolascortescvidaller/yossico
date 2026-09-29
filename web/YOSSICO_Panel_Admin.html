@@ -434,6 +434,46 @@
 <div id="stock-grid" class="stock-grid"><div class="loading">Cargando inventario...</div></div>
       </div>
 
+
+      <!-- INTELIGENCIA DE PRODUCCIÓN (FORECAST) -->
+      <div class="stock-section" style="margin-top:2rem; background:#f8fbfa; border:1px solid #c8e6c9;">
+        <div class="section-title">🧠 Inteligencia de Producción (Distribución de Tallas)</div>
+        <div style="font-size:0.8rem; color:var(--grisMed); margin-bottom:1.5rem;">
+          Basado en el histórico de ventas reales. Úsalo para planear exactamente cuántas prendas hacer de cada talla en tu próximo lote (Drop).
+        </div>
+        <div style="display:flex; gap:2rem; align-items:center;">
+          <div style="flex:1;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem; font-weight:600;">
+              <span>Talla S</span><span id="prod-pct-s">0%</span>
+            </div>
+            <div style="width:100%; height:8px; background:var(--grisCl); border-radius:4px; margin-bottom:1rem; overflow:hidden;"><div id="prod-bar-s" style="height:100%; background:#2e7d32; width:0%;"></div></div>
+            
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem; font-weight:600;">
+              <span>Talla M</span><span id="prod-pct-m">0%</span>
+            </div>
+            <div style="width:100%; height:8px; background:var(--grisCl); border-radius:4px; margin-bottom:1rem; overflow:hidden;"><div id="prod-bar-m" style="height:100%; background:#1565c0; width:0%;"></div></div>
+            
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem; font-weight:600;">
+              <span>Talla L</span><span id="prod-pct-l">0%</span>
+            </div>
+            <div style="width:100%; height:8px; background:var(--grisCl); border-radius:4px; overflow:hidden;"><div id="prod-bar-l" style="height:100%; background:#e65100; width:0%;"></div></div>
+          </div>
+          
+          <div style="flex:1; background:#fff; padding:1.5rem; border:1px solid var(--grisCl); border-radius:8px; text-align:center;">
+            <div style="font-size:0.8rem; font-weight:600; margin-bottom:1rem;">Calculadora de Lote</div>
+            <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:1.5rem;">
+              <span>Prendas a producir:</span>
+              <input type="number" id="prod-calc-input" value="100" class="input-form" style="width:80px; text-align:center;" oninput="calcularLoteProduccion()">
+            </div>
+            <div style="display:flex; justify-content:center; gap:1.5rem;">
+              <div><div style="font-size:1.5rem; font-weight:700; color:#2e7d32;" id="prod-calc-s">0</div><div style="font-size:0.7rem; color:var(--grisMed);">Talla S</div></div>
+              <div><div style="font-size:1.5rem; font-weight:700; color:#1565c0;" id="prod-calc-m">0</div><div style="font-size:0.7rem; color:var(--grisMed);">Talla M</div></div>
+              <div><div style="font-size:1.5rem; font-weight:700; color:#e65100;" id="prod-calc-l">0</div><div style="font-size:0.7rem; color:var(--grisMed);">Talla L</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Agregar nueva prenda -->
       <div class="stock-section" style="margin-top:1rem">
         <div class="flex-between" style="cursor:pointer;margin-bottom:0" onclick="toggleAgregarPrenda()">
@@ -696,6 +736,24 @@
           <button class="subtab-btn" onclick="cambiarSubTabFinanzas('sub-simulador', this)">Simulador & Reparto</button>
         </div>
 <div id="sub-resumen" class="fin-subtab-content active">
+
+        <!-- META MENSUAL Y PACING -->
+        <div style="background:#fff; border:1px solid var(--grisCl); border-radius:8px; padding:1.5rem; margin-bottom:1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1rem;">
+            <div>
+              <div class="section-title" style="margin-bottom:0.2rem; font-size:1.1rem;">🎯 Meta de Ventas del Mes</div>
+              <div id="meta-pacing-text" style="font-size:0.8rem; color:var(--grisMed);">Cargando proyección...</div>
+            </div>
+            <div style="text-align:right;">
+              <div id="meta-current-text" style="font-size:1.4rem; font-weight:700; color:var(--negro);">$0</div>
+              <div style="font-size:0.75rem; color:var(--grisMed);">de <span id="meta-goal-text">$0</span> <button onclick="editarMetaMensual()" style="background:none;border:none;cursor:pointer;color:var(--azul);text-decoration:underline;font-size:0.7rem;">Editar</button></div>
+            </div>
+          </div>
+          <div style="width:100%; height:12px; background:var(--grisF); border-radius:6px; overflow:hidden; position:relative;">
+            <div id="meta-progress-bar" style="height:100%; background:var(--verde); width:0%; transition:width 0.5s ease;"></div>
+            <div id="meta-pacing-marker" style="position:absolute; top:0; bottom:0; width:2px; background:#000; display:none;" title="Proyección a cierre de mes"></div>
+          </div>
+        </div>
 <div class="resumen-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1rem;">
           <div class="resumen-card hover-module verde" style="background:var(--blanco); border-color:#e0f2e9">
             <div class="rlabel">Ingresos Brutos Reales</div>
@@ -1379,6 +1437,19 @@
         </div>
       </div>
 
+      
+      <!-- ALERTAS CRM -->
+      <div id="crm-recompra-container" style="display:none; background:#fff3e0; border:1px solid #ffcc80; border-radius:8px; padding:1rem; margin-bottom:1.5rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.8rem;">
+          <span style="font-size:1.2rem;">🔔</span>
+          <strong style="color:#e65100;">Oportunidades de Recompra Activas</strong>
+          <span style="font-size:0.75rem; color:var(--grisMed); margin-left:auto;">Clientes que compraron hace 3 - 5 meses</span>
+        </div>
+        <div id="crm-recompra-list" style="display:flex; gap:0.5rem; overflow-x:auto; padding-bottom:0.5rem;">
+          <!-- Items generated via JS -->
+        </div>
+      </div>
+
       <div class="table-container">
         <table class="table">
           <thead>
@@ -1437,6 +1508,147 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script src="js/auth.js"></script>
 <script>
+
+// ── METAS DEL MES Y PACING ──
+function renderMetaMensual() {
+  const goalStr = localStorage.getItem('yossico_meta_mensual') || '30000000';
+  const goal = parseFloat(goalStr);
+  
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const currentDay = now.getDate();
+
+  let ventasMes = 0;
+  (todosPedidos || []).filter(p => esPagado(p.estado)).forEach(p => {
+    const d = new Date(p.created_at);
+    if (d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+      ventasMes += parseFloat(p.total || 0);
+    }
+  });
+
+  const mGoalTxt = document.getElementById('meta-goal-text');
+  const mCurTxt = document.getElementById('meta-current-text');
+  if(mGoalTxt) mGoalTxt.textContent = fCOP(goal);
+  if(mCurTxt) mCurTxt.textContent = fCOP(ventasMes);
+
+  let pct = (ventasMes / goal) * 100;
+  if (pct > 100) pct = 100;
+  const pb = document.getElementById('meta-progress-bar');
+  if(pb) pb.style.width = pct + '%';
+
+  if (currentDay > 0) {
+    const dailyRate = ventasMes / currentDay;
+    const projected = dailyRate * daysInMonth;
+    const projPct = (projected / goal) * 100;
+    
+    const pm = document.getElementById('meta-pacing-marker');
+    if(pm) {
+      pm.style.display = 'block';
+      pm.style.left = Math.min(projPct, 100) + '%';
+    }
+
+    const pText = document.getElementById('meta-pacing-text');
+    if(pText) {
+      if (projected >= goal) {
+        pText.innerHTML = `🚀 Vas a buen ritmo. Proyección a cierre: <strong>${fCOP(projected)}</strong>`;
+        pText.style.color = '#2e7d32';
+      } else {
+        pText.innerHTML = `⚠️ A este ritmo cerrarás en <strong>${fCOP(projected)}</strong>. Faltan ${fCOP(goal - projected)}`;
+        pText.style.color = '#e65100';
+      }
+    }
+  }
+}
+
+window.editarMetaMensual = function() {
+  const current = localStorage.getItem('yossico_meta_mensual') || '30000000';
+  const res = prompt('Ingresa la meta de ventas para este mes (solo números, sin puntos):', current);
+  if (res && !isNaN(res)) {
+    localStorage.setItem('yossico_meta_mensual', res);
+    renderMetaMensual();
+  }
+};
+
+// ── INTELIGENCIA DE PRODUCCIÓN ──
+let prodDist = { S: 0, M: 0, L: 0, total: 0 };
+function analizarTallasHistoricas() {
+  prodDist = { S: 0, M: 0, L: 0, total: 0 };
+  (todosPedidos || []).filter(p => esPagado(p.estado)).forEach(p => {
+    (p.items || []).forEach(i => {
+      const t = (i.talla || '').toUpperCase();
+      const q = parseInt(i.qty || 1);
+      if (t === 'S' || t === 'M' || t === 'L') {
+        prodDist[t] += q;
+        prodDist.total += q;
+      }
+    });
+  });
+
+  if (prodDist.total > 0) {
+    ['S', 'M', 'L'].forEach(t => {
+      const pct = (prodDist[t] / prodDist.total) * 100;
+      const elPct = document.getElementById('prod-pct-' + t.toLowerCase());
+      const elBar = document.getElementById('prod-bar-' + t.toLowerCase());
+      if(elPct) elPct.textContent = pct.toFixed(1) + '%';
+      if(elBar) elBar.style.width = pct + '%';
+    });
+  }
+  calcularLoteProduccion();
+}
+
+window.calcularLoteProduccion = function() {
+  const loteStr = document.getElementById('prod-calc-input');
+  if(!loteStr) return;
+  const lote = parseInt(loteStr.value) || 0;
+  if (prodDist.total > 0) {
+    ['S', 'M', 'L'].forEach(t => {
+      const amount = Math.round((prodDist[t] / prodDist.total) * lote);
+      const elVal = document.getElementById('prod-calc-' + t.toLowerCase());
+      if(elVal) elVal.textContent = amount;
+    });
+  }
+};
+
+// ── ALERTAS CRM (RECOMPRA) ──
+function renderAlertasCRM(clientes) {
+  const container = document.getElementById('crm-recompra-container');
+  const list = document.getElementById('crm-recompra-list');
+  if (!container || !list) return;
+
+  const now = new Date();
+  const opportunities = [];
+
+  clientes.forEach(c => {
+    if (c.ultimo_pedido) {
+      const last = new Date(c.ultimo_pedido);
+      const diffDays = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+      if (diffDays >= 90 && diffDays <= 180) { // Extended to 6 months to catch more
+        opportunities.push({ ...c, diffDays });
+      }
+    }
+  });
+
+  if (opportunities.length > 0) {
+    opportunities.sort((a,b) => b.total_gastado - a.total_gastado);
+    list.innerHTML = opportunities.map(c => {
+      const telStr = c.cliente_telefono ? c.cliente_telefono.replace(/[^0-9]/g, '') : '';
+      const msg = encodeURIComponent(`Hola ${c.cliente_nombre.split(' ')[0]}, ¿cómo están tus scrubs YOSSICO? Hace unos meses compraste y nos acaba de llegar la nueva colección. ¡Te dejo un detalle especial si quieres renovar!`);
+      const wpLink = telStr ? `https://wa.me/57${telStr}?text=${msg}` : '#';
+      
+      return `<div style="background:#fff; border:1px solid #ffcc80; padding:0.8rem; border-radius:6px; min-width:220px; flex-shrink:0;">
+        <div style="font-weight:600; font-size:0.85rem; margin-bottom:0.2rem;">${c.cliente_nombre}</div>
+        <div style="font-size:0.75rem; color:var(--grisMed); margin-bottom:0.6rem;">Compró hace ${c.diffDays} días</div>
+        <a href="${wpLink}" target="_blank" style="display:inline-block; background:#25D366; color:#fff; text-decoration:none; padding:0.3rem 0.6rem; border-radius:4px; font-size:0.75rem; font-weight:600;">Escribir WhatsApp</a>
+      </div>`;
+    }).join('');
+    container.style.display = 'block';
+  } else {
+    container.style.display = 'none';
+  }
+}
+
 
 function cambiarSubTabFinanzas(tabId, btn) {
   document.querySelectorAll('.fin-subtab-content').forEach(el => el.classList.remove('active'));
@@ -2440,6 +2652,7 @@ function renderFinanzas(pedidos) {
   // Nuevos módulos: Capital inmovilizado y Cashflow
   try { renderCapitalInmovilizado(getPrecioReal); } catch(e) { console.warn('renderCapitalInmovilizado error:', e); }
   try { renderCashflow(pagados, todosGastos); } catch(e) { console.warn('renderCashflow error:', e); }
+  try { renderMetaMensual(); } catch(e) { console.warn('renderMetaMensual error:', e); }
 
 
 
