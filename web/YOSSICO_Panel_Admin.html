@@ -1669,9 +1669,13 @@ window.crearEmbajadora = async function() {
   if (!nombre) return;
   const codigo = prompt("Código que usará para referir (Ej. CAMILA10):");
   if (!codigo) return;
-  
+
+  const slug = codigo.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const placeholderEmail = `embajadora.${slug}@yossico.internal`;
+
   const payload = {
     name: `EMBAJADORA|${nombre}`,
+    email: placeholderEmail,
     discount_code: codigo.toUpperCase().trim(),
     used: false
   };
@@ -1679,7 +1683,7 @@ window.crearEmbajadora = async function() {
   const { error } = await sb.from('subscribers').insert([payload]);
   if (error) mostrarToast("Error: " + error.message, "err");
   else {
-    mostrarToast("Embajadora creada", "ok");
+    mostrarToast("Embajadora creada ✓", "ok");
     cargarSuscriptoras();
   }
 };
@@ -1691,10 +1695,12 @@ window.crearGiftcard = async function() {
   if (!owner) return;
   
   const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-  const codigo = `GC-${monto.substring(0,2)}${randomSuffix}`;
-  
+  const codigo = `GC-${monto.substring(0, 2)}${randomSuffix}`;
+  const placeholderEmail = `giftcard.${codigo.toLowerCase().replace(/[^a-z0-9]/g, '')}@yossico.internal`;
+
   const payload = {
     name: `GIFTCARD|${monto}|${owner}`,
+    email: placeholderEmail,
     discount_code: codigo,
     used: false
   };
