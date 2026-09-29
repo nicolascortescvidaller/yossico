@@ -1828,13 +1828,34 @@ function renderEnvios() {
 function renderPedidos(pedidos) {
   document.getElementById("contador-pedidos").textContent = `Mostrando ${pedidos.length} de ${todosPedidos.length} pedidos`;
   if (!pedidos.length) { document.getElementById("tabla-pedidos").innerHTML = '<tr><td colspan="8" class="loading">Sin resultados</td></tr>'; return; }
+  
+  // ── LÓGICA VIP (Experiencia de Empaque) ──
+  const gastosPorCliente = {};
+  (window.todosPedidos || []).filter(x => esPagado(x.estado)).forEach(x => {
+    const cid = x.cliente_telefono ? x.cliente_telefono.replace(/[^0-9]/g, '') : (x.cliente_nombre ? x.cliente_nombre.trim().toUpperCase() : null);
+    if (cid) gastosPorCliente[cid] = (gastosPorCliente[cid] || 0) + parseFloat(x.total || 0);
+  });
+
   document.getElementById("tabla-pedidos").innerHTML = pedidos.map(p => {
+    const cid = p.cliente_telefono ? p.cliente_telefono.replace(/[^0-9]/g, '') : (p.cliente_nombre ? p.cliente_nombre.trim().toUpperCase() : null);
+    const gastoTotal = cid ? (gastosPorCliente[cid] || 0) : 0;
+    
+    let vipBadge = '';
+    let rowStyle = '';
+    
+    if (gastoTotal >= 1000000) {
+      vipBadge = '<div style="display:inline-block; margin-top:0.3rem; background:linear-gradient(135deg, #FFD700 0%, #FDB931 100%); color:#5c4000; font-size:0.6rem; padding:0.15rem 0.5rem; border-radius:12px; font-weight:700; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">👑 VIP (>$1M)</div>';
+      rowStyle = 'background-color:#fffcf2; border-left: 3px solid #FFD700;';
+    } else if (gastoTotal >= 500000) {
+      vipBadge = '<div style="display:inline-block; margin-top:0.3rem; background:#e0e0e0; color:#424242; font-size:0.6rem; padding:0.15rem 0.5rem; border-radius:12px; font-weight:700;">🥈 Frecuente (>$500k)</div>';
+    }
+
     const fecha = new Date(p.created_at).toLocaleDateString("es-CO",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
     const prendas = (p.items||[]).map(i => `${i.nombre||""} T${i.talla||""} x${i.qty||1}`).join(", ")||"-";
-    return `<tr>
+    return `<tr style="${rowStyle}">
       <td><input type="checkbox" class="chk-envio" value="${p.id}" style="margin-right:8px;"><code style="font-size:.7rem">${(p.id||"").split("-")[0]}</code></td>
       <td style="font-size:.75rem">${fecha}</td>
-      <td><strong>${p.cliente_nombre||""}</strong><br><span style="font-size:.7rem;color:var(--grisMed)">${p.cliente_telefono||""}</span></td>
+      <td><strong>${p.cliente_nombre||""}</strong><br><span style="font-size:.7rem;color:var(--grisMed)">${p.cliente_telefono||""}</span><br>${vipBadge}</td>
       <td style="font-size:.75rem;max-width:180px;word-break:break-word">${prendas}</td>
       <td><strong>${fCOP(p.total)}</strong></td>
       <td>
