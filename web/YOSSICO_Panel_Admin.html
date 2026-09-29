@@ -322,6 +322,14 @@
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
         Clientes
       </button>
+      <button class="tab-btn" onclick="cambiarTab('embajadoras',this)">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        Embajadoras
+      </button>
+      <button class="tab-btn" onclick="cambiarTab('giftcards',this)">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        Gift Cards
+      </button>
       <button class="tab-btn" onclick="cambiarTab('b2b',this)">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
         Cotizador B2B
@@ -640,6 +648,29 @@
         <div class="stats-card">
           <div class="stats-card__title">⚠️ Alertas de stock</div>
           <div id="lista-stock-critico" style="margin-top:.75rem"></div>
+        </div>
+      </div>
+
+
+      <!-- Fila 3: Product Analytics -->
+      <div class="stats-row" style="margin-top:1.5rem">
+        <div class="stats-card stats-card--lg" style="flex:1;">
+          <div class="stats-card__title">📊 Product Analytics (Batalla de Ventas)</div>
+          <div style="font-size:0.75rem; color:var(--grisMed); margin-bottom:1.5rem;">Descubre exactamente qué colores y modelos están impulsando el volumen de prendas vendidas (Unidades).</div>
+          
+          <div style="display:flex; gap:3rem; flex-wrap:wrap;">
+            <!-- Modelos -->
+            <div style="flex:1; min-width:250px;">
+              <div style="font-size:0.8rem; font-weight:600; margin-bottom:1rem; padding-bottom:0.4rem; border-bottom:1px solid var(--grisCl); color:var(--negro)">Top Modelos (Sets)</div>
+              <div id="stats-top-modelos">Cargando...</div>
+            </div>
+            
+            <!-- Colores -->
+            <div style="flex:1; min-width:250px;">
+              <div style="font-size:0.8rem; font-weight:600; margin-bottom:1rem; padding-bottom:0.4rem; border-bottom:1px solid var(--grisCl); color:var(--negro)">Top Colores</div>
+              <div id="stats-top-colores">Cargando...</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1471,6 +1502,63 @@
       </div>
     </div><!-- /tab-clientes -->
 
+    <!-- TAB EMBAJADORAS -->
+    <div id="tab-embajadoras" class="tab-content">
+      <div class="form-card hover-module">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+          <div class="section-title" style="margin:0;font-size:1.1rem">Programa de Embajadoras (Referidos)</div>
+          <button class="btn btn-negro btn-sm" onclick="crearEmbajadora()">+ Nueva Embajadora</button>
+        </div>
+        <div style="font-size:0.8rem; color:var(--grisMed); margin-bottom:1.5rem;">Crea códigos únicos para clientas VIP. Por cada pedido pagado donde se use su código, la embajadora acumula $15.000 de Saldo a Favor.</div>
+        
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Embajadora</th>
+                <th>Código Único</th>
+                <th>Usos (Ventas Referidas)</th>
+                <th>Saldo Acumulado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-embajadoras">
+              <tr><td colspan="5" class="loading">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB GIFTCARDS -->
+    <div id="tab-giftcards" class="tab-content">
+      <div class="form-card hover-module">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+          <div class="section-title" style="margin:0;font-size:1.1rem">Gift Cards / Saldo a Favor (Wallet)</div>
+          <button class="btn btn-negro btn-sm" onclick="crearGiftcard()">+ Emitir Gift Card</button>
+        </div>
+        <div style="font-size:0.8rem; color:var(--grisMed); margin-bottom:1.5rem;">Emite saldo a favor para cambios/devoluciones o regalos. El cliente ingresa el código en el Checkout como cupón de descuento.</div>
+        
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Propietario / Motivo</th>
+                <th>Código Gift Card</th>
+                <th>Valor Inicial</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-giftcards">
+              <tr><td colspan="5" class="loading">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
   </div><!-- /main -->
   </div><!-- /admin-wrapper -->
 </div>
@@ -1510,6 +1598,154 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script src="js/auth.js"></script>
 <script>
+
+// ── PRODUCT ANALYTICS ──
+function renderProductAnalytics(pedidos) {
+  const modelMap = {};
+  const colorMap = {};
+  let totalUds = 0;
+  
+  pedidos.filter(p => esPagado(p.estado)).forEach(p => {
+    (p.items || []).forEach(i => {
+      const mod = (i.nombre || 'Desconocido').toUpperCase().trim();
+      const col = (i.color || '-').toUpperCase().trim();
+      const q = parseInt(i.qty || 1);
+      
+      modelMap[mod] = (modelMap[mod] || 0) + q;
+      if (col !== '-' && col !== '') colorMap[col] = (colorMap[col] || 0) + q;
+      totalUds += q;
+    });
+  });
+  
+  const buildHTML = (map) => {
+    const sorted = Object.entries(map).sort((a,b) => b[1] - a[1]).slice(0, 6);
+    if (sorted.length === 0) return '<div class="loading">Sin datos</div>';
+    
+    return sorted.map(t => {
+      const pct = totalUds > 0 ? ((t[1] / totalUds) * 100).toFixed(1) : 0;
+      return `
+        <div style="margin-bottom:1rem;">
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:0.4rem;">
+            <span style="font-weight:600; color:#333">${t[0]}</span>
+            <span style="color:var(--grisMed)">${t[1]} uds (${pct}%)</span>
+          </div>
+          <div style="width:100%; height:6px; background:var(--grisF); border-radius:3px; overflow:hidden;">
+            <div style="height:100%; width:${pct}%; background:#263238;"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  };
+  
+  const elMod = document.getElementById('stats-top-modelos');
+  const elCol = document.getElementById('stats-top-colores');
+  if(elMod) elMod.innerHTML = buildHTML(modelMap);
+  if(elCol) elCol.innerHTML = buildHTML(colorMap);
+}
+
+// ── EMBAJADORAS & GIFTCARDS ──
+function renderEmbajadorasYGc() {
+  if (!window.todasSubs) return;
+  
+  const embajadoras = todasSubs.filter(s => s.name && s.name.startsWith('EMBAJADORA|'));
+  const giftcards = todasSubs.filter(s => s.name && s.name.startsWith('GIFTCARD|'));
+  
+  const tbEmb = document.getElementById('tabla-embajadoras');
+  if (tbEmb) {
+    if (embajadoras.length === 0) tbEmb.innerHTML = '<tr><td colspan="5" class="loading">No hay embajadoras activas</td></tr>';
+    else {
+      const usosPorCodigo = {};
+      (window.todosPedidos || []).filter(p => esPagado(p.estado)).forEach(p => {
+        if (p.codigo_descuento) {
+          const c = p.codigo_descuento.toUpperCase().trim();
+          usosPorCodigo[c] = (usosPorCodigo[c] || 0) + 1;
+        }
+      });
+      
+      tbEmb.innerHTML = embajadoras.map(e => {
+        const parts = e.name.split('|');
+        const realName = parts[1] || 'Sin Nombre';
+        const usos = usosPorCodigo[(e.discount_code||'').toUpperCase().trim()] || 0;
+        const saldo = usos * 15000; 
+        
+        return `<tr>
+          <td><strong>${realName}</strong></td>
+          <td><code style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.6rem;border-radius:4px;font-size:0.75rem">${e.discount_code}</code></td>
+          <td>${usos} referidos</td>
+          <td><strong style="color:var(--verde)">${fCOP(saldo)}</strong></td>
+          <td><button class="btn-gris btn-sm" style="font-size:0.65rem;border:1px solid var(--rojo);color:var(--rojo)" onclick="eliminarSub('${e.discount_code}')">Eliminar</button></td>
+        </tr>`;
+      }).join('');
+    }
+  }
+
+  const tbGc = document.getElementById('tabla-giftcards');
+  if (tbGc) {
+    if (giftcards.length === 0) tbGc.innerHTML = '<tr><td colspan="5" class="loading">No hay Gift Cards emitidas</td></tr>';
+    else {
+      tbGc.innerHTML = giftcards.map(g => {
+        const parts = g.name.split('|');
+        const valor = parseFloat(parts[1] || 0);
+        const owner = parts[2] || 'Sin Propietario';
+        const statusBadge = g.used 
+            ? `<span style="background:#f4f4f4;color:#757575;padding:0.2rem 0.6rem;font-size:0.65rem;border-radius:12px;font-weight:600">Gastada</span>` 
+            : `<span style="background:#e3f2fd;color:#1976d2;padding:0.2rem 0.6rem;font-size:0.65rem;border-radius:12px;font-weight:600">Disponible</span>`;
+            
+        return `<tr>
+          <td>${owner}</td>
+          <td><code style="background:#fce4ec;color:#c2185b;padding:0.3rem 0.6rem;border-radius:4px;font-size:0.75rem">${g.discount_code}</code></td>
+          <td><strong>${fCOP(valor)}</strong></td>
+          <td>${statusBadge}</td>
+          <td><button class="btn-gris btn-sm" style="font-size:0.65rem;border:1px solid var(--rojo);color:var(--rojo)" onclick="eliminarSub('${g.discount_code}')">Eliminar</button></td>
+        </tr>`;
+      }).join('');
+    }
+  }
+}
+
+window.crearEmbajadora = async function() {
+  const nombre = prompt("Nombre de la Embajadora (Ej. Camila Rojas):");
+  if (!nombre) return;
+  const codigo = prompt("Código que usará para referir (Ej. CAMILA10):");
+  if (!codigo) return;
+  
+  const payload = {
+    name: `EMBAJADORA|${nombre}`,
+    discount_code: codigo.toUpperCase().trim(),
+    used: false
+  };
+  
+  const { error } = await sb.from('subscribers').insert([payload]);
+  if (error) mostrarToast("Error: " + error.message, "err");
+  else {
+    mostrarToast("Embajadora creada", "ok");
+    cargarSuscriptoras();
+  }
+};
+
+window.crearGiftcard = async function() {
+  const monto = prompt("Valor de la Gift Card en COP (Ej. 250000):");
+  if (!monto || isNaN(monto)) return;
+  const owner = prompt("¿Para quién es o motivo? (Ej. Devolución María Pérez):");
+  if (!owner) return;
+  
+  const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+  const codigo = `GC-${monto.substring(0,2)}${randomSuffix}`;
+  
+  const payload = {
+    name: `GIFTCARD|${monto}|${owner}`,
+    discount_code: codigo,
+    used: false
+  };
+  
+  const { error } = await sb.from('subscribers').insert([payload]);
+  if (error) mostrarToast("Error: " + error.message, "err");
+  else {
+    prompt("Gift Card creada con éxito. Copia este código y envíaselo al cliente:", codigo);
+    cargarSuscriptoras();
+  }
+};
+
 
 // ── METAS DEL MES Y PACING ──
 function renderMetaMensual() {
@@ -2626,6 +2862,7 @@ function renderStats() {
   renderIngresosProenda(pedidosFiltrados);
   renderStockCritico();
   renderFinanzas(pedidosFiltrados);
+  try{ renderProductAnalytics(pedidosFiltrados); }catch(e){}
 }
 
 // ── KPIs ─────────────────────────────────────────────────
