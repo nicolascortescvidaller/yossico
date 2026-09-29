@@ -543,8 +543,11 @@
           <div id="stock-preview-nums" style="display:flex;gap:.75rem"></div>
         </div>
         <div class="flex-between mt1">
-          <button class="btn btn-gris" onclick="limpiarFormulario()">Limpiar</button>
-          <button class="btn btn-negro" onclick="registrarVenta()">Registrar venta →</button>
+                    <button class="btn btn-gris" onclick="limpiarFormulario()">Limpiar</button>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn btn-verde" style="background:#1565c0; color:#fff; border:none;" onclick="generarLinkWompi()">Generar Link Wompi</button>
+            <button class="btn btn-negro" onclick="registrarVenta()">Registrar venta →</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2179,15 +2182,54 @@ function renderStock() {
     </div>`).join("")||'<div class="loading">Sin productos</div>';
 }
 
+
 function chkStockBajo() {
-  const bajos = stockData.filter(p=>p.stock<=2&&p.stock>0);
+  const past30Days = new Date();
+  past30Days.setDate(past30Days.getDate() - 30);
+  
+  const salesMap = {};
+  (window.todosPedidos || []).filter(p => esPagado(p.estado) && new Date(p.created_at) >= past30Days).forEach(p => {
+    (p.items || []).forEach(item => {
+      const key = (item.nombre + ' ' + (item.color || '') + ' ' + item.talla).toUpperCase().trim();
+      salesMap[key] = (salesMap[key] || 0) + parseInt(item.qty || 1);
+    });
+  });
+
+  const alerts = [];
+  stockData.forEach(p => {
+    if (p.stock <= 0) return; 
+    const key = (p.nombre + ' ' + (p.color || '') + ' ' + p.talla).toUpperCase().trim();
+    const sold = salesMap[key] || 0;
+    
+    const dailySales = sold / 30;
+    const daysOfInventory = dailySales > 0 ? (p.stock / dailySales) : 999;
+    
+    if (p.stock <= 3 && sold >= 1) { 
+        alerts.push(`${p.nombre} ${p.color} T${p.talla} (🔥 Quedan ${p.stock})`);
+    } else if (daysOfInventory < 14 && p.stock > 0 && sold >= 2) { 
+        alerts.push(`${p.nombre} ${p.color} T${p.talla} (🔥 Quedan ${p.stock})`);
+    }
+  });
+
   const al = document.getElementById("alerta-stock-bajo");
   if (!al) return;
-  if (bajos.length) {
-    document.getElementById("alerta-stock-texto").textContent = `⚠️ Stock crítico (≤2 uds): ${[...new Set(bajos.map(p=>`${p.nombre} T${p.talla}`))].join(", ")}`;
+  
+  const uniqueAlerts = [...new Set(alerts)];
+  
+  if (uniqueAlerts.length) {
+    document.getElementById("alerta-stock-texto").innerHTML = `<strong>⚠️ ALERTA DE REPOSICIÓN INTELIGENTE:</strong> Basado en el ritmo de ventas de los últimos 30 días, estas prendas se agotarán muy pronto:<br> <div style="margin-top:0.4rem; font-size:0.8rem; color:#d84315; font-weight:600">${uniqueAlerts.slice(0, 10).join(" • ")}${uniqueAlerts.length > 10 ? ' (y más...)' : ''}</div>`;
     al.classList.add("visible");
-  } else al.classList.remove("visible");
+  } else {
+    const bajos = stockData.filter(p=>p.stock<=2&&p.stock>0);
+    if (bajos.length) {
+       document.getElementById("alerta-stock-texto").innerHTML = `⚠️ Stock estático crítico (≤2 uds): ${[...new Set(bajos.map(p=>`${p.nombre} T${p.talla}`))].join(", ")}`;
+       al.classList.add("visible");
+    } else {
+       al.classList.remove("visible");
+    }
+  }
 }
+
 
 function abrirModal(nEnc,cEnc,s,m,l,costo,imgEnc) {
   const nombre=decodeURIComponent(nEnc), color=decodeURIComponent(cEnc), img = imgEnc ? decodeURIComponent(imgEnc) : '';
@@ -2274,6 +2316,62 @@ async function registrarVenta() {
     cargarProduccion();
     cargarCotizaciones();
     cargarPauta();
+}
+
+
+async function generarLinkWompi() {
+  const nombre=document.getElementById("f-nombre").value.trim()||"Cliente WhatsApp";
+  const telefono=document.getElementById("f-telefono").value.trim()||"0000000000";
+  const ciudad=document.getElementById("f-ciudad").value.trim()||"Venta Chat";
+  const dir=document.getElementById("f-direccion").value.trim()||"N/A";
+  const sku=document.getElementById("f-sku").value,color=document.getElementById("f-color").value.trim()||"-";
+  const talla=document.getElementById("f-talla").value,cantidad=parseInt(document.getElementById("f-cantidad").value)||1;
+  const valor=parseInt(document.getElementById("f-valor").value);
+  
+  if(!sku||!talla||!valor||valor<=0){mostrarToast("Faltan datos de Prenda, Talla o Valor","err");return;}
+  const items=[{nombre:sku,color,talla,qty:cantidad,price:valor}];
+  
+  mostrarToast("Generando link Wompi...", "ok");
+  
+  const payload = {
+    cliente_nombre: nombre,
+    cliente_telefono: telefono,
+    cliente_email: '',
+    cliente_ciudad: ciudad,
+    cliente_direccion: dir,
+    items: items,
+    total: valor,
+    estado: 'Pendiente', 
+    metodo_pago: 'Wompi Link POS',
+    drop_numero: 1
+  };
+  
+  const { data: pedData, error: pedErr } = await sb.from('pedidos').insert([payload]).select('id').single();
+  if (pedErr) { mostrarToast("Error al crear pedido: " + pedErr.message, "err"); return; }
+  
+  try {
+    const sigRes = await fetch(`https://mgzevtcipwfpqgolmpwm.supabase.co/functions/v1/generar-pago-wompi`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pedidoId: pedData.id, totalCOP: valor }),
+    });
+    const sig = await sigRes.json();
+    if (sig.error) throw new Error(sig.error);
+    
+    await sb.rpc("decrementar_stock", { items });
+    
+    const link = `https://checkout.wompi.co/p/?public-key=${sig.publicKey}&currency=${sig.currency}&amount-in-cents=${sig.amountCents}&reference=${sig.referencia}&signature:integrity=${sig.firma}&redirect-url=${encodeURIComponent(sig.redirectUrl)}`;
+    
+    navigator.clipboard.writeText(link).then(() => {
+      mostrarToast("Link de Wompi copiado al portapapeles ✓", "ok");
+      limpiarFormulario(); cargarPedidos(); cargarStock();
+    }).catch(err => {
+      prompt("Link generado, cópialo aquí:", link);
+      limpiarFormulario(); cargarPedidos(); cargarStock();
+    });
+  } catch(e) {
+    mostrarToast("Error Wompi: " + e.message, "err");
+  }
 }
 
 function limpiarFormulario() {
