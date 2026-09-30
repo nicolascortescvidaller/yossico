@@ -2,7 +2,8 @@ import os
 import glob
 import re
 
-html_files = glob.glob('/Users/nicolascortesv/Documents/Proyectos/Yossico/web/*.html')
+base_dir = os.path.dirname(os.path.abspath(__file__))
+html_files = glob.glob(os.path.join(base_dir, 'web', '*.html'))
 
 new_cart_html = """  <div class="nav__actions">
     <button class="cart-icon-btn" id="cart-open" aria-label="Carrito">

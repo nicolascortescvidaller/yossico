@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO -->
+  <meta name="description" content="Diseños exclusivos de uniformes médicos para enfermeras y profesionales de la salud en Colombia. Calidad premium, telas técnicas, estilo editorial.">
+  <meta name="keywords" content="uniformes médicos, enfermería, Colombia, ropa médica premium, YOSSICO">
+  <meta name="author" content="YOSSICO">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="YOSSICO">
+  <meta property="og:title" content="YOSSICO — Uniformes médicos premium para la mujer en salud">
+  <meta property="og:description" content="Diseños exclusivos de uniformes médicos para enfermeras y profesionales de la salud en Colombia. Calidad premium, telas técnicas, estilo editorial.">
+  <meta property="og:image" content="https://yossico.com/img/og-yossico.jpg">
+  <meta property="og:url" content="https://yossico.com/index.html">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="YOSSICO — Uniformes médicos premium para la mujer en salud">
+  <meta name="twitter:description" content="Diseños exclusivos de uniformes médicos para enfermeras y profesionales de la salud en Colombia. Calidad premium, telas técnicas, estilo editorial.">
+  <meta name="twitter:image" content="https://yossico.com/img/og-yossico.jpg">
+
+  <meta name="description"
+    content="YOSSICO — Uniformes médicos premium diseñados para los profesionales de la salud en Colombia. Scrubs de alta calidad con identidad propia.">
+  <title>Rastreo de Pedido — YOSSICO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.v2.css?v=105">
+  <style>
+    /* ── Hero ─────────────────────────────────────────────── */
+    .hero {
+      display: grid;
+      grid-template-columns: 60fr 40fr;
+      min-height: 100vh;
+      /* No padding-top needed: countdown (sticky) sits above in flow,
+         and body content already starts below the fixed header via
+         the countdown's margin-top on first load. */
+      padding-top: 0;
+    }
+
+    .hero__left {
+      background: var(--gray-bg);
+      padding: 100px 80px 100px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hero__label {
+      margin-bottom: 32px;
+    }
+
+    .hero__title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(72px, 8vw, 110px);
+      line-height: 0.92;
+      letter-spacing: -1px;
+      color: var(--black);
+      margin-bottom: 36px;
+    }
+
+    .hero__title em {
+      font-style: italic;
+      color: var(--gray);
+    }
+
+    .hero__sub {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--gray-mid);
+      line-height: 2;
+      letter-spacing: 1.5px;
+      margin-bottom: 48px;
+      max-width: 280px;
+    }
+
+    .hero__ctas {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .hero__right {
+      position: relative;
+      overflow: hidden;
+      background: var(--off-white);
+    }
+
+    .hero__right-inner {
+      width: 100%;
+      height: 100%;
+      background: var(--off-white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero__right-inner::before {
+      content: 'YOSSICO';
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(60px, 10vw, 120px);
+      letter-spacing: 20px;
+      color: rgba(0, 0, 0, 0.04);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      z-index: 0;
+    }
+
+    /* ── Hero Video-like Slideshow ──────────────────────── */
+    .hero__slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      z-index: 1;
+      animation: heroSlide 20s infinite;
+    }
+
+    .hero__slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      animation: kenBurns1 20s infinite;
+      transform-origin: center center;
+    }
+
+    /* Stagger each slide by 4s (20s total / 5 slides) */
+    .hero__slide:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .hero__slide:nth-child(1) img {
+      animation-delay: 0s;
+    }
+
+    .hero__slide:nth-child(2) {
+      animation-delay: 4s;
+    }
+
+    .hero__slide:nth-child(2) img {
+      animation-delay: 4s;
+      animation-name: kenBurns2;
+    }
+
+    .hero__slide:nth-child(3) {
+      animation-delay: 8s;
+    }
+
+    .hero__slide:nth-child(3) img {
+      animation-delay: 8s;
+      animation-name: kenBurns3;
+    }
+
+    .hero__slide:nth-child(4) {
+      animation-delay: 12s;
+    }
+
+    .hero__slide:nth-child(4) img {
+      animation-delay: 12s;
+      animation-name: kenBurns4;
+    }
+
+    .hero__slide:nth-child(5) {
+      animation-delay: 16s;
+    }
+
+    .hero__slide:nth-child(5) img {
+      animation-delay: 16s;
+      animation-name: kenBurns1;
+    }
+
+    /* Slide fade in/out: visible for 4s, fades 0.8s */
+    @keyframes heroSlide {
+      0% {
+        opacity: 0;
+      }
+
+      4% {
+        opacity: 1;
+      }
+
+      95% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* 5 different Ken Burns movements */
+    @keyframes kenBurns1 {
+      0% {
+        transform: scale(1) translate(0, 0);
+      }
+
+      100% {
+        transform: scale(1.08) translate(-2%, -2%);
+      }
+    }
+
+    @keyframes kenBurns2 {
+      0% {
+        transform: scale(1.06) translate(2%, 1%);
+      }
+
+      100% {
+        transform: scale(1) translate(0, 0);
+      }
+    }
+
+    @keyframes kenBurns3 {
+      0% {
+        transform: scale(1) translate(-1%, 2%);
+      }
+
+      100% {
+        transform: scale(1.07) translate(2%, 0);
+      }
+    }
+
+    @keyframes kenBurns4 {
+      0% {
+        transform: scale(1.05) translate(0, -1%);
+      }
+
+      100% {
+        transform: scale(1) translate(-1%, 2%);
+      }
+    }
+
+    /* ── Countdown (pre-hero banner) ──────────────────────────── */
+    /* ── CSS layout vars ─────────────────────────────────────── */
+    :root {
+      --barra-h: 41px;    /* #barra-envio-gratis fixed height          */
+      --nav-h: 60px;      /* .nav fixed height (reduced from 96px)      */
+      --fixed-top: 101px; /* barra(41) + nav(60) = total fixed header    */
+    }
+
+    /* ── Barra Envío Gratis ──────────────────────────────────── */
+    #barra-envio-gratis {
+      background-color: #000000;
+      color: #FFFFFF;
+      text-align: center;
+      padding: 0 16px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      width: 100%;
+      height: 41px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    .countdown-section {
+      background: var(--black);
+      color: var(--white);
+      padding: 16px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      /* Sticky: stays just below the fixed navbar while page scrolls */
+      position: sticky;
+      top: var(--fixed-top);   /* 41px barra + 96px nav = 137px */
+      z-index: 998;            /* below nav (1000) and barra (1002)     */
+      /* Push initial position below the fixed header so it's visible on load */
+      margin-top: var(--fixed-top);
+      width: 100%;
+      overflow: hidden;
+    }
+    .countdown-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 120% at 50% 100%, rgba(255,255,255,0.03) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .countdown__eyebrow {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      margin: 0;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    /* Thin vertical divider between label and numbers */
+    .countdown__divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,0.15);
+      flex-shrink: 0;
+    }
+    .countdown__units {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+    .countdown__unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 0 18px;
+    }
+    .countdown__num {
+      font-family: var(--font-heading);
+      font-size: clamp(22px, 2.4vw, 34px);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.5px;
+      color: var(--white);
+      min-width: 2ch;
+      display: inline-block;
+      transition: transform 0.15s ease;
+    }
+    .countdown__num.tick {
+      transform: translateY(-3px);
+    }
+    .countdown__label {
+      font-family: var(--font-body);
+      font-size: 7px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+    }
+    .countdown__sep {
+      font-family: var(--font-heading);
+      font-size: clamp(18px, 2vw, 26px);
+      color: rgba(255,255,255,0.18);
+      line-height: 1;
+      padding-bottom: 10px;
+      user-select: none;
+    }
+    @media (max-width: 768px) {
+      :root {
+        /* mobile nav is same 60px, barra stays 41px */
+        --nav-h: 60px;
+        --fixed-top: 101px; /* 41px barra + 60px nav */
+      }
+      #barra-envio-gratis {
+        font-size: 11px;
+        padding: 0 10px;
+        letter-spacing: 0;
+      }
+      .hide-mobile { display: none !important; }
+      
+      .nav__logo {
+        font-size: 18px !important;
+        letter-spacing: 3px !important;
+      }
+      .countdown-section {
+        flex-direction: column;
+        padding: 12px 16px;
+        gap: 8px;
+        top: var(--fixed-top);
+        margin-top: var(--fixed-top);
+      }
+      .countdown__eyebrow {
+        margin: 0;
+      }
+      .countdown__units {
+        flex-wrap: nowrap;
+        width: 100%;
+        justify-content: center;
+      }
+      .countdown__divider { display: none; }
+      .countdown__unit { padding: 0 5px; }
+      .countdown__num { font-size: clamp(18px, 5vw, 24px); }
+      .countdown__sep { font-size: 16px; padding-bottom: 4px; margin: 0 2px; }
+    }
+    @media (max-width: 380px) {
+      .countdown__unit { padding: 0 3px; }
+      .countdown__num { font-size: 18px; }
+    }
+
+    /* ── Drops Section ───────────────────────────────────────── */
+    .drops {
+      background: var(--off-white);
+      padding: 120px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .drops__left {
+      position: sticky;
+      top: 120px;
+    }
+
+    .drops__eyebrow {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--black);
+      display: block;
+      margin-bottom: 28px;
+    }
+
+    .drops__headline {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(42px, 4.5vw, 68px);
+      line-height: 1.0;
+      letter-spacing: -0.5px;
+      color: var(--black);
+    }
+
+    .drops__headline em {
+      font-style: italic;
+      color: var(--gray);
+    }
+
+    .drops__rule {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      margin: 36px 0;
+    }
+
+    .drops__sub {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--black);
+      line-height: 1.9;
+    }
+
+    .drops__right {
+      padding-top: 8px;
+    }
+
+    .drops__body p {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 2;
+      color: var(--black);
+      margin-bottom: 36px;
+    }
+
+    .drops__body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .drops__pull {
+      border-left: 2px solid var(--black);
+      padding: 24px 0 24px 28px;
+      margin: 56px 0;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 1.5;
+      color: var(--black);
+    }
+
+    .drops__cta-block {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      position: relative;
+      flex-wrap: wrap;
+    }
+
+    /* ── Drops CTA & Arrow ── */
+    .drops__main-cta {
+      transition: transform 0.3s var(--ease-out), background 0.3s, color 0.3s !important;
+    }
+    .drops__main-cta:hover {
+      transform: scale(1.02);
+    }
+    .drops__main-cta .arrow-icon {
+      display: inline-block;
+      transition: transform 0.3s var(--ease-out);
+      margin-left: 2px;
+    }
+    .drops__main-cta:hover .arrow-icon {
+      transform: translateX(4px);
+    }
+
+    .drops__decorative-arrow {
+      position: absolute;
+      top: 50%;
+      left: -290px;
+      transform: translateY(-50%);
+      width: 270px;
+      height: 110px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 2 trazos: cuerpo con loop + cabeza de flecha */
+    .drops__decorative-arrow .pa { stroke-dasharray: 380; stroke-dashoffset: 380; }
+    .drops__decorative-arrow .pc { stroke-dasharray:  46; stroke-dashoffset:  46; }
+
+    .drops__right.is-visible .drops__decorative-arrow .pa {
+      animation: trA 4.2s cubic-bezier(0.3, 0, 0.15, 1) infinite;
+      animation-delay: 0.3s;
+    }
+    .drops__right.is-visible .drops__decorative-arrow .pc {
+      animation: trC 4.2s cubic-bezier(0.3, 0, 0.15, 1) infinite;
+      animation-delay: 1.1s;
+    }
+
+    @keyframes trA {
+      0%   { stroke-dashoffset: 380; opacity: 0; }
+      4%   { opacity: 1; }
+      42%  { stroke-dashoffset: 0; opacity: 1; }
+      80%  { stroke-dashoffset: 0; opacity: 1; }
+      92%  { stroke-dashoffset: 0; opacity: 0; }
+      100% { stroke-dashoffset: 380; opacity: 0; }
+    }
+
+    @keyframes trC {
+      0%   { stroke-dashoffset: 46; opacity: 0; }
+      4%   { opacity: 1; }
+      42%  { stroke-dashoffset: 0; opacity: 1; }
+      80%  { stroke-dashoffset: 0; opacity: 1; }
+      92%  { stroke-dashoffset: 0; opacity: 0; }
+      100% { stroke-dashoffset: 46; opacity: 0; }
+    }
+    @media (max-width: 1000px) {
+      .drops__decorative-arrow { display: none; }
+    }
+
+    .drops__cta-label {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--black);
+    }
+
+    /* ── Historia Section ─────────────────────────────────── */
+    .historia {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 700px;
+    }
+
+    .historia__left {
+      background: var(--white);
+      padding: 100px 60px;
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+
+    .historia__bg-letter {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 420px;
+      line-height: 1;
+      color: rgba(0, 0, 0, 0.04);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .acronym__item {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateX(-16px);
+      transition: opacity 0.6s var(--ease-expo), transform 0.6s var(--ease-expo);
+    }
+
+    .acronym__item.is-visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .acronym__letter {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 32px;
+      color: var(--black);
+      min-width: 24px;
+      line-height: 1;
+    }
+
+    .acronym__text {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--black);
+      line-height: 1.4;
+    }
+
+    .acronym__word {
+      display: block;
+      color: var(--gray-mid);
+      font-size: 11px;
+      letter-spacing: 0px;
+      font-style: italic;
+      font-family: var(--font-display);
+      font-weight: 400;
+    }
+
+    .historia__right {
+      background: var(--white);
+      padding: 100px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .historia__quote {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 26px;
+      line-height: 1.5;
+      color: var(--black);
+      border-left: 2px solid var(--gray-light);
+      padding-left: 24px;
+      margin-bottom: 32px;
+    }
+
+    .historia__body {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 13px;
+      color: var(--black);
+      line-height: 2;
+      margin-bottom: 40px;
+    }
+
+    .historia__tagline {
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 18px;
+      color: var(--gray-mid);
+    }
+
+    /* ── Nosotros Section ─────────────────────────────────── */
+    .nosotros {
+      background: var(--off-white);
+      padding: 120px 60px;
+    }
+
+    .nosotros__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      margin-top: 72px;
+    }
+
+    .nosotros__card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .nosotros__num {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 56px;
+      letter-spacing: 8px;
+      color: rgba(0, 0, 0, 0.13);
+      line-height: 1;
+      margin-bottom: 24px;
+      user-select: none;
+      -webkit-text-stroke: 0;
+      display: block;
+    }
+
+    .nosotros__icon {
+      margin-bottom: 20px;
+      margin-top: 16px;
+    }
+
+    .nosotros__card-title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 22px;
+      letter-spacing: -0.3px;
+      color: var(--black);
+      margin-bottom: 12px;
+    }
+
+    .nosotros__card-text {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--black);
+      line-height: 2;
+    }
+
+    /* ── Contacto CTA ─────────────────────────────────────── */
+    .contacto-cta {
+      background: var(--black);
+      padding: 140px 60px;
+      text-align: center;
+    }
+
+    .contacto-cta__title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(48px, 6vw, 88px);
+      color: var(--white);
+      letter-spacing: -1px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .contacto-cta__title em {
+      font-style: italic;
+      color: var(--gray-light);
+    }
+
+    .contacto-cta__sub {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.3);
+      margin-bottom: 52px;
+    }
+
+    .contacto-cta__btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero__right {
+        min-height: 50vw;
+      }
+
+      .historia {
+        grid-template-columns: 1fr;
+      }
+
+      .catalog__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .catalog__grid .product-card:nth-child(4) {
+        grid-column: auto;
+      }
+
+      .nosotros__grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero__left {
+        padding: 60px 20px;
+      }
+
+      .catalog {
+        padding: 80px 20px;
+      }
+
+      .catalog__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .historia__left,
+      .historia__right {
+        padding: 80px 20px;
+      }
+
+      .nosotros {
+        padding: 80px 20px;
+      }
+
+      .contacto-cta {
+        padding: 100px 20px;
+      }
+
+      /* Drops: single column, logical order */
+      .drops {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 64px 20px;
+      }
+      .drops__left {
+        position: static;
+        margin-bottom: 40px;
+      }
+      .drops__headline {
+        font-size: clamp(36px, 10vw, 54px);
+      }
+      .drops__body p {
+        font-size: 13px;
+        margin-bottom: 24px;
+      }
+      .drops__pull {
+        font-size: 18px;
+        margin: 32px 0;
+        padding: 16px 0 16px 20px;
+      }
+      .drops__cta-block {
+        flex-direction: column;
+        align-items: stretch; /* Make button full width on mobile */
+        text-align: center;
+        gap: 20px;
+        margin-top: 36px;
+        padding-top: 28px;
+      }
+      .drops__cta-block .btn {
+        width: 100%;
+        padding: 16px 20px !important;
+        font-size: 9px !important;
+      }
+
+      /* Nosotros: single column already at 1100px, just pad */
+      .nosotros__card {
+        padding-top: 0;
+      }
+    }
+  </style>
+
+  <style>
+    .rastreo-container {
+      max-width: 600px;
+      margin: 120px auto;
+      padding: 40px 20px;
+      text-align: center;
+      min-height: 50vh;
+    }
+    .rastreo-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .rastreo-subtitle {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--gray-mid);
+      margin-bottom: 30px;
+    }
+    .rastreo-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .rastreo-btn {
+      background: var(--black);
+      color: #fff;
+      border: none;
+      padding: 14px 24px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s;
+    }
+    .rastreo-btn:hover { background: #333; }
+    .rastreo-results {
+      margin-top: 40px;
+      text-align: left;
+    }
+    .r-pedido {
+      border: 1px solid var(--border);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    .r-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    .badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      color: white;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .bg-green { background: #27ae60; }
+    .bg-blue { background: #2980b9; }
+    .bg-orange { background: #f39c12; }
+    .bg-gray { background: #7f8c8d; }
+    
+    .timeline {
+      margin-top: 20px;
+      padding-left: 10px;
+      border-left: 2px solid var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 15px;
+      padding-left: 15px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -21px;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      background: var(--black);
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+    .t-date { font-size: 11px; color: var(--gray-mid); }
+    .t-status { font-size: 13px; font-weight: 600; }
+  </style>
+</head><body><header></header>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SU_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+  const SU_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
+  window.supabaseClient = supabase.createClient(SU_URL, SU_KEY);
+</script>
+
+<main class="rastreo-container">
+  <h1 class="rastreo-title">Rastrea tu pedido</h1>
+  <p class="rastreo-subtitle">Ingresa tu número de celular o los primeros 8 caracteres de tu #ID de pedido.</p>
+  
+  <input type="text" id="busqueda" class="rastreo-input" placeholder="Tu número de teléfono o #ID de pedido">
+  <button id="btn-rastrear" class="rastreo-btn">Rastrear pedido →</button>
+  
+  <div id="rastreo-resultados" class="rastreo-results"></div>
+</main>
+
+<script>
+  function formatPrice(val) {
+    if (!val) return '$0';
+    return '$' + parseFloat(val).toLocaleString('es-CO');
+  }
+  
+  function getBadgeClass(status) {
+    if (status === 'entregado') return 'bg-green';
+    if (status === 'enviado') return 'bg-blue';
+    if (status === 'confirmado') return 'bg-orange';
+    return 'bg-gray';
+  }
+
+  document.getElementById('btn-rastrear').addEventListener('click', async () => {
+    const val = document.getElementById('busqueda').value.trim();
+    const resDiv = document.getElementById('rastreo-resultados');
+    
+    if (!val) {
+      resDiv.innerHTML = '<p style="color:red">Por favor ingresa un dato para buscar.</p>';
+      return;
+    }
+    
+    resDiv.innerHTML = '<p>Buscando...</p>';
+    
+    try {
+      const { data, error } = await window.supabaseClient.rpc('rastrear_pedido', { busqueda: val });
+      if (error) throw error;
+      
+      if (!data || data.length === 0) {
+        resDiv.innerHTML = `<p style="text-align:center;margin-top:40px;">
+          No encontramos pedidos con ese dato.<br>
+          Escríbenos a WhatsApp si necesitas ayuda.<br><br>
+          <a href="https://wa.me/573219937221" target="_blank" style="display:inline-block;padding:10px 20px;background:#25D366;color:white;text-decoration:none;border-radius:4px;">Contactar por WhatsApp</a>
+        </p>`;
+        return;
+      }
+      
+      let html = '';
+      data.forEach(p => {
+        let itemsHtml = '';
+        (p.items || []).forEach(i => {
+          itemsHtml += `<div style="font-size:13px;margin-bottom:5px;">▸ ${i.nombre} - Talla ${i.talla} (×${i.qty})</div>`;
+        });
+        
+        let timelineHtml = '<div class="timeline">';
+        if (p.historial_estados && p.historial_estados.length > 0) {
+          p.historial_estados.forEach(h => {
+            timelineHtml += `
+              <div class="timeline-item">
+                <div class="t-status">${(h.estado || 'Actualizado').toUpperCase()}</div>
+                <div class="t-date">${new Date(h.fecha).toLocaleString('es-CO')}</div>
+              </div>
+            `;
+          });
+        } else {
+           timelineHtml += `
+              <div class="timeline-item">
+                <div class="t-status">${(p.estado || 'Pendiente').toUpperCase()}</div>
+                <div class="t-date">${new Date(p.created_at).toLocaleString('es-CO')}</div>
+              </div>
+            `;
+        }
+        timelineHtml += '</div>';
+        
+        let envioHtml = '';
+        if (p.numero_guia && p.empresa_envio) {
+          envioHtml = `<div style="margin-top:15px;padding:10px;background:#f9f9f9;border:1px solid #ddd;">
+            <strong>Envío:</strong> ${p.empresa_envio} - Guía: ${p.numero_guia}
+          </div>`;
+        }
+        
+        html += `
+          <div class="r-pedido">
+            <div class="r-header">
+              <div>
+                <strong>Pedido:</strong> ${p.id.substring(0,8)}...<br>
+                <span style="font-size:12px;color:gray">${new Date(p.created_at).toLocaleDateString('es-CO')}</span>
+              </div>
+              <div>
+                <span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span>
+              </div>
+            </div>
+            
+            <div style="margin-bottom:15px;">
+              <strong>Cliente:</strong> ${p.cliente_nombre}<br>
+              <strong>Total pagado:</strong> ${formatPrice(p.total)}
+            </div>
+            
+            <div style="margin-bottom:15px;">
+              <strong>Artículos:</strong><br>
+              ${itemsHtml}
+            </div>
+            
+            ${envioHtml}
+            
+            <div style="margin-top:20px;">
+              <strong>Historial:</strong>
+              ${timelineHtml}
+            </div>
+          </div>
+        `;
+      });
+      
+      resDiv.innerHTML = html;
+      
+    } catch(err) {
+      console.error(err);
+      resDiv.innerHTML = '<p style="color:red">Ocurrió un error al buscar. Intenta de nuevo.</p>';
+    }
+  });
+</script>
+<footer class="footer">
+        <div class="footer__columns">
+            <div class="footer__col">
+                <div class="footer__logo">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="white" stroke-width="1" />
+                        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    YOSSICO
+                </div>
+                <div class="footer__links">
+                    <a href="institucional.html">YOSSICO Institucional</a>
+                    <a href="embajadoras.html">Embajadoras YOSSICO</a>
+                </div>
+            </div>
+            
+            <div class="footer__col">
+                <h4 class="footer__col-title">AYUDA</h4>
+                <div class="footer__links">
+                    <a href="guia-de-tallas.html">Guía de Tallas</a>
+                    <a href="cuidado-de-tus-prendas.html">Cuidado de tus prendas</a>
+                    <a href="tecnologia-de-la-tela.html">Tecnología de la tela</a>
+                    <a href="terminos.html#s5">Envíos y Logística</a>
+                    <a href="terminos.html#s7">Devoluciones y Garantía</a>
+                    <a href="rastreo.html">Rastreo de pedido</a>
+                </div>
+            </div>
+
+            <div class="footer__col">
+                <h4 class="footer__col-title">CONTACTO</h4>
+                <div class="footer__links">
+                    <span>WhatsApp: +57 312 730 0661</span>
+                    <span>Email: customerserviceyossico@gmail.com</span>
+                    <span>Horario: Lunes a viernes, 10:00 a.m. – 4:00 p.m.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__bottom-bar">
+            <div class="footer__copy">
+                © 2026 YOSSICO · Colombia · <a href="terminos.html">Términos y Condiciones</a>
+            </div>
+            <div class="footer__sic" style="display: flex; align-items: center; justify-content: flex-end; opacity: 0.8; transition: opacity 0.2s; cursor: default;">
+                <div style="font-family: var(--font-body); color: #FFFFFF; text-align: left; line-height: 1.2;">
+                    <span style="font-size: 8px; letter-spacing: 1px; font-weight: 300;">SUPERINTENDENCIA DE</span><br>
+                    <strong style="font-size: 11px; letter-spacing: 0.5px; font-weight: 400;">INDUSTRIA Y COMERCIO</strong>
+                    <div style="height: 1px; background: #FFFFFF; width: 100%; margin-top: 4px;"></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <!-- ══ Cart Overlay ══ -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <!-- ══ Cart Drawer ══ -->
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito">
+    <div class="cart-drawer__header">
+      <span class="cart-drawer__title">Tu Pedido</span>
+      <button class="cart-drawer__close" id="cart-close" aria-label="Cerrar"><svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg></button>
+    </div>
+    <div class="cart-drawer__body" id="cart-body"></div>
+    <div class="cart-drawer__footer" id="cart-footer">
+      <div class="cart-total"><span>Total</span><span id="cart-total-price">$0 COP</span></div>
+      <a href="#" id="cart-checkout" class="cart-checkout" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+        Pedir por WhatsApp
+      </a>
+    </div>
+  </aside>
+  <script>
+    /* ── Countdown to Aug 19 2026 00:00 local time ─────────────── */
+    (function () {
+      const TARGET = new Date('2026-10-16T00:00:00').getTime();
+
+      const elW = document.getElementById('cd-weeks');
+      const elD = document.getElementById('cd-days');
+      const elH = document.getElementById('cd-hours');
+      const elM = document.getElementById('cd-minutes');
+      const elS = document.getElementById('cd-seconds');
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function tick(el, newVal) {
+        if (el.textContent !== newVal) {
+          el.classList.remove('tick');
+          void el.offsetWidth; /* reflow */
+          el.textContent = newVal;
+          el.classList.add('tick');
+          setTimeout(() => el.classList.remove('tick'), 200);
+        }
+      }
+
+      function update() {
+        const now  = Date.now();
+        const diff = TARGET - now;
+
+        if (diff <= 0) {
+          elW.textContent = elD.textContent = elH.textContent = elM.textContent = elS.textContent = '00';
+          return;
+        }
+
+        const totalSeconds = Math.floor(diff / 1000);
+        const totalMinutes = Math.floor(diff / 60000);
+        const totalHours   = Math.floor(diff / 3600000);
+        const totalDays    = Math.floor(diff / 86400000);
+        const weeks        = Math.floor(totalDays / 7);
+        const days         = totalDays % 7;
+        const hours        = totalHours % 24;
+        const minutes      = totalMinutes % 60;
+        const seconds      = totalSeconds % 60;
+
+        tick(elW, pad(weeks));
+        tick(elD, pad(days));
+        tick(elH, pad(hours));
+        tick(elM, pad(minutes));
+        tick(elS, pad(seconds));
+      }
+
+      update();
+      setInterval(update, 1000);
+    })();
+  </script>
+  <script src="script.js"></script>
+  <script src="cart.js"></script>
+  <link rel="stylesheet" href="styles.v2.css?v=105">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/auth.js"></script>
+
+  <!-- ══ Subscription Popup ══ -->
+  <div class="sub-overlay" id="sub-overlay" role="dialog" aria-modal="true" aria-label="Suscríbete al drop">
+    <div class="sub-modal">
+
+      <!-- Left: brand panel -->
+      <div class="sub-modal__left">
+        <div>
+          <span class="sub-modal__tag">YOSSICO Drops</span>
+          <h2 class="sub-modal__headline">
+            Sé el primero<br>en saber<br><em>cuándo abre.</em>
+          </h2>
+        </div>
+        <div class="sub-modal__discount">
+          <span class="sub-modal__discount-label">10% de descuento en tu primera compra</span>
+          <hr class="sub-modal__discount-rule">
+          <span class="sub-modal__drop-word">DROP 01</span>
+        </div>
+      </div>
+
+      <!-- Right: form panel -->
+      <div class="sub-modal__right">
+        <button class="sub-modal__close" id="sub-close" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <!-- Form state -->
+        <div id="sub-form-wrap">
+          <p class="sub-form__title">Únete al drop</p>
+          <p class="sub-form__sub">Cuéntanos quién eres y te avisamos antes de que abra el próximo drop — más tu
+            descuento de bienvenida.</p>
+          <form class="sub-form" id="sub-form" novalidate>
+            <div class="sub-form__field">
+              <label class="sub-form__label" for="sub-name">Nombre completo</label>
+              <input class="sub-form__input" id="sub-name" type="text" placeholder="Tu nombre" autocomplete="name"
+                required>
+            </div>
+            <div class="sub-form__field">
+              <label class="sub-form__label" for="sub-email">Correo electrónico</label>
+              <input class="sub-form__input" id="sub-email" type="email" placeholder="tu@correo.com"
+                autocomplete="email" required>
+            </div>
+            <div class="sub-form__field">
+              <label class="sub-form__label" for="sub-phone">Celular / WhatsApp</label>
+              <input class="sub-form__input" id="sub-phone" type="tel" placeholder="+57 300 000 0000" autocomplete="tel"
+                required>
+            </div>
+            
+            <!-- Turnstile Widget -->
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-bottom: 20px;"></div>
+            
+            <button type="submit" class="sub-form__btn">Quiero mi descuento →</button>
+            <p class="sub-form__legal">Al registrarte aceptas recibir notificaciones de drops y promociones de YOSSICO.
+              Sin spam.</p>
+          </form>
+        </div>
+
+        <!-- Success state -->
+        <div class="sub-success" id="sub-success">
+          <div class="sub-success__icon">
+            <svg viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <p class="sub-success__title">¡Estás dentro.</p>
+          <p class="sub-success__body">Te avisamos cuando abra el próximo drop.<br>Usa este código en tu primera compra:
+          </p>
+          <div class="sub-success__code-box">
+            <span class="sub-success__code-label">Tu código de descuento</span>
+            <span class="sub-success__code" id="sub-code-value">YOSSICO-BIENVENIDA-···</span>
+          </div>
+          <p class="sub-form__legal" style="margin-top:0;">Válido para tu primera compra · 10% de descuento · Te lo
+            enviamos también por email</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── Subscription Popup ───────────────────────────────────── */
+    const SUPABASE_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+    const EDGE_FN_URL = `${SUPABASE_URL}/functions/v1/register-subscriber`;
+
+    const subOverlay = document.getElementById('sub-overlay');
+    const subClose = document.getElementById('sub-close');
+    const subForm = document.getElementById('sub-form');
+    const subFormWrap = document.getElementById('sub-form-wrap');
+    const subSuccess = document.getElementById('sub-success');
+    const subBtn = subForm.querySelector('.sub-form__btn');
+    const codeDisplay = document.getElementById('sub-code-value');
+
+    // Auto-open flag — resets on every page load (in-memory only)
+    let popupDismissed = false;
+
+    function openSubPopup() {
+      subOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      subFormWrap.style.display = '';
+      subSuccess.classList.remove('show');
+      subForm.reset();
+      clearFormErrors();
+      setSubmitState('idle');
+    }
+
+    function closeSubPopup() {
+      subOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+      popupDismissed = true; // Don't auto-reopen this page load
+    }
+
+    function setSubmitState(state) {
+      if (state === 'loading') {
+        subBtn.disabled = true;
+        subBtn.textContent = 'Registrando...';
+      } else if (state === 'error') {
+        subBtn.disabled = false;
+        subBtn.textContent = 'Quiero mi descuento →';
+      } else {
+        subBtn.disabled = false;
+        subBtn.textContent = 'Quiero mi descuento →';
+      }
+    }
+
+    function setFieldError(id, message) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.borderBottomColor = '#c0392b';
+      let errEl = el.parentElement.querySelector('.sub-form__error');
+      if (!errEl) {
+        errEl = document.createElement('p');
+        errEl.className = 'sub-form__error';
+        errEl.style.cssText = 'margin:4px 0 0; font-size:10px; color:#c0392b; font-family:var(--font-body); letter-spacing:0.5px;';
+        el.parentElement.appendChild(errEl);
+      }
+      errEl.textContent = message;
+    }
+
+    function clearFormErrors() {
+      subForm.querySelectorAll('.sub-form__input').forEach(el => {
+        el.style.borderBottomColor = '';
+      });
+      subForm.querySelectorAll('.sub-form__error').forEach(el => el.remove());
+    }
+
+    // Close on overlay click
+    subOverlay.addEventListener('click', e => {
+      if (e.target === subOverlay) closeSubPopup();
+    });
+
+    // Close button
+    subClose.addEventListener('click', closeSubPopup);
+
+    // Close on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && subOverlay.classList.contains('open')) closeSubPopup();
+    });
+
+    // Trigger: any button with data-open-sub
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-open-sub]');
+      if (btn) { e.preventDefault(); openSubPopup(); }
+    });
+
+    // Auto-open after 2.5s — always on page load, but not again if dismissed
+    setTimeout(() => {
+      if (!popupDismissed) openSubPopup();
+    }, 2500);
+
+    // Form submit
+    subForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      clearFormErrors();
+
+      const name = document.getElementById('sub-name').value.trim();
+      const email = document.getElementById('sub-email').value.trim();
+      const phone = document.getElementById('sub-phone').value.trim();
+
+      // Client-side validation
+      let hasError = false;
+      if (!name) { setFieldError('sub-name', 'Por favor ingresa tu nombre.'); hasError = true; }
+      if (!email) { setFieldError('sub-email', 'Por favor ingresa tu correo.'); hasError = true; }
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setFieldError('sub-email', 'El correo no es válido.'); hasError = true;
+      }
+      if (!phone) { setFieldError('sub-phone', 'Por favor ingresa tu número de celular.'); hasError = true; }
+      if (hasError) return;
+
+      const turnstileToken = document.querySelector('#sub-form [name="cf-turnstile-response"]')?.value;
+      if (!turnstileToken) {
+        setFieldError('sub-email', 'Por favor completa la validación de seguridad.');
+        return;
+      }
+
+      setSubmitState('loading');
+
+      try {
+        const res = await fetch(EDGE_FN_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, phone, turnstileToken }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          if (res.status === 409 || data.already_registered) {
+            setFieldError('sub-email', 'Este correo ya está registrado. ¡Revisa tu bandeja de entrada!');
+          } else {
+            setFieldError('sub-email', data.error || 'Algo salió mal. Intenta de nuevo.');
+            turnstile.reset(); // Reset Turnstile on generic error
+          }
+          setSubmitState('error');
+          return;
+        }
+
+        // Success — show code returned by API
+        if (codeDisplay && data.discount_code) {
+          codeDisplay.textContent = data.discount_code;
+        }
+        subFormWrap.style.display = 'none';
+        subSuccess.classList.add('show');
+
+      } catch (err) {
+        console.error('Popup fetch error:', err);
+        setFieldError('sub-email', 'Error de conexión. Revisa tu internet e intenta de nuevo.');
+        setSubmitState('error');
+      }
+    });
+  </script>
+
+
+</body>
+
+</html>

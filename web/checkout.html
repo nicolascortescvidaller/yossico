@@ -312,6 +312,7 @@
 
       /* Discount apply */
       let discountPct = 0;
+      let discountMonto = 0;
       document.getElementById('ck-apply-discount').addEventListener('click', async () => {
         const code = document.getElementById('ck-discount').value.trim().toUpperCase();
         const msg  = document.getElementById('ck-discount-msg');
@@ -368,6 +369,7 @@
           // Actualizamos variables globales para el momento de pagar
           finalTotal = newTotal;
           discountPct = dType === 'porcentaje' ? dVal : 0; // Para el mensaje WA
+          discountMonto = dType === 'monto' ? dVal : 0;
           
         } catch (err) {
           console.warn('Discount validation error:', err);
@@ -389,7 +391,9 @@
           return;
         }
 
-        const finalTotal = t * (1 - discountPct / 100);
+        let finalTotal = t;
+        if (discountPct > 0) finalTotal = t * (1 - discountPct / 100);
+        else if (discountMonto > 0) finalTotal = Math.max(0, t - discountMonto);
 
         /* ── 1. Guardar datos para gracias.html ────────────────── */
         sessionStorage.setItem('yossico_ultimo_pedido', JSON.stringify({
@@ -465,10 +469,17 @@
             const { error: rpcError } = await sb.rpc('decrementar_stock', { items: stockItems });
             if (rpcError) console.warn('[checkout] decrementar_stock:', rpcError.message);
 
-            /* Marcar código de descuento como usado */
+            /* Consumir código de descuento (Gift Cards: saldo parcial; otros: marcar usado) */
             if (dcode) {
-              const { error: usedError } = await sb.rpc('marcar_descuento_usado', { codigo: dcode });
-              if (usedError) console.warn('[checkout] mark used error:', usedError.message);
+              const isGiftCard = dcode.startsWith('GC-');
+              if (isGiftCard) {
+                const montoDescontado = t - finalTotal;
+                const { error: gcError } = await sb.rpc('usar_giftcard', { codigo: dcode, monto_a_descontar: montoDescontado });
+                if (gcError) console.warn('[checkout] usar_giftcard error:', gcError.message);
+              } else {
+                const { error: usedError } = await sb.rpc('marcar_descuento_usado', { codigo: dcode });
+                if (usedError) console.warn('[checkout] mark used error:', usedError.message);
+              }
             }
 
             /* Email de confirmación (solo si hay email) */

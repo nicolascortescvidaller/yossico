@@ -1,0 +1,211 @@
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pedido confirmado — YOSSICO">
+  <meta name="twitter:description" content="Gracias por tu pedido en YOSSICO.">
+  <meta name="twitter:image" content="https://yossico.com/img/og-yossico.jpg">
+
+  <title>Pedido confirmado — YOSSICO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.v2.css?v=105">
+  <style>
+    /* ── Gracias page ── */
+    .grc-page {
+      min-height: 100vh;
+      background: #FFFFFF;
+    }
+    .grc-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 140px 40px 80px;
+    }
+
+    /* Tag / eyebrow */
+    .grc-tag {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    /* Status badge */
+    .grc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      border-radius: 2px;
+      margin-bottom: 32px;
+    }
+    .grc-badge--approved {
+      background: #D8F0E4;
+      color: #2D6A4F;
+      border: 1px solid #2D6A4F;
+    }
+    .grc-badge--pending {
+      background: #FFF8E1;
+      color: #7B5800;
+      border: 1px solid #D4A017;
+    }
+    .grc-badge--whatsapp {
+      background: #D8F0E4;
+      color: #2D6A4F;
+      border: 1px solid #2D6A4F;
+    }
+
+    /* Main heading */
+    .grc-title {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 40px;
+      color: var(--black);
+      line-height: 1.15;
+      margin: 0 0 8px;
+    }
+    .grc-title em {
+      font-style: italic;
+      color: #555;
+    }
+    .grc-sub {
+      font-family: var(--font-body);
+      font-weight: 200;
+      font-size: 13px;
+      color: var(--gray);
+      letter-spacing: 0.5px;
+      line-height: 1.7;
+      margin: 0 0 48px;
+    }
+
+    /* Divider */
+    .grc-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 32px 0;
+    }
+
+    /* Order summary */
+    .grc-section-label {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 20px;
+      display: block;
+    }
+    .grc-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .grc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .grc-item:last-child {
+      border-bottom: none;
+    }
+    .grc-item__left {}
+    .grc-item__name {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--black);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .grc-item__meta {
+      font-family: var(--font-body);
+      font-weight: 200;
+      font-size: 10px;
+      color: var(--gray);
+      letter-spacing: 0.5px;
+    }
+    .grc-item__price {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--black);
+      white-space: nowrap;
+    }
+
+    /* Total row */
+    .grc-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 20px 0 0;
+    }
+    .grc-total__label {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .grc-total__value {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 32px;
+      color: var(--black);
+    }
+
+    /* Info block */
+    .grc-info {
+      background: #F8F8F8;
+      border: 1px solid var(--border);
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .grc-info__line {
+      font-family: var(--font-body);
+      font-weight: 200;
+      font-size: 12px;
+      color: #444;
+      letter-spacing: 0.3px;
+      line-height: 1.8;
+      margin: 0;
+    }
+    .grc-info__line strong {
+      font-weight: 400;
+      color: var(--black);
+    }
+    .grc-info__wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--black);
+      text-decoration: none;
+      border-bottom: 1px solid var(--black);
+      padding-bottom: 1px;
+    }
+
+    /* Pedido ID */
+    .grc-pedido-id {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--gray);
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* Generic thank you */
+    .grc-generic {

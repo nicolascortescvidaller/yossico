@@ -1697,7 +1697,12 @@ function renderEmbajadorasYGc() {
         return `<tr>
           <td>${owner}</td>
           <td><code style="background:#fce4ec;color:#c2185b;padding:0.3rem 0.6rem;border-radius:4px;font-size:0.75rem">${g.discount_code}</code></td>
-          <td><strong>${fCOP(valor)}</strong></td>
+          <td>
+  <strong>${fCOP(valor)}</strong>
+  ${saldoMap[g.discount_code] !== null && saldoMap[g.discount_code] !== undefined && saldoMap[g.discount_code] < valor 
+    ? `<br><span style="font-size:0.65rem;color:var(--grisMed)">Saldo: ${fCOP(saldoMap[g.discount_code])}</span>` 
+    : ''}
+</td>
           <td>${statusBadge}</td>
           <td><button class="btn-gris btn-sm" style="font-size:0.65rem;border:1px solid var(--rojo);color:var(--rojo)" onclick="eliminarSub('${g.discount_code}')">Eliminar</button></td>
         </tr>`;
@@ -4491,7 +4496,8 @@ function renderDropStatus() {
   if (!el) return;
   
   if (!dropData || !dropData.activo) {
-    el.innerHTML = '<span style="color:var(--grisMed)">⬜ No hay ningún Drop activo en este momento. El contador en la web está apagado.</span>';
+    el.innerHTML = '<span style="color:var(--grisMed)">⬛ No hay ningún Drop activo. El contador en la web está apagado para todos.</span>';
+    ['drop-pedidos','drop-ingresos','drop-ticket','drop-nuevas'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent='—'; });
     return;
   }
   
@@ -4522,19 +4528,24 @@ function renderDropStatus() {
   const elNuv = document.getElementById('drop-nuevas'); if(elNuv) elNuv.textContent = nuevas;
 }
 
-window.activarDrop = function() {
+window.activarDrop = async function() {
   const nombre = document.getElementById('drop-nombre').value.trim();
   const fecha = document.getElementById('drop-fecha').value;
   if (!nombre || !fecha) { mostrarToast('Completa el nombre y la fecha del Drop', 'warn'); return; }
-  localStorage.setItem('yossico_drop_activo', JSON.stringify({ activo: true, nombre, fecha }));
-  mostrarToast('Drop activado ✓', 'ok');
+  const dropData = { activo: true, nombre, fecha };
+  const { error } = await sb.rpc('set_config', { p_clave: 'drop_activo', p_valor: dropData, pin: adminPin });
+  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
+  localStorage.setItem('yossico_drop_activo', JSON.stringify(dropData));
+  mostrarToast('Drop activado globalmente ✓', 'ok');
   renderDropStatus();
 };
 
-window.desactivarDrop = function() {
-  if (!confirm('¿Desactivar el Drop? El contador en la web desaparecerá.')) return;
+window.desactivarDrop = async function() {
+  if (!confirm('¿Desactivar el Drop? El contador desaparecerá para todos.')) return;
+  const { error } = await sb.rpc('set_config', { p_clave: 'drop_activo', p_valor: { activo: false }, pin: adminPin });
+  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
   localStorage.removeItem('yossico_drop_activo');
-  mostrarToast('Drop desactivado', 'ok');
+  mostrarToast('Drop desactivado ✓', 'ok');
   renderDropStatus();
 };
 

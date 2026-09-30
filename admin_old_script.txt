@@ -1,0 +1,264 @@
+<script>
+// ══════════════════════════════════════════════════════════
+// CONFIGURACIÓN — Cambia esta URL por la de tu Apps Script
+// ══════════════════════════════════════════════════════════
+const API_URL = "TU_URL_DE_APPS_SCRIPT_AQUÍ";
+// Ejemplo: "https://script.google.com/macros/s/XXXXXXXXXX/exec"
+
+const PASS = "yossico2025"; // Misma contraseña que en el script
+
+// ══════════════════════════════════════════════════════════
+// SKUs por línea
+// ══════════════════════════════════════════════════════════
+const SKUS = {
+  SIGNATURE:  ["42393-P3", "42384-P6"],
+  ESSENTIALS: ["42020-G27", "42020-G20", "42020-G12", "42389-S27", "42389-S21", "42389-S24"],
+  CORE:       ["42015-Z9", "42342-Z17", "42342-Z9", "42342-Z21"],
+};
+
+let stockData    = [];
+let pedidosHoy   = [];
+let autenticado  = false;
+
+// ── LOGIN ────────────────────────────────────────────────
+function login() {
+  const pass = document.getElementById("input-pass").value;
+  if (pass === PASS) {
+    autenticado = true;
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("panel").classList.remove("hidden");
+    document.getElementById("usuario-info").textContent = "Admin";
+    cargarStock();
+  } else {
+    mostrarToast("Contraseña incorrecta", "err");
+  }
+}
+
+document.getElementById("input-pass").addEventListener("keydown", e => {
+  if (e.key === "Enter") login();
+});
+
+// ── CARGAR STOCK ─────────────────────────────────────────
+async function cargarStock() {
+  const grid = document.getElementById("stock-grid");
+  grid.innerHTML = '<div class="loading">Actualizando...</div>';
+
+  try {
+    const res  = await fetch(`${API_URL}?accion=stock`);
+    const data = await res.json();
+
+    if (!data.ok) throw new Error(data.error);
+    stockData = data.stock;
+    renderStock(stockData);
+
+  } catch (err) {
+    grid.innerHTML = `<div class="loading" style="color:var(--rojo)">Error al cargar stock. Verifica la URL del script.</div>`;
+  }
+}
+
+function renderStock(stock) {
+  const grid = document.getElementById("stock-grid");
+  grid.innerHTML = stock.map(item => {
+    const badge = (n, label) => {
+      const cls = n === 0 ? "talla-cero" : n <= 3 ? "talla-bajo" : "talla-ok";
+      return `<div class="talla-badge ${cls}">${label}<br><strong>${n}</strong></div>`;
+    };
+    return `
+      <div class="stock-item">
+        <div class="stock-sku">${item.sku}</div>
+        <div class="stock-nombre">${item.linea}</div>
+        <div class="stock-color">${item.color}</div>
+        <div class="stock-tallas">
+          ${badge(item.stock_s, "S")}
+          ${badge(item.stock_m, "M")}
+          ${badge(item.stock_l, "L")}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+// ── FILTRAR SKUS POR LÍNEA ───────────────────────────────
+function filtrarSKUs() {
+  const linea = document.getElementById("f-linea").value;
+  const sel   = document.getElementById("f-sku");
+  sel.innerHTML = '<option value="">Seleccionar SKU...</option>';
+
+  if (SKUS[linea]) {
+    SKUS[linea].forEach(sku => {
+      const opt = document.createElement("option");
+      opt.value = sku;
+      opt.textContent = sku;
+      sel.appendChild(opt);
+    });
+  }
+
+  // Auto-llenar color desde el stock
+  document.getElementById("f-sku").addEventListener("change", autoColor);
+  actualizarStockPreview();
+}
+
+function autoColor() {
+  const sku  = document.getElementById("f-sku").value;
+  const item = stockData.find(s => s.sku === sku);
+  if (item) {
+    document.getElementById("f-color").value = item.color;
+  }
+  actualizarStockPreview();
+}
+
+// ── PREVIEW STOCK SELECCIONADO ───────────────────────────
+function actualizarStockPreview() {
+  const sku   = document.getElementById("f-sku").value;
+  const item  = stockData.find(s => s.sku === sku);
+  const prev  = document.getElementById("stock-preview");
+  const nums  = document.getElementById("stock-preview-nums");
+
+  if (!item || !sku) { prev.style.display = "none"; return; }
+
+  prev.style.display = "block";
+  const badge = (n, t) => {
+    const cls = n === 0 ? "talla-cero" : n <= 3 ? "talla-bajo" : "talla-ok";
+    return `<div class="talla-badge ${cls}" style="padding:.3rem .75rem">${t}: <strong>${n}</strong></div>`;
+  };
+  nums.innerHTML = badge(item.stock_s,"S") + badge(item.stock_m,"M") + badge(item.stock_l,"L");
+}
+
+document.getElementById("f-sku").addEventListener("change", () => {
+  autoColor();
+  actualizarStockPreview();
+});
+
+// ── EFECTIVO ─────────────────────────────────────────────
+function checkEfectivo() {
+  const pago    = document.getElementById("f-pago").value;
+  const banner  = document.getElementById("efectivo-banner");
+  if (pago === "Efectivo") {
+    banner.classList.add("visible");
+  } else {
+    banner.classList.remove("visible");
+  }
+}
+
+// ── REGISTRAR VENTA ──────────────────────────────────────
+async function registrarVenta() {
+  const nombre   = document.getElementById("f-nombre").value.trim();
+  const telefono = document.getElementById("f-telefono").value.trim();
+  const sku      = document.getElementById("f-sku").value;
+  const talla    = document.getElementById("f-talla").value;
+  const valor    = document.getElementById("f-valor").value;
+  const pago     = document.getElementById("f-pago").value;
+
+  // Validaciones básicas
+  if (!nombre || !telefono || !sku || !talla || !valor || !pago) {
+    mostrarToast("Completa los campos obligatorios (*)", "err");
+    return;
+  }
+
+  const esEfectivo = pago === "Efectivo";
+  const estado = esEfectivo ? "Efectivo - Pendiente confirmar" : "En preparación";
+
+  const pedido = {
+    accion:     "registrar_pedido",
+    contrasena: PASS,
+    nombre:     document.getElementById("f-nombre").value,
+    cedula:     document.getElementById("f-cedula").value,
+    correo:     document.getElementById("f-correo").value,
+    telefono,
+    ciudad:     document.getElementById("f-ciudad").value,
+    direccion:  document.getElementById("f-direccion").value,
+    linea:      document.getElementById("f-linea").value,
+    sku,
+    color:      document.getElementById("f-color").value,
+    talla,
+    cantidad:   document.getElementById("f-cantidad").value || 1,
+    descuento:  document.getElementById("f-descuento").value,
+    valor_total: Number(valor),
+    metodo_pago: pago,
+    estado,
+  };
+
+  try {
+    const res  = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify(pedido),
+    });
+    const data = await res.json();
+
+    if (data.ok) {
+      const msg = esEfectivo
+        ? `✓ ${data.num_pedido} registrado como EFECTIVO. Confirma el pago manualmente en Sheets.`
+        : `✓ ${data.num_pedido} registrado. Stock actualizado automáticamente.`;
+
+      mostrarToast(msg, "ok");
+      agregarPedidoTabla(pedido, data.num_pedido, esEfectivo);
+      limpiarFormulario();
+      setTimeout(cargarStock, 2000); // Refresca stock
+    } else {
+      mostrarToast("Error: " + data.error, "err");
+    }
+
+  } catch (err) {
+    mostrarToast("Error de conexión con Google Sheets", "err");
+  }
+}
+
+// ── TABLA PEDIDOS HOY ────────────────────────────────────
+function agregarPedidoTabla(p, num, esEfectivo) {
+  const tbody = document.getElementById("tabla-pedidos");
+  if (tbody.querySelector(".loading")) tbody.innerHTML = "";
+
+  const valor = Number(p.valor_total).toLocaleString("es-CO", {
+    style:"currency", currency:"COP", minimumFractionDigits:0
+  });
+
+  const estadoBadge = esEfectivo
+    ? `<span class="badge badge-ef">💵 Efectivo</span>`
+    : `<span class="badge badge-prep">Preparación</span>`;
+
+    const pagoBadge = esEfectivo
+    ? `<span class="badge badge-ef">Efectivo</span>`
+    : p.metodo_pago;
+
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><strong>${num}</strong></td>
+    <td>${p.nombre}</td>
+    <td style="font-size:.7rem;color:var(--grisMed)">${p.sku}</td>
+    <td><strong>${p.talla}</strong></td>
+    <td>${valor}</td>
+    <td>${pagoBadge}</td>
+    <td>${estadoBadge}</td>
+  `;
+  tbody.insertBefore(tr, tbody.firstChild);
+
+  pedidosHoy.push(num);
+  document.getElementById("contador-hoy").textContent =
+    `${pedidosHoy.length} pedido${pedidosHoy.length > 1 ? "s" : ""} hoy`;
+}
+
+// ── LIMPIAR FORMULARIO ───────────────────────────────────
+function limpiarFormulario() {
+  ["f-nombre","f-cedula","f-correo","f-telefono","f-ciudad",
+   "f-direccion","f-color","f-valor"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+  ["f-linea","f-sku","f-talla","f-descuento","f-pago"].forEach(id => {
+    document.getElementById(id).selectedIndex = 0;
+  });
+  document.getElementById("f-cantidad").value = 1;
+  document.getElementById("efectivo-banner").classList.remove("visible");
+  document.getElementById("stock-preview").style.display = "none";
+  document.getElementById("f-sku").innerHTML = '<option value="">Primero selecciona línea</option>';
+}
+
+// ── TOAST ────────────────────────────────────────────────
+function mostrarToast(msg, tipo) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = `toast toast-${tipo} show`;
+  setTimeout(() => t.classList.remove("show"), 4000);
+}
+</script>
+</body>
+</html>
