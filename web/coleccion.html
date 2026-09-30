@@ -1974,6 +1974,37 @@
             }
         })();
     </script>
+
+<!-- YOSSICO Drop Countdown Banner -->
+<div id="drop-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#000 0%,#1a1a1a 100%);color:#fff;text-align:center;padding:0.8rem 1rem;z-index:9999;font-family:Montserrat,sans-serif;font-size:0.8rem;letter-spacing:2px;">
+  <span id="drop-banner-text"></span>
+  <button onclick="document.getElementById('drop-banner').style.display='none'" style="background:none;border:none;color:#888;cursor:pointer;margin-left:1.5rem;font-size:0.9rem">✕</button>
+</div>
+<script>
+(function() {
+  const dropData = JSON.parse(localStorage.getItem('yossico_drop_activo') || 'null');
+  if (!dropData || !dropData.activo) return;
+  const banner = document.getElementById('drop-banner');
+  const textEl = document.getElementById('drop-banner-text');
+  const target = new Date(dropData.fecha);
+  function tick() {
+    const diff = target - new Date();
+    if (diff > 0) {
+      const h = Math.floor(diff/3600000);
+      const m = Math.floor((diff%3600000)/60000);
+      const s = Math.floor((diff%60000)/1000);
+      textEl.textContent = `🚀 ${dropData.nombre} — Lanzamiento en ${h}h ${m}m ${s}s`;
+      banner.style.display = 'block';
+    } else {
+      textEl.textContent = `🔥 ${dropData.nombre} — ¡YA DISPONIBLE!`;
+      banner.style.display = 'block';
+    }
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
 </body>
+
 
 </html>
