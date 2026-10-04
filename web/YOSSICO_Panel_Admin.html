@@ -3788,33 +3788,38 @@ function renderCotizaciones() {
 }
 
 async function b2bGuardarCotizacion() {
-  const cliente = document.getElementById('b2b-print-empresa').textContent;
-  const nit = document.getElementById('b2b-print-nit').textContent;
-  
-  const trs = document.querySelectorAll('#b2b-print-tbody tr');
+  const cliente = (document.getElementById('b2b-empresa')?.value || '').trim();
+  const nit = (document.getElementById('b2b-nit')?.value || '').trim();
+  if (!cliente) { mostrarToast('Falta el nombre de la empresa', 'warn'); return; }
+
+  const rows = document.getElementById('b2b-items-container').children;
   const items = [];
   let subtotal = 0;
-  
-  trs.forEach(tr => {
-    const tds = tr.querySelectorAll('td');
-    if(tds.length >= 6) {
-      const p = parseFloat(tds[4].textContent.replace(/[^0-9]/g, '')) || 0;
-      const q = parseInt(tds[3].textContent) || 0;
-      items.push({ sku: tds[0].textContent, nombre: tds[1].textContent, qty: q, price: p });
-      subtotal += p * q;
-    }
-  });
-  
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    const qty = parseInt(r.querySelector('.b2b-item-qty')?.value) || 0;
+    const price = parseFloat(r.querySelector('.b2b-item-price')?.value) || 0;
+    if (qty <= 0) continue;
+    items.push({
+      sku: r.querySelector('.b2b-item-sku')?.value || '-',
+      nombre: r.querySelector('.b2b-item-desc')?.value || '-',
+      qty, price
+    });
+    subtotal += qty * price;
+  }
+  if (!items.length) { mostrarToast('Agrega al menos un item con cantidad', 'warn'); return; }
+
   const total = subtotal * 1.19; // con IVA
-  
+
   const { error } = await sb.from('cotizaciones_b2b').insert([{
     cliente_nombre: cliente, nit: nit, items: items, subtotal: subtotal, total: total
   }]);
-  
-  if(error) mostrarToast(error.message, 'err');
+
+  if (error) mostrarToast(error.message, 'err');
   else {
     mostrarToast("Cotización guardada", "ok");
     document.getElementById('b2b-print-controls').style.display = 'none';
+    document.getElementById('b2b-print-view').style.display = 'none';
     document.getElementById('b2b-form-area').style.display = 'block';
     cargarCotizaciones();
     cargarPauta();
@@ -3833,7 +3838,7 @@ async function convertirCotizacionAPedido(id) {
     const { data } = await sb.rpc("admin_get_pedidos", { pin: adminPin });
     if(data) todosPedidos = data;
     actualizarResumen();
-    renderPedidos();
+    aplicarFiltros();
   }
 }
 
