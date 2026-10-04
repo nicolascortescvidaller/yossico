@@ -1,0 +1,9 @@
+node_modules/
+package.json
+package-lock.json
+*.pyc
+/*.py
+/temp.js
+/test_*.js
+/script_check.js
+web/*.py

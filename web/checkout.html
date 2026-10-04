@@ -370,6 +370,7 @@
           finalTotal = newTotal;
           discountPct = dType === 'porcentaje' ? dVal : 0; // Para el mensaje WA
           discountMonto = dType === 'monto' ? dVal : 0;
+          window.__ckDesc = { pct: discountPct, monto: discountMonto, code: code };
           
         } catch (err) {
           console.warn('Discount validation error:', err);
@@ -584,17 +585,35 @@
         //    (igual que el flujo WhatsApp, pero sin abrir WhatsApp)
         const sbCk   = window.supabase.createClient(SUPABASE_URL_CK, 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19');
         const items  = getCart();
-        const total  = items.reduce((s, i) => s + i.price * i.qty, 0);
+        const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+        const desc = window.__ckDesc || { pct: 0, monto: 0, code: '' };
+        let total = subtotal;
+        if (desc.pct > 0) total = Math.round(subtotal * (1 - desc.pct / 100));
+        else if (desc.monto > 0) total = Math.max(0, subtotal - desc.monto);
+
+        const wNombre = document.getElementById('ck-nombre')?.value?.trim() || '';
+        const wCiudad = document.getElementById('ck-ciudad')?.value?.trim() || '';
+        const wDir    = document.getElementById('ck-dir')?.value?.trim() || '';
+        if (!wNombre || !wCiudad || !wDir) {
+          contenedor.innerHTML = '<p style="font-size:11px;color:#c0392b">Completa nombre, ciudad y dirección y vuelve a elegir Wompi.</p>';
+          return;
+        }
+        if (total < 1500) {
+          contenedor.innerHTML = '<p style="font-size:11px;color:#c0392b">El total es muy bajo para pagar con Wompi. Usa WhatsApp.</p>';
+          return;
+        }
 
         const { data: pedido, error: pedidoErr } = await sbCk.from('pedidos').insert([{
-          cliente_nombre:   document.getElementById('ck-name')?.value?.trim()  || 'Cliente Web',
-          cliente_telefono: document.getElementById('ck-tel')?.value?.trim()   || '',
-          cliente_ciudad:   document.getElementById('ck-city')?.value?.trim()  || '',
-          cliente_direccion:document.getElementById('ck-address')?.value?.trim()|| '',
+          cliente_nombre:   wNombre,
+          cliente_telefono: document.getElementById('ck-tel')?.value?.trim() || '',
+          cliente_email:    document.getElementById('ck-email')?.value?.trim() || null,
+          cliente_ciudad:   wCiudad,
+          cliente_direccion:wDir,
           items,
           total,
           estado:           'Pendiente - Wompi',
           metodo_pago:      'wompi',
+          codigo_descuento: desc.code || null,
           drop_numero:      'Drop 1',
         }]).select('id').single();
 
@@ -608,6 +627,12 @@
         });
         const sig = await sigRes.json();
         if (sig.error) throw new Error(sig.error);
+
+        // 2b. Consumir código de descuento / gift card
+        if (desc.code) {
+          if (desc.code.startsWith('GC-')) sbCk.rpc('usar_giftcard', { codigo: desc.code, monto_a_descontar: subtotal - total });
+          else sbCk.rpc('marcar_descuento_usado', { codigo: desc.code });
+        }
 
         // 3. Descontar stock (igual que flujo WhatsApp)
         sbCk.rpc('decrementar_stock', { items }).then(({ error }) => {

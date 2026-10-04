@@ -997,6 +997,10 @@
       return;
     }
     
+    if (val.replace(/\s/g,'').length < 7) {
+      resDiv.innerHTML = '<p style="color:red">Ingresa tu teléfono completo (mín. 7 dígitos) o el código de tu pedido.</p>';
+      return;
+    }
     resDiv.innerHTML = '<p>Buscando...</p>';
     
     try {
