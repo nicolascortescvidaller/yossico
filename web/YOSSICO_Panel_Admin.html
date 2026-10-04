@@ -1824,6 +1824,13 @@ window.editarMetaMensual = function() {
 };
 
 // ── INTELIGENCIA DE PRODUCCIÓN ──
+// Se recalcula cada vez que cambian los pedidos (login, recarga, cambios de estado)
+const _actualizarResumenOrig = actualizarResumen;
+actualizarResumen = function() {
+  const r = _actualizarResumenOrig.apply(this, arguments);
+  try { analizarTallasHistoricas(); } catch (e) { console.warn('[produccion]', e); }
+  return r;
+};
 let prodDist = { S: 0, M: 0, L: 0, total: 0 };
 function analizarTallasHistoricas() {
   prodDist = { S: 0, M: 0, L: 0, total: 0 };
@@ -4407,6 +4414,7 @@ function abrirModalRMA(pedidoId) {
       chk.style.flexShrink = '0';
       chk.dataset.nombre = item.nombre || '';
       chk.dataset.talla = item.talla || '';
+      chk.dataset.color = item.color || '';
       chk.dataset.qty = item.qty || 1;
       const span = document.createElement('span');
       span.style.fontSize = '0.8rem';
@@ -4421,11 +4429,12 @@ function abrirModalRMA(pedidoId) {
   }
   
   modal.classList.remove('hidden');
+  modal.classList.add('visible');
 }
 
 function cerrarModalRMA() {
   const modal = document.getElementById('modal-rma');
-  if (modal) modal.classList.add('hidden');
+  if (modal) { modal.classList.remove('visible'); modal.classList.add('hidden'); }
 }
 
 async function ejecutarRMA() {
@@ -4438,7 +4447,9 @@ async function ejecutarRMA() {
     const nombre = chk.dataset.nombre;
     const talla = chk.dataset.talla;
     const qty = parseInt(chk.dataset.qty) || 1;
-    const prod = stockData.find(s => s.nombre.toUpperCase() === nombre.toUpperCase() && (s.talla || '').toUpperCase() === talla.toUpperCase());
+    const color = (chk.dataset.color || '').toUpperCase();
+    const mismo = s => (s.nombre || '').toUpperCase() === nombre.toUpperCase() && (s.talla || '').toUpperCase() === talla.toUpperCase();
+    const prod = stockData.find(s => mismo(s) && (!color || (s.color || '').toUpperCase() === color)) || stockData.find(mismo);
     if (prod) {
       const { error } = await sb.from('productos').update({ stock: prod.stock + qty }).eq('id', prod.id);
       if (!error) { prod.stock += qty; ok++; } else err++;
@@ -4490,8 +4501,17 @@ function pedirResena(id) {
 
 
 // ── DROP / LANZAMIENTO ──
-function renderDropStatus() {
-  const dropData = JSON.parse(localStorage.getItem('yossico_drop_activo') || 'null');
+async function renderDropStatus() {
+  let dropData = null;
+  try {
+    const { data, error } = await sb.rpc('get_config', { p_clave: 'drop_activo' });
+    if (error) throw error;
+    dropData = data;
+    if (dropData && dropData.activo) localStorage.setItem('yossico_drop_activo', JSON.stringify(dropData));
+    else localStorage.removeItem('yossico_drop_activo');
+  } catch (e) {
+    dropData = JSON.parse(localStorage.getItem('yossico_drop_activo') || 'null');
+  }
   const el = document.getElementById('drop-status');
   if (!el) return;
   
