@@ -2999,7 +2999,7 @@ function renderFinanzas(pedidos) {
 
   const utilidadNeta = ingresosBrutos - costosTotales;
   const margenNeto = ingresosBrutos > 0 ? ((utilidadNeta / ingresosBrutos) * 100).toFixed(1) : 0;
-  const roi = costosTotales > 0 ? ((utilidadNeta / costosTotales) * 100).toFixed(1) : 0;
+  const roi = costosTotales > 0 ? ((utilidadNeta / costosTotales) * 100).toFixed(1) : 'N/A';
   
   // Margen Bruto Promedio (Sin OPEX)
   const utilidadBrutaTotal = ingresosBrutos - costosTotalesProd;
@@ -3065,7 +3065,7 @@ function renderFinanzas(pedidos) {
   document.getElementById('fin-utilidad').style.color = utilidadNeta < 0 ? 'var(--rojo)' : 'var(--azul)';
   document.getElementById('fin-margen').textContent = 'Margen Neto: ' + margenNeto + '%';
   const roiEl = document.getElementById('fin-roi');
-  if(roiEl) roiEl.textContent = roi + '%';
+  if(roiEl) roiEl.textContent = roi === 'N/A' ? 'N/A (Sin costos)' : roi + '%';
   // Hook: render payment methods and real net margin
   try { renderMetodosPago(todosPedidos); } catch(e) { console.warn('renderMetodosPago', e); }
   try { cargarParamsFinancieros(); renderMargenNetoReal(ingresosBrutos, utilidadNeta, pagados); } catch(e) { console.warn('renderMargenNetoReal', e); }
@@ -4096,7 +4096,12 @@ function actualizarSimulador(pctStr) {
   
   document.getElementById('sim-ventas').textContent = fCOP(totalVentas);
   document.getElementById('sim-costos').textContent = fCOP(totalCostos);
-  document.getElementById('sim-utilidad').textContent = fCOP(totalVentas - totalCostos);
+  const utilidadBrutaSim = totalVentas - totalCostos;
+  document.getElementById('sim-utilidad').textContent = fCOP(utilidadBrutaSim);
+  
+  const simRoi = totalCostos > 0 ? ((utilidadBrutaSim / totalCostos) * 100).toFixed(1) : 'N/A';
+  const simRoiEl = document.getElementById('sim-roi');
+  if(simRoiEl) simRoiEl.textContent = simRoi === 'N/A' ? 'N/A' : simRoi + '%';
   
   // Update Unidades Totales
   const udsTotal = stockData.reduce((acc, s) => acc + (s.stock * pct), 0);
