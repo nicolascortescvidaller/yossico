@@ -793,7 +793,7 @@
             <div id="meta-pacing-marker" style="position:absolute; top:0; bottom:0; width:2px; background:#000; display:none;" title="Proyección a cierre de mes"></div>
           </div>
         </div>
-<div class="resumen-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1rem;">
+<div class="resumen-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1rem;">
           <div class="resumen-card hover-module verde" style="background:var(--blanco); border-color:#e0f2e9">
             <div class="rlabel">Ingresos Brutos Reales</div>
             <div class="rvalor" id="fin-ingresos">$0</div>
@@ -808,6 +808,11 @@
             <div class="rlabel">Utilidad Neta del Negocio</div>
             <div class="rvalor" id="fin-utilidad" style="color:var(--azul)">$0</div>
             <div class="rsub" id="fin-margen">Margen Neto Global: 0%</div>
+          </div>
+          <div class="resumen-card hover-module" style="background:var(--blanco); border-color:#fce4ec">
+            <div class="rlabel" style="color:#c2185b">ROI Global</div>
+            <div class="rvalor" id="fin-roi" style="color:#d81b60">0%</div>
+            <div class="rsub">Retorno sobre la Inversión</div>
           </div>
         </div>
 
@@ -1068,7 +1073,7 @@
             <span style="font-weight:600">del stock actual.</span>
           </div>
           
-          <div class="resumen-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
+          <div class="resumen-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 2rem;">
             <div class="resumen-card hover-module" style="background:#f4f9ff; border:1px solid #ddecff">
               <div class="rlabel" style="color:#0d47a1">Ventas Brutas Esperadas</div>
               <div class="rvalor" id="sim-ventas" style="color:#1565c0">$0</div>
@@ -1076,14 +1081,19 @@
               <div class="rsub">Lo que pagarían los clientes</div>
             </div>
             <div class="resumen-card hover-module" style="background:#fffaf5; border:1px solid #fcecdb">
-              <div class="rlabel" style="color:#e65100">Costo de la Mercancía</div>
+              <div class="rlabel" style="color:#e65100">Costo Mercancía</div>
               <div class="rvalor" id="sim-costos" style="color:#ef6c00">$0</div>
               <div class="rsub">Lo que costó producirla</div>
             </div>
             <div class="resumen-card hover-module" style="background:#f9fdfa; border:1px solid #e0f2e9">
-              <div class="rlabel" style="color:#1b5e20">Utilidad Bruta Proyectada</div>
+              <div class="rlabel" style="color:#1b5e20">Utilidad Bruta</div>
               <div class="rvalor" id="sim-utilidad" style="color:#2e7d32">$0</div>
-              <div class="rsub">Ganancia antes de Opex/Pauta</div>
+              <div class="rsub">Ganancia antes de Opex</div>
+            </div>
+            <div class="resumen-card hover-module" style="background:#fdf2f8; border:1px solid #fce4ec">
+              <div class="rlabel" style="color:#c2185b">ROI Proyectado</div>
+              <div class="rvalor" id="sim-roi" style="color:#d81b60">0%</div>
+              <div class="rsub">Retorno sobre la Inversión</div>
             </div>
           </div>
           <div style="position:relative;height:300px; width:100%"><canvas id="chart-simulador"></canvas></div>
@@ -2989,6 +2999,7 @@ function renderFinanzas(pedidos) {
 
   const utilidadNeta = ingresosBrutos - costosTotales;
   const margenNeto = ingresosBrutos > 0 ? ((utilidadNeta / ingresosBrutos) * 100).toFixed(1) : 0;
+  const roi = costosTotales > 0 ? ((utilidadNeta / costosTotales) * 100).toFixed(1) : 0;
   
   // Margen Bruto Promedio (Sin OPEX)
   const utilidadBrutaTotal = ingresosBrutos - costosTotalesProd;
@@ -3053,6 +3064,8 @@ function renderFinanzas(pedidos) {
   document.getElementById('fin-utilidad').textContent = fCOP(utilidadNeta);
   document.getElementById('fin-utilidad').style.color = utilidadNeta < 0 ? 'var(--rojo)' : 'var(--azul)';
   document.getElementById('fin-margen').textContent = 'Margen Neto: ' + margenNeto + '%';
+  const roiEl = document.getElementById('fin-roi');
+  if(roiEl) roiEl.textContent = roi + '%';
   // Hook: render payment methods and real net margin
   try { renderMetodosPago(todosPedidos); } catch(e) { console.warn('renderMetodosPago', e); }
   try { cargarParamsFinancieros(); renderMargenNetoReal(ingresosBrutos, utilidadNeta, pagados); } catch(e) { console.warn('renderMargenNetoReal', e); }
