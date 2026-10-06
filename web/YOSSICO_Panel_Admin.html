@@ -1091,9 +1091,9 @@
               <div class="rsub">Ganancia antes de Opex</div>
             </div>
             <div class="resumen-card hover-module" style="background:#fdf2f8; border:1px solid #fce4ec">
-              <div class="rlabel" style="color:#c2185b">ROI Proyectado</div>
+              <div class="rlabel" style="color:#c2185b">ROI Neta Proyectado</div>
               <div class="rvalor" id="sim-roi" style="color:#d81b60">0%</div>
-              <div class="rsub">Retorno sobre la Inversión</div>
+              <div class="rsub">Incluye absorción de OPEX</div>
             </div>
           </div>
           <div style="position:relative;height:300px; width:100%"><canvas id="chart-simulador"></canvas></div>
@@ -4099,7 +4099,15 @@ function actualizarSimulador(pctStr) {
   const utilidadBrutaSim = totalVentas - totalCostos;
   document.getElementById('sim-utilidad').textContent = fCOP(utilidadBrutaSim);
   
-  const simRoi = totalCostos > 0 ? ((utilidadBrutaSim / totalCostos) * 100).toFixed(1) : 'N/A';
+  // Calcular OPEX para hacer el ROI dinámico (economía de escala)
+  const sumGastos = (window.todosGastos || []).reduce((acc, g) => acc + parseFloat(g.monto || 0), 0);
+  const sumPauta = (window.todaPauta || []).reduce((acc, p) => acc + parseFloat(p.monto || 0), 0);
+  const totalOpexSim = sumGastos + sumPauta;
+  
+  const inversionTotal = totalCostos + totalOpexSim;
+  const utilidadNetaSim = utilidadBrutaSim - totalOpexSim;
+  
+  const simRoi = inversionTotal > 0 ? ((utilidadNetaSim / inversionTotal) * 100).toFixed(1) : 'N/A';
   const simRoiEl = document.getElementById('sim-roi');
   if(simRoiEl) simRoiEl.textContent = simRoi === 'N/A' ? 'N/A' : simRoi + '%';
   
