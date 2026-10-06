@@ -4472,12 +4472,12 @@ async function ejecutarRMA() {
 
 <!-- MODAL RMA / CAMBIOS -->
 <div id="modal-rma" class="modal-overlay hidden">
-  <div class="modal-content" style="max-width:500px">
-    <div class="modal-header">
+  <div style="background:var(--blanco);padding:2rem;border-radius:12px;width:90%;max-width:500px;color:var(--negro);position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--grisCl);">
       <div style="font-size:1.1rem;font-weight:600;">Procesar Cambio / Devolución</div>
       <button onclick="cerrarModalRMA()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;line-height:1;">&times;</button>
     </div>
-    <div style="padding:1.5rem;">
+    <div>
       <p style="font-size:0.8rem;color:var(--grisMed);margin-bottom:1.2rem;line-height:1.5;">
         Selecciona las prendas devueltas. El stock se sumará de inmediato al inventario.
       </p>
