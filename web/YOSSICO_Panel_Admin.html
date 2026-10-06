@@ -2992,7 +2992,7 @@ function renderFinanzas(pedidos) {
   // no filtrados por el período de la pestaña de Estadísticas.
   // todosGastos ya viene cargado con todos los registros desde cargarGastos().
   const sumGastos = todosGastos.reduce((acc, g) => acc + parseFloat(g.monto || 0), 0);
-  const sumPauta = (window.todaPauta || []).reduce((acc, p) => acc + parseFloat(p.monto || 0), 0);
+  const sumPauta = (typeof todaPauta !== 'undefined' ? todaPauta : (window.todaPauta || [])).reduce((acc, p) => acc + parseFloat(p.monto || 0), 0);
   const totalOpex = sumGastos + sumPauta;
   
   const costosTotales = costosTotalesProd + totalOpex;
@@ -4100,8 +4100,8 @@ function actualizarSimulador(pctStr) {
   document.getElementById('sim-utilidad').textContent = fCOP(utilidadBrutaSim);
   
   // Calcular OPEX para hacer el ROI dinámico (economía de escala)
-  const sumGastos = (window.todosGastos || []).reduce((acc, g) => acc + parseFloat(g.monto || 0), 0);
-  const sumPauta = (window.todaPauta || []).reduce((acc, p) => acc + parseFloat(p.monto || 0), 0);
+  const sumGastos = (typeof todosGastos !== 'undefined' ? todosGastos : []).reduce((acc, g) => acc + parseFloat(g.monto || 0), 0);
+  const sumPauta = (typeof todaPauta !== 'undefined' ? todaPauta : (window.todaPauta || [])).reduce((acc, p) => acc + parseFloat(p.monto || 0), 0);
   const totalOpexSim = sumGastos + sumPauta;
   
   const inversionTotal = totalCostos + totalOpexSim;
