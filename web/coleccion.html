@@ -1986,18 +1986,13 @@
   const SUPA_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
   const SUPA_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
   
-  async function initDropBanner() {
-    let dropData = null;
-    try {
-      const res = await fetch(`${SUPA_URL}/rest/v1/rpc/get_config`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY },
-        body: JSON.stringify({ p_clave: 'drop_activo' })
-      });
-      dropData = await res.json();
-    } catch(e) {
-      dropData = JSON.parse(localStorage.getItem('yossico_drop_activo') || 'null');
-    }
+  function initDropBanner() {
+    // Configuración forzada en código fuente según solicitud
+    const dropData = {
+      activo: true,
+      nombre: 'DROP 01/01/2025',
+      fecha: '2026-12-01T08:00:00'
+    };
     
     if (!dropData || !dropData.activo) return;
     
