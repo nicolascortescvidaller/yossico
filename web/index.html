@@ -980,30 +980,19 @@
         
         <div class="hero__slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 1; z-index: 10; animation: fadeIntro 1.5s ease-out forwards;">
           
-          <!-- Sombra estática -->
-          <div id="hero-shadow" style="position: absolute; bottom: 5%; left: 0; right: 0; margin: 0 auto; width: 50%; height: 15px; background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 70%); z-index: 2; filter: blur(5px);"></div>
+          <!-- Modelo llenando el 100% del espacio, anclada arriba para no cortar la cabeza -->
+          <img src="img/hero_model_cutout.png" alt="YOSSICO — Modelo Principal" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; object-fit: cover; object-position: center top; display: block; z-index: 3;">
 
-          <!-- Modelo 100% visible, sin recortes -->
-          <img src="img/hero_model_cutout.png" alt="YOSSICO — Modelo Principal" style="position: absolute; bottom: 5%; left: 0; height: 90%; width: 100%; object-fit: contain; object-position: bottom center; display: block; z-index: 3;">
-
-          <!-- TAG 1: Etiqueta Manga 'Y' (Izquierda de la pantalla) -->
-          <div style="position: absolute; top: 60%; left: 10%; z-index: 4; display: flex; align-items: center; gap: 8px;">
-            <div style="font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 2px; color: #111; background: rgba(255,255,255,0.8); padding: 8px 12px; border-radius: 4px; backdrop-filter: blur(4px); white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+          <!-- TAG 1: Tecnología Antifluido (Flotante, sin líneas que se desalineen) -->
+          <div style="position: absolute; bottom: 20%; left: 8%; z-index: 4;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 2px; color: #111; background: rgba(255,255,255,0.85); padding: 10px 16px; border-radius: 4px; backdrop-filter: blur(4px); white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
               TECNOLOGÍA ANTIFLUIDO
             </div>
-            <svg width="40" height="2" viewBox="0 0 40 2" fill="none" style="opacity: 0.6; margin-top: 1px;">
-              <line x1="0" y1="1" x2="40" y2="1" stroke="#111" stroke-width="1.5" stroke-dasharray="2 2" />
-            </svg>
-            <div style="width: 5px; height: 5px; border-radius: 50%; background: #111; margin-left: -6px;"></div>
           </div>
 
-          <!-- TAG 2: Etiqueta Pecho YOSSICO (Derecha de la pantalla) -->
-          <div style="position: absolute; top: 75%; right: 10%; z-index: 4; display: flex; align-items: center; gap: 8px;">
-            <div style="width: 5px; height: 5px; border-radius: 50%; background: #111; margin-right: -6px;"></div>
-            <svg width="40" height="2" viewBox="0 0 40 2" fill="none" style="opacity: 0.6; margin-top: 1px;">
-              <line x1="0" y1="1" x2="40" y2="1" stroke="#111" stroke-width="1.5" stroke-dasharray="2 2" />
-            </svg>
-            <div style="font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 2px; color: #111; background: rgba(255,255,255,0.8); padding: 8px 12px; border-radius: 4px; backdrop-filter: blur(4px); white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+          <!-- TAG 2: Etiqueta YOSSICO (Flotante, arriba para no tapar el bolsillo) -->
+          <div style="position: absolute; top: 25%; right: 8%; z-index: 4;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 2px; color: #111; background: rgba(255,255,255,0.85); padding: 10px 16px; border-radius: 4px; backdrop-filter: blur(4px); white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
               ETIQUETA YOSSICO
             </div>
           </div>
