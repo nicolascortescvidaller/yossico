@@ -563,99 +563,17 @@
         optWA.classList.toggle('ck-pay-option--selected',   !esWompi);
 
         if (esWompi && WOMPI_ACTIVO) {
-          btnWA.style.display        = 'none';
-          contenedorW.style.display  = 'block';
-          legalTxt.textContent       = 'Serás redirigido al portal seguro de Wompi para completar tu pago.';
-          cargarBotonWompi();
+          btnWA.innerHTML            = 'Pagar con Wompi';
+          btnWA.style.backgroundColor= '#1f2022'; // slight differentiation
+          contenedorW.style.display  = 'none';
+          legalTxt.textContent       = 'Al confirmar, se abrirá la pasarela segura de Wompi para procesar tu pago con tarjeta o PSE.';
         } else {
-          btnWA.style.display        = '';
+          btnWA.innerHTML            = '<svg viewBox="0 0 24 24" style="width:16px;vertical-align:middle;margin-right:8px;fill:currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Confirmar pedido por WhatsApp';
+          btnWA.style.backgroundColor= '';
           contenedorW.style.display  = 'none';
           legalTxt.textContent       = 'Al confirmar, serás redirigido a WhatsApp para finalizar tu pedido con el equipo YOSSICO.';
         }
       }));
-    }
-
-    /* Genera la firma de integridad en el servidor y renderiza el widget de Wompi */
-    async function cargarBotonWompi() {
-      const contenedor = document.getElementById('wompi-btn-container');
-      contenedor.innerHTML = '<p style="font-size:10px;color:#8A8A8A;letter-spacing:1px">Cargando pasarela de pago...</p>';
-
-      try {
-        // 1. Insertar el pedido en Supabase para obtener su ID
-        //    (igual que el flujo WhatsApp, pero sin abrir WhatsApp)
-        const sbCk   = window.supabase.createClient(SUPABASE_URL_CK, 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19');
-        const items  = getCart();
-        const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
-        const desc = window.__ckDesc || { pct: 0, monto: 0, code: '' };
-        let total = subtotal;
-        if (desc.pct > 0) total = Math.round(subtotal * (1 - desc.pct / 100));
-        else if (desc.monto > 0) total = Math.max(0, subtotal - desc.monto);
-
-        const wNombre = document.getElementById('ck-nombre')?.value?.trim() || '';
-        const wCiudad = document.getElementById('ck-ciudad')?.value?.trim() || '';
-        const wDir    = document.getElementById('ck-dir')?.value?.trim() || '';
-        if (!wNombre || !wCiudad || !wDir) {
-          contenedor.innerHTML = '<p style="font-size:11px;color:#c0392b">Completa nombre, ciudad y dirección y vuelve a elegir Wompi.</p>';
-          return;
-        }
-        if (total < 1500) {
-          contenedor.innerHTML = '<p style="font-size:11px;color:#c0392b">El total es muy bajo para pagar con Wompi. Usa WhatsApp.</p>';
-          return;
-        }
-
-        const { data: pedido, error: pedidoErr } = await sbCk.from('pedidos').insert([{
-          cliente_nombre:   wNombre,
-          cliente_telefono: document.getElementById('ck-tel')?.value?.trim() || '',
-          cliente_email:    document.getElementById('ck-email')?.value?.trim() || null,
-          cliente_ciudad:   wCiudad,
-          cliente_direccion:wDir,
-          items,
-          total,
-          estado:           'Pendiente - Wompi',
-          metodo_pago:      'wompi',
-          codigo_descuento: desc.code || null,
-          drop_numero:      'Drop 1',
-        }]).select('id').single();
-
-        if (pedidoErr) throw pedidoErr;
-
-        // 2. Pedir la firma a la Edge Function
-        const sigRes = await fetch(`${SUPABASE_URL_CK}/functions/v1/generar-pago-wompi`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pedidoId: pedido.id, totalCOP: total }),
-        });
-        const sig = await sigRes.json();
-        if (sig.error) throw new Error(sig.error);
-
-        // 2b. Consumir código de descuento / gift card
-        if (desc.code) {
-          if (desc.code.startsWith('GC-')) sbCk.rpc('usar_giftcard', { codigo: desc.code, monto_a_descontar: subtotal - total });
-          else sbCk.rpc('marcar_descuento_usado', { codigo: desc.code });
-        }
-
-        // 3. Descontar stock (igual que flujo WhatsApp)
-        sbCk.rpc('decrementar_stock', { items }).then(({ error }) => {
-          if (error) console.warn('[wompi] decrementar_stock:', error.message);
-        });
-
-        // 4. Renderizar el widget de Wompi
-        contenedor.innerHTML = '';
-        const script = document.createElement('script');
-        script.src = 'https://checkout.wompi.co/widget.js';
-        script.setAttribute('data-render',             'button');
-        script.setAttribute('data-public-key',         sig.publicKey);
-        script.setAttribute('data-currency',           sig.currency);
-        script.setAttribute('data-amount-in-cents',    sig.amountCents);
-        script.setAttribute('data-reference',          sig.referencia);
-        script.setAttribute('data-signature:integrity',sig.firma);
-        script.setAttribute('data-redirect-url',       sig.redirectUrl);
-        contenedor.appendChild(script);
-
-      } catch (err) {
-        console.error('[wompi] error al cargar botón:', err);
-        contenedor.innerHTML = `<p style="font-size:10px;color:#C0392B;letter-spacing:1px">Error al cargar la pasarela de pago. Intenta de nuevo o usa WhatsApp.</p>`;
-      }
     }
 
     // Monkey-patch ckInit para que llame a initMetodoPago tras renderizar
