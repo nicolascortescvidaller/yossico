@@ -48,7 +48,8 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      
+      align-items: center;
+      text-align: center;
     }
 
     .hero__label {
@@ -84,6 +85,7 @@
     .hero__ctas {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 32px;
     }
 
@@ -956,8 +958,8 @@
   <section class="hero">
     <div class="hero__left">
 
-      <div class="label hero__label reveal" data-delay="1">
-        Uniformes Médicos · Colombia
+      <div class="label hero__label reveal" data-delay="1" style="font-weight: 600;">
+        Uniformes Médicos · <span id="hero-word-swap" style="transition: opacity 0.3s ease; display: inline-block;">Colombia</span>
       </div>
 
       <h1 class="hero__title reveal" data-delay="2">
@@ -965,8 +967,8 @@
         para <em>sanar.</em>
       </h1>
 
-      <p class="hero__sub reveal" data-delay="3">
-        Uniformes de alto desempeño diseñados para quienes dan todo en cada turno. Precisión, identidad, orgullo.
+      <p class="hero__sub reveal" data-delay="3" style="margin-left: auto; margin-right: auto;">
+        Uniformes para mujer diseñados para quienes dan todo en su día a día, hechos con muchísima precisión, identidad y orgullo para ellas.
       </p>
 
       <div class="hero__ctas reveal" data-delay="4">
@@ -1562,6 +1564,22 @@
     }
   });
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    setInterval(() => {
+      const el = document.getElementById('hero-word-swap');
+      if (el) {
+        el.style.opacity = 0;
+        setTimeout(() => {
+          el.innerText = el.innerText.trim() === 'Colombia' ? 'YOSSICO' : 'Colombia';
+          el.style.opacity = 1;
+        }, 300);
+      }
+    }, 4500);
+  });
+</script>
 </body>
+
 
 </html>
