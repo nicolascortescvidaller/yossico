@@ -1569,14 +1569,7 @@
       gsap.to('.tag-1', { opacity: 1, y: 0, duration: 1.2, delay: 0.8, ease: "power2.out" });
       gsap.to('.tag-2', { opacity: 1, y: 0, duration: 1.2, delay: 1.1, ease: "power2.out" });
 
-      // Breathing idle animation to make her feel "alive" smoothly
-      gsap.to(model, { 
-        y: -8, 
-        duration: 3, 
-        repeat: -1, 
-        yoyo: true, 
-        ease: "sine.inOut" 
-      });
+      // Animation completely static as requested.
     }
   });
 </script>
