@@ -863,6 +863,9 @@
       }
     }
   </style>
+  <style>
+    .hero__right-inner::before { display: none !important; }
+  </style>
 </head>
 
 <body>
@@ -973,15 +976,15 @@
     </div>
 
     <div class="hero__right">
-      <div class="hero__right-inner" style="position: relative; width: 100%; height: 100%; overflow: hidden; background: radial-gradient(circle at center, #ffffff 0%, #e0e0e0 100%);">
+      <div class="hero__right-inner" style="position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--off-white);">
         
         <div class="hero__slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 1; z-index: 10; animation: fadeIntro 1.5s ease-out forwards;">
           
           <!-- Sombra estática -->
-          <div id="hero-shadow" style="position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); width: 50%; height: 15px; background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 70%); z-index: 2; filter: blur(5px);"></div>
+          <div id="hero-shadow" style="position: absolute; bottom: 5%; left: 0; right: 0; margin: 0 auto; width: 50%; height: 15px; background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 70%); z-index: 2; filter: blur(5px);"></div>
 
           <!-- Modelo 100% visible, sin recortes -->
-          <img src="img/hero_model_cutout.png" alt="YOSSICO — Modelo Principal" style="position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); height: 90%; width: 100%; object-fit: contain; object-position: bottom center; display: block; z-index: 3;">
+          <img src="img/hero_model_cutout.png" alt="YOSSICO — Modelo Principal" style="position: absolute; bottom: 5%; left: 0; height: 90%; width: 100%; object-fit: contain; object-position: bottom center; display: block; z-index: 3;">
 
           <!-- TAG 1: Etiqueta Manga 'Y' (Izquierda de la pantalla) -->
           <div style="position: absolute; top: 60%; left: 10%; z-index: 4; display: flex; align-items: center; gap: 8px;">
