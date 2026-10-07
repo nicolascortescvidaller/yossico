@@ -1567,12 +1567,14 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    let isColombia = true;
     setInterval(() => {
       const el = document.getElementById('hero-word-swap');
       if (el) {
         el.style.opacity = 0;
         setTimeout(() => {
-          el.innerText = el.innerText.trim() === 'Colombia' ? 'YOSSICO' : 'Colombia';
+          isColombia = !isColombia;
+          el.textContent = isColombia ? 'Colombia' : 'YOSSICO';
           el.style.opacity = 1;
         }, 300);
       }
