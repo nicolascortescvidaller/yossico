@@ -48,7 +48,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      position: relative;
+      
     }
 
     .hero__label {
@@ -88,7 +88,7 @@
     }
 
     .hero__right {
-      position: relative;
+      
       overflow: hidden;
       background: var(--off-white);
     }
@@ -97,7 +97,7 @@
       width: 100%;
       height: 100%;
       background: var(--off-white);
-      position: relative;
+      
       overflow: hidden;
     }
 
@@ -485,7 +485,7 @@
       display: flex;
       align-items: center;
       gap: 32px;
-      position: relative;
+      
       flex-wrap: wrap;
     }
 
@@ -569,7 +569,7 @@
     .historia__left {
       background: var(--white);
       padding: 100px 60px;
-      position: relative;
+      
       overflow: hidden;
       border-right: 1px solid var(--border);
     }
@@ -685,7 +685,7 @@
     }
 
     .nosotros__card {
-      position: relative;
+      
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -972,9 +972,9 @@
     </div>
 
     <div class="hero__right">
-      <div class="hero__right-inner">
+      <div class="hero__right-inner" style="position: relative; width: 100%; height: 100%;">
         <!-- Parallax 2.5D Hero -->
-        <div class="hero__slide parallax-container" style="opacity: 1; animation: none; overflow: hidden; background: radial-gradient(circle at center, #d4d4d4 0%, #9e9e9e 100%); position: relative;">
+        <div class="hero__slide parallax-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 1; z-index: 10; animation: none; overflow: hidden; background: radial-gradient(circle at center, #d4d4d4 0%, #9e9e9e 100%);">
           
           <!-- Elementos Dinámicos de Texto/Tags -->
           <div class="parallax-tag tag-1" style="position: absolute; top: 30%; left: 15%; opacity: 0; transform: translateY(20px); z-index: 2;">
@@ -991,7 +991,7 @@
             </div>
           </div>
 
-          <img id="hero-model" src="img/hero_model_cutout.png" alt="YOSSICO — Set OSLO Vinotinto" style="animation: none; position: absolute; bottom: -5%; left: 50%; width: auto; height: 105%; transform: translateX(-50%) scale(1); object-fit: contain; z-index: 3;">
+          <img id="hero-model" src="img/hero_model_cutout.png" alt="YOSSICO — Set OSLO Vinotinto" style="animation: none; position: absolute; bottom: -5%; left: 50%; width: auto; height: 105%; max-width: none; object-fit: contain; z-index: 3;">
         </div>
       </div>
     </div>
@@ -1553,8 +1553,8 @@
     if (container && model) {
       // Intro Animation
       gsap.fromTo(model, 
-        { scale: 1.05, opacity: 0, y: 30 }, 
-        { scale: 1, opacity: 1, y: 0, duration: 1.5, ease: "power3.out" }
+        { xPercent: -50, scale: 1.05, opacity: 0, y: 30 }, 
+        { xPercent: -50, scale: 1, opacity: 1, y: 0, duration: 1.5, ease: "power3.out" }
       );
       
       gsap.to('.tag-1', { opacity: 1, y: 0, duration: 1, delay: 0.8, ease: "power2.out" });
@@ -1566,7 +1566,8 @@
         const y = (e.clientY / window.innerHeight - 0.5) * 2;
         
         gsap.to(model, {
-          x: `calc(-50% + ${x * -15}px)`,
+          xPercent: -50,
+          x: x * -15,
           y: y * -10,
           duration: 1,
           ease: "power2.out"
@@ -1582,7 +1583,7 @@
       
       // Reset on mouse leave
       container.addEventListener('mouseleave', () => {
-        gsap.to(model, { x: "-50%", y: 0, duration: 1.5, ease: "power2.out" });
+        gsap.to(model, { xPercent: -50, x: 0, y: 0, duration: 1.5, ease: "power2.out" });
         gsap.to(tags, { x: 0, y: 0, duration: 1.5, ease: "power2.out" });
       });
     }
