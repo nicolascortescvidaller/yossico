@@ -97,7 +97,7 @@
 
 ### 2.3. Concierge Virtual Inteligente ("Valentina")
 * **Archivos:** [`chat-widget.js`](file:///Users/nicolascortesvidaller/yossico/web/chat-widget.js) y [`chat-widget.css`](file:///Users/nicolascortesvidaller/yossico/web/chat-widget.css).
-* **Diseño:** Botón flotante cuadrado negro con diseño editorial minimalista (*¿Hablamos?*).
+* **Diseño:** Botón flotante circular de 52px (`border-radius: 50%`) con indicador verde de atención en vivo, cápsula redondeada (*¿Hablamos?*) y transición suave a ícono de cierre `✕` al desplegarse. En móvil se adapta a un círculo de 48px sin obstruir la pantalla.
 * **Pantalla 1 (Cero Ruido):** Solicita nombre y WhatsApp/correo de forma limpia para iniciar.
 * **Persistencia Inmediata:** Al enviar, los datos se guardan automáticamente en la tabla Supabase `chat_leads` mediante el RPC `guardar_chat_lead`.
 * **Pantalla 2 (Conversación):** Presenta a **Valentina**, asesora virtual de YOSSICO, con botones de preguntas frecuentes:
