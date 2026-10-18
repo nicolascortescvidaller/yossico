@@ -126,6 +126,8 @@
   .talla-cero{border-color:var(--rojo);color:var(--rojo);background:var(--rojoCl)}
   .btn-editar-stock{font-size:.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--grisMed);background:none;border:1px solid var(--grisCl);padding:.25rem .5rem;cursor:pointer;font-family:inherit;width:100%;transition:all .2s;margin-top:.5rem}
   .btn-editar-stock:hover{background:var(--negro);color:var(--blanco);border-color:var(--negro)}
+  .fila-unit-eco{cursor:pointer;transition:background .15s ease}
+  .fila-unit-eco:hover{background:#f0f7ff !important}
   /* MODAL */
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center}
   .modal-overlay.visible{display:flex}
@@ -1020,7 +1022,7 @@
 <!-- UNIT ECONOMICS (CATÁLOGO) -->
         <div class="section-title" style="margin-top:0;font-size:1rem">Unit Economics (Márgenes por Modelo en Catálogo)</div>
         <div style="font-size:0.8rem;color:var(--grisMed);margin-bottom:1rem;line-height:1.5">
-          Proyección de rentabilidad por unidad basada en los precios de venta al público y los costos de producción configurados en el inventario.
+          Proyección de rentabilidad por unidad basada en los precios de venta al público y los costos de producción configurados en el inventario. <strong>Haz clic en cualquier prenda</strong> (Bogotá, Lima, Oslo, Kyoto, etc.) para abrir el desglose financiero interactivo y ver a qué se debe exactamente cada margen bruto y neto.
         </div>
         <table class="tabla-admin" style="margin-bottom:2rem;">
           <thead>
@@ -1666,6 +1668,23 @@
       <button class="btn btn-gris" onclick="cerrarModalStock()">Cancelar</button>
       <button class="btn btn-negro" onclick="guardarStock()">Guardar cambios</button>
     </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE Y DESGLOSE UNIT ECONOMICS -->
+<div class="modal-overlay" id="modal-unit-eco" onclick="if(event.target===this) cerrarModalUnitEco()">
+  <div class="modal" style="max-width:760px;width:95%;max-height:88vh;overflow-y:auto;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,0.3);padding:2rem;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;border-bottom:1px solid var(--grisCl);padding-bottom:1rem;">
+      <div>
+        <span style="font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--grisMed);font-weight:600;display:block;margin-bottom:0.25rem">Análisis Financiero Profundo</span>
+        <h3 id="mue-titulo" style="margin:0;font-size:1.6rem;font-family:'Cormorant Garamond',serif">Desglose Unit Economics</h3>
+        <span id="mue-sub" style="font-size:0.75rem;color:var(--grisMed)"></span>
+      </div>
+      <button onclick="cerrarModalUnitEco()" style="background:none;border:none;font-size:1.6rem;cursor:pointer;color:var(--grisMed);padding:0 0.5rem;line-height:1" title="Cerrar">&times;</button>
+    </div>
+
+    <!-- Contenedor dinámico inyectado por JS -->
+    <div id="mue-contenido"></div>
   </div>
 </div>
 
@@ -3365,6 +3384,7 @@ function renderFinanzas(pedidos) {
   
   // --- Lógica Tabla Unit Economics (Catálogo) ---
   const tCat = document.getElementById('tabla-finanzas-catalogo');
+  window.__modelosUnicos = modelosUnicos;
   if(!Object.keys(modelosUnicos).length) tCat.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--grisMed)">Sin prendas en catálogo. Primero agrega productos en la pestaña Inventario y asígnales un costo de producción.</td></tr>';
   else {
     const p = getParamsFinancieros();
@@ -3385,8 +3405,8 @@ function renderFinanzas(pedidos) {
       const nColor = margenNeto >= 30 ? '#1565c0' : margenNeto >= 15 ? '#2e7d32' : margenNeto >= 0 ? '#e65100' : '#c62828';
       const nBg = margenNeto >= 30 ? '#e3f2fd' : margenNeto >= 15 ? '#e0f2e9' : margenNeto >= 0 ? '#fff3e0' : '#ffebee';
       
-      return '<tr>'
-        + '<td><strong>' + nombre + '</strong></td>'
+      return `<tr onclick="abrirDetalleUnitEconomics('${encodeURIComponent(nombre)}')" class="fila-unit-eco" style="cursor:pointer" title="Haz clic para ver el desglose detallado de por qué da este margen en ${nombre}">`
+        + `<td><div style="display:flex;align-items:center;gap:6px"><strong>${nombre}</strong> <span style="font-size:0.62rem;color:var(--azul);background:#e3f2fd;padding:2px 6px;border-radius:3px;font-weight:600">Ver desglose 🔍</span></div></td>`
         + '<td style="text-align:right">' + precioLabel + '</td>'
         + '<td style="text-align:right;color:var(--naranja)">' + fCOP(m.costo) + '</td>'
         + '<td style="text-align:right;color:var(--verde);font-weight:600">' + fCOP(m.utilidad) + '</td>'
@@ -3397,6 +3417,288 @@ function renderFinanzas(pedidos) {
     }).join('');
   }
 }
+
+// ── DETALLE PROFUNDO Y EXPLICATIVO DE UNIT ECONOMICS ──
+let __currentUnitEco = null;
+
+function abrirDetalleUnitEconomics(nombreEnc) {
+  const nombre = decodeURIComponent(nombreEnc);
+  const m = (window.__modelosUnicos || {})[nombre];
+  if (!m) {
+    mostrarToast("No se encontraron datos para este modelo", "warn");
+    return;
+  }
+  
+  const p = getParamsFinancieros();
+  __currentUnitEco = {
+    nombre: nombre,
+    precio: m.precio,
+    costo: m.costo,
+    fuentePrecio: m.fuentePrecio,
+    p: p
+  };
+  
+  document.getElementById('mue-titulo').textContent = nombre;
+  document.getElementById('mue-sub').textContent = `Precio de Venta al Público: ${fCOP(m.precio)} (${m.fuentePrecio === 'real' ? 'precio real de pedidos' : 'precio estimado del catálogo'})`;
+  
+  renderContenidoUnitEco(m.precio, m.costo);
+  
+  const modal = document.getElementById('modal-unit-eco');
+  if (modal) modal.classList.add('visible');
+}
+
+function cerrarModalUnitEco() {
+  const modal = document.getElementById('modal-unit-eco');
+  if (modal) modal.classList.remove('visible');
+}
+
+function renderContenidoUnitEco(precio, costo) {
+  const p = __currentUnitEco.p;
+  const c = Math.max(0, parseFloat(costo) || 0);
+  const utilidadBruta = precio - c;
+  const margenBrutoPct = precio > 0 ? (utilidadBruta / precio) * 100 : 0;
+  
+  // Deducciones operativas asignadas
+  const wompiEfectivo = precio * (p.wompi / 100) * 0.5; // Asume 50% de pedidos pagados online
+  const devProvision = precio * (p.dev / 100); // 5% para cambios de talla sin costo y fletes
+  const ivaContenido = precio * (p.iva / (100 + p.iva)); // 19% IVA contenido en PVP
+  const utilidadNeta = utilidadBruta - wompiEfectivo - devProvision - ivaContenido;
+  const margenNetoPct = precio > 0 ? (utilidadNeta / precio) * 100 : 0;
+  
+  // Proporciones sobre el 100% del PVP para la barra apilada
+  const pctCosto = precio > 0 ? Math.max(0, (c / precio) * 100) : 0;
+  const pctWompi = precio > 0 ? (wompiEfectivo / precio) * 100 : 0;
+  const pctDev = precio > 0 ? (devProvision / precio) * 100 : 0;
+  const pctIva = precio > 0 ? (ivaContenido / precio) * 100 : 0;
+  const pctNeto = Math.max(0, margenNetoPct);
+  
+  const mColor = margenBrutoPct >= 50 ? '#2e7d32' : margenBrutoPct >= 30 ? '#e65100' : '#c62828';
+  const mBg = margenBrutoPct >= 50 ? '#e0f2e9' : margenBrutoPct >= 30 ? '#fff3e0' : '#ffebee';
+  const nColor = margenNetoPct >= 30 ? '#1565c0' : margenNetoPct >= 15 ? '#2e7d32' : margenNetoPct >= 0 ? '#e65100' : '#c62828';
+  const nBg = margenNetoPct >= 30 ? '#e3f2fd' : margenNetoPct >= 15 ? '#e0f2e9' : margenNetoPct >= 0 ? '#fff3e0' : '#ffebee';
+
+  const html = `
+    <!-- 4 Métricas Clave de la Prenda -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem">
+      <div style="background:var(--grisF);padding:0.8rem;border-radius:4px;border:1px solid var(--grisCl)">
+        <div style="font-size:0.65rem;color:var(--grisMed);text-transform:uppercase;letter-spacing:1px">PVP (Venta)</div>
+        <div style="font-size:1.15rem;font-weight:700;color:var(--negro);margin-top:4px">${fCOP(precio)}</div>
+        <div style="font-size:0.65rem;color:var(--grisMed);margin-top:2px">100% de la venta</div>
+      </div>
+      <div style="background:var(--grisF);padding:0.8rem;border-radius:4px;border:1px solid var(--grisCl)">
+        <div style="font-size:0.65rem;color:var(--grisMed);text-transform:uppercase;letter-spacing:1px">Costo Fabricación</div>
+        <div style="font-size:1.15rem;font-weight:700;color:var(--naranja);margin-top:4px">${fCOP(c)}</div>
+        <div style="font-size:0.65rem;color:var(--grisMed);margin-top:2px">${pctCosto.toFixed(1)}% del PVP</div>
+      </div>
+      <div style="background:${mBg};padding:0.8rem;border-radius:4px;border:1px solid ${mColor}40">
+        <div style="font-size:0.65rem;color:${mColor};text-transform:uppercase;letter-spacing:1px;font-weight:600">Margen Bruto</div>
+        <div style="font-size:1.15rem;font-weight:700;color:${mColor};margin-top:4px">${margenBrutoPct.toFixed(1)}%</div>
+        <div style="font-size:0.65rem;color:${mColor};margin-top:2px">+${fCOP(utilidadBruta)}</div>
+      </div>
+      <div style="background:${nBg};padding:0.8rem;border-radius:4px;border:1px solid ${nColor}40">
+        <div style="font-size:0.65rem;color:${nColor};text-transform:uppercase;letter-spacing:1px;font-weight:600">Margen Neto</div>
+        <div style="font-size:1.15rem;font-weight:700;color:${nColor};margin-top:4px">${margenNetoPct.toFixed(1)}%</div>
+        <div style="font-size:0.65rem;color:${nColor};margin-top:2px">+${fCOP(utilidadNeta)} libre</div>
+      </div>
+    </div>
+
+    <!-- Barra Visual de Distribución de los Pesos de la Prenda -->
+    <div style="margin-bottom:1.5rem;background:var(--grisF);padding:1rem;border-radius:6px;border:1px solid var(--grisCl)">
+      <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:600;margin-bottom:0.5rem">
+        <span>¿A dónde va cada peso de los ${fCOP(precio)}?</span>
+        <span style="color:var(--grisMed)">Desglose 100% de la venta</span>
+      </div>
+      <div style="display:flex;height:26px;border-radius:4px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,0.1)">
+        <div style="width:${pctNeto}%;background:#2e7d32;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.65rem;font-weight:600;transition:width 0.3s" title="Utilidad Neta Libre: ${pctNeto.toFixed(1)}% (${fCOP(utilidadNeta)})">
+          ${pctNeto > 10 ? pctNeto.toFixed(0) + '%' : ''}
+        </div>
+        <div style="width:${pctIva}%;background:#7b1fa2;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.65rem;font-weight:600;transition:width 0.3s" title="IVA Contenido: ${pctIva.toFixed(1)}% (${fCOP(ivaContenido)})">
+          ${pctIva > 8 ? pctIva.toFixed(0) + '%' : ''}
+        </div>
+        <div style="width:${pctDev}%;background:#f57c00;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.65rem;font-weight:600;transition:width 0.3s" title="Provisión Garantías y Cambios de Talla: ${pctDev.toFixed(1)}% (${fCOP(devProvision)})">
+          ${pctDev > 6 ? pctDev.toFixed(0) + '%' : ''}
+        </div>
+        <div style="width:${pctWompi}%;background:#0288d1;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.65rem;font-weight:600;transition:width 0.3s" title="Comisión Pasarela: ${pctWompi.toFixed(1)}% (${fCOP(wompiEfectivo)})">
+          ${pctWompi > 5 ? pctWompi.toFixed(0) + '%' : ''}
+        </div>
+        <div style="width:${pctCosto}%;background:#d32f2f;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.65rem;font-weight:600;transition:width 0.3s" title="Costo de Fabricación: ${pctCosto.toFixed(1)}% (${fCOP(c)})">
+          ${pctCosto > 10 ? pctCosto.toFixed(0) + '%' : ''}
+        </div>
+      </div>
+      <!-- Leyenda descriptiva -->
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:0.75rem;font-size:0.65rem;color:#444">
+        <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#2e7d32;border-radius:2px;display:inline-block"></span> <strong>Neto libre:</strong> ${fCOP(utilidadNeta)} (${pctNeto.toFixed(1)}%)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7b1fa2;border-radius:2px;display:inline-block"></span> <strong>IVA contenido:</strong> ${fCOP(ivaContenido)} (${pctIva.toFixed(1)}%)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#f57c00;border-radius:2px;display:inline-block"></span> <strong>Reserva Cambios:</strong> ${fCOP(devProvision)} (${pctDev.toFixed(1)}%)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#0288d1;border-radius:2px;display:inline-block"></span> <strong>Pasarela:</strong> ${fCOP(wompiEfectivo)} (${pctWompi.toFixed(1)}%)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#d32f2f;border-radius:2px;display:inline-block"></span> <strong>Fabricación:</strong> ${fCOP(c)} (${pctCosto.toFixed(1)}%)</span>
+      </div>
+    </div>
+
+    <!-- 2 Tarjetas Explicativas: Margen Bruto vs Margen Neto -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem">
+      <!-- Tarjeta 1: Margen Bruto -->
+      <div style="background:#ffffff;border:1px solid var(--grisCl);border-radius:6px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.03)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.75rem">
+          <span style="font-size:1.1rem">📐</span>
+          <h4 style="margin:0;font-size:0.88rem;font-weight:700;color:var(--negro)">¿Por qué da ${margenBrutoPct.toFixed(1)}% en Margen Bruto?</h4>
+        </div>
+        <p style="font-size:0.73rem;color:#444;line-height:1.6;margin-bottom:0.75rem">
+          El <strong>Margen Bruto</strong> mide exclusivamente la ganancia directa sobre la confección antes de restar gastos de operación, ventas o impuestos.
+        </p>
+        <div style="background:#f8f9fa;padding:0.75rem;border-radius:4px;font-size:0.7rem;color:#333;margin-bottom:0.75rem;font-family:monospace;border-left:3px solid var(--verde);line-height:1.6">
+          <strong>Fórmula:</strong><br>
+          (PVP − Costo Producción) ÷ PVP × 100<br><br>
+          (${fCOP(precio)} − ${fCOP(c)}) ÷ ${fCOP(precio)}<br>
+          = ${fCOP(utilidadBruta)} ÷ ${fCOP(precio)} = <strong>${margenBrutoPct.toFixed(1)}%</strong>
+        </div>
+        <div style="font-size:0.7rem;color:var(--grisMed);line-height:1.5">
+          🧵 <strong>Qué compone el costo de fabricación:</strong> Tela técnica antifluido con 4-way stretch, corte y confección en taller, marquillas tejidas YOSSICO y empaque rígido de lujo.
+        </div>
+      </div>
+
+      <!-- Tarjeta 2: Margen Neto -->
+      <div style="background:#ffffff;border:1px solid var(--grisCl);border-radius:6px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.03)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.75rem">
+          <span style="font-size:1.1rem">🎯</span>
+          <h4 style="margin:0;font-size:0.88rem;font-weight:700;color:var(--negro)">¿Por qué da ${margenNetoPct.toFixed(1)}% en Margen Neto?</h4>
+        </div>
+        <p style="font-size:0.73rem;color:#444;line-height:1.6;margin-bottom:0.75rem">
+          El <strong>Margen Neto</strong> representa la rentabilidad real que le queda libre a YOSSICO tras absorber los costos comerciales de la venta.
+        </p>
+        <div style="background:#f8f9fa;padding:0.6rem 0.75rem;border-radius:4px;font-size:0.7rem;color:#333;margin-bottom:0.75rem;border-left:3px solid var(--azul);line-height:1.6">
+          <div style="display:flex;justify-content:space-between;padding:2px 0;font-weight:600">
+            <span>Ganancia Bruta Base</span>
+            <span style="color:var(--verde)">+${fCOP(utilidadBruta)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:2px 0;color:#666">
+            <span>(−) Pasarela Wompi (${p.wompi}% al 50% ventas)</span>
+            <span style="color:var(--rojo)">-${fCOP(wompiEfectivo)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:2px 0;color:#666">
+            <span>(−) Provisión Cambios de Talla (${p.dev}%)</span>
+            <span style="color:var(--rojo)">-${fCOP(devProvision)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:2px 0;color:#666">
+            <span>(−) Carga IVA Contenido (${p.iva}%)</span>
+            <span style="color:var(--rojo)">-${fCOP(ivaContenido)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;margin-top:4px;border-top:1px dashed #ccc;font-weight:700">
+            <span>= Utilidad Neta Real</span>
+            <span style="color:var(--azul)">+${fCOP(utilidadNeta)} (${margenNetoPct.toFixed(1)}%)</span>
+          </div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--grisMed);line-height:1.5">
+          📦 <strong>Por qué baja el margen:</strong> Cada venta asume la promesa de cambio de talla sin costo para la clienta médica y la provisión tributaria correspondiente.
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulador Interactivo en Vivo -->
+    <div style="background:linear-gradient(135deg, #f9f9f7 0%, #f1f0ec 100%);border:1px solid #e0dfd9;border-radius:6px;padding:1.25rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:8px">
+        <div>
+          <h4 style="margin:0;font-size:0.85rem;font-weight:700;color:var(--negro)">🧪 Simulador en Vivo: ¿Qué pasa si negocias otro costo de producción?</h4>
+          <span style="font-size:0.7rem;color:var(--grisMed)">Prueba cómo varía el margen si confeccionas un lote mayor o cambias de proveedor.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <label style="font-size:0.7rem;font-weight:600;color:var(--negro)">Probar Costo ($):</label>
+          <input type="number" id="mue-sim-costo" value="${c}" step="1000" min="0" oninput="recalcularSimuladorUnitEco(this.value)" style="width:115px;padding:6px 8px;border:1px solid var(--grisCl);border-radius:4px;font-size:0.85rem;font-weight:600;font-family:inherit;background:#fff">
+        </div>
+      </div>
+      <div id="mue-sim-diff" style="font-size:0.75rem;color:#444;line-height:1.5;background:#ffffff;padding:0.75rem 1rem;border-radius:4px;border:1px solid #e8e8e6">
+        Modifica el costo de producción en la caja de arriba para ver en tiempo real cómo cambia la utilidad de cada Set ${__currentUnitEco.nombre}.
+      </div>
+      <div style="margin-top:0.75rem;display:flex;justify-content:flex-end">
+        <button onclick="guardarCostoDesdeUnitEco()" class="btn btn-negro btn-sm" style="display:inline-flex;align-items:center;gap:6px">
+          💾 Guardar este costo en Inventario
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('mue-contenido').innerHTML = html;
+}
+
+function recalcularSimuladorUnitEco(nuevoCosto) {
+  if (!__currentUnitEco) return;
+  const precio = __currentUnitEco.precio;
+  const costoOrig = __currentUnitEco.costo;
+  const c = Math.max(0, parseFloat(nuevoCosto) || 0);
+  const p = __currentUnitEco.p;
+  
+  const utBruta = precio - c;
+  const mgBruto = precio > 0 ? (utBruta / precio) * 100 : 0;
+  
+  const wompi = precio * (p.wompi / 100) * 0.5;
+  const dev = precio * (p.dev / 100);
+  const iva = precio * (p.iva / (100 + p.iva));
+  const utNeta = utBruta - wompi - dev - iva;
+  const mgNeto = precio > 0 ? (utNeta / precio) * 100 : 0;
+  
+  const diffDinero = c - costoOrig;
+  const diffTexto = diffDinero === 0
+    ? `Costo original (${fCOP(costoOrig)}). Sin variación.`
+    : diffDinero < 0
+      ? `<strong style="color:var(--verde)">¡Ahorro de ${fCOP(Math.abs(diffDinero))} por prenda!</strong> Tu margen bruto subiría a <strong>${mgBruto.toFixed(1)}%</strong> y tu margen neto libre sería de <strong>${fCOP(utNeta)} (${mgNeto.toFixed(1)}%)</strong>.`
+      : `<span style="color:var(--rojo)">Incremento de ${fCOP(diffDinero)} en costo.</span> Tu margen bruto bajaría a <strong>${mgBruto.toFixed(1)}%</strong> y el neto a <strong>${fCOP(utNeta)} (${mgNeto.toFixed(1)}%)</strong>.`;
+  
+  const diffEl = document.getElementById('mue-sim-diff');
+  if (diffEl) {
+    diffEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div>${diffTexto}</div>
+        <div style="display:flex;gap:8px">
+          <span style="background:#e0f2e9;color:#2e7d32;padding:3px 8px;border-radius:4px;font-size:0.7rem;font-weight:600">Bruto: ${mgBruto.toFixed(1)}%</span>
+          <span style="background:#e3f2fd;color:#1565c0;padding:3px 8px;border-radius:4px;font-size:0.7rem;font-weight:600">Neto: ${mgNeto.toFixed(1)}%</span>
+        </div>
+      </div>
+    `;
+  }
+}
+
+async function guardarCostoDesdeUnitEco() {
+  if (!__currentUnitEco) return;
+  const inputEl = document.getElementById('mue-sim-costo');
+  const nuevoCosto = inputEl ? parseFloat(inputEl.value) : NaN;
+  if (isNaN(nuevoCosto) || nuevoCosto < 0) {
+    mostrarToast("Ingresa un costo válido", "warn");
+    return;
+  }
+  
+  const { error } = await sb.from("productos").update({
+    costo_produccion: nuevoCosto,
+    updated_at: new Date().toISOString()
+  }).eq("nombre", __currentUnitEco.nombre);
+
+  if (error) {
+    mostrarToast("Error al guardar: " + error.message, "err");
+    return;
+  }
+  
+  mostrarToast(`Costo de ${__currentUnitEco.nombre} actualizado a ${fCOP(nuevoCosto)} ✓`, "ok");
+  __currentUnitEco.costo = nuevoCosto;
+  
+  // Actualizar memoria local de stockData
+  (window.stockData || []).forEach(s => {
+    if (s.nombre === __currentUnitEco.nombre) s.costo_produccion = nuevoCosto;
+  });
+  
+  if (window.__modelosUnicos && window.__modelosUnicos[__currentUnitEco.nombre]) {
+    window.__modelosUnicos[__currentUnitEco.nombre].costo = nuevoCosto;
+    window.__modelosUnicos[__currentUnitEco.nombre].utilidad = __currentUnitEco.precio - nuevoCosto;
+    window.__modelosUnicos[__currentUnitEco.nombre].margen = __currentUnitEco.precio > 0 ? (window.__modelosUnicos[__currentUnitEco.nombre].utilidad / __currentUnitEco.precio) : 0;
+  }
+  
+  renderFinanzas();
+  renderContenidoUnitEco(__currentUnitEco.precio, nuevoCosto);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    cerrarModalUnitEco();
+  }
+});
 
 async function agregarGastoFijo() {
   const categoria = document.getElementById('opex-categoria').value.trim();
