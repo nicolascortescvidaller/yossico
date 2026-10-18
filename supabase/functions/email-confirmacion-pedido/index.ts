@@ -141,10 +141,16 @@ serve(async (req) => {
               </table>
 
               <!-- CTA -->
-              <a href="https://yossico.com/coleccion.html"
-                 style="display:inline-block; margin-top:36px; padding:14px 32px; background:#111111; color:#ffffff; text-decoration:none; font-size:10px; letter-spacing:3px; text-transform:uppercase;">
-                Ver colección →
-              </a>
+              <div style="margin-top:36px;">
+                <a href="https://yossico.com/rastreo.html?busqueda=${pedidoId || tel || ''}"
+                   style="display:inline-block; padding:14px 32px; background:#111111; color:#ffffff; text-decoration:none; font-size:10px; letter-spacing:3px; text-transform:uppercase;">
+                  Rastrear mi pedido en tiempo real →
+                </a>
+                <a href="https://yossico.com/coleccion.html"
+                   style="display:inline-block; margin-left:16px; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#666; text-decoration:none;">
+                  Ver colección →
+                </a>
+              </div>
             </td>
           </tr>
 
@@ -190,13 +196,54 @@ serve(async (req) => {
       const resendBody = await resendRes.text();
       if (!resendRes.ok) {
         console.error("[email-confirmacion] Resend FAILED — status:", resendRes.status, "| body:", resendBody);
-        // Do NOT throw — we return success to the caller regardless
       } else {
         console.log("[email-confirmacion] Resend OK — id:", resendBody);
       }
     } catch (emailErr) {
       console.error("[email-confirmacion] Resend fetch error:", emailErr);
-      // Swallow — caller still gets success
+    }
+
+    /* ── Notificación instantánea a la administración (Nicolás / YOSSICO) ── */
+    if (resendKey) {
+      try {
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "YOSSICO Tienda <hola@yossico.com>",
+            to: "hola@yossico.com",
+            subject: `🚨 ¡Nueva venta YOSSICO! ${fmtPrice(Number(total || 0))} — ${nombre}`,
+            html: `
+              <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:600px;margin:0 auto;padding:32px 24px;border:1px solid #ebe9e5;background:#ffffff;">
+                <span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#888;">YOSSICO Ventas</span>
+                <h2 style="margin:12px 0 20px;color:#111;font-weight:400;font-size:24px;">¡Nueva venta registrada!</h2>
+                <div style="background:#f9f9f7;padding:18px;border-radius:4px;margin-bottom:24px;font-size:13px;line-height:1.7;color:#333;">
+                  <p style="margin:0 0 6px;"><strong>Cliente:</strong> ${nombre}</p>
+                  <p style="margin:0 0 6px;"><strong>WhatsApp:</strong> <a href="https://wa.me/${(tel || '').replace(/\D/g, '')}" target="_blank" style="color:#1565c0;text-decoration:none;">${tel || 'No registrado'}</a></p>
+                  <p style="margin:0 0 6px;"><strong>Email:</strong> ${email}</p>
+                  <p style="margin:0 0 6px;"><strong>Ciudad:</strong> ${ciudad || 'No especificada'}</p>
+                  <p style="margin:0 0 6px;"><strong>Total:</strong> <strong style="font-size:16px;color:#111;">${fmtPrice(Number(total || 0))}</strong></p>
+                  <p style="margin:0 0 6px;"><strong>Ref. Pedido:</strong> <code>${pedidoId || 'N/A'}</code></p>
+                  ${codigo_descuento ? `<p style="margin:0;color:#2D6A4F;"><strong>Cupón aplicado:</strong> ${codigo_descuento}</p>` : ''}
+                </div>
+                <h3 style="margin:0 0 12px;font-size:13px;text-transform:uppercase;letter-spacing:2px;color:#888;">Prendas del pedido:</h3>
+                <table width="100%" cellpadding="6" style="border-collapse:collapse;border:1px solid #eee;font-size:12px;">
+                  ${itemRows}
+                </table>
+                <div style="margin-top:28px;">
+                  <a href="https://yossico.com/YOSSICO_Panel_Admin.html" style="background:#111;color:#fff;padding:12px 24px;text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;display:inline-block;">Ir al Panel de Administración →</a>
+                </div>
+              </div>
+            `
+          }),
+        });
+        console.log("[email-confirmacion] Admin alert sent successfully");
+      } catch (adminErr) {
+        console.warn("[email-confirmacion] Admin alert error:", adminErr);
+      }
     }
 
     return new Response(

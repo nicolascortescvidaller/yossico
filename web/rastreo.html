@@ -1094,6 +1094,21 @@
       resDiv.innerHTML = '<p style="color:red">Ocurrió un error al buscar. Intenta de nuevo.</p>';
     }
   });
+
+  // Auto-búsqueda si viene parámetro en URL (?busqueda=... o ?id=... o ?q=...)
+  (function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const q = urlParams.get('busqueda') || urlParams.get('id') || urlParams.get('q');
+    if (q) {
+      const inputEl = document.getElementById('busqueda');
+      if (inputEl) {
+        inputEl.value = q;
+        setTimeout(() => {
+          document.getElementById('btn-rastrear')?.click();
+        }, 150);
+      }
+    }
+  })();
 </script>
 <footer class="footer">
         <div class="footer__columns">

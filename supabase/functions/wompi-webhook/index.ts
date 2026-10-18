@@ -67,7 +67,7 @@ Deno.serve(async (req: Request) => {
     const sb = createClient(SUPABASE_URL, DB_SERVICE_KEY);
     const { data: pedido, error: fetchError } = await sb
       .from("pedidos")
-      .select("id, cliente_nombre, cliente_telefono, items, total")
+      .select("id, cliente_nombre, cliente_telefono, cliente_email, cliente_ciudad, items, total, codigo_descuento")
       .eq("wompi_referencia", reference)
       .single();
 
@@ -94,7 +94,7 @@ Deno.serve(async (req: Request) => {
     if (updateError) console.error("[wompi-webhook] update error:", updateError.message);
 
     // ── Email de confirmación si el pago fue aprobado ────────────────
-    if (status === "APPROVED" && RESEND_API_KEY) {
+    if (status === "APPROVED") {
       await enviarEmailConfirmacion(pedido, wompiId);
     }
 
@@ -137,35 +137,43 @@ async function validarFirmaWebhook(
 
 // ── Email de confirmación de pago ─────────────────────────────────────
 async function enviarEmailConfirmacion(
-  pedido: { id: string; cliente_nombre: string; cliente_telefono: string; items: unknown[]; total: number },
+  pedido: {
+    id: string;
+    cliente_nombre: string;
+    cliente_telefono: string;
+    cliente_email?: string;
+    cliente_ciudad?: string;
+    items: unknown[];
+    total: number;
+    codigo_descuento?: string;
+  },
   wompiId: string
 ): Promise<void> {
-  const prendas = (pedido.items as Array<{ nombre?: string; talla?: string; qty?: number }>)
-    .map(i => `• ${i.nombre} · Talla ${i.talla} × ${i.qty ?? 1}`)
-    .join("<br>");
-
-  // TODO: Añadir email del cliente al insertar pedido para poder enviar aquí
-  // Por ahora solo logueamos
   console.log(`[wompi-webhook] Pago confirmado para pedido ${pedido.id} | Wompi TX: ${wompiId}`);
-  console.log(`[wompi-webhook] Cliente: ${pedido.cliente_nombre} | Total: ${pedido.total}`);
+  console.log(`[wompi-webhook] Cliente: ${pedido.cliente_nombre} | Email: ${pedido.cliente_email} | Total: ${pedido.total}`);
 
-  // Cuando se agregue el campo email al pedido, descomentar:
-  /*
-  await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { "Authorization": `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: "hola@yossico.com",
-      to: pedido.cliente_email,
-      subject: "✅ Pago confirmado — YOSSICO",
-      html: `
-        <h2>¡Gracias por tu compra, ${pedido.cliente_nombre}!</h2>
-        <p>Tu pago fue procesado exitosamente.</p>
-        <p>${prendas}</p>
-        <p><strong>Total: $${pedido.total.toLocaleString("es-CO")} COP</strong></p>
-        <p>Ref. Wompi: ${wompiId}</p>
-      `
-    })
-  });
-  */
+  if (!pedido.cliente_email) return;
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/email-confirmacion-pedido`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${DB_SERVICE_KEY}`,
+      },
+      body: JSON.stringify({
+        pedidoId: pedido.id,
+        nombre: pedido.cliente_nombre,
+        email: pedido.cliente_email,
+        tel: pedido.cliente_telefono,
+        ciudad: pedido.cliente_ciudad,
+        items: pedido.items,
+        total: pedido.total,
+        codigo_descuento: pedido.codigo_descuento,
+      }),
+    });
+    console.log("[wompi-webhook] Email confirmación disparado — status:", res.status);
+  } catch (err) {
+    console.error("[wompi-webhook] Error disparando email confirmación:", err);
+  }
 }

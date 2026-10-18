@@ -500,13 +500,24 @@
     if (pedidoId) {
       html += '<span class="grc-pedido-id">Ref. ' + pedidoId + '</span>';
     }
+
+    if (data.email) {
+      html += [
+        '<div style="margin:24px 0;padding:14px 18px;background:#fbfbf9;border:1px solid #ebebea;border-radius:4px;font-size:12px;color:#333;line-height:1.6;display:flex;align-items:center;gap:10px;">',
+        '  <span style="color:#2D6A4F;font-weight:700;font-size:14px;">✓</span>',
+        '  <div>Te enviamos una copia detallada del pedido y comprobante a <strong>' + data.email + '</strong>.</div>',
+        '</div>'
+      ].join('');
+    }
+
     html += '</div>';
 
     // CTA buttons
+    var busquedaVal = pedidoId || data.tel || '';
     html += [
       '<div class="grc-actions">',
-      '  <a href="coleccion.html" class="grc-btn grc-btn--primary">Seguir comprando →</a>',
-      '  <a href="index.html" class="grc-btn grc-btn--secondary">Ir al inicio</a>',
+      '  <a href="rastreo.html?busqueda=' + encodeURIComponent(busquedaVal) + '" class="grc-btn grc-btn--primary">Rastrear mi pedido en tiempo real →</a>',
+      '  <a href="coleccion.html" class="grc-btn grc-btn--secondary">Seguir explorando colección</a>',
       '</div>'
     ].join('');
 
@@ -527,8 +538,8 @@
       '    +57 312 730 0661',
       '  </a>',
       '  <div class="grc-actions" style="justify-content:center;">',
-      '    <a href="coleccion.html" class="grc-btn grc-btn--primary">Seguir comprando →</a>',
-      '    <a href="index.html" class="grc-btn grc-btn--secondary">Ir al inicio</a>',
+      '    <a href="rastreo.html" class="grc-btn grc-btn--primary">Rastrear un pedido →</a>',
+      '    <a href="coleccion.html" class="grc-btn grc-btn--secondary">Ver colección</a>',
       '  </div>',
       '</div>'
     ].join('');
@@ -537,6 +548,12 @@
 
   /* ── Main logic ── */
   function init() {
+    // Vaciar carrito de compras de forma segura
+    try {
+      localStorage.removeItem('yossico_cart');
+      if (typeof updateBadge === 'function') updateBadge();
+    } catch (_) {}
+
     // 1. Try sessionStorage first
     var raw = null;
     try { raw = sessionStorage.getItem('yossico_ultimo_pedido'); } catch (e) {}
@@ -545,8 +562,6 @@
       try {
         var data = JSON.parse(raw);
         renderWithData(data, 'session');
-        // Optionally clear after reading to avoid stale data on refresh
-        // sessionStorage.removeItem('yossico_ultimo_pedido');
         return;
       } catch (e) {
         console.warn('[gracias] Error parsing sessionStorage data:', e);
