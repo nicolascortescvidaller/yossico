@@ -66,13 +66,19 @@
     wrap.id = 'yos-chat-root';
     wrap.innerHTML = `
       <div class="yos-chat-launcher" id="yos-chat-launcher" role="button" aria-haspopup="dialog" aria-expanded="false" aria-label="${t.launcher}">
-        <div class="yos-chat-launcher__status-dot"></div>
-        <div class="yos-chat-launcher__icon">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
+        <span class="yos-chat-launcher__label" id="yos-chat-launcher-text">${t.launcher}</span>
+        <div class="yos-chat-launcher__circle">
+          <div class="yos-chat-launcher__status-dot"></div>
+          <div class="yos-chat-launcher__icon">
+            <svg class="yos-chat-icon--msg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <svg class="yos-chat-icon--close" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </div>
         </div>
-        <span id="yos-chat-launcher-text">${t.launcher}</span>
       </div>
 
       <div class="yos-chat-window" id="yos-chat-window" role="dialog" aria-hidden="true">
