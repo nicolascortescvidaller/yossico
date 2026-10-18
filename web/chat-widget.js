@@ -20,38 +20,43 @@
 
     var texts = {
       es: {
-        launcher: 'Asistencia',
-        header: 'YOSSICO Support',
-        headline: '¡Bienvenida a YOSSICO!',
-        sub: 'Asesoría directa para profesionales de la salud. ¿En qué podemos ayudarte?',
-        pillTalla: '📏 Guía de tallas y medidas',
-        pillDrop: '🚀 Próximo Drop y lanzamientos',
-        pillTela: '💧 Tela antifluido y materiales',
+        launcher: '¿Hablamos?',
+        header: 'YOSSICO Concierge',
+        headline: '¿Tienes alguna duda?',
+        sub: 'Estamos en línea para responder tus preguntas sobre tallas, telas técnicas y el próximo drop.',
+        pillTalla: 'Guía de tallas y medidas',
+        pillDrop: 'Próximo Drop y lanzamientos',
+        pillTela: 'Tela antifluido y materiales',
         namePh: 'Tu nombre',
         contactPh: 'WhatsApp o correo',
-        submit: 'Iniciar chat',
+        submit: 'Iniciar conversación',
         footer: '¿Prefieres WhatsApp directo?',
         footerLink: 'Escríbenos aquí',
-        waMsg: 'Hola YOSSICO, mi nombre es {name} ({contact}). Quisiera recibir asesoría personalizada sobre los uniformes.'
+        waMsg: 'Hola YOSSICO, mi nombre es {name} ({contact}). Quisiera resolver unas dudas sobre los uniformes.'
       },
       en: {
-        launcher: 'Support',
-        header: 'YOSSICO Support',
-        headline: 'Welcome to YOSSICO!',
-        sub: 'Direct assistance for healthcare professionals. How can we help you?',
-        pillTalla: '📏 Size & measurement guide',
-        pillDrop: '🚀 Next Drop & launches',
-        pillTela: '💧 Fluid-resistant fabric & materials',
+        launcher: "Questions? Let's talk",
+        header: 'YOSSICO Concierge',
+        headline: 'Have a question?',
+        sub: "We're online to answer your questions about sizing, technical fabrics, and the upcoming drop.",
+        pillTalla: 'Size & measurement guide',
+        pillDrop: 'Next Drop & launches',
+        pillTela: 'Fluid-resistant fabric & materials',
         namePh: 'Your name',
         contactPh: 'WhatsApp or email',
-        submit: 'Start chat',
+        submit: 'Start conversation',
         footer: 'Prefer direct WhatsApp?',
         footerLink: 'Message us here',
-        waMsg: 'Hello YOSSICO, my name is {name} ({contact}). I would like personal assistance regarding your medical uniforms.'
+        waMsg: 'Hello YOSSICO, my name is {name} ({contact}). I would like to ask a few questions about your medical uniforms.'
       }
     };
 
     var t = isEn ? texts.en : texts.es;
+
+    // SVG icons (monochrome 1.5px stroke, pure YOSSICO quiet luxury aesthetic)
+    var iconRuler = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 8.7 8.7 21.3a2 2 0 0 1-2.8 0L2.7 18.1a2 2 0 0 1 0-2.8L15.3 2.7a2 2 0 0 1 2.8 0l3.2 3.2a2 2 0 0 1 0 2.8Z"></path><path d="m14.5 5.5 1.5 1.5"></path><path d="m11.5 8.5 2 2"></path><path d="m8.5 11.5 1.5 1.5"></path></svg>';
+    var iconClock = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
+    var iconDrop  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>';
 
     // DOM Container
     var wrap = document.createElement('div');
@@ -88,29 +93,29 @@
 
           <div class="yos-chat-pills">
             <button type="button" class="yos-chat-pill" id="yos-pill-talla">
-              <span>${t.pillTalla}</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              <span>${iconRuler} ${t.pillTalla}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
             <button type="button" class="yos-chat-pill" id="yos-pill-drop">
-              <span>${t.pillDrop}</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              <span>${iconClock} ${t.pillDrop}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
             <button type="button" class="yos-chat-pill" id="yos-pill-tela">
-              <span>${t.pillTela}</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              <span>${iconDrop} ${t.pillTela}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
           </div>
 
           <form class="yos-chat-form" id="yos-chat-form">
             <div class="yos-chat-input-wrap">
               <span class="yos-chat-input-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               </span>
               <input type="text" class="yos-chat-input" id="yos-chat-name" placeholder="${t.namePh}" required>
             </div>
             <div class="yos-chat-input-wrap">
               <span class="yos-chat-input-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
               </span>
               <input type="text" class="yos-chat-input" id="yos-chat-contact" placeholder="${t.contactPh}" required>
             </div>

@@ -1443,6 +1443,7 @@
       subOverlay.classList.remove('open');
       document.body.style.overflow = '';
       popupDismissed = true; // Don't auto-reopen this page load
+      try { localStorage.setItem('yos_popup_dismissed', 'true'); } catch (e) {}
     }
 
     function setSubmitState(state) {
@@ -1498,9 +1499,17 @@
       if (btn) { e.preventDefault(); openSubPopup(); }
     });
 
-    // Auto-open after 2.5s — always on page load, but not again if dismissed
+    // Auto-open after 2.5s — only if visitor hasn't already subscribed or dismissed it
     setTimeout(() => {
-      if (!popupDismissed) openSubPopup();
+      let alreadySub = false;
+      let alreadyDismissed = false;
+      try {
+        alreadySub = localStorage.getItem('yos_subscribed') === 'true';
+        alreadyDismissed = localStorage.getItem('yos_popup_dismissed') === 'true';
+      } catch (e) {}
+      if (!popupDismissed && !alreadySub && !alreadyDismissed) {
+        openSubPopup();
+      }
     }, 2500);
 
     // Form submit
@@ -1544,6 +1553,7 @@
         if (!res.ok) {
           if (res.status === 409 || data.already_registered) {
             setFieldError('sub-email', 'Este correo ya está registrado. ¡Revisa tu bandeja de entrada!');
+            try { localStorage.setItem('yos_subscribed', 'true'); } catch (e) {}
           } else {
             setFieldError('sub-email', data.error || 'Algo salió mal. Intenta de nuevo.');
             turnstile.reset(); // Reset Turnstile on generic error
@@ -1558,6 +1568,7 @@
         }
         subFormWrap.style.display = 'none';
         subSuccess.classList.add('show');
+        try { localStorage.setItem('yos_subscribed', 'true'); } catch (e) {}
 
       } catch (err) {
         console.error('Popup fetch error:', err);
