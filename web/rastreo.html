@@ -1396,10 +1396,7 @@
       if (btn) { e.preventDefault(); openSubPopup(); }
     });
 
-    // Auto-open after 2.5s — always on page load, but not again if dismissed
-    setTimeout(() => {
-      if (!popupDismissed) openSubPopup();
-    }, 2500);
+    // El popup solo se abre bajo demanda si hay botones con data-open-sub
 
     // Form submit
     subForm.addEventListener('submit', async e => {

@@ -1499,18 +1499,7 @@
       if (btn) { e.preventDefault(); openSubPopup(); }
     });
 
-    // Auto-open after 2.5s — only if visitor hasn't already subscribed or dismissed it
-    setTimeout(() => {
-      let alreadySub = false;
-      let alreadyDismissed = false;
-      try {
-        alreadySub = localStorage.getItem('yos_subscribed') === 'true';
-        alreadyDismissed = localStorage.getItem('yos_popup_dismissed') === 'true';
-      } catch (e) {}
-      if (!popupDismissed && !alreadySub && !alreadyDismissed) {
-        openSubPopup();
-      }
-    }, 2500);
+    // Nota: El popup solo se abre cuando el usuario hace clic voluntariamente en un botón con data-open-sub
 
     // Form submit
     subForm.addEventListener('submit', async e => {
