@@ -594,6 +594,27 @@
         </div>
         <div style="font-size:.7rem;color:var(--grisMed);margin-top:.75rem" id="contador-subs"></div>
       </div>
+
+      <!-- LEADS CHAT CONCIERGE -->
+      <div class="form-card hover-module" style="margin-top:1.5rem">
+        <div class="flex-between">
+          <div class="section-title" style="margin-bottom:0">💬 Leads del Chat (Concierge)</div>
+          <div class="dgap">
+            <button class="btn btn-gris btn-sm" onclick="cargarChatLeads()">↻ Actualizar</button>
+            <button class="btn btn-negro btn-sm" onclick="exportarChatLeadsCSV()">⬇ CSV</button>
+          </div>
+        </div>
+        <div class="filtros-bar" style="margin-top:1rem">
+          <input type="text" id="filtro-chat-buscar" placeholder="🔍 Buscar por nombre o contacto..." oninput="filtrarChatLeads()">
+        </div>
+        <div class="tabla-wrap" style="margin-top:.75rem">
+          <table>
+            <thead><tr><th>Nombre</th><th>Contacto (WhatsApp/Email)</th><th>Página de origen</th><th>Fecha</th><th>Acción</th></tr></thead>
+            <tbody id="tabla-chat-leads"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+        <div style="font-size:.7rem;color:var(--grisMed);margin-top:.75rem" id="contador-chat-leads"></div>
+      </div>
     </div>
 
 
@@ -2063,8 +2084,9 @@ function cambiarTab(tab, btn) {
   document.getElementById("tab-" + tab).classList.add("active");
   btn.classList.add("active");
   
-  if (tab === "suscriptoras" && todasSubs.length === 0) {
-    cargarSuscriptoras();
+  if (tab === "suscriptoras") {
+    if (todasSubs.length === 0) cargarSuscriptoras();
+    cargarChatLeads();
   } else if (tab === 'stats') {
     if (todasSubs.length === 0) cargarSuscriptoras().then(() => renderStats());
     else renderStats();
@@ -2845,6 +2867,49 @@ function exportarSuscriptorasCSV() {
   const rows=todasSubs.map(s=>[s.name,s.email,s.phone,s.discount_code,s.used?"Sí":"No",s.created_at].map(v=>`"${String(v||"").replace(/"/g,'""')}"`));
   descargarCSV([cols,...rows].map(r=>r.join(",")).join("\n"),`yossico-suscriptoras-${dHoy()}.csv`);
   mostrarToast("CSV exportado ✓","ok");
+}
+
+// ── LEADS DE CHAT (CONCIERGE)
+let todosChatLeads = [];
+async function cargarChatLeads() {
+  const tbody = document.getElementById("tabla-chat-leads");
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="5" class="loading">Cargando...</td></tr>';
+  const { data, error } = await sb.rpc("admin_get_chat_leads", { pin: adminPin });
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="5" class="loading" style="color:var(--rojo)">Error: ${error.message}</td></tr>`;
+    return;
+  }
+  todosChatLeads = data || [];
+  filtrarChatLeads();
+}
+function filtrarChatLeads() {
+  const buscar = (document.getElementById("filtro-chat-buscar")?.value || "").toLowerCase();
+  let f = [...todosChatLeads];
+  if (buscar) f = f.filter(l => (l.nombre || "").toLowerCase().includes(buscar) || (l.contacto || "").toLowerCase().includes(buscar));
+  renderChatLeads(f);
+}
+function renderChatLeads(leads) {
+  const cnt = document.getElementById("contador-chat-leads");
+  if (cnt) cnt.textContent = `Mostrando ${leads.length} de ${todosChatLeads.length} leads del chat`;
+  const tbody = document.getElementById("tabla-chat-leads");
+  if (!tbody) return;
+  if (!leads.length) { tbody.innerHTML = '<tr><td colspan="5" class="loading">Sin leads registrados aún</td></tr>'; return; }
+  tbody.innerHTML = leads.map(l => {
+    const fecha = new Date(l.created_at).toLocaleDateString("es-CO", { day: "2-digit", month: "2-digit", year: "2-digit", hour: "2-digit", minute: "2-digit" });
+    const telLimpio = (l.contacto || "").replace(/\D/g, "");
+    const waLink = telLimpio.length >= 7 
+      ? `<a href="https://wa.me/${telLimpio.startsWith('57') ? telLimpio : '57' + telLimpio}?text=Hola%20${encodeURIComponent(l.nombre || '')},%20te%20escribimos%20de%20YOSSICO" target="_blank" class="btn btn-sm btn-gris" style="text-decoration:none;display:inline-block">💬 WhatsApp</a>`
+      : '—';
+    return `<tr><td><strong>${l.nombre || ""}</strong></td><td>${l.contacto || ""}</td><td style="font-size:.75rem;color:var(--grisMed)">${l.origen_pagina || "/"}</td><td style="font-size:.75rem;color:var(--grisMed)">${fecha}</td><td>${waLink}</td></tr>`;
+  }).join("");
+}
+function exportarChatLeadsCSV() {
+  if (!todosChatLeads.length) { mostrarToast("Sin leads para exportar", "warn"); return; }
+  const cols = ["Nombre", "Contacto", "Origen", "Fecha", "Estado"];
+  const rows = todosChatLeads.map(l => [l.nombre, l.contacto, l.origen_pagina, l.created_at, l.estado].map(v => `"${String(v || "").replace(/"/g, '""')}"`));
+  descargarCSV([cols, ...rows].map(r => r.join(",")).join("\n"), `yossico-chat-leads-${dHoy()}.csv`);
+  mostrarToast("CSV exportado ✓", "ok");
 }
 
 // ── UTILS

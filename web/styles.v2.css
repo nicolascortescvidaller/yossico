@@ -1558,7 +1558,7 @@ body.cursor-hover .cursor-ring {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   z-index: 9500;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 24px;
@@ -1569,6 +1569,7 @@ body.cursor-hover .cursor-ring {
 }
 
 .sub-overlay.open {
+  display: flex !important;
   opacity: 1;
   pointer-events: all;
 }
