@@ -209,6 +209,7 @@
     `y te avisamos cuando lleguen`, `and we'll notify you when they arrive`,
     `Nombre`, `Name`, `Teléfono`, `Phone`, `Correo`, `Email`,
     `Avisarme`, `Notify me`,
+    `Avisarme al abrir`, `Notify me on launch`,
     `ya está en la lista`, `is already on the list`,
     `¿No encuentras tu talla?`, `Can't find your size?`,
     `Escríbenos directamente y te asesoramos.`, `Write to us directly and we'll advise you.`,

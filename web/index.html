@@ -311,6 +311,27 @@
       background: rgba(255,255,255,0.15);
       flex-shrink: 0;
     }
+    .countdown__cta-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #ffffff;
+      padding: 7px 18px;
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .countdown__cta-btn:hover {
+      background: #ffffff;
+      color: var(--black);
+      border-color: #ffffff;
+    }
     .countdown__units {
       display: flex;
       align-items: center;
@@ -874,6 +895,7 @@
   <link rel="canonical" href="https://yossico.com/">
   <script src="/analytics.js" defer></script>
   <script src="/i18n.js" defer></script>
+  <script src="/chat-widget.js" defer></script>
 </head>
 
 <body>
@@ -959,6 +981,8 @@
         <span class="countdown__label">SEGUNDOS</span>
       </div>
     </div>
+    <div class="countdown__divider countdown__divider--desktop" aria-hidden="true"></div>
+    <button type="button" class="countdown__cta-btn" data-open-sub>Avisarme al abrir</button>
   </section>
 
   <section class="hero">
