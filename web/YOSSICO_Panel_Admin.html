@@ -334,6 +334,10 @@
   <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
   Drop / Lanzamiento
 </button>
+      <button class="tab-btn" onclick="cambiarTab('visitas',this)">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 14l4-4 3 3 5-6"></path></svg>
+        Visitas Web
+      </button>
       <button class="tab-btn" onclick="cambiarTab('b2b',this)">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
         Cotizador B2B
@@ -1422,7 +1426,7 @@
                 Yossico,<br>designed for<br>presence.
               </div>
               <div style="margin-top:1rem; font-size:0.75rem; color:#888; letter-spacing:1px; display:flex; gap:1rem;">
-                <span>+57 321 9937221</span> | <span>HOLA@YOSSICO.COM</span> | <span>WWW.YOSSICO.COM</span>
+                <span>+57 312 730 0661</span> | <span>HOLA@YOSSICO.COM</span> | <span>WWW.YOSSICO.COM</span>
               </div>
             </div>
           </div>
@@ -1535,7 +1539,46 @@
     </div>
 
 
-  <!-- TAB DROP -->
+  <!-- TAB VISITAS -->
+<div id="tab-visitas" class="tab-content">
+  <div class="form-card hover-module">
+    <div class="flex-between" style="margin-bottom:1rem">
+      <div class="section-title" style="margin-bottom:0">📈 Analítica de la Web</div>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <select id="vis-dias" onchange="cargarVisitas()" style="padding:.4rem .6rem;border:1px solid var(--grisCl);font-family:inherit;font-size:.75rem">
+          <option value="1">Hoy / 24h</option>
+          <option value="7">Últimos 7 días</option>
+          <option value="30" selected>Últimos 30 días</option>
+          <option value="90">Últimos 90 días</option>
+        </select>
+        <button class="btn btn-gris btn-sm" onclick="cargarVisitas()">↻ Actualizar</button>
+      </div>
+    </div>
+    <div id="vis-aviso" style="font-size:.75rem;color:var(--grisMed);margin-bottom:1rem"></div>
+    <div class="resumen-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="resumen-card hover-module azul"><div class="rlabel">Visitas (páginas vistas)</div><div class="rvalor" id="vis-total">—</div><div class="rsub">en el período</div></div>
+      <div class="resumen-card hover-module verde"><div class="rlabel">Visitantes únicos</div><div class="rvalor" id="vis-unicos">—</div><div class="rsub">personas distintas</div></div>
+      <div class="resumen-card hover-module naranja"><div class="rlabel">Sesiones</div><div class="rvalor" id="vis-sesiones">—</div><div class="rsub">visitas al sitio</div></div>
+      <div class="resumen-card hover-module verde"><div class="rlabel">Clics a WhatsApp</div><div class="rvalor" id="vis-wa">—</div><div class="rsub">interés directo</div></div>
+      <div class="resumen-card hover-module azul"><div class="rlabel">Agregar al carrito</div><div class="rvalor" id="vis-carrito">—</div><div class="rsub">eventos</div></div>
+      <div class="resumen-card hover-module rojo"><div class="rlabel">Conversión a pedido</div><div class="rvalor" id="vis-conv">—</div><div class="rsub">sesiones que llegan a "gracias"</div></div>
+    </div>
+  </div>
+
+  <div class="form-card hover-module" style="margin-top:1.5rem">
+    <div class="section-title" style="margin-bottom:1rem">🧭 Embudo (sesiones únicas por etapa)</div>
+    <div id="vis-embudo"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem">
+    <div class="form-card hover-module"><div class="section-title" style="margin-bottom:1rem">📄 Páginas más vistas</div><div id="vis-paginas"></div></div>
+    <div class="form-card hover-module"><div class="section-title" style="margin-bottom:1rem">🔗 De dónde llegan</div><div id="vis-fuentes"></div></div>
+    <div class="form-card hover-module"><div class="section-title" style="margin-bottom:1rem">📱 Dispositivo</div><div id="vis-disp"></div></div>
+    <div class="form-card hover-module"><div class="section-title" style="margin-bottom:1rem">📅 Visitas por día</div><div id="vis-dias-tabla"></div></div>
+  </div>
+</div>
+
+<!-- TAB DROP -->
 <div id="tab-drop" class="tab-content">
   <div class="form-card hover-module">
     <div class="section-title" style="margin-bottom:0.5rem">🚀 Control de Drop / Lanzamiento</div>
@@ -1937,6 +1980,72 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ── TABS
+// ── VISITAS WEB (analítica propia)
+async function cargarVisitas() {
+  const dias = parseInt(document.getElementById('vis-dias')?.value || '30');
+  const aviso = document.getElementById('vis-aviso');
+  aviso.textContent = 'Cargando…';
+  const { data, error } = await sb.rpc('admin_get_visitas', { pin: adminPin, dias });
+  if (error) {
+    aviso.innerHTML = '⚠️ No se pudo cargar: ' + error.message + '. ¿Ya ejecutaste el SQL <code>20261017_analitica_visitas.sql</code> en Supabase?';
+    return;
+  }
+  renderVisitas(data || [], dias);
+}
+
+function renderVisitas(rows, dias) {
+  const aviso = document.getElementById('vis-aviso');
+  aviso.textContent = rows.length === 0
+    ? 'Aún no hay datos. Las visitas empiezan a registrarse cuando alguien entra a yossico.com.'
+    : 'Datos reales de yossico.com (se excluyen bots y tu propio panel).';
+  const pv = rows.filter(r => r.evento === 'pageview');
+  const ev = n => rows.filter(r => r.evento === n).length;
+  const uniq = arr => new Set(arr).size;
+  const sesiones = uniq(pv.map(r => r.sesion));
+  const sesGracias = uniq(pv.filter(r => /gracias/.test(r.pagina)).map(r => r.sesion));
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  set('vis-total', pv.length.toLocaleString('es-CO'));
+  set('vis-unicos', uniq(pv.map(r => r.visitante)).toLocaleString('es-CO'));
+  set('vis-sesiones', sesiones.toLocaleString('es-CO'));
+  set('vis-wa', ev('click_whatsapp'));
+  set('vis-carrito', ev('agregar_carrito'));
+  set('vis-conv', sesiones ? ((sesGracias / sesiones) * 100).toFixed(1) + '%' : '—');
+
+  const bar = (label, n, max, extra) => `
+    <div style="display:flex;align-items:center;gap:.6rem;font-size:.75rem;margin:.35rem 0">
+      <div style="width:42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${label}">${label}</div>
+      <div style="flex:1;background:var(--grisF);height:10px;border-radius:5px"><div style="width:${max ? (n / max) * 100 : 0}%;background:var(--negro);height:10px;border-radius:5px"></div></div>
+      <div style="width:70px;text-align:right">${n.toLocaleString('es-CO')}${extra || ''}</div>
+    </div>`;
+  const top = (map, limit) => Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, limit || 10);
+  const count = (arr, key) => arr.reduce((m, r) => { const k = key(r) || '(vacío)'; m[k] = (m[k] || 0) + 1; return m; }, {});
+  const lista = (id, entries) => {
+    const max = entries.length ? entries[0][1] : 0;
+    document.getElementById(id).innerHTML = entries.length ? entries.map(([k, n]) => bar(k, n, max)).join('') : '<div style="font-size:.75rem;color:var(--grisMed)">Sin datos</div>';
+  };
+  lista('vis-paginas', top(count(pv, r => r.pagina), 10));
+  lista('vis-fuentes', top(count(pv, r => r.fuente), 8));
+  lista('vis-disp', top(count(pv, r => r.dispositivo), 3));
+
+  // por día
+  const porDia = count(pv, r => new Date(r.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' }));
+  const diasOrden = Object.entries(porDia).slice(0, 14);
+  const maxD = Math.max(0, ...diasOrden.map(e => e[1]));
+  document.getElementById('vis-dias-tabla').innerHTML = diasOrden.length ? diasOrden.map(([k, n]) => bar(k, n, maxD)).join('') : '<div style="font-size:.75rem;color:var(--grisMed)">Sin datos</div>';
+
+  // embudo por sesiones
+  const etapa = re => uniq(pv.filter(r => re.test(r.pagina)).map(r => r.sesion));
+  const etapas = [
+    ['Entraron al sitio', sesiones],
+    ['Vieron la colección o un producto', uniq(pv.filter(r => /coleccion|oslo|milan|kyoto|lima|bogota|manta|producto/.test(r.pagina)).map(r => r.sesion))],
+    ['Agregaron al carrito', uniq(rows.filter(r => r.evento === 'agregar_carrito').map(r => r.sesion))],
+    ['Llegaron al checkout', etapa(/checkout/)],
+    ['Pedido confirmado (gracias)', etapa(/gracias/)]
+  ];
+  const maxE = etapas[0][1];
+  document.getElementById('vis-embudo').innerHTML = etapas.map(([l, n]) => bar(l, n, maxE, maxE ? ` · ${((n / maxE) * 100).toFixed(0)}%` : '')).join('');
+}
+
 function cambiarTab(tab, btn) {
   if (tab === 'finanzas') {
     if (sessionStorage.getItem('rent_auth') !== 'true') {
@@ -1977,6 +2086,8 @@ function cambiarTab(tab, btn) {
     renderEnvios();
   } else if (tab === 'drop') {
     renderDropStatus();
+  } else if (tab === 'visitas') {
+    cargarVisitas();
   }
 }
 

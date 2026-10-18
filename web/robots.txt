@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /rastreo.html
+Disallow: /login.html
+Disallow: /registro.html
+Disallow: /perfil.html
+
+Sitemap: https://yossico.com/sitemap.xml
