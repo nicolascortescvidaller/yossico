@@ -88,8 +88,8 @@
         wrapper.innerHTML = `
       <button class="nav__user-btn" id="nav-user-btn" aria-label="Mi cuenta" aria-expanded="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
+          <path d="M20 22v-2.5a4.5 4.5 0 0 0-4.5-4.5h-7A4.5 4.5 0 0 0 4 19.5V22"/>
+          <circle cx="12" cy="6.5" r="4.5"/>
         </svg>
       </button>
       <div class="nav__user-dropdown" id="nav-user-dropdown" aria-hidden="true">

@@ -16,13 +16,13 @@
     var wrap = document.createElement('div');
     wrap.id = 'lang-toggle';
     wrap.setAttribute('translate', 'no');
-    wrap.style.cssText = 'display:flex;align-items:center;gap:6px;font-family:Montserrat,sans-serif;font-size:10px;letter-spacing:2px;margin-right:14px;';
+    wrap.style.cssText = 'display:inline-flex;align-items:center;height:40px;line-height:1;gap:6px;font-family:Montserrat,sans-serif;font-size:10px;letter-spacing:2px;margin-right:6px;flex-shrink:0;';
     function btn(code, label) {
       var b = document.createElement('button');
       b.type = 'button';
       b.textContent = label;
       b.setAttribute('aria-label', code === 'en' ? 'English' : 'Español');
-      b.style.cssText = 'background:none;border:none;padding:2px;cursor:pointer;font:inherit;letter-spacing:inherit;color:inherit;' +
+      b.style.cssText = 'background:none;border:none;padding:2px;margin:0;line-height:1;cursor:pointer;font:inherit;letter-spacing:inherit;color:inherit;' +
         (lang === code ? 'font-weight:700;border-bottom:1px solid currentColor;' : 'opacity:.5;');
       b.addEventListener('click', function () {
         try { localStorage.setItem(STORE, code); } catch (e) {}

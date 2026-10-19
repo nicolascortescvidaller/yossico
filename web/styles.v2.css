@@ -215,7 +215,9 @@ body.cursor-hover .cursor-ring {
 .nav__actions {
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: flex-end;
+  gap: 12px;
+  height: 40px;
 }
 
 .nav__links a {
@@ -990,8 +992,17 @@ body.cursor-hover .cursor-ring {
   .nav__links {
     display: none;
   }
+  .nav__actions {
+    margin-left: auto;
+    gap: 8px;
+  }
   .nav__hamburger {
-    display: flex;
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-left: 4px;
   }
   .nav__mobile-menu {
     display: flex;
@@ -1061,11 +1072,19 @@ body.cursor-hover .cursor-ring {
   outline: none !important;
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
-  cursor: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
+  cursor: pointer;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  width: 40px;
+  height: 40px;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  font-size: 0 !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0;
   color: var(--gray-mid);
   transition: color 0.2s;
   text-decoration: none;
@@ -1078,11 +1097,12 @@ body.cursor-hover .cursor-ring {
 /* Tight wrapper = exactly 24×24px = the visible icon. Badge anchors here. */
 .cart-icon-wrap {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 24px;
   height: 24px;
+  line-height: 1;
   flex-shrink: 0;
 }
 
@@ -1090,11 +1110,14 @@ body.cursor-hover .cursor-ring {
   width: 24px;
   height: 24px;
   stroke: currentColor;
-  stroke-width: 1.4;
+  stroke-width: 1.5;
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
-  display: block;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0;
 }
 
 .cart-badge {
@@ -1908,8 +1931,16 @@ body.cursor-hover .cursor-ring {
 /* ══ Auth Nav — User Icon & Dropdown ═══════════════════════════════ */
 .nav__user {
   position: relative;
-  display: flex;
-  align-items: center;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  width: 40px;
+  height: 40px;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  flex-shrink: 0;
 }
 
 .nav__user-btn {
@@ -1921,22 +1952,40 @@ body.cursor-hover .cursor-ring {
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--black);
-  opacity: 0.6;
-  transition: opacity 0.2s;
+  width: 40px;
+  height: 40px;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  font-size: 0 !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  flex-shrink: 0;
+  color: var(--gray-mid);
+  opacity: 1;
+  transition: color 0.2s, opacity 0.2s;
 }
 
 .nav__user-btn:hover {
+  color: var(--black);
   opacity: 1;
 }
 
 .nav__user-btn svg {
   width: 24px;
   height: 24px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0;
 }
 
 .nav__user-dropdown {
