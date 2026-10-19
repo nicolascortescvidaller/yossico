@@ -686,9 +686,10 @@
 
         const params = new URLSearchParams(window.location.search);
         const id = (params.get('id') || '').toLowerCase();
+        const urlColorParam = (params.get('color') || '').toLowerCase().trim();
         
         if (id === 'manta') {
-            window.location.replace('manta.html');
+            window.location.replace(urlColorParam ? `manta.html?color=${encodeURIComponent(urlColorParam)}` : 'manta.html');
         }
         
         const prod = YOSSICO_PRODUCTS[id];
@@ -725,7 +726,10 @@
         });
 
         /* ── Gallery state ─────────────────────────── */
-        let currentImgs = [...prod.defaultImgs];
+        const initialColorObj = prod.colors.find(c =>
+            c.key.toLowerCase() === urlColorParam || c.label.toLowerCase() === urlColorParam
+        ) || prod.colors[0];
+        let currentImgs = [...(initialColorObj.imgs || prod.defaultImgs)];
         let currentSlide = 0;
 
         function buildGallery(imgs) {
@@ -771,18 +775,18 @@
         document.getElementById('pd-next').addEventListener('click', () => advSlide(1));
 
         // Initial build
-        buildGallery(prod.defaultImgs);
+        buildGallery(currentImgs);
 
         /* ── Color swatches ───────────────────────── */
         const colorsContainer = document.getElementById('pd-colors');
         const colorNameEl = document.getElementById('pd-color-name');
-        let activeColorKey = prod.colors[0].key;
+        let activeColorKey = initialColorObj.key;
 
-        colorNameEl.textContent = prod.colors[0].label;
+        colorNameEl.textContent = initialColorObj.label;
 
-        prod.colors.forEach((c, i) => {
+        prod.colors.forEach((c) => {
             const btn = document.createElement('button');
-            btn.className = `pd__color-swatch${i === 0 ? ' selected' : ''}`;
+            btn.className = `pd__color-swatch${c.key === activeColorKey ? ' selected' : ''}`;
             btn.style.background = c.hex;
             btn.title = c.label;
             btn.setAttribute('aria-label', c.label);
@@ -793,6 +797,9 @@
                 colorNameEl.textContent = c.label;
                 currentImgs = c.imgs;
                 buildGallery(c.imgs);
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('color', c.key);
+                window.history.replaceState({}, '', newUrl);
             });
             colorsContainer.appendChild(btn);
         });

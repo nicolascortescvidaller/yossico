@@ -31,7 +31,10 @@
 
       stockMap = {};
       data.forEach(r => {
-        stockMap[`${r.nombre}|${r.color}|${r.talla}`] = r.stock;
+        const nom = (r.nombre || '').trim().toUpperCase();
+        const col = (r.color || '').trim().toLowerCase();
+        const tal = (r.talla || '').trim().toUpperCase();
+        stockMap[`${nom}|${col}|${tal}`] = r.stock;
       });
 
       updateAllCards();
@@ -42,7 +45,8 @@
 
   /* Devuelve el stock de una combinación, o null si no está en la tabla */
   function getStock(nombre, color, talla) {
-    const key = `${nombre}|${color}|${talla}`;
+    if (!nombre || !color || !talla) return null;
+    const key = `${nombre.trim().toUpperCase()}|${color.trim().toLowerCase()}|${talla.trim().toUpperCase()}`;
     return key in stockMap ? stockMap[key] : null;
   }
 
@@ -70,9 +74,13 @@
       return;
     }
 
-    const color  = colorSwatch.dataset.color;
-    const talla  = sizeBtn.textContent.trim();
-    const stock  = getStock(nombre, color, talla);
+    const colorSlug  = colorSwatch.dataset.color || '';
+    const colorLabel = colorSwatch.dataset.label || '';
+    const talla      = sizeBtn.textContent.trim();
+    let   stock      = getStock(nombre, colorSlug, talla);
+    if (stock === null && colorLabel) {
+      stock = getStock(nombre, colorLabel, talla);
+    }
 
     if (stock === null) {
       /* Producto no encontrado en tabla → no bloquear */
