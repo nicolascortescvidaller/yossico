@@ -214,7 +214,8 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "YOSSICO <hola@yossico.com>",
+        from: "YOSSICO <customerserviceyossico@gmail.com>",
+        reply_to: "customerserviceyossico@gmail.com",
         to: email.toLowerCase().trim(),
         subject: `${name.split(" ")[0]}, aquí está tu 10% de descuento YOSSICO`,
         html: emailHtml,

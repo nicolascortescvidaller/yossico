@@ -12,13 +12,13 @@
 | **Dominio Principal** | DNS en Cloudflare / Vercel | `https://yossico.com` |
 | **Hosting Frontend** | Vercel (Sitio estático de ultra-alta velocidad) | `web/` |
 | **Base de Datos & Auth** | Supabase PostgreSQL (Sao Paulo / US-East) | `https://mgzevtcipwfpqgolmpwm.supabase.co` |
-| **Email Transaccional** | Resend API (`RESEND_API_KEY`) | Envío desde `hola@yossico.com` |
+| **Email Transaccional** | Resend API (`RESEND_API_KEY`) | Envío desde `customerserviceyossico@gmail.com` |
 | **Pasarela de Pagos** | Wompi Colombia (Bancolombia, Nequi, Tarjetas, PSE) | Integración Widget + Webhook Edge Function |
 | **Panel Administrativo** | Aplicación web standalone en archivo único | [`web/YOSSICO_Panel_Admin.html`](file:///Users/nicolascortesvidaller/yossico/web/YOSSICO_Panel_Admin.html) |
 | **PIN Admin General** | Autenticación en frontend | `yossico2025` |
 | **PIN Finanzas Maestro**| Submódulo financiero protegido | `Nc1018499182*` |
 | **Teléfono WhatsApp Oficial** | Línea comercial y soporte | `+57 312 730 0661` |
-| **Email Administrador** | Recepción de alertas de ventas y leads | `hola@yossico.com` |
+| **Email Administrador** | Recepción de alertas de ventas y leads | `customerserviceyossico@gmail.com` |
 
 ---
 
@@ -163,7 +163,7 @@ Acceso universal centralizado: **`https://yossico.com/YOSSICO_Panel_Admin.html`*
 1. **`email-confirmacion-pedido`:**
    * Recibe la orden confirmada.
    * Envía email de lujo al cliente con detalle de compra, resumen de pago y botón directo a `rastreo.html`.
-   * **Alerta al Administrador:** Envía inmediatamente una notificación por correo a **`hola@yossico.com`** con los datos de la clienta, enlace directo a su WhatsApp, detalle de prendas compradas y acceso al Panel Admin.
+   * **Alerta al Administrador:** Envía inmediatamente una notificación por correo a **`customerserviceyossico@gmail.com`** con los datos de la clienta, enlace directo a su WhatsApp, detalle de prendas compradas y acceso al Panel Admin.
 2. **`wompi-webhook`:**
    * Escucha eventos de Wompi, valida la firma criptográfica (`checksum`), actualiza el pedido a `Pagado` y dispara automáticamente la confirmación por correo.
 3. **`register-subscriber`:**

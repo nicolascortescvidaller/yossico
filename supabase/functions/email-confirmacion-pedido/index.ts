@@ -186,7 +186,8 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "YOSSICO <hola@yossico.com>",
+          from: "YOSSICO <customerserviceyossico@gmail.com>",
+          reply_to: "customerserviceyossico@gmail.com",
           to: email,
           subject,
           html: emailHtml,
@@ -213,8 +214,8 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "YOSSICO Tienda <hola@yossico.com>",
-            to: "hola@yossico.com",
+            from: "YOSSICO Tienda <customerserviceyossico@gmail.com>",
+            to: "customerserviceyossico@gmail.com",
             subject: `🚨 ¡Nueva venta YOSSICO! ${fmtPrice(Number(total || 0))} — ${nombre}`,
             html: `
               <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:600px;margin:0 auto;padding:32px 24px;border:1px solid #ebe9e5;background:#ffffff;">
