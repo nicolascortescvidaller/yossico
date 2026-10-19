@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO -->
+    <meta name="description" content="Política de Cookies de YOSSICO. Información transparente sobre las cookies esenciales, de rendimiento y analíticas utilizadas en nuestra tienda online.">
+    <meta name="keywords" content="política de cookies, cookies, YOSSICO, Colombia, privacidad, navegación web">
+    <meta name="author" content="YOSSICO">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="YOSSICO">
+    <meta property="og:title" content="Política de Cookies — YOSSICO">
+    <meta property="og:description" content="Conoce qué cookies utilizamos en YOSSICO y cómo gestionar tus preferencias de privacidad.">
+    <meta property="og:image" content="https://yossico.com/img/og-yossico.jpg">
+    <meta property="og:url" content="https://yossico.com/cookies.html">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Política de Cookies — YOSSICO">
+    <meta name="twitter:description" content="Conoce qué cookies utilizamos y cómo gestionar tus preferencias.">
+    <meta name="twitter:image" content="https://yossico.com/img/og-yossico.jpg">
+
+    <title>Política de Cookies — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.v2.css?v=105">
+    <style>
+        .terminos {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        .terminos__sidebar {
+            position: sticky;
+            top: 72px;
+            align-self: start;
+            padding: 60px 40px 60px 60px;
+            border-right: 1px solid var(--border);
+            max-height: calc(100vh - 72px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .terminos__sidebar-title {
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .terminos__index {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .terminos__index a {
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            color: var(--gray);
+            text-decoration: none;
+            display: block;
+            padding: 6px 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            line-height: 1.5;
+        }
+
+        .terminos__index a:hover {
+            color: var(--black);
+            border-bottom-color: var(--border);
+        }
+
+        .terminos__index-num {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--gray-light);
+            margin-right: 6px;
+        }
+
+        .terminos__content {
+            padding: 80px 80px 120px 80px;
+            max-width: 860px;
+        }
+
+        .terminos__version {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .terminos__version::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--gray-light);
+        }
+
+        .terminos__intro {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--gray-mid);
+            line-height: 1.7;
+            border-left: 2px solid var(--border);
+            padding-left: 24px;
+            margin-bottom: 64px;
+        }
+
+        .tc-section {
+            margin-bottom: 64px;
+            scroll-margin-top: 100px;
+        }
+
+        .tc-section__num {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: var(--gray-light);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .tc-section__title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(22px, 2.5vw, 32px);
+            letter-spacing: -0.3px;
+            color: var(--black);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tc-section__subtitle {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 18px;
+            color: var(--black);
+            margin-bottom: 12px;
+            margin-top: 32px;
+        }
+
+        .tc-body {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 2;
+        }
+
+        .tc-body+.tc-body {
+            margin-top: 16px;
+        }
+
+        .tc-body strong {
+            font-weight: 400;
+            color: var(--black);
+        }
+
+        .tc-alert {
+            background: #faf9f6;
+            border-left: 3px solid var(--black);
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--gray-mid);
+            line-height: 1.8;
+        }
+
+        .tc-alert strong {
+            font-weight: 400;
+            color: var(--black);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .tc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        .tc-table th {
+            font-family: var(--font-body);
+            font-size: 8px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--off-white);
+        }
+
+        .tc-table td {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--gray-mid);
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.6;
+        }
+
+        .tc-list {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 16px 0;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 1.9;
+        }
+
+        @media (max-width: 900px) {
+            .terminos {
+                grid-template-columns: 1fr;
+            }
+            .terminos__sidebar {
+                display: none;
+            }
+            .terminos__content {
+                padding: 40px 24px 80px 24px;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="canonical" href="https://yossico.com/cookies.html">
+    <script src="/analytics.js" defer></script>
+    <script src="/i18n.js" defer></script>
+    <script src="/chat-widget.js" defer></script>
+</head>
+
+<body>
+    <div id="barra-envio-gratis" style="background-color:#000000; color:#FFFFFF; text-align:center; padding:10px 16px; font-size:13px; letter-spacing:0.08em; width:100%; position:fixed; top:0; left:0; z-index:1002;">
+      Envío gratis en compras superiores a $450.000 &nbsp;·&nbsp; Exclusivo para Colombia <span style="display:inline-block; width:14px; height:10px; vertical-align:middle; margin-left:6px; box-shadow:0 0 1px rgba(255,255,255,0.4);"><div style="height:50%;background:#FCD116;"></div><div style="height:25%;background:#003893;"></div><div style="height:25%;background:#CE1126;"></div></span>
+    </div>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111" stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111" stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+                <div class="nav__dropdown-menu">
+                    <a href="coleccion.html?linea=essentials">Essentials</a>
+                    <a href="coleccion.html?linea=signature">Signature</a>
+                    <a href="coleccion.html?linea=core">Core</a>
+                    <div class="nav__dropdown-divider"></div>
+                    <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
+                </div>
+            </li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <div class="nav__actions">
+            <a class="cart-icon-btn" id="cart-open" aria-label="Carrito" tabindex="0" role="button">
+                <span class="cart-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="label page-header__label reveal">Transparencia Digital</div>
+        <h1 class="page-header__title reveal" data-delay="2">
+            Política de<br><em>Cookies.</em>
+        </h1>
+    </div>
+
+    <!-- Main -->
+    <div class="terminos">
+        <!-- Sidebar -->
+        <aside class="terminos__sidebar">
+            <p class="terminos__sidebar-title">Índice</p>
+            <ol class="terminos__index">
+                <li><a href="#c1"><span class="terminos__index-num">01</span>¿Qué son las Cookies?</a></li>
+                <li><a href="#c2"><span class="terminos__index-num">02</span>Cookies que Utilizamos</a></li>
+                <li><a href="#c3"><span class="terminos__index-num">03</span>Cookies Esenciales</a></li>
+                <li><a href="#c4"><span class="terminos__index-num">04</span>Cookies Analíticas</a></li>
+                <li><a href="#c5"><span class="terminos__index-num">05</span>Almacenamiento Local</a></li>
+                <li><a href="#c6"><span class="terminos__index-num">06</span>Gestión y Desactivación</a></li>
+                <li><a href="#c7"><span class="terminos__index-num">07</span>Contacto</a></li>
+            </ol>
+        </aside>
+
+        <!-- Content -->
+        <main class="terminos__content">
+            <div class="terminos__version">Versión 1.0 · Colombia · 2026</div>
+
+            <p class="terminos__intro">
+                En YOSSICO utilizamos cookies y tecnologías de almacenamiento local para garantizar el funcionamiento técnico indispensable de la tienda, recordar tus prendas en el carrito, proteger la plataforma contra ataques maliciosos y analizar de forma anónima el rendimiento de nuestro sitio web.
+            </p>
+
+            <!-- 1 -->
+            <section class="tc-section" id="c1">
+                <div class="tc-section__num">01</div>
+                <h2 class="tc-section__title">¿Qué son las Cookies y Tecnologías Similares?</h2>
+                <p class="tc-body">
+                    Una cookie es un pequeño archivo de texto que se descarga y almacena en su navegador web al acceder a determinadas páginas. Permiten a una tienda online reconocer su dispositivo, recordar qué artículos agregó a su bolsa de compras mientras navega por la colección y mantener la seguridad de las transacciones.
+                </p>
+                <p class="tc-body">
+                    Adicionalmente, empleamos <strong>almacenamiento local (localStorage y sessionStorage)</strong>, que funciona de forma semejante para recordar preferencias de idioma o el estado de navegación sin rastreo invasivo de terceros.
+                </p>
+            </section>
+
+            <!-- 2 -->
+            <section class="tc-section" id="c2">
+                <div class="tc-section__num">02</div>
+                <h2 class="tc-section__title">Clasificación de Cookies en YOSSICO</h2>
+                <table class="tc-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Finalidad</th>
+                            <th>Consentimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Técnicas / Esenciales</strong></td>
+                            <td>Permiten la navegación, el carrito de compras y la seguridad antibot.</td>
+                            <td>Obligatorias (indispensables)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Preferencias</strong></td>
+                            <td>Recuerdan idioma, moneda y visualización elegida.</td>
+                            <td>Opcionales</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Analíticas anónimas</strong></td>
+                            <td>Miden volumen de visitas y páginas más consultadas sin identificar a la persona.</td>
+                            <td>Opcionales / Gestionables</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 3 -->
+            <section class="tc-section" id="c3">
+                <div class="tc-section__num">03</div>
+                <h2 class="tc-section__title">Cookies Estrictamente Necesarias</h2>
+                <p class="tc-body">
+                    Estas cookies son indispensables para que la plataforma funcione correctamente. Sin ellas, no sería posible mantener las prendas en el carrito mientras navegas entre páginas, completar el checkout ni verificar la autenticidad de las solicitudes:
+                </p>
+                <ul class="tc-list">
+                    <li><strong>Carrito de compras:</strong> Mantiene la selección de prendas, tallas y cantidades durante la sesión de compra.</li>
+                    <li><strong>Seguridad antibot (Cloudflare Turnstile):</strong> Previene envíos automáticos de spam en los formularios mediante tokens criptográficos efímeros.</li>
+                    <li><strong>Pasarela de pago Wompi:</strong> Mantiene el token seguro de la transacción durante el checkout bancario.</li>
+                </ul>
+            </section>
+
+            <!-- 4 -->
+            <section class="tc-section" id="c4">
+                <div class="tc-section__num">04</div>
+                <h2 class="tc-section__title">Cookies Analíticas y de Rendimiento</h2>
+                <p class="tc-body">
+                    Utilizamos herramientas analíticas de primera parte (first-party) configuradas con anonimización de IP para medir el rendimiento de la plataforma (por ejemplo, saber qué scrub o uniforme médico despierta mayor interés).
+                </p>
+                <div class="tc-alert">
+                    <strong>Privacidad por diseño:</strong> YOSSICO <strong>no vende datos de navegación a redes publicitarias externas</strong> ni realiza perfiles invasivos cruzados entre sitios web.
+                </div>
+            </section>
+
+            <!-- 5 -->
+            <section class="tc-section" id="c5">
+                <div class="tc-section__num">05</div>
+                <h2 class="tc-section__title">Almacenamiento Local (LocalStorage)</h2>
+                <p class="tc-body">En su navegador se almacenan los siguientes elementos estrictamente funcionales:</p>
+                <ul class="tc-list">
+                    <li><code>yossico_cart</code>: Listado de artículos añadidos al carrito.</li>
+                    <li><code>yossico_cookie_consent</code>: Registro de su decisión sobre el aviso de cookies.</li>
+                    <li><code>yossico_lang</code>: Preferencia de idioma seleccionada (español o inglés).</li>
+                    <li><code>yossico_concierge_lead</code>: Datos de contacto ingresados voluntariamente en el chat para mantener la continuidad de la conversación.</li>
+                </ul>
+            </section>
+
+            <!-- 6 -->
+            <section class="tc-section" id="c6">
+                <div class="tc-section__num">06</div>
+                <h2 class="tc-section__title">¿Cómo Controlar o Desactivar las Cookies?</h2>
+                <p class="tc-body">
+                    Usted puede permitir, bloquear o eliminar las cookies instaladas en su equipo mediante la configuración de las opciones del navegador que utilice:
+                </p>
+                <ul class="tc-list">
+                    <li><strong>Google Chrome:</strong> Configuración &gt; Privacidad y seguridad &gt; Cookies y otros datos de sitios.</li>
+                    <li><strong>Apple Safari:</strong> Preferencias &gt; Privacidad &gt; Bloquear todas las cookies.</li>
+                    <li><strong>Mozilla Firefox:</strong> Opciones &gt; Privacidad y seguridad &gt; Cookies y datos del sitio.</li>
+                    <li><strong>Microsoft Edge:</strong> Configuración &gt; Permisos del sitio &gt; Cookies y datos de sitios.</li>
+                </ul>
+                <p class="tc-body">
+                    <em>Tenga en cuenta que si desactiva o bloquea las cookies técnicas esenciales, algunas funcionalidades de la tienda online (como el carrito de compras y el checkout) podrían no operar adecuadamente.</em>
+                </p>
+            </section>
+
+            <!-- 7 -->
+            <section class="tc-section" id="c7">
+                <div class="tc-section__num">07</div>
+                <h2 class="tc-section__title">Contacto</h2>
+                <p class="tc-body">
+                    Si tiene alguna duda sobre nuestra Política de Cookies o sobre el tratamiento de datos técnicos, puede comunicarse con nosotros en: <strong>hola@yossico.com</strong> o vía WhatsApp al <strong>+57 321 993 7221</strong>.
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__columns">
+            <div class="footer__col">
+                <div class="footer__logo">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="white" stroke-width="1" />
+                        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    YOSSICO
+                </div>
+                <div class="footer__links">
+                    <a href="institucional.html">YOSSICO Institucional</a>
+                    <a href="embajadoras.html">Embajadoras YOSSICO</a>
+                </div>
+            </div>
+            
+            <div class="footer__col">
+                <h4 class="footer__col-title">LEGAL Y GARANTÍAS</h4>
+                <div class="footer__links">
+                    <a href="terminos.html">Términos y Condiciones</a>
+                    <a href="privacidad.html">Política de Privacidad (Habeas Data)</a>
+                    <a href="reembolsos.html">Política de Reembolso y Retracto</a>
+                    <a href="cookies.html">Política de Cookies</a>
+                    <a href="rastreo.html">Rastreo de pedido</a>
+                </div>
+            </div>
+
+            <div class="footer__col">
+                <h4 class="footer__col-title">CONTACTO Y PQRs</h4>
+                <div class="footer__links">
+                    <span>WhatsApp: +57 321 993 7221</span>
+                    <span>Email: hola@yossico.com</span>
+                    <span>Bogotá D.C., Colombia</span>
+                    <span>Horario: Lunes a viernes, 9:00 a.m. – 5:00 p.m.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__bottom-bar">
+            <div class="footer__copy">
+                © 2026 YOSSICO · Colombia · <a href="terminos.html">Términos</a> · <a href="privacidad.html">Privacidad</a> · <a href="reembolsos.html">Reembolsos</a>
+            </div>
+            <a href="https://www.sic.gov.co" target="_blank" rel="noopener noreferrer" class="footer__sic" style="display: flex; align-items: center; justify-content: flex-end; opacity: 0.9; text-decoration: none;" title="Superintendencia de Industria y Comercio — Colombia">
+                <div style="font-family: var(--font-body); color: #FFFFFF; text-align: left; line-height: 1.2;">
+                    <span style="font-size: 8px; letter-spacing: 1px; font-weight: 300;">SUPERINTENDENCIA DE</span><br>
+                    <strong style="font-size: 11px; letter-spacing: 0.5px; font-weight: 400;">INDUSTRIA Y COMERCIO</strong>
+                    <div style="height: 1px; background: #FFFFFF; width: 100%; margin-top: 4px;"></div>
+                </div>
+            </a>
+        </div>
+    </footer>
+</body>
+</html>

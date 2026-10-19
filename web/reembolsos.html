@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO -->
+    <meta name="description" content="Política de Reembolso, Garantías, Cambios de Talla y Derecho de Retracto de YOSSICO bajo la Ley 1480 de 2011 (Estatuto del Consumidor).">
+    <meta name="keywords" content="reembolsos, derecho de retracto, garantías, cambios de talla, ley 1480, SIC, YOSSICO, Colombia, uniformes médicos">
+    <meta name="author" content="YOSSICO">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="YOSSICO">
+    <meta property="og:title" content="Política de Reembolso y Derecho de Retracto — YOSSICO">
+    <meta property="og:description" content="Conoce tus derechos como consumidor en Colombia: 5 días hábiles de retracto, garantías por defectos y cambios de talla sin complicaciones.">
+    <meta property="og:image" content="https://yossico.com/img/og-yossico.jpg">
+    <meta property="og:url" content="https://yossico.com/reembolsos.html">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Política de Reembolso y Retracto — YOSSICO">
+    <meta name="twitter:description" content="Conoce tus derechos: 5 días de retracto legal, reversión del pago y garantías.">
+    <meta name="twitter:image" content="https://yossico.com/img/og-yossico.jpg">
+
+    <title>Política de Reembolso, Garantías y Retracto — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.v2.css?v=105">
+    <style>
+        .terminos {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        .terminos__sidebar {
+            position: sticky;
+            top: 72px;
+            align-self: start;
+            padding: 60px 40px 60px 60px;
+            border-right: 1px solid var(--border);
+            max-height: calc(100vh - 72px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .terminos__sidebar-title {
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .terminos__index {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .terminos__index a {
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            color: var(--gray);
+            text-decoration: none;
+            display: block;
+            padding: 6px 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            line-height: 1.5;
+        }
+
+        .terminos__index a:hover {
+            color: var(--black);
+            border-bottom-color: var(--border);
+        }
+
+        .terminos__index-num {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--gray-light);
+            margin-right: 6px;
+        }
+
+        .terminos__content {
+            padding: 80px 80px 120px 80px;
+            max-width: 860px;
+        }
+
+        .terminos__version {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .terminos__version::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--gray-light);
+        }
+
+        .terminos__intro {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--gray-mid);
+            line-height: 1.7;
+            border-left: 2px solid var(--border);
+            padding-left: 24px;
+            margin-bottom: 64px;
+        }
+
+        .tc-section {
+            margin-bottom: 64px;
+            scroll-margin-top: 100px;
+        }
+
+        .tc-section__num {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: var(--gray-light);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .tc-section__title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(22px, 2.5vw, 32px);
+            letter-spacing: -0.3px;
+            color: var(--black);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tc-section__subtitle {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 18px;
+            color: var(--black);
+            margin-bottom: 12px;
+            margin-top: 32px;
+        }
+
+        .tc-body {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 2;
+        }
+
+        .tc-body+.tc-body {
+            margin-top: 16px;
+        }
+
+        .tc-body strong {
+            font-weight: 400;
+            color: var(--black);
+        }
+
+        .tc-alert {
+            background: #faf9f6;
+            border-left: 3px solid var(--black);
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--gray-mid);
+            line-height: 1.8;
+        }
+
+        .tc-alert strong {
+            font-weight: 400;
+            color: var(--black);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .tc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+
+        .tc-table th {
+            font-family: var(--font-body);
+            font-size: 8px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--off-white);
+        }
+
+        .tc-table td {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--gray-mid);
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.6;
+        }
+
+        .tc-list {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 16px 0;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 1.9;
+        }
+
+        .tc-list li {
+            margin-bottom: 8px;
+        }
+
+        .tc-steps {
+            list-style: none;
+            counter-reset: steps;
+            margin: 20px 0;
+        }
+
+        .tc-steps li {
+            counter-increment: steps;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 1.8;
+            padding-left: 36px;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .tc-steps li::before {
+            content: counter(steps, decimal-leading-zero);
+            font-family: var(--font-display);
+            font-size: 12px;
+            color: var(--gray-light);
+            position: absolute;
+            left: 0;
+            top: 1px;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 900px) {
+            .terminos {
+                grid-template-columns: 1fr;
+            }
+            .terminos__sidebar {
+                display: none;
+            }
+            .terminos__content {
+                padding: 40px 24px 80px 24px;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="canonical" href="https://yossico.com/reembolsos.html">
+    <script src="/analytics.js" defer></script>
+    <script src="/i18n.js" defer></script>
+    <script src="/chat-widget.js" defer></script>
+</head>
+
+<body>
+    <div id="barra-envio-gratis" style="background-color:#000000; color:#FFFFFF; text-align:center; padding:10px 16px; font-size:13px; letter-spacing:0.08em; width:100%; position:fixed; top:0; left:0; z-index:1002;">
+      Envío gratis en compras superiores a $450.000 &nbsp;·&nbsp; Exclusivo para Colombia <span style="display:inline-block; width:14px; height:10px; vertical-align:middle; margin-left:6px; box-shadow:0 0 1px rgba(255,255,255,0.4);"><div style="height:50%;background:#FCD116;"></div><div style="height:25%;background:#003893;"></div><div style="height:25%;background:#CE1126;"></div></span>
+    </div>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111" stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111" stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+                <div class="nav__dropdown-menu">
+                    <a href="coleccion.html?linea=essentials">Essentials</a>
+                    <a href="coleccion.html?linea=signature">Signature</a>
+                    <a href="coleccion.html?linea=core">Core</a>
+                    <div class="nav__dropdown-divider"></div>
+                    <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
+                </div>
+            </li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <div class="nav__actions">
+            <a class="cart-icon-btn" id="cart-open" aria-label="Carrito" tabindex="0" role="button">
+                <span class="cart-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="label page-header__label reveal">Estatuto del Consumidor · Ley 1480</div>
+        <h1 class="page-header__title reveal" data-delay="2">
+            Reembolsos, Retracto<br><em>y Garantías.</em>
+        </h1>
+    </div>
+
+    <!-- Main -->
+    <div class="terminos">
+        <!-- Sidebar -->
+        <aside class="terminos__sidebar">
+            <p class="terminos__sidebar-title">Índice</p>
+            <ol class="terminos__index">
+                <li><a href="#r1"><span class="terminos__index-num">01</span>Derecho de Retracto (Art. 47)</a></li>
+                <li><a href="#r2"><span class="terminos__index-num">02</span>Excepciones al Retracto</a></li>
+                <li><a href="#r3"><span class="terminos__index-num">03</span>Reversión del Pago (Art. 51)</a></li>
+                <li><a href="#r4"><span class="terminos__index-num">04</span>Garantía Legal por Defectos</a></li>
+                <li><a href="#r5"><span class="terminos__index-num">05</span>Cambios de Talla</a></li>
+                <li><a href="#r6"><span class="terminos__index-num">06</span>Procedimiento y Tiempos</a></li>
+                <li><a href="#r7"><span class="terminos__index-num">07</span>Canal de PQRs y SIC</a></li>
+            </ol>
+        </aside>
+
+        <!-- Content -->
+        <main class="terminos__content">
+            <div class="terminos__version">Versión 2.0 · Estatuto del Consumidor (Ley 1480 de 2011) · SIC Colombia</div>
+
+            <p class="terminos__intro">
+                En YOSSICO garantizamos la total transparencia y el pleno respeto a los derechos de nuestras clientas conforme a la legislación colombiana. Esta política detalla los términos bajo los cuales opera el derecho legal de retracto, la reversión del pago electrónico, la garantía legal de calidad y nuestra política especial de cambios de talla.
+            </p>
+
+            <!-- 1 -->
+            <section class="tc-section" id="r1">
+                <div class="tc-section__num">01</div>
+                <h2 class="tc-section__title">Derecho de Retracto (Artículo 47 de la Ley 1480 de 2011)</h2>
+                <p class="tc-body">
+                    Al tratarse de una compraventa realizada mediante métodos a distancia y comercio electrónico en Colombia, la clienta tiene derecho legal a retractarse de su compra sin necesidad de justificación alguna.
+                </p>
+                <div class="tc-alert">
+                    <strong>Término legal para ejercer el retracto:</strong>
+                    Usted cuenta con <strong>cinco (5) días hábiles</strong> contados a partir de la fecha de entrega física de la prenda en su dirección de destino.
+                </div>
+                <h3 class="tc-section__subtitle">Condiciones para hacer efectivo el retracto:</h3>
+                <ul class="tc-list">
+                    <li>La clienta debe informar a YOSSICO su decisión de ejercer el derecho de retracto dentro del término legal de 5 días hábiles a través de nuestros canales oficiales (WhatsApp +57 321 993 7221 o correo <code>hola@yossico.com</code>).</li>
+                    <li>La prenda debe devolverse en las mismas condiciones en que fue recibida: sin signos de uso, sin olores, sin haber sido lavada ni alterada, con sus etiquetas originales intactas y en su empaque original.</li>
+                    <li>De conformidad con el artículo 47 de la Ley 1480 de 2011, los costos de transporte y demás que conlleve la devolución del bien hacia nuestras instalaciones en Bogotá correrán por cuenta del consumidor.</li>
+                    <li>Una vez recibida y verificada la prenda, YOSSICO reintegrará el <strong>100% del dinero pagado</strong> en un plazo máximo de <strong>treinta (30) días calendario</strong> contados desde el momento en que se ejerció el derecho, a través del mismo medio de pago utilizado o mediante transferencia bancaria acordada.</li>
+                </ul>
+            </section>
+
+            <!-- 2 -->
+            <section class="tc-section" id="r2">
+                <div class="tc-section__num">02</div>
+                <h2 class="tc-section__title">Excepciones Legales al Derecho de Retracto</h2>
+                <p class="tc-body">
+                    De conformidad con el numeral 3 del artículo 47 de la Ley 1480 de 2011, se exceptúan expresamente del derecho de retracto:
+                </p>
+                <div class="tc-alert">
+                    <strong>Prendas con bordado personalizado o confección a medida:</strong>
+                    Los uniformes médicos que incluyan bordado de nombre, cargo, especialidad, logotipo institucional o modificaciones personalizadas aprobadas por la clienta <strong>no admiten derecho de retracto ni cambio por gusto</strong>, dado que fueron confeccionados o intervenidos de forma exclusiva y no pueden ser comercializados a terceros.
+                </div>
+            </section>
+
+            <!-- 3 -->
+            <section class="tc-section" id="r3">
+                <div class="tc-section__num">03</div>
+                <h2 class="tc-section__title">Reversión del Pago (Artículo 51 Ley 1480 y Decreto 587 de 2016)</h2>
+                <p class="tc-body">
+                    Cuando las compras hayan sido pagadas mediante mecanismos de comercio electrónico (tarjetas de crédito, débito, PSE, Nequi o pasarela Wompi), la clienta tiene derecho a solicitar la reversión total del pago en los siguientes eventos:
+                </p>
+                <ul class="tc-list">
+                    <li>Cuando la clienta haya sido víctima de un fraude o transacción no consentida.</li>
+                    <li>Cuando corresponda a una operación no solicitada.</li>
+                    <li>Cuando el producto adquirido no sea recibido en los plazos legalmente acordados.</li>
+                    <li>Cuando el producto entregado no corresponda a lo solicitado o presente defectos de fabricación de origen.</li>
+                </ul>
+                <p class="tc-body">
+                    <strong>Plazo para radicar la reversión:</strong> La solicitud debe presentarse dentro de los <strong>cinco (5) días hábiles</strong> siguientes a la fecha en que la clienta tuvo noticia de la operación fraudulenta o en que debió haber recibido el producto. YOSSICO y los participantes del sistema de pago dispondrán de quince (15) días hábiles para hacer efectiva la reversión.
+                </p>
+            </section>
+
+            <!-- 4 -->
+            <section class="tc-section" id="r4">
+                <div class="tc-section__num">04</div>
+                <h2 class="tc-section__title">Garantía Legal por Defectos de Calidad e Idoneidad</h2>
+                <p class="tc-body">
+                    Todos los uniformes y prendas YOSSICO están respaldados por nuestra garantía legal de calidad conforme a los artículos 7 y siguientes de la Ley 1480 de 2011:
+                </p>
+                <ul class="tc-list">
+                    <li><strong>Vigencia:</strong> <strong>30 días calendario</strong> contados desde la recepción del producto.</li>
+                    <li><strong>Cobertura:</strong> Costuras imperfectas o abiertas de origen, broches o cremalleras defectuosos, o fallas estructurales en el textil técnico antifluido no atribuibles a mal uso.</li>
+                    <li><strong>Costos de envío por garantía:</strong> Cuando la garantía es confirmada por defecto de origen, <strong>YOSSICO asume el 100% de los costos de recolección y nuevo envío</strong>.</li>
+                    <li><strong>Respuesta de la garantía:</strong> Si procede, se ofrecerá la reparación técnica óptima, el cambio por una prenda nueva idéntica o, a elección de la clienta, la devolución total del dinero.</li>
+                </ul>
+            </section>
+
+            <!-- 5 -->
+            <section class="tc-section" id="r5">
+                <div class="tc-section__num">05</div>
+                <h2 class="tc-section__title">Política de Cambios de Talla (Garantía de Satisfacción)</h2>
+                <p class="tc-body">
+                    Sabemos que en el vestir médico el fit perfecto y la comodidad en turnos de más de 12 horas son indispensables. Por eso, además de los derechos de ley, YOSSICO ofrece una política especial de cambio de talla:
+                </p>
+                <ul class="tc-list">
+                    <li>Dispone de <strong>15 días calendario</strong> desde la recepción para solicitar el cambio de talla.</li>
+                    <li>La prenda debe encontrarse en estado nuevo, sin uso clínico, sin lavar y con etiquetas originales.</li>
+                    <li><strong>Primer cambio de talla asistido:</strong> Te asesoramos de manera personalizada por WhatsApp para verificar medidas de busto, cintura, cadera y tiro antes de despachar la nueva talla.</li>
+                </ul>
+            </section>
+
+            <!-- 6 -->
+            <section class="tc-section" id="r6">
+                <div class="tc-section__num">06</div>
+                <h2 class="tc-section__title">Procedimiento Paso a Paso</h2>
+                <ol class="tc-steps">
+                    <li><strong>Contacto inicial:</strong> Escríbenos a WhatsApp (+57 321 993 7221) o a <code>hola@yossico.com</code> indicando tu número de pedido o nombre completo y la solicitud (retracto, cambio de talla o garantía).</li>
+                    <li><strong>Validación fotográfica:</strong> Envíanos fotografías claras de la prenda y sus etiquetas para coordinar la logística.</li>
+                    <li><strong>Respuesta del equipo:</strong> Evaluamos y confirmamos la solicitud en un plazo máximo de <strong>3 días hábiles</strong>.</li>
+                    <li><strong>Logística de devolución:</strong> Te indicamos la guía y dirección de despacho con nuestras transportadoras aliadas (Coordinadora o Servientrega).</li>
+                    <li><strong>Reintegro o reemplazo:</strong> Una vez recibido el paquete en nuestras instalaciones y verificado su estado, se efectúa el reintegro de dinero o el envío de la nueva prenda.</li>
+                </ol>
+            </section>
+
+            <!-- 7 -->
+            <section class="tc-section" id="r7">
+                <div class="tc-section__num">07</div>
+                <h2 class="tc-section__title">Canal Oficial de PQRs y Enlace a la SIC</h2>
+                <p class="tc-body">
+                    Para la radicación formal de Peticiones, Quejas o Reclamos (PQRs), puede escribirnos directamente al correo <strong>hola@yossico.com</strong>. Todas las PQRs serán contestadas en un término máximo de <strong>quince (15) días hábiles</strong>, conforme al artículo 58 de la Ley 1480 de 2011.
+                </p>
+                <p class="tc-body">
+                    Si considera que su reclamo no ha sido atendido satisfactoriamente, tiene el derecho de acudir ante la autoridad de protección al consumidor en Colombia:
+                </p>
+                <div class="tc-alert">
+                    <strong>Superintendencia de Industria y Comercio (SIC):</strong>
+                    Sitio web oficial: <a href="https://www.sic.gov.co" target="_blank" rel="noopener noreferrer" style="color:var(--black);text-decoration:underline;">www.sic.gov.co</a><br>
+                    Canal de denuncias y demandas del consumidor: Carrera 13 No. 27 - 00, Bogotá D.C., Colombia.
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__columns">
+            <div class="footer__col">
+                <div class="footer__logo">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="white" stroke-width="1" />
+                        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    YOSSICO
+                </div>
+                <div class="footer__links">
+                    <a href="institucional.html">YOSSICO Institucional</a>
+                    <a href="embajadoras.html">Embajadoras YOSSICO</a>
+                </div>
+            </div>
+            
+            <div class="footer__col">
+                <h4 class="footer__col-title">LEGAL Y GARANTÍAS</h4>
+                <div class="footer__links">
+                    <a href="terminos.html">Términos y Condiciones</a>
+                    <a href="privacidad.html">Política de Privacidad (Habeas Data)</a>
+                    <a href="reembolsos.html">Política de Reembolso y Retracto</a>
+                    <a href="cookies.html">Política de Cookies</a>
+                    <a href="rastreo.html">Rastreo de pedido</a>
+                </div>
+            </div>
+
+            <div class="footer__col">
+                <h4 class="footer__col-title">CONTACTO Y PQRs</h4>
+                <div class="footer__links">
+                    <span>WhatsApp: +57 321 993 7221</span>
+                    <span>Email: hola@yossico.com</span>
+                    <span>Bogotá D.C., Colombia</span>
+                    <span>Horario: Lunes a viernes, 9:00 a.m. – 5:00 p.m.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__bottom-bar">
+            <div class="footer__copy">
+                © 2026 YOSSICO · Colombia · <a href="terminos.html">Términos</a> · <a href="privacidad.html">Privacidad</a> · <a href="reembolsos.html">Reembolsos</a>
+            </div>
+            <a href="https://www.sic.gov.co" target="_blank" rel="noopener noreferrer" class="footer__sic" style="display: flex; align-items: center; justify-content: flex-end; opacity: 0.9; text-decoration: none;" title="Superintendencia de Industria y Comercio — Colombia">
+                <div style="font-family: var(--font-body); color: #FFFFFF; text-align: left; line-height: 1.2;">
+                    <span style="font-size: 8px; letter-spacing: 1px; font-weight: 300;">SUPERINTENDENCIA DE</span><br>
+                    <strong style="font-size: 11px; letter-spacing: 0.5px; font-weight: 400;">INDUSTRIA Y COMERCIO</strong>
+                    <div style="height: 1px; background: #FFFFFF; width: 100%; margin-top: 4px;"></div>
+                </div>
+            </a>
+        </div>
+    </footer>
+</body>
+</html>

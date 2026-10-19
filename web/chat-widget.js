@@ -121,6 +121,10 @@
                   <input type="text" class="yos-chat-input" id="yos-chat-contact" placeholder="${t.contactPh}" required autocomplete="email tel">
                 </div>
               </div>
+              <label style="display:flex;align-items:flex-start;gap:8px;font-size:10px;color:#666;line-height:1.4;margin:6px 0 12px;cursor:pointer;text-align:left;">
+                <input type="checkbox" id="yos-chat-check-privacidad" style="margin-top:2px;accent-color:#000;cursor:pointer;" required>
+                <span>Autorizo el tratamiento de mis datos personales para atención y asesoría comercial (<a href="privacidad.html" target="_blank" style="color:#000;text-decoration:underline;">Política de Privacidad</a> · Ley 1581).</span>
+              </label>
               <button type="submit" class="yos-chat-submit">${t.submit}</button>
             </form>
           </div>
@@ -200,7 +204,14 @@
         var payload = {
           p_nombre: nombre,
           p_contacto: contacto,
-          p_origen: window.location.pathname || '/'
+          p_origen: window.location.pathname || '/',
+          p_acepto_datos: true,
+          p_consentimiento_meta: {
+            timestamp_utc: new Date().toISOString(),
+            version_privacidad: '2.0-2026',
+            user_agent: navigator.userAgent,
+            canal: 'chat_widget_concierge'
+          }
         };
         fetch(SUPABASE_URL + '/rest/v1/rpc/guardar_chat_lead', {
           method: 'POST',
@@ -229,8 +240,15 @@
       e.preventDefault();
       var name = (document.getElementById('yos-chat-name').value || '').trim();
       var contact = (document.getElementById('yos-chat-contact').value || '').trim();
+      var checkPriv = document.getElementById('yos-chat-check-privacidad');
 
       if (!name || !contact) return;
+
+      if (!checkPriv || !checkPriv.checked) {
+        alert('Por favor autoriza el tratamiento de datos personales para iniciar la conversación.');
+        if (checkPriv) checkPriv.focus();
+        return;
+      }
 
       currentLead.name = name;
       currentLead.contact = contact;

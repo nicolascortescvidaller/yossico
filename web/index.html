@@ -1214,38 +1214,39 @@
             </div>
             
             <div class="footer__col">
-                <h4 class="footer__col-title">AYUDA</h4>
+                <h4 class="footer__col-title">LEGAL Y GARANTÍAS</h4>
                 <div class="footer__links">
+                    <a href="terminos.html">Términos y Condiciones</a>
+                    <a href="privacidad.html">Política de Privacidad (Habeas Data)</a>
+                    <a href="reembolsos.html">Política de Reembolso y Retracto</a>
+                    <a href="cookies.html">Política de Cookies</a>
                     <a href="guia-de-tallas.html">Guía de Tallas</a>
-                    <a href="cuidado-de-tus-prendas.html">Cuidado de tus prendas</a>
-                    <a href="tecnologia-de-la-tela.html">Tecnología de la tela</a>
-                    <a href="terminos.html#s5">Envíos y Logística</a>
-                    <a href="terminos.html#s7">Devoluciones y Garantía</a>
                     <a href="rastreo.html">Rastreo de pedido</a>
                 </div>
             </div>
 
             <div class="footer__col">
-                <h4 class="footer__col-title">CONTACTO</h4>
+                <h4 class="footer__col-title">CONTACTO Y PQRs</h4>
                 <div class="footer__links">
-                    <span>WhatsApp: +57 312 730 0661</span>
-                    <span>Email: customerserviceyossico@gmail.com</span>
-                    <span>Horario: Lunes a viernes, 10:00 a.m. – 4:00 p.m.</span>
+                    <span>WhatsApp: +57 321 993 7221</span>
+                    <span>Email: hola@yossico.com</span>
+                    <span>Bogotá D.C., Colombia</span>
+                    <span>Horario: Lunes a viernes, 9:00 a.m. – 5:00 p.m.</span>
                 </div>
             </div>
         </div>
 
         <div class="footer__bottom-bar">
             <div class="footer__copy">
-                © 2026 YOSSICO · Colombia · <a href="terminos.html">Términos y Condiciones</a>
+                © 2026 YOSSICO · Colombia · <a href="terminos.html">Términos</a> · <a href="privacidad.html">Privacidad</a> · <a href="reembolsos.html">Reembolsos</a>
             </div>
-            <div class="footer__sic" style="display: flex; align-items: center; justify-content: flex-end; opacity: 0.8; transition: opacity 0.2s; cursor: default;">
+            <a href="https://www.sic.gov.co" target="_blank" rel="noopener noreferrer" class="footer__sic" style="display: flex; align-items: center; justify-content: flex-end; opacity: 0.9; text-decoration: none;" title="Superintendencia de Industria y Comercio — Colombia">
                 <div style="font-family: var(--font-body); color: #FFFFFF; text-align: left; line-height: 1.2;">
                     <span style="font-size: 8px; letter-spacing: 1px; font-weight: 300;">SUPERINTENDENCIA DE</span><br>
                     <strong style="font-size: 11px; letter-spacing: 0.5px; font-weight: 400;">INDUSTRIA Y COMERCIO</strong>
                     <div style="height: 1px; background: #FFFFFF; width: 100%; margin-top: 4px;"></div>
                 </div>
-            </div>
+            </a>
         </div>
     </footer>
 
@@ -1327,6 +1328,7 @@
   </script>
   <script src="script.js"></script>
   <script src="cart.js"></script>
+  <script src="cookie-banner.js" defer></script>
   <link rel="stylesheet" href="styles.v2.css?v=105">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -1383,11 +1385,21 @@
             </div>
             
             <!-- Turnstile Widget (Explicit render only when modal opens) -->
-            <div id="sub-turnstile-container" style="margin-bottom: 20px;"></div>
+            <div id="sub-turnstile-container" style="margin-bottom: 16px;"></div>
+
+            <!-- Casillas de consentimiento legal obligatorio (Ley 1480 y Ley 1581 de Colombia) -->
+            <div style="margin: 14px 0 18px; display: flex; flex-direction: column; gap: 10px; font-size: 11px; text-align: left; color: #444; line-height: 1.5;">
+              <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+                <input type="checkbox" id="sub-check-terminos" style="margin-top: 2px; accent-color: #000; cursor: pointer;" required>
+                <span>Acepto los <a href="terminos.html" target="_blank" style="color: #000; text-decoration: underline;">Términos y Condiciones</a> de YOSSICO.</span>
+              </label>
+              <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+                <input type="checkbox" id="sub-check-privacidad" style="margin-top: 2px; accent-color: #000; cursor: pointer;" required>
+                <span>Autorizo el tratamiento de mis datos personales para recibir novedades del drop y promociones según la <a href="privacidad.html" target="_blank" style="color: #000; text-decoration: underline;">Política de Privacidad</a> (Ley 1581 de 2012).</span>
+              </label>
+            </div>
             
             <button type="submit" class="sub-form__btn">Quiero mi descuento →</button>
-            <p class="sub-form__legal">Al registrarte aceptas recibir notificaciones de drops y promociones de YOSSICO.
-              Sin spam.</p>
           </form>
         </div>
 
@@ -1527,14 +1539,25 @@
       const email = document.getElementById('sub-email').value.trim();
       const phone = document.getElementById('sub-phone').value.trim();
 
-      // Client-side validation
-      let hasError = false;
+      const checkTerminos = document.getElementById('sub-check-terminos');
+      const checkPrivacidad = document.getElementById('sub-check-privacidad');
+
       if (!name) { setFieldError('sub-name', 'Por favor ingresa tu nombre.'); hasError = true; }
       if (!email) { setFieldError('sub-email', 'Por favor ingresa tu correo.'); hasError = true; }
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         setFieldError('sub-email', 'El correo no es válido.'); hasError = true;
       }
       if (!phone) { setFieldError('sub-phone', 'Por favor ingresa tu número de celular.'); hasError = true; }
+      if (!checkTerminos?.checked) {
+        alert('Debes aceptar los Términos y Condiciones para registrarte.');
+        checkTerminos?.focus();
+        return;
+      }
+      if (!checkPrivacidad?.checked) {
+        alert('Debes autorizar el tratamiento de datos personales conforme a la Ley 1581 de 2012.');
+        checkPrivacidad?.focus();
+        return;
+      }
       if (hasError) return;
 
       const turnstileToken = (subTurnstileWidgetId !== null && window.turnstile)
@@ -1553,7 +1576,21 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name, email, phone, turnstileToken }),
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            turnstileToken,
+            aceptoTerminos: true,
+            aceptoPrivacidad: true,
+            consentimientoMeta: {
+              timestamp_utc: new Date().toISOString(),
+              version_terminos: '2.0-2026',
+              version_privacidad: '2.0-2026',
+              user_agent: navigator.userAgent,
+              origen: 'modal_drop_index'
+            }
+          }),
         });
 
         const data = await res.json();

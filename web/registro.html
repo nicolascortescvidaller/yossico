@@ -351,10 +351,17 @@
                     <span class="auth-field__error" id="err-confirm"></span>
                 </div>
 
-                <p class="auth-legal">
-                    Al registrarte aceptas los <a href="terminos.html" style="color:var(--gray-mid);">Términos y
-                        Condiciones</a> de YOSSICO.
-                </p>
+                <!-- Casillas de consentimiento legal obligatorio (Ley 1480 y Ley 1581 de Colombia) -->
+                <div style="margin: 16px 0 20px; display: flex; flex-direction: column; gap: 10px; font-size: 11px; text-align: left; color: var(--gray-mid); line-height: 1.5;">
+                  <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="reg-check-terminos" style="margin-top: 2px; accent-color: var(--black); cursor: pointer;" required>
+                    <span>He leído y acepto los <a href="terminos.html" target="_blank" style="color: var(--black); text-decoration: underline;">Términos y Condiciones</a> de YOSSICO.</span>
+                  </label>
+                  <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="reg-check-privacidad" style="margin-top: 2px; accent-color: var(--black); cursor: pointer;" required>
+                    <span>Autorizo el tratamiento de mis datos personales conforme a la <a href="privacidad.html" target="_blank" style="color: var(--black); text-decoration: underline;">Política de Privacidad</a> (Ley 1581 de 2012).</span>
+                  </label>
+                </div>
 
                 <!-- Turnstile Widget -->
                 <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-bottom: 24px;"></div>
@@ -444,6 +451,21 @@
                     document.getElementById('reg-confirm').style.borderBottomColor = '#c0392b';
                     hasError = true;
                 }
+
+                const checkTerminos = document.getElementById('reg-check-terminos');
+                const checkPrivacidad = document.getElementById('reg-check-privacidad');
+
+                if (!checkTerminos?.checked) {
+                    showAlert('Debes aceptar los Términos y Condiciones para registrarte.');
+                    checkTerminos?.focus();
+                    return;
+                }
+                if (!checkPrivacidad?.checked) {
+                    showAlert('Debes autorizar el tratamiento de datos personales conforme a la Ley 1581.');
+                    checkPrivacidad?.focus();
+                    return;
+                }
+
                 if (hasError) return;
 
                 const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;

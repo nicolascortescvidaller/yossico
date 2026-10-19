@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { name, email, phone, turnstileToken } = await req.json();
+    const { name, email, phone, turnstileToken, aceptoTerminos, aceptoPrivacidad, consentimientoMeta } = await req.json();
 
     // Validate inputs
     if (!name || !email || !phone) {
@@ -96,12 +96,20 @@ serve(async (req) => {
     ).join("");
     const discountCode = `YOSSICO-BIENVENIDA-${suffix}`;
 
-    // Insert subscriber into DB
+    // Insert subscriber into DB with SIC consent traceability
     const { error: insertError } = await supabase.from("subscribers").insert({
       name: name.trim(),
       email: email.toLowerCase().trim(),
       phone: phone.trim(),
       discount_code: discountCode,
+      acepto_terminos: aceptoTerminos ?? true,
+      acepto_politica_datos: aceptoPrivacidad ?? true,
+      consentimiento_ts: new Date().toISOString(),
+      consentimiento_meta: consentimientoMeta ?? {
+        timestamp_utc: new Date().toISOString(),
+        version: "2.0-2026",
+        canal: "modal_drop_web"
+      }
     });
 
     if (insertError) {

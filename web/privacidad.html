@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO -->
+    <meta name="description" content="Política de Privacidad y Tratamiento de Datos Personales de YOSSICO conforme a la Ley 1581 de 2012 y normatividad de la SIC Colombia.">
+    <meta name="keywords" content="política de privacidad, habeas data, ley 1581, protección de datos, YOSSICO, Colombia, uniformes médicos">
+    <meta name="author" content="YOSSICO">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="YOSSICO">
+    <meta property="og:title" content="Política de Privacidad y Tratamiento de Datos — YOSSICO">
+    <meta property="og:description" content="Conoce cómo protegemos tus datos personales bajo la Ley 1581 de 2012 y las directrices de la Superintendencia de Industria y Comercio.">
+    <meta property="og:image" content="https://yossico.com/img/og-yossico.jpg">
+    <meta property="og:url" content="https://yossico.com/privacidad.html">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Política de Privacidad y Tratamiento de Datos — YOSSICO">
+    <meta name="twitter:description" content="Conoce cómo protegemos tus datos personales bajo la Ley 1581 de 2012 y las directrices de la SIC.">
+    <meta name="twitter:image" content="https://yossico.com/img/og-yossico.jpg">
+
+    <title>Política de Privacidad y Tratamiento de Datos — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.v2.css?v=105">
+    <style>
+        .terminos {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        .terminos__sidebar {
+            position: sticky;
+            top: 72px;
+            align-self: start;
+            padding: 60px 40px 60px 60px;
+            border-right: 1px solid var(--border);
+            max-height: calc(100vh - 72px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .terminos__sidebar-title {
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .terminos__index {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .terminos__index a {
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            color: var(--gray);
+            text-decoration: none;
+            display: block;
+            padding: 6px 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            line-height: 1.5;
+        }
+
+        .terminos__index a:hover {
+            color: var(--black);
+            border-bottom-color: var(--border);
+        }
+
+        .terminos__index-num {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--gray-light);
+            margin-right: 6px;
+        }
+
+        .terminos__content {
+            padding: 80px 80px 120px 80px;
+            max-width: 860px;
+        }
+
+        .terminos__version {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .terminos__version::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--gray-light);
+        }
+
+        .terminos__intro {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--gray-mid);
+            line-height: 1.7;
+            border-left: 2px solid var(--border);
+            padding-left: 24px;
+            margin-bottom: 64px;
+        }
+
+        .tc-section {
+            margin-bottom: 64px;
+            scroll-margin-top: 100px;
+        }
+
+        .tc-section__num {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: var(--gray-light);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .tc-section__title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(22px, 2.5vw, 32px);
+            letter-spacing: -0.3px;
+            color: var(--black);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tc-section__subtitle {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 18px;
+            color: var(--black);
+            margin-bottom: 12px;
+            margin-top: 32px;
+        }
+
+        .tc-body {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 2;
+        }
+
+        .tc-body+.tc-body {
+            margin-top: 16px;
+        }
+
+        .tc-body strong {
+            font-weight: 400;
+            color: var(--black);
+        }
+
+        .tc-alert {
+            background: #faf9f6;
+            border-left: 3px solid var(--black);
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--gray-mid);
+            line-height: 1.8;
+        }
+
+        .tc-alert strong {
+            font-weight: 400;
+            color: var(--black);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .tc-list {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 16px 0;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 1.9;
+        }
+
+        .tc-list li {
+            margin-bottom: 8px;
+        }
+
+        .tc-steps {
+            list-style: none;
+            counter-reset: steps;
+            margin: 20px 0;
+        }
+
+        .tc-steps li {
+            counter-increment: steps;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 1.8;
+            padding-left: 36px;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .tc-steps li::before {
+            content: counter(steps, decimal-leading-zero);
+            font-family: var(--font-display);
+            font-size: 12px;
+            color: var(--gray-light);
+            position: absolute;
+            left: 0;
+            top: 1px;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 900px) {
+            .terminos {
+                grid-template-columns: 1fr;
+            }
+            .terminos__sidebar {
+                display: none;
+            }
+            .terminos__content {
+                padding: 40px 24px 80px 24px;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="canonical" href="https://yossico.com/privacidad.html">
+    <script src="/analytics.js" defer></script>
+    <script src="/i18n.js" defer></script>
+    <script src="/chat-widget.js" defer></script>
+</head>
+
+<body>
+    <div id="barra-envio-gratis" style="background-color:#000000; color:#FFFFFF; text-align:center; padding:10px 16px; font-size:13px; letter-spacing:0.08em; width:100%; position:fixed; top:0; left:0; z-index:1002;">
+      Envío gratis en compras superiores a $450.000 &nbsp;·&nbsp; Exclusivo para Colombia <span style="display:inline-block; width:14px; height:10px; vertical-align:middle; margin-left:6px; box-shadow:0 0 1px rgba(255,255,255,0.4);"><div style="height:50%;background:#FCD116;"></div><div style="height:25%;background:#003893;"></div><div style="height:25%;background:#CE1126;"></div></span>
+    </div>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111" stroke-width="1" />
+                <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111" stroke-width="0.4" />
+                <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            YOSSICO
+        </a>
+        <ul class="nav__links">
+            <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+                <div class="nav__dropdown-menu">
+                    <a href="coleccion.html?linea=essentials">Essentials</a>
+                    <a href="coleccion.html?linea=signature">Signature</a>
+                    <a href="coleccion.html?linea=core">Core</a>
+                    <div class="nav__dropdown-divider"></div>
+                    <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
+                </div>
+            </li>
+            <li><a href="acronimo.html">El Acrónimo</a></li>
+            <li><a href="historia.html">Historia</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <div class="nav__actions">
+            <a class="cart-icon-btn" id="cart-open" aria-label="Carrito" tabindex="0" role="button">
+                <span class="cart-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="label page-header__label reveal">Habeas Data · Colombia</div>
+        <h1 class="page-header__title reveal" data-delay="2">
+            Política de Privacidad<br><em>y Tratamiento de Datos.</em>
+        </h1>
+    </div>
+
+    <!-- Main -->
+    <div class="terminos">
+        <!-- Sidebar -->
+        <aside class="terminos__sidebar">
+            <p class="terminos__sidebar-title">Índice</p>
+            <ol class="terminos__index">
+                <li><a href="#p1"><span class="terminos__index-num">01</span>Responsable del Tratamiento</a></li>
+                <li><a href="#p2"><span class="terminos__index-num">02</span>Marco Normativo</a></li>
+                <li><a href="#p3"><span class="terminos__index-num">03</span>Principios Rectores</a></li>
+                <li><a href="#p4"><span class="terminos__index-num">04</span>Datos Recolectados (Minimización)</a></li>
+                <li><a href="#p5"><span class="terminos__index-num">05</span>Finalidades del Tratamiento</a></li>
+                <li><a href="#p6"><span class="terminos__index-num">06</span>Datos Sensibles y Menores</a></li>
+                <li><a href="#p7"><span class="terminos__index-num">07</span>Derechos del Titular (Habeas Data)</a></li>
+                <li><a href="#p8"><span class="terminos__index-num">08</span>Procedimiento para Ejercer Derechos</a></li>
+                <li><a href="#p9"><span class="terminos__index-num">09</span>Terceros y Transferencia</a></li>
+                <li><a href="#p10"><span class="terminos__index-num">10</span>Seguridad y Trazabilidad (SIC)</a></li>
+                <li><a href="#p11"><span class="terminos__index-num">11</span>Vigencia de la Política</a></li>
+            </ol>
+        </aside>
+
+        <!-- Content -->
+        <main class="terminos__content">
+            <div class="terminos__version">Versión 2.0 · Conforme a Ley 1581 de 2012 · SIC Colombia</div>
+
+            <p class="terminos__intro">
+                En YOSSICO respetamos profundamente la privacidad de cada profesional de la salud y visitante de nuestra plataforma. Dando estricto cumplimiento a la Ley Estatutaria 1581 de 2012, al Decreto 1377 de 2013 y a las directrices de la Superintendencia de Industria y Comercio (SIC), ponemos a su disposición las directrices bajo las cuales recolectamos, almacenamos, usamos y protegemos sus datos personales.
+            </p>
+
+            <!-- 1 -->
+            <section class="tc-section" id="p1">
+                <div class="tc-section__num">01</div>
+                <h2 class="tc-section__title">Identificación del Responsable del Tratamiento</h2>
+                <p class="tc-body">El responsable del tratamiento de sus datos personales es:</p>
+                <div class="tc-alert">
+                    <strong>YOSSICO</strong>
+                    Domicilio: Bogotá D.C., Colombia.<br>
+                    Correo oficial de atención y privacidad: <strong>hola@yossico.com</strong><br>
+                    Canal oficial de WhatsApp de atención al titular: <strong>+57 321 993 7221</strong><br>
+                    Página web: <strong>https://yossico.com</strong>
+                </div>
+            </section>
+
+            <!-- 2 -->
+            <section class="tc-section" id="p2">
+                <div class="tc-section__num">02</div>
+                <h2 class="tc-section__title">Marco Normativo</h2>
+                <p class="tc-body">Esta Política de Privacidad se rige integralmente por la legislación de la República de Colombia:</p>
+                <ul class="tc-list">
+                    <li><strong>Artículo 15 de la Constitución Política de Colombia:</strong> Derecho fundamental al Habeas Data y a la intimidad.</li>
+                    <li><strong>Ley Estatutaria 1581 de 2012:</strong> Régimen General de Protección de Datos Personales.</li>
+                    <li><strong>Decreto Reglamentario 1377 de 2013:</strong> Reglamentación parcial de la Ley 1581.</li>
+                    <li><strong>Circular Única de la Superintendencia de Industria y Comercio (SIC):</strong> Título V sobre Tratamiento de Información Personal.</li>
+                    <li><strong>Ley 1480 de 2011:</strong> Estatuto del Consumidor en aspectos vinculados al comercio electrónico.</li>
+                </ul>
+            </section>
+
+            <!-- 3 -->
+            <section class="tc-section" id="p3">
+                <div class="tc-section__num">03</div>
+                <h2 class="tc-section__title">Principios Rectores del Tratamiento</h2>
+                <p class="tc-body">El tratamiento de datos personales en YOSSICO se efectúa aplicando los siguientes principios:</p>
+                <ul class="tc-list">
+                    <li><strong>Principio de Legalidad:</strong> El tratamiento es una actividad reglada sujeta a la ley colombiana.</li>
+                    <li><strong>Principio de Finalidad:</strong> Los datos se tratan exclusivamente para fines legítimos, informados previamente al titular.</li>
+                    <li><strong>Principio de Libertad:</strong> El tratamiento solo se ejerce con el consentimiento previo, expreso e informado del titular. No se emplean casillas premarcadas ni consentimientos tácitos.</li>
+                    <li><strong>Principio de Veracidad o Calidad:</strong> La información debe ser veraz, completa, exacta y actualizada.</li>
+                    <li><strong>Principio de Transparencia:</strong> Se garantiza el derecho del titular a obtener en cualquier momento información sobre sus datos.</li>
+                    <li><strong>Principio de Acceso y Circulación Restringida:</strong> El tratamiento está sujeto a los límites de la autorización otorgada.</li>
+                    <li><strong>Principio de Seguridad:</strong> Medidas técnicas, humanas y administrativas para evitar adulteración, pérdida o acceso no autorizado.</li>
+                    <li><strong>Principio de Confidencialidad:</strong> Obligación de reserva estricta sobre la información personal suministrada.</li>
+                    <li><strong>Principio de Necesidad y Minimización:</strong> Solo se solicitan los datos indispensables para cumplir la finalidad legítima informada.</li>
+                </ul>
+            </section>
+
+            <!-- 4 -->
+            <section class="tc-section" id="p4">
+                <div class="tc-section__num">04</div>
+                <h2 class="tc-section__title">Datos Recolectados y Principio de Minimización</h2>
+                <p class="tc-body">YOSSICO aplica rigurosamente el <strong>principio de necesidad y minimización</strong>: únicamente solicitamos los datos estrictamente necesarios para procesar su compra, coordinar la entrega física del uniforme médico y brindar soporte posventa:</p>
+                <ul class="tc-list">
+                    <li><strong>Datos de contacto e identificación:</strong> Nombre completo, número de teléfono móvil / WhatsApp y correo electrónico.</li>
+                    <li><strong>Datos de entrega logística:</strong> Dirección física de despacho, ciudad, departamento y notas adicionales de entrega.</li>
+                    <li><strong>Datos de facturación o pago:</strong> Las transacciones bancarias, con tarjetas de crédito o débito, PSE y Nequi son procesadas de forma cifrada y directa por la pasarela vigilada <strong>Wompi (Bancolombia)</strong>. YOSSICO <strong>nunca almacena ni tiene acceso a números de tarjetas de crédito, claves ni cuentas bancarias</strong> de los usuarios.</li>
+                </ul>
+                <div class="tc-alert">
+                    <strong>Minimización garantizada:</strong> No solicitamos datos superfluos, estado civil, datos biométricos invasivos, ni antecedentes personales ajenos a la transacción comercial.
+                </div>
+            </section>
+
+            <!-- 5 -->
+            <section class="tc-section" id="p5">
+                <div class="tc-section__num">05</div>
+                <h2 class="tc-section__title">Finalidades del Tratamiento</h2>
+                <p class="tc-body">Los datos personales recolectados serán utilizados exclusivamente para los siguientes fines:</p>
+                <ul class="tc-list">
+                    <li>Gestionar, procesar y despachar los pedidos de uniformes médicos y prendas adquiridas en la tienda oficial.</li>
+                    <li>Coordinar el despacho físico con las empresas transportadoras autorizadas en Colombia (Coordinadora Mercantil, Servientrega).</li>
+                    <li>Enviar notificaciones operativas del pedido: confirmación de compra, número de guía, estado del envío y comprobante digital.</li>
+                    <li>Atender solicitudes, consultas, garantías, cambios de talla, ejercicio del derecho de retracto y PQRs.</li>
+                    <li>Remitir comunicaciones informativas sobre lanzamientos de nuevos Drops, disponibilidad de inventario o beneficios exclusivos, <strong>únicamente cuando el titular haya otorgado su consentimiento expreso</strong> para dicha finalidad en la casilla respectiva.</li>
+                    <li>Cumplir con las obligaciones legales y contables exigidas por las autoridades tributarias y de comercio en Colombia.</li>
+                </ul>
+            </section>
+
+            <!-- 6 -->
+            <section class="tc-section" id="p6">
+                <div class="tc-section__num">06</div>
+                <h2 class="tc-section__title">Tratamiento de Datos Sensibles y Menores de Edad</h2>
+                <p class="tc-body">
+                    <strong>Datos Sensibles:</strong> YOSSICO <strong>no solicita ni trata datos de carácter sensible</strong> (origen racial o étnico, orientación política, convicciones religiosas, datos de salud o biométricos). En caso excepcional de requerirse algún dato sensible, el titular tiene derecho expreso a no responder.
+                </p>
+                <p class="tc-body">
+                    <strong>Menores de Edad:</strong> Nuestra tienda y catálogo están dirigidos exclusivamente a profesionales y personas mayores de 18 años con capacidad legal para contratar. YOSSICO no recopila deliberadamente datos de niños, niñas ni adolescentes.
+                </p>
+            </section>
+
+            <!-- 7 -->
+            <section class="tc-section" id="p7">
+                <div class="tc-section__num">07</div>
+                <h2 class="tc-section__title">Derechos del Titular (Habeas Data)</h2>
+                <p class="tc-body">De conformidad con el artículo 8 de la Ley 1581 de 2012, el titular de los datos personales tiene los siguientes derechos:</p>
+                <ul class="tc-list">
+                    <li><strong>Conocer:</strong> Acceder de forma gratuita a los datos personales que se encuentren bajo tratamiento de YOSSICO.</li>
+                    <li><strong>Actualizar y Rectificar:</strong> Solicitar la corrección de datos inexactos, incompletos, fraccionados o que induzcan a error.</li>
+                    <li><strong>Suprimir:</strong> Solicitar la eliminación de sus datos cuando considere que no están siendo tratados conforme a la ley o hayan dejado de ser necesarios.</li>
+                    <li><strong>Revocar la autorización:</strong> Retirar el consentimiento otorgado para el tratamiento de sus datos en cualquier momento.</li>
+                    <li><strong>Solicitar prueba de la autorización:</strong> Exigir copia del registro de consentimiento otorgado.</li>
+                    <li><strong>Presentar quejas ante la SIC:</strong> Acudir ante la Superintendencia de Industria y Comercio una vez agotado el trámite directo ante YOSSICO.</li>
+                </ul>
+            </section>
+
+            <!-- 8 -->
+            <section class="tc-section" id="p8">
+                <div class="tc-section__num">08</div>
+                <h2 class="tc-section__title">Procedimiento para el Ejercicio de Derechos</h2>
+                <p class="tc-body">Para ejercer cualquiera de sus derechos de Habeas Data (conocer, actualizar, rectificar, suprimir o revocar la autorización), el titular puede radicar su solicitud mediante:</p>
+                <ul class="tc-list">
+                    <li><strong>Correo electrónico:</strong> <code>hola@yossico.com</code> con el asunto "Ejercicio de Derechos Habeas Data".</li>
+                    <li><strong>WhatsApp oficial:</strong> +57 321 993 7221</li>
+                </ul>
+                <p class="tc-body">La solicitud debe contener: nombre completo, documento de identificación, datos de contacto para recibir respuesta y la descripción clara de la solicitud.</p>
+                
+                <h3 class="tc-section__subtitle">Términos legales de respuesta (Ley 1581 de 2012)</h3>
+                <ol class="tc-steps">
+                    <li><strong>Consultas:</strong> Serán atendidas en un término máximo de <strong>diez (10) días hábiles</strong> contados a partir de la fecha de recibo.</li>
+                    <li><strong>Reclamos (corrección, supresión o revocatoria):</strong> Serán atendidos en un término máximo de <strong>quince (15) días hábiles</strong> contados a partir del día siguiente a la fecha de recibo.</li>
+                </ol>
+            </section>
+
+            <!-- 9 -->
+            <section class="tc-section" id="p9">
+                <div class="tc-section__num">09</div>
+                <h2 class="tc-section__title">Terceros Encargados y Transferencia de Datos</h2>
+                <p class="tc-body">YOSSICO no vende, arrienda ni comercializa sus bases de datos con terceros. Para la operación indispensable de la tienda, transmitimos datos estrictamente a encargados que cumplen altos estándares de seguridad:</p>
+                <ul class="tc-list">
+                    <li><strong>Operadores logísticos (Coordinadora / Servientrega):</strong> Se transmiten nombre, teléfono y dirección para la entrega física de su paquete.</li>
+                    <li><strong>Pasarela de pagos (Wompi - Bancolombia):</strong> Plataforma certificada PCI-DSS para el procesamiento seguro de pagos.</li>
+                    <li><strong>Infraestructura en la nube (Supabase Inc. / Cloudflare):</strong> Servidores con cifrado en tránsito (TLS/SSL 256 bits) y cifrado en reposo para el almacenamiento seguro de pedidos.</li>
+                </ul>
+            </section>
+
+            <!-- 10 -->
+            <section class="tc-section" id="p10">
+                <div class="tc-section__num">10</div>
+                <h2 class="tc-section__title">Seguridad, Trazabilidad y Principio de Responsabilidad Demostrada (SIC)</h2>
+                <p class="tc-body">
+                    En cumplimiento de la doctrina de <strong>Responsabilidad Demostrada (Accountability)</strong> de la Superintendencia de Industria y Comercio, YOSSICO almacena de manera trazable y auditable la evidencia de cada autorización otorgada por el titular en nuestros formularios:
+                </p>
+                <ul class="tc-list">
+                    <li>Marca temporal exacta (fecha y hora UTC de la aceptación).</li>
+                    <li>Versión exacta del texto legal y política aceptada.</li>
+                    <li>Identificador de sesión, User-Agent y mecanismo de verificación.</li>
+                    <li>Separación estricta de casillas de consentimiento (Términos vs. Privacidad).</li>
+                </ul>
+                <p class="tc-body">
+                    Esta información es conservada bajo estrictas medidas de seguridad como soporte probatorio ante eventuales requerimientos de la autoridad competente.
+                </p>
+            </section>
+
+            <!-- 11 -->
+            <section class="tc-section" id="p11">
+                <div class="tc-section__num">11</div>
+                <h2 class="tc-section__title">Vigencia y Modificaciones de la Política</h2>
+                <p class="tc-body">
+                    Esta política rige a partir de su publicación en octubre de 2026. Las bases de datos tendrán una vigencia equivalente al tiempo durante el cual se mantenga la relación comercial o durante el término legal establecido por las normas fiscales y de comercio en Colombia.
+                </p>
+                <p class="tc-body">
+                    Cualquier modificación sustancial en las finalidades del tratamiento será comunicada oportunamente a través de nuestro sitio web antes de su entrada en vigencia.
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__columns">
+            <div class="footer__col">
+                <div class="footer__logo">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="white" stroke-width="1" />
+                        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    YOSSICO
+                </div>
+                <div class="footer__links">
+                    <a href="institucional.html">YOSSICO Institucional</a>
+                    <a href="embajadoras.html">Embajadoras YOSSICO</a>
+                </div>
+            </div>
+            
+            <div class="footer__col">
+                <h4 class="footer__col-title">LEGAL Y GARANTÍAS</h4>
+                <div class="footer__links">
+                    <a href="terminos.html">Términos y Condiciones</a>
+                    <a href="privacidad.html">Política de Privacidad (Habeas Data)</a>
+                    <a href="reembolsos.html">Política de Reembolso y Retracto</a>
+                    <a href="cookies.html">Política de Cookies</a>
+                    <a href="rastreo.html">Rastreo de pedido</a>
+                </div>
+            </div>
+
+            <div class="footer__col">
+                <h4 class="footer__col-title">CONTACTO Y PQRs</h4>
+                <div class="footer__links">
+                    <span>WhatsApp: +57 321 993 7221</span>
+                    <span>Email: hola@yossico.com</span>
+                    <span>Bogotá D.C., Colombia</span>
+                    <span>Horario: Lunes a viernes, 9:00 a.m. – 5:00 p.m.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__bottom-bar">
+            <div class="footer__copy">
+                © 2026 YOSSICO · Colombia · <a href="terminos.html">Términos</a> · <a href="privacidad.html">Privacidad</a> · <a href="reembolsos.html">Reembolsos</a>
+            </div>
+            <a href="https://www.sic.gov.co" target="_blank" rel="noopener noreferrer" class="footer__sic" style="display: flex; align-items: center; justify-content: flex-end; opacity: 0.9; text-decoration: none;" title="Superintendencia de Industria y Comercio — Colombia">
+                <div style="font-family: var(--font-body); color: #FFFFFF; text-align: left; line-height: 1.2;">
+                    <span style="font-size: 8px; letter-spacing: 1px; font-weight: 300;">SUPERINTENDENCIA DE</span><br>
+                    <strong style="font-size: 11px; letter-spacing: 0.5px; font-weight: 400;">INDUSTRIA Y COMERCIO</strong>
+                    <div style="height: 1px; background: #FFFFFF; width: 100%; margin-top: 4px;"></div>
+                </div>
+            </a>
+        </div>
+    </footer>
+</body>
+</html>

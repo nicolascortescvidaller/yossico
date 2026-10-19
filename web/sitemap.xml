@@ -6,6 +6,9 @@
   <url><loc>https://yossico.com/historia.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://yossico.com/contacto.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://yossico.com/acronimo.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://yossico.com/terminos.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://yossico.com/terminos.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://yossico.com/privacidad.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://yossico.com/reembolsos.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://yossico.com/cookies.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
   <url><loc>https://yossico.com/guia-de-tallas.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
