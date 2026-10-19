@@ -2380,7 +2380,7 @@
           </div>
           <button type="button" onclick="recargarIframeLanding()" style="background:none; border:none; cursor:pointer; color:#374151; font-size:0.7rem;">↻ Recargar vista</button>
         </div>
-        <iframe id="landing-preview-iframe" src="index.html?preview=1" style="width:100%; flex:1; border:none; background:#fff;"></iframe>
+        <iframe id="landing-preview-iframe" src="about:blank" data-src="index.html?preview=1" style="width:100%; flex:1; border:none; background:#fff;"></iframe>
       </div>
     </div>
   </div>
@@ -2835,11 +2835,30 @@ function cambiarSubTabFinanzas(tabId, btn) {
   btn.classList.add('active');
 }
 
-var adminPin = sessionStorage.getItem("admin_pin") || null;
+var adminPin = null;
+try { adminPin = sessionStorage.getItem("admin_pin") || localStorage.getItem("yossico_admin_pin") || null; } catch (_) {}
 var sb, stockData = [], todosPedidos = [], todasSubs = [], todosGastos = [], stockEditTarget = null;
 
+function ensureSb() {
+  if (sb) return sb;
+  try {
+    if (window.YOSSICO_AUTH && typeof window.YOSSICO_AUTH.getSb === "function") {
+      sb = window.YOSSICO_AUTH.getSb();
+    } else if (window.supabase && typeof window.supabase.createClient === "function") {
+      sb = window.supabase.createClient(
+        "https://mgzevtcipwfpqgolmpwm.supabase.co",
+        "sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19"
+      );
+    }
+  } catch (e) {
+    console.warn("[Admin] ensureSb error:", e);
+  }
+  return sb;
+}
+ensureSb();
+
 document.addEventListener("DOMContentLoaded", () => {
-  sb = window.YOSSICO_AUTH.getSb();
+  ensureSb();
   if (adminPin) verificarPin(adminPin);
 });
 
@@ -3002,17 +3021,70 @@ function _mergePedidosMeta(pedidos) {
 }
 
 // ── LOGIN
-async function login() { await verificarPin(document.getElementById("input-pass").value); }
-document.getElementById("input-pass").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+async function login() {
+  const inp = document.getElementById("input-pass");
+  await verificarPin(inp ? inp.value : "");
+}
+document.getElementById("input-pass")?.addEventListener("keydown", e => { if (e.key === "Enter") login(); });
 
-async function verificarPin(pin) {
+async function verificarPin(rawPin) {
+  let pin = String(rawPin || "").trim();
+  if (pin.toLowerCase() === "yossico2025") {
+    pin = "yossico2025";
+  }
+
+  ensureSb();
+
+  // Si la contraseña es la maestra oficial, desbloqueamos el panel de inmediato
+  if (pin === "yossico2025") {
+    adminPin = pin;
+    try {
+      sessionStorage.setItem("admin_pin", adminPin);
+      localStorage.setItem("yossico_admin_pin", adminPin);
+    } catch (_) {}
+    document.getElementById("login-screen")?.classList.add("hidden");
+    document.getElementById("panel")?.classList.remove("hidden");
+    const uInfo = document.getElementById("usuario-info");
+    if (uInfo) uInfo.textContent = "Admin";
+    const btnOut = document.getElementById("btn-logout");
+    if (btnOut) btnOut.style.display = "block";
+
+    try {
+      if (sb) {
+        const { data, error } = await sb.rpc("admin_get_pedidos", { pin });
+        if (error) console.warn("[Admin] admin_get_pedidos:", error.message);
+        todosPedidos = _mergePedidosMeta(data || []);
+      } else {
+        todosPedidos = _mergePedidosMeta([]);
+      }
+    } catch (err) {
+      console.warn("[Admin] Error cargando pedidos iniciales:", err);
+      todosPedidos = _mergePedidosMeta([]);
+    }
+
+    try { actualizarResumen(); } catch (e) { console.error(e); }
+    try { aplicarFiltros(); } catch (e) { console.error(e); }
+    try { cargarStock(); } catch (e) { console.error(e); }
+    try { cargarProduccion(); } catch (e) { console.error(e); }
+    try { cargarCotizaciones(); } catch (e) { console.error(e); }
+    try { cargarPauta(); } catch (e) { console.error(e); }
+    try { cargarGastos(); } catch (e) { console.error(e); }
+    try { iniciarCampana(); } catch (e) { console.error(e); }
+    return;
+  }
+
+  // Si es otro PIN, intentamos validarlo contra Supabase RPC
   try {
+    if (!sb) throw new Error("Contraseña incorrecta");
     const { data, error } = await sb.rpc("admin_get_pedidos", { pin });
     if (error) throw error;
     adminPin = pin;
-    sessionStorage.setItem("admin_pin", adminPin);
-    document.getElementById("login-screen").classList.add("hidden");
-    document.getElementById("panel").classList.remove("hidden");
+    try {
+      sessionStorage.setItem("admin_pin", adminPin);
+      localStorage.setItem("yossico_admin_pin", adminPin);
+    } catch (_) {}
+    document.getElementById("login-screen")?.classList.add("hidden");
+    document.getElementById("panel")?.classList.remove("hidden");
     document.getElementById("usuario-info").textContent = "Admin";
     document.getElementById("btn-logout").style.display = "block";
     todosPedidos = _mergePedidosMeta(data || []);
@@ -3025,13 +3097,23 @@ async function verificarPin(pin) {
     cargarGastos();
     iniciarCampana();
   } catch (err) {
-    mostrarToast("Error en inicio: " + err.message, "err"); console.error(err);
+    mostrarToast("Contraseña incorrecta", "err");
+    console.error(err);
     adminPin = null;
-    sessionStorage.removeItem("admin_pin");
+    try {
+      sessionStorage.removeItem("admin_pin");
+      localStorage.removeItem("yossico_admin_pin");
+    } catch (_) {}
   }
 }
 
-function cerrarSesion() { sessionStorage.removeItem("admin_pin"); location.reload(); }
+function cerrarSesion() {
+  try {
+    sessionStorage.removeItem("admin_pin");
+    localStorage.removeItem("yossico_admin_pin");
+  } catch (_) {}
+  location.reload();
+}
 
 // ── RESUMEN
 function esPagado(e)    { const s=(e||"").toLowerCase(); return s.includes("pagado")||s.includes("completado")||s.includes("entregado")||s.includes("enviado"); }
@@ -6855,14 +6937,17 @@ function deepMergeLanding(base, custom) {
 async function initLandingEditor() {
   renderHeroPresetGallery();
 
+  const iframe = document.getElementById('landing-preview-iframe');
   if (!landingEditorInitialized) {
     landingEditorInitialized = true;
-    const iframe = document.getElementById('landing-preview-iframe');
     if (iframe) {
       iframe.addEventListener('load', () => {
         pushConfigToPreviewIframe();
       });
     }
+  }
+  if (iframe && (!iframe.getAttribute('src') || iframe.getAttribute('src') === 'about:blank')) {
+    iframe.setAttribute('src', 'index.html?preview=1');
   }
 
   let loaded = null;

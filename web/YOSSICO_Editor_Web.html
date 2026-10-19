@@ -1432,10 +1432,13 @@
     }
 
     function verificarPinStudio() {
-      const val = document.getElementById('studio-pin-input')?.value?.trim();
-      if (val === 'yossico2025') {
-        adminPin = val;
-        sessionStorage.setItem('admin_pin', val);
+      const raw = document.getElementById('studio-pin-input')?.value?.trim() || '';
+      if (raw.toLowerCase() === 'yossico2025') {
+        adminPin = 'yossico2025';
+        try {
+          sessionStorage.setItem('admin_pin', adminPin);
+          localStorage.setItem('yossico_admin_pin', adminPin);
+        } catch (_) {}
         document.getElementById('studio-login').style.display = 'none';
       } else {
         alert('PIN incorrecto');
@@ -1443,7 +1446,20 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      sb = window.YOSSICO_AUTH ? window.YOSSICO_AUTH.getSb() : window.supabase.createClient(SUPA_URL, SUPA_KEY);
+      try {
+        const savedPin = sessionStorage.getItem('admin_pin') || localStorage.getItem('yossico_admin_pin');
+        if (savedPin && savedPin.toLowerCase() === 'yossico2025') {
+          adminPin = 'yossico2025';
+          const loginEl = document.getElementById('studio-login');
+          if (loginEl) loginEl.style.display = 'none';
+        }
+      } catch (_) {}
+
+      try {
+        sb = (window.YOSSICO_AUTH && typeof window.YOSSICO_AUTH.getSb === 'function')
+          ? window.YOSSICO_AUTH.getSb()
+          : (window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null);
+      } catch (_) {}
 
       const urlParams = new URLSearchParams(window.location.search);
       const initPage = urlParams.get('page');
