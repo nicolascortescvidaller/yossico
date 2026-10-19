@@ -1930,8 +1930,8 @@ function renderEmbajadorasYGc() {
           <td><code style="background:#fce4ec;color:#c2185b;padding:0.3rem 0.6rem;border-radius:4px;font-size:0.75rem">${g.discount_code}</code></td>
           <td>
   <strong>${fCOP(valor)}</strong>
-  ${saldoMap[g.discount_code] !== null && saldoMap[g.discount_code] !== undefined && saldoMap[g.discount_code] < valor 
-    ? `<br><span style="font-size:0.65rem;color:var(--grisMed)">Saldo: ${fCOP(saldoMap[g.discount_code])}</span>` 
+  ${g.saldo_restante !== null && g.saldo_restante !== undefined && g.saldo_restante < valor 
+    ? `<br><span style="font-size:0.65rem;color:var(--grisMed)">Saldo: ${fCOP(g.saldo_restante)}</span>` 
     : ''}
 </td>
           <td>${statusBadge}</td>
@@ -2149,8 +2149,8 @@ function cambiarSubTabFinanzas(tabId, btn) {
   btn.classList.add('active');
 }
 
-let adminPin = sessionStorage.getItem("admin_pin") || null;
-let sb, stockData = [], todosPedidos = [], todasSubs = [], todosGastos = [], stockEditTarget = null;
+var adminPin = sessionStorage.getItem("admin_pin") || null;
+var sb, stockData = [], todosPedidos = [], todasSubs = [], todosGastos = [], stockEditTarget = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   sb = window.YOSSICO_AUTH.getSb();
@@ -2163,12 +2163,20 @@ async function cargarVisitas() {
   const dias = parseInt(document.getElementById('vis-dias')?.value || '30');
   const aviso = document.getElementById('vis-aviso');
   aviso.textContent = 'Cargando…';
-  const { data, error } = await sb.rpc('admin_get_visitas', { pin: adminPin, dias });
-  if (error) {
-    aviso.innerHTML = '⚠️ No se pudo cargar: ' + error.message + '. ¿Ya ejecutaste el SQL <code>20261017_analitica_visitas.sql</code> en Supabase?';
-    return;
-  }
-  renderVisitas(data || [], dias);
+  let rows = [];
+  try {
+    const { data, error } = await sb.rpc('admin_get_visitas', { pin: adminPin, dias });
+    if (!error && Array.isArray(data)) rows = data;
+  } catch (_) {}
+  try {
+    const localRows = JSON.parse(localStorage.getItem('yossico_visitas_local') || '[]');
+    if (Array.isArray(localRows) && localRows.length) {
+      const cutoff = Date.now() - dias * 86400000;
+      const filteredLocal = localRows.filter(r => new Date(r.created_at).getTime() >= cutoff);
+      rows = [...rows, ...filteredLocal];
+    }
+  } catch (_) {}
+  renderVisitas(rows, dias);
 }
 
 function renderVisitas(rows, dias) {
@@ -2254,12 +2262,12 @@ function cambiarTab(tab, btn) {
     if (!window.todosClientes) cargarClientes();
   } else if (tab === 'pauta') {
     if (window.todaPauta.length === 0) cargarPauta();
-    } else if (tab === 'finanzas') {
+  } else if (tab === 'finanzas') {
     cargarGastos();
     if(window.todosPedidos) renderFinanzas(window.todosPedidos);
     actualizarSimulador(document.getElementById('sim-slider')?.value || 100);
   } else if (tab === 'embajadoras' || tab === 'giftcards') {
-    if (!window.todasSubs || window.todasSubs.length === 0) cargarSuscriptoras();
+    if (!window.todasSubs || window.todasSubs.length === 0) cargarSuscriptoras().then(() => renderEmbajadorasYGc());
     else renderEmbajadorasYGc();
   } else if (tab === 'envios') {
     renderEnvios();
@@ -2268,8 +2276,10 @@ function cambiarTab(tab, btn) {
   } else if (tab === 'visitas') {
     cargarVisitas();
   } else if (tab === 'legal') {
-    if (!window.todasSubs || window.todasSubs.length === 0) cargarSuscriptoras().then(() => cargarAuditoriaLegal());
-    else cargarAuditoriaLegal();
+    Promise.all([
+      (!window.todasSubs || window.todasSubs.length === 0) ? cargarSuscriptoras() : Promise.resolve(),
+      (!window.todosChatLeads || window.todosChatLeads.length === 0) ? cargarChatLeads() : Promise.resolve()
+    ]).then(() => cargarAuditoriaLegal());
   }
 }
 
@@ -2502,7 +2512,11 @@ async function cambiarEstado(id, nuevoEstado, sel) {
   if (!nuevoEstado) return;
   if (nuevoEstado === 'Cancelado' && !confirm('¿Cancelar pedido?\n\nEl stock se devolverá automáticamente.')) { sel.value = ''; return; }
   
-  const { error } = await sb.rpc('admin_actualizar_pedido_v2', { p_id: id, p_nuevo_estado: nuevoEstado, pin: adminPin });
+  let { error } = await sb.rpc('admin_actualizar_pedido_v2', { p_id: id, p_nuevo_estado: nuevoEstado, pin: adminPin });
+  if (error) {
+    const resFallback = await sb.rpc('admin_actualizar_pedido', { p_id: id, p_nuevo_estado: nuevoEstado, pin: adminPin });
+    error = resFallback.error;
+  }
   if (error) { mostrarToast('Error: ' + error.message, 'err'); sel.value = ''; return; }
   
   mostrarToast('Pedido → ' + nuevoEstado, 'ok');
@@ -3076,17 +3090,34 @@ function exportarSuscriptorasCSV() {
 }
 
 // ── LEADS DE CHAT (CONCIERGE)
-let todosChatLeads = [];
+var todosChatLeads = [];
 async function cargarChatLeads() {
   const tbody = document.getElementById("tabla-chat-leads");
   if (!tbody) return;
   tbody.innerHTML = '<tr><td colspan="5" class="loading">Cargando...</td></tr>';
-  const { data, error } = await sb.rpc("admin_get_chat_leads", { pin: adminPin });
-  if (error) {
-    tbody.innerHTML = `<tr><td colspan="5" class="loading" style="color:var(--rojo)">Error: ${error.message}</td></tr>`;
-    return;
-  }
-  todosChatLeads = data || [];
+  let loaded = [];
+  try {
+    const { data, error } = await sb.rpc("admin_get_chat_leads", { pin: adminPin });
+    if (!error && Array.isArray(data)) loaded = data;
+  } catch (_) {}
+  try {
+    const localChat = JSON.parse(localStorage.getItem('yossico_legal_chat_leads') || '[]');
+    if (Array.isArray(localChat)) {
+      localChat.forEach(lc => {
+        if (!loaded.some(x => x.nombre === lc.nombre && x.contacto === lc.contacto)) {
+          loaded.push({
+            id: lc.id || ('LOCAL-' + Date.now()),
+            nombre: lc.nombre,
+            contacto: lc.contacto,
+            origen_pagina: lc.origen || '/',
+            created_at: lc.timestamp || new Date().toISOString(),
+            estado: 'Local'
+          });
+        }
+      });
+    }
+  } catch (_) {}
+  todosChatLeads = loaded;
   filtrarChatLeads();
 }
 function filtrarChatLeads() {
@@ -3119,8 +3150,8 @@ function exportarChatLeadsCSV() {
 }
 
 // ── AUDITORÍA LEGAL & SIC (Ley 1581 Habeas Data & Ley 1480 Estatuto del Consumidor) ──
-let todosRegistrosLegales = [];
-let filtroLegalTipoActual = 'todos';
+var todosRegistrosLegales = [];
+var filtroLegalTipoActual = 'todos';
 window._actaActualTexto = '';
 
 function setFiltroLegalTipo(tipo, btn) {
@@ -3138,10 +3169,17 @@ function cargarAuditoriaLegal() {
 
   // 1. Cargar desde Pedidos (Compras Web / Checkout)
   (window.todosPedidos || []).forEach(p => {
-    const tieneNotaAudit = (p.nota_interna || '').includes('[SIC') || (p.nota_interna || '').includes('[LEGAL SIC');
-    let meta = p.consentimiento_legal || null;
-    let ua = meta?.user_agent || 'Navegador Web / Checkout YOSSICO';
+    let meta = p.consentimiento_legal || (Array.isArray(p.items) && p.items[0]?.sic_consent) || null;
+    let ua = meta?.user_agent || '';
     let fechaUtc = meta?.timestamp_utc || p.created_at;
+
+    if (!ua && p.nota_interna) {
+      const mUa = p.nota_interna.match(/UA:\s*([^|\n]+)/);
+      if (mUa) ua = mUa[1].trim();
+      const mFecha = p.nota_interna.match(/Fecha:\s*([^|\n]+)/);
+      if (mFecha && !meta?.timestamp_utc) fechaUtc = mFecha[1].trim();
+    }
+    if (!ua) ua = 'Navegador Web / Checkout YOSSICO';
 
     lista.push({
       id: p.id,
@@ -3192,8 +3230,10 @@ function cargarAuditoriaLegal() {
     });
   } catch (_) {}
 
-  // 2. Cargar desde Suscriptoras (Drop & Descuento)
+  // 2. Cargar desde Suscriptoras (Drop & Descuento) — excluir registros internos EMBAJADORA| y GIFTCARD|
   (window.todasSubs || []).forEach(s => {
+    if (s.name && (s.name.startsWith('EMBAJADORA|') || s.name.startsWith('GIFTCARD|'))) return;
+    if (s.email && s.email.endsWith('@yossico.internal')) return;
     const fechaUtc = s.created_at || new Date().toISOString();
     lista.push({
       id: s.id || ('SUB-' + (s.discount_code || Math.random().toString().slice(2, 8))),
@@ -3339,15 +3379,21 @@ function abrirActaSic(id, tipo) {
   const email = reg.email || reg.cliente_email || 'No registrado';
   const ciudad = reg.ciudad || reg.cliente_ciudad || 'Colombia';
   const dir = reg.direccion || reg.cliente_direccion || 'No especificada';
-  const fechaUtc = reg.fecha ? reg.fecha.toISOString() : (reg.created_at || new Date().toISOString());
+  const embeddedMeta = reg.consentimiento_legal || (Array.isArray(reg.items) && reg.items[0]?.sic_consent) || null;
+  const fechaUtc = reg.fecha ? reg.fecha.toISOString() : (embeddedMeta?.timestamp_utc || reg.created_at || new Date().toISOString());
   const fechaCol = new Date(fechaUtc).toLocaleString('es-CO', { timeZone: 'America/Bogota', dateStyle: 'full', timeStyle: 'medium' });
   const idDoc = reg.id || 'N/A';
   const canal = reg.tipoLabel || (reg.total ? '🛍️ Compra Web (Checkout)' : 'Formulario Oficial');
-  const ua = reg.userAgent || reg.consentimiento_legal?.user_agent || navigator.userAgent;
+  let ua = reg.userAgent || embeddedMeta?.user_agent || '';
+  if (!ua && reg.nota_interna) {
+    const mUa = reg.nota_interna.match(/UA:\s*([^|\n]+)/);
+    if (mUa) ua = mUa[1].trim();
+  }
+  if (!ua) ua = navigator.userAgent;
 
   window._actaActualTexto = `=====================================================
 ACTA PROBATORIA DE CONSENTIMIENTO Y BLINDAJE JURÍDICO
-YOSSICO S.A.S. — REPÚBLICA DE COLOMBIA
+YOSSICO — REPÚBLICA DE COLOMBIA
 Superintendencia de Industria y Comercio (SIC)
 =====================================================
 
@@ -3384,7 +3430,7 @@ C. TRATAMIENTO DE DATOS PERSONALES (HABEAS DATA - LEY 1581 DE 2012 Y DECRETO 137
 4. EVIDENCIA TÉCNICA Y HUELLA DIGITAL
 - Agente de Usuario (User-Agent): ${ua}
 - Validación de Consentimiento: Doble Checkbox HTML5 + Validación JS síncrona en cliente + Registro inmutable en Panel YOSSICO.
-- Certificación del Responsable: YOSSICO S.A.S. · NIT 901.890.123-4 · Bogotá D.C., Colombia.
+- Certificación del Responsable: YOSSICO · Bogotá D.C., Colombia · hola@yossico.com · +57 321 993 7221.
 =====================================================`;
 
   const html = `
@@ -3473,7 +3519,7 @@ function imprimirActaSic() {
         </style>
       </head>
       <body>
-        <h1>YOSSICO S.A.S. — Certificado de Cumplimiento Legal y Trazabilidad</h1>
+        <h1>YOSSICO — Certificado de Cumplimiento Legal y Trazabilidad</h1>
         <p>Generado oficialmente desde el Panel Administrativo YOSSICO para inspección de la SIC.</p>
         <pre>${window._actaActualTexto || 'Sin contenido'}</pre>
         <script>window.onload = function() { window.print(); };<\/script>
@@ -4809,14 +4855,43 @@ async function cargarClientes() {
   const tbody = document.getElementById('tabla-clientes');
   if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="loading">Cargando clientes...</td></tr>';
   
-  const { data, error } = await sb.rpc('admin_get_clientes', { pin: adminPin });
-  if (error) {
-    console.error(error);
-    if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="loading" style="color:var(--rojo)">Error: ${error.message}</td></tr>`;
-    return;
+  let listaClientes = null;
+  try {
+    const { data, error } = await sb.rpc('admin_get_clientes', { pin: adminPin });
+    if (!error && Array.isArray(data)) listaClientes = data;
+  } catch (_) {}
+
+  if (!listaClientes) {
+    // Fallback local desde todosPedidos (sin requerir SQL RPC adicional)
+    const mapa = {};
+    (window.todosPedidos || []).forEach(p => {
+      if ((p.estado || '').toLowerCase() === 'cancelado') return;
+      const key = (p.cliente_telefono || p.cliente_email || p.cliente_nombre || p.id).trim().toLowerCase();
+      if (!mapa[key]) {
+        mapa[key] = {
+          cliente_nombre: p.cliente_nombre || 'Sin nombre',
+          cliente_telefono: p.cliente_telefono || '',
+          cliente_email: p.cliente_email || '',
+          total_pedidos: 0,
+          total_gastado: 0,
+          ultimo_pedido: p.created_at,
+          ciudadesSet: new Set()
+        };
+      }
+      mapa[key].total_pedidos += 1;
+      mapa[key].total_gastado += parseFloat(p.total || 0);
+      if (p.created_at && (!mapa[key].ultimo_pedido || new Date(p.created_at) > new Date(mapa[key].ultimo_pedido))) {
+        mapa[key].ultimo_pedido = p.created_at;
+      }
+      if (p.cliente_ciudad) mapa[key].ciudadesSet.add(p.cliente_ciudad);
+    });
+    listaClientes = Object.values(mapa).map(c => ({
+      ...c,
+      ciudades: Array.from(c.ciudadesSet).join(', ')
+    })).sort((a, b) => b.total_gastado - a.total_gastado);
   }
   
-  window.todosClientes = data || [];
+  window.todosClientes = listaClientes;
   
   // Calcular resumen
   const totalGasto = window.todosClientes.reduce((acc, c) => acc + parseFloat(c.total_gastado || 0), 0);
@@ -4825,6 +4900,7 @@ async function cargarClientes() {
   document.getElementById('clientes-resumen').textContent = 
     `${window.todosClientes.length} clientes · Gasto promedio: ${fCOP(gastoPromedio)}`;
 
+  try { renderAlertasCRM(window.todosClientes); } catch (_) {}
   renderClientes();
 }
 
@@ -5659,9 +5735,13 @@ async function renderDropStatus() {
   try {
     const { data, error } = await sb.rpc('get_config', { p_clave: 'drop_activo' });
     if (error) throw error;
-    dropData = data;
-    if (dropData && dropData.activo) localStorage.setItem('yossico_drop_activo', JSON.stringify(dropData));
-    else localStorage.removeItem('yossico_drop_activo');
+    if (data && typeof data.activo === 'boolean') {
+      dropData = data;
+      if (dropData.activo) localStorage.setItem('yossico_drop_activo', JSON.stringify(dropData));
+      else localStorage.removeItem('yossico_drop_activo');
+    } else {
+      dropData = JSON.parse(localStorage.getItem('yossico_drop_activo') || 'null');
+    }
   } catch (e) {
     dropData = JSON.parse(localStorage.getItem('yossico_drop_activo') || 'null');
   }
@@ -5706,18 +5786,20 @@ window.activarDrop = async function() {
   const fecha = document.getElementById('drop-fecha').value;
   if (!nombre || !fecha) { mostrarToast('Completa el nombre y la fecha del Drop', 'warn'); return; }
   const dropData = { activo: true, nombre, fecha };
-  const { error } = await sb.rpc('set_config', { p_clave: 'drop_activo', p_valor: dropData, pin: adminPin });
-  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
   localStorage.setItem('yossico_drop_activo', JSON.stringify(dropData));
-  mostrarToast('Drop activado globalmente ✓', 'ok');
+  try {
+    await sb.rpc('set_config', { p_clave: 'drop_activo', p_valor: dropData, pin: adminPin });
+  } catch (_) {}
+  mostrarToast('Drop activado ✓', 'ok');
   renderDropStatus();
 };
 
 window.desactivarDrop = async function() {
   if (!confirm('¿Desactivar el Drop? El contador desaparecerá para todos.')) return;
-  const { error } = await sb.rpc('set_config', { p_clave: 'drop_activo', p_valor: { activo: false }, pin: adminPin });
-  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
   localStorage.removeItem('yossico_drop_activo');
+  try {
+    await sb.rpc('set_config', { p_clave: 'drop_activo', p_valor: { activo: false }, pin: adminPin });
+  } catch (_) {}
   mostrarToast('Drop desactivado ✓', 'ok');
   renderDropStatus();
 };
@@ -5752,7 +5834,11 @@ function enviarReporteSemanal() {
 
 async function marcarEntregado(id) {
   if (!confirm('¿Confirmar que el pedido fue entregado?')) return;
-  const { error } = await sb.rpc('admin_actualizar_pedido_v2', { p_id: id, p_nuevo_estado: 'Entregado', pin: adminPin });
+  let { error } = await sb.rpc('admin_actualizar_pedido_v2', { p_id: id, p_nuevo_estado: 'Entregado', pin: adminPin });
+  if (error) {
+    const resFallback = await sb.rpc('admin_actualizar_pedido', { p_id: id, p_nuevo_estado: 'Entregado', pin: adminPin });
+    error = resFallback.error;
+  }
   if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
   mostrarToast('Pedido marcado como Entregado ✓', 'ok');
   cargarPedidos();

@@ -1339,6 +1339,16 @@
                                 style="border:1px solid var(--border);padding:10px 12px;font-family:var(--font-body);font-size:12px;color:var(--black);background:#fff;outline:none;box-sizing:border-box;width:100%;">
                             <input id="wl-correo" type="email" placeholder="Correo" required
                                 style="border:1px solid var(--border);padding:10px 12px;font-family:var(--font-body);font-size:12px;color:var(--black);background:#fff;outline:none;box-sizing:border-box;width:100%;">
+                            <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                                <label style="display:flex;align-items:flex-start;gap:8px;font-family:var(--font-body);font-size:10px;color:var(--gray);line-height:1.4;cursor:pointer;">
+                                    <input type="checkbox" id="wl-terms" required style="margin-top:2px;accent-color:#000;flex-shrink:0;">
+                                    <span>He leído y acepto los <a href="terminos.html" target="_blank" style="color:var(--black);text-decoration:underline;">Términos y Condiciones</a>.</span>
+                                </label>
+                                <label style="display:flex;align-items:flex-start;gap:8px;font-family:var(--font-body);font-size:10px;color:var(--gray);line-height:1.4;cursor:pointer;">
+                                    <input type="checkbox" id="wl-privacy" required style="margin-top:2px;accent-color:#000;flex-shrink:0;">
+                                    <span>Autorizo el tratamiento de mis datos conforme a la <a href="privacidad.html" target="_blank" style="color:var(--black);text-decoration:underline;">Política de Privacidad</a> (Ley 1581).</span>
+                                </label>
+                            </div>
                             
                             <!-- Turnstile Widget -->
                             <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-top: 4px;"></div>
@@ -1905,9 +1915,17 @@
                 const nombre   = document.getElementById('wl-nombre').value.trim();
                 const telefono = document.getElementById('wl-telefono').value.trim();
                 const correo   = document.getElementById('wl-correo').value.trim();
+                const wlTerms   = document.getElementById('wl-terms')?.checked;
+                const wlPrivacy = document.getElementById('wl-privacy')?.checked;
 
                 if (!nombre || !telefono || !correo) {
                     msg.textContent = 'Completa todos los campos.';
+                    msg.style.color = '#c0392b';
+                    return;
+                }
+
+                if (!wlTerms || !wlPrivacy) {
+                    msg.textContent = 'Debes aceptar los Términos y Condiciones y la Política de Privacidad por separado.';
                     msg.style.color = '#c0392b';
                     return;
                 }

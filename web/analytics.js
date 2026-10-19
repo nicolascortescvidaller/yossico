@@ -36,6 +36,31 @@
     if (pagina === '') pagina = '/';
 
     function send(evento) {
+      try {
+        var rawConsent = localStorage.getItem('yossico_cookie_consent');
+        if (rawConsent) {
+          var parsedConsent = JSON.parse(rawConsent);
+          if (parsedConsent && parsedConsent.choice === 'essential') return;
+        }
+      } catch (_) {}
+
+      var rowLocal = {
+        pagina: pagina,
+        evento: evento,
+        referrer: document.referrer || '',
+        fuente: src,
+        sesion: sesion,
+        visitante: visitante,
+        dispositivo: dispositivo,
+        created_at: new Date().toISOString()
+      };
+      try {
+        var localLog = JSON.parse(localStorage.getItem('yossico_visitas_local') || '[]');
+        localLog.unshift(rowLocal);
+        if (localLog.length > 500) localLog = localLog.slice(0, 500);
+        localStorage.setItem('yossico_visitas_local', JSON.stringify(localLog));
+      } catch (_) {}
+
       var body = JSON.stringify({
         p_pagina: pagina, p_evento: evento, p_referrer: document.referrer || '',
         p_fuente: src, p_sesion: sesion, p_visitante: visitante, p_dispositivo: dispositivo

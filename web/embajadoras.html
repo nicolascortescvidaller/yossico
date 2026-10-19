@@ -527,7 +527,11 @@
                 
                 <div class="inst-checkbox-wrap">
                     <input type="checkbox" id="terminos" class="inst-checkbox" required>
-                    <label for="terminos" class="inst-checkbox-label">Acepto los <a href="terminos.html" target="_blank">términos y condiciones</a> de YOSSICO</label>
+                    <label for="terminos" class="inst-checkbox-label">He leído y acepto los <a href="terminos.html" target="_blank">Términos y Condiciones</a> de YOSSICO.</label>
+                </div>
+                <div class="inst-checkbox-wrap" style="margin-top: 8px;">
+                    <input type="checkbox" id="privacidad" class="inst-checkbox" required>
+                    <label for="privacidad" class="inst-checkbox-label">Autorizo el tratamiento de mis datos personales conforme a la <a href="privacidad.html" target="_blank">Política de Privacidad</a> (Ley 1581 de 2012).</label>
                 </div>
                 
                 <!-- Turnstile Widget -->
@@ -644,6 +648,11 @@
 
             form.addEventListener('submit', async function (e) {
                 e.preventDefault();
+                if (!document.getElementById('terminos')?.checked || !document.getElementById('privacidad')?.checked) {
+                    msgDiv.textContent = 'Debes aceptar los Términos y Condiciones y la Política de Privacidad por separado.';
+                    msgDiv.style.color = 'red';
+                    return;
+                }
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Enviando...';
                 msgDiv.textContent = '';

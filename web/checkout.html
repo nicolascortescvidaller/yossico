@@ -499,16 +499,23 @@
               version_reembolsos:   '2.0-2026',
               user_agent:           navigator.userAgent,
               canal:                'checkout_web',
+              email_cliente:        email || null,
+              notas_cliente:        notas || null,
               texto_autorizacion:   'Aceptación expresa de Términos, Retracto y Autorización informada para Tratamiento de Datos Personales (Ley 1581 / Ley 1480).'
             };
 
-            const legalAuditStr = `[SIC HABEAS DATA]: Términos v2.0 (Aceptado), Privacidad v2.0 (Aceptado), Retracto 5 días (Informado). Fecha: ${new Date().toISOString()}. UA: ${navigator.userAgent.slice(0, 100)}`;
+            // Incluir metadatos probatorios dentro del JSONB de items[0] (garantizado sin migraciones)
+            if (itemsForDb.length > 0) {
+              itemsForDb[0].sic_consent = legalAudit;
+            }
+
+            const legalAuditStr = `[SIC HABEAS DATA]: Términos v2.0 (Aceptado), Privacidad v2.0 (Aceptado), Retracto 5 días (Informado). Fecha: ${legalAudit.timestamp_utc}. UA: ${navigator.userAgent.slice(0, 120)}`;
             const notaFinal = notas ? `${notas}\n\n${legalAuditStr}` : legalAuditStr;
 
             let pedidoInsertado = null;
             let insertError = null;
 
-            // Inserción segura: compatible con y sin columna adicional en Postgres
+            // Inserción segura en 3 niveles para nunca fallar sin importar las columnas de la tabla
             const payloadCompleto = {
               cliente_nombre:       nombre,
               cliente_telefono:     tel || null,
@@ -527,11 +534,19 @@
             try {
               const res1 = await sb.from('pedidos').insert(payloadCompleto).select('id').single();
               if (res1.error) {
-                // Fallback sin la columna consentimiento_legal (todo queda asegurado en nota_interna)
+                // Nivel 2: sin columna consentimiento_legal (queda en nota_interna + items[0].sic_consent)
                 delete payloadCompleto.consentimiento_legal;
                 const res2 = await sb.from('pedidos').insert(payloadCompleto).select('id').single();
-                pedidoInsertado = res2.data;
-                insertError = res2.error;
+                if (res2.error) {
+                  // Nivel 3: solo columnas base originales (la evidencia viaja en items[0].sic_consent)
+                  delete payloadCompleto.nota_interna;
+                  delete payloadCompleto.cliente_email;
+                  const res3 = await sb.from('pedidos').insert(payloadCompleto).select('id').single();
+                  pedidoInsertado = res3.data;
+                  insertError = res3.error;
+                } else {
+                  pedidoInsertado = res2.data;
+                }
               } else {
                 pedidoInsertado = res1.data;
               }
@@ -539,9 +554,10 @@
               console.warn('[checkout] insert attempt failed, retrying minimal:', errIn);
               try {
                 delete payloadCompleto.consentimiento_legal;
-                const res3 = await sb.from('pedidos').insert(payloadCompleto).select('id').single();
-                pedidoInsertado = res3.data;
-                insertError = res3.error;
+                delete payloadCompleto.nota_interna;
+                const resMin = await sb.from('pedidos').insert(payloadCompleto).select('id').single();
+                pedidoInsertado = resMin.data;
+                insertError = resMin.error;
               } catch (_) {}
             }
 

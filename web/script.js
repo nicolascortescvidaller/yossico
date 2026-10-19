@@ -220,3 +220,12 @@ animId = requestAnimationFrame(animateCursor);
   });
 })();
 
+/* ── Universal Cookie Banner Loader (SIC / Ley 1581) ───────── */
+(function ensureCookieBanner() {
+  if (document.getElementById('yossico-cookie-banner')) return;
+  if (document.querySelector('script[src*="cookie-banner.js"]')) return;
+  const s = document.createElement('script');
+  s.src = 'cookie-banner.js';
+  s.defer = true;
+  document.head.appendChild(s);
+})();
