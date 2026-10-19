@@ -29,7 +29,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=106">
+    <link rel="stylesheet" href="styles.v2.css?v=107">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         /* ── Layout ── */
@@ -794,9 +794,50 @@
         }
 
         @media (max-width: 600px) {
+            #barra-envio-gratis {
+                font-size: 10px !important;
+                padding: 8px 10px !important;
+                letter-spacing: 0.03em !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .breadcrumb {
+                padding: 58px 20px 0 !important;
+            }
+            .breadcrumb__link {
+                padding: 6px 12px;
+                font-size: 9px;
+            }
+            .page-header {
+                padding: 14px 20px 18px !important;
+            }
+            .page-header__label {
+                margin-bottom: 8px;
+            }
+            .page-header__title {
+                font-size: clamp(34px, 9.5vw, 44px);
+                line-height: 1.02;
+            }
+            .coleccion {
+                padding: 18px 20px 44px;
+            }
+            .filter-bar {
+                margin-bottom: 22px;
+                gap: 6px;
+                flex-wrap: nowrap;
+            }
+            .filter-btn {
+                padding: 9px 8px;
+                font-size: 8.5px;
+                letter-spacing: 1.6px;
+                flex: 1 1 0;
+                text-align: center;
+                white-space: nowrap;
+            }
             .product-grid {
                 grid-template-columns: 1fr;
-                gap: 60px;
+                gap: 48px;
             }
         }
     </style>
