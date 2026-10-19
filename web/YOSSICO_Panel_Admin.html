@@ -336,6 +336,10 @@
   <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
   Drop / Lanzamiento
 </button>
+      <button class="tab-btn" onclick="cambiarTab('landing',this)" style="border-left: 3px solid #0C4E57;">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
+        Editor Web (Landing)
+      </button>
       <button class="tab-btn" onclick="cambiarTab('visitas',this)">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 14l4-4 3 3 5-6"></path></svg>
         Visitas Web
@@ -1747,6 +1751,619 @@
 
 </div>
 
+<!-- TAB EDITOR WEB (LANDING ESTILO SHOPIFY) -->
+<div id="tab-landing" class="tab-content">
+  <style>
+    .le-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      background: #111;
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .le-workspace {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 1rem;
+      height: calc(100vh - 165px);
+      min-height: 640px;
+    }
+    @media (max-width: 1100px) {
+      .le-workspace {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+    }
+    .le-sidebar {
+      background: #fff;
+      border: 1px solid var(--grisCl);
+      border-radius: 8px;
+      overflow-y: auto;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .le-acc {
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fafafa;
+      transition: border-color 0.2s;
+    }
+    .le-acc.open {
+      border-color: #111;
+      background: #fff;
+    }
+    .le-acc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0.9rem;
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #111;
+      background: #f8f9fa;
+    }
+    .le-acc.open .le-acc-head {
+      background: #111;
+      color: #fff;
+    }
+    .le-acc-body {
+      display: none;
+      padding: 0.9rem;
+      border-top: 1px solid #eee;
+      font-size: 0.75rem;
+    }
+    .le-acc.open .le-acc-body {
+      display: block;
+    }
+    .le-field {
+      margin-bottom: 0.75rem;
+    }
+    .le-field label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #555;
+      margin-bottom: 0.3rem;
+    }
+    .le-field input[type="text"],
+    .le-field input[type="datetime-local"],
+    .le-field select,
+    .le-field textarea {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.76rem;
+      color: #111;
+      background: #fff;
+    }
+    .le-field textarea {
+      resize: vertical;
+      min-height: 58px;
+      line-height: 1.4;
+    }
+    .le-toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.45rem 0.6rem;
+      background: #f3f4f6;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+    .le-img-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 0.4rem;
+    }
+    .le-img-thumb {
+      border: 2px solid transparent;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 3/4;
+      background: #f0f0ec;
+      position: relative;
+    }
+    .le-img-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .le-img-thumb.selected {
+      border-color: #0C4E57;
+      box-shadow: 0 0 0 2px rgba(12,78,87,0.25);
+    }
+    .le-img-thumb span {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.68);
+      color: #fff;
+      font-size: 0.55rem;
+      padding: 2px 3px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .le-preview-pane {
+      background: #e5e7eb;
+      border: 1px solid var(--grisCl);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0.75rem;
+      overflow: hidden;
+    }
+    .le-iframe-wrap {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      transition: max-width 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .le-iframe-wrap.mobile-mode {
+      max-width: 390px;
+      border: 8px solid #1f2937;
+      border-radius: 24px;
+    }
+    .le-order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0.6rem;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      margin-bottom: 0.35rem;
+      font-size: 0.73rem;
+    }
+  </style>
+
+  <!-- Barra superior estilo Shopify -->
+  <div class="le-toolbar">
+    <div style="display:flex; align-items:center; gap:0.85rem;">
+      <div style="font-size:0.95rem; font-weight:600; letter-spacing:0.5px;">🎨 Personalizador de Landing (Shopify Studio)</div>
+      <span id="le-status-badge" style="font-size:0.68rem; padding:0.2rem 0.6rem; border-radius:20px; background:rgba(46,125,50,0.3); color:#a5d6a7; border:1px solid #4caf50;">● Sincronizado</span>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+      <button type="button" class="btn btn-sm" id="le-btn-desktop" onclick="setLandingPreviewMode('desktop')" style="background:#333; color:#fff; border:1px solid #555; font-size:0.7rem;">🖥️ Computador</button>
+      <button type="button" class="btn btn-sm" id="le-btn-mobile" onclick="setLandingPreviewMode('mobile')" style="background:transparent; color:#ccc; border:1px solid #444; font-size:0.7rem;">📱 Celular</button>
+      <a href="index.html" target="_blank" class="btn btn-sm" style="background:transparent; color:#fff; border:1px solid #555; text-decoration:none; font-size:0.7rem;">↗ Ver Landing Real</a>
+      <button type="button" class="btn btn-sm" onclick="restaurarLandingOriginal()" style="background:#2b2b2b; color:#fca5a5; border:1px solid #7f1d1d; font-size:0.7rem;">↺ Restaurar Original</button>
+      <button type="button" class="btn btn-sm" onclick="guardarLandingEnVivo()" style="background:#25D366; color:#000; font-weight:700; border:none; padding:0.45rem 0.95rem; font-size:0.74rem;">💾 Guardar y Publicar en Vivo</button>
+    </div>
+  </div>
+
+  <!-- Área de trabajo dividida: Inspector Izquierdo + Vista Previa Derecha -->
+  <div class="le-workspace">
+    <div class="le-sidebar" id="le-sidebar-controls">
+
+      <!-- 0. ORDEN Y VISIBILIDAD DE SECCIONES -->
+      <div class="le-acc" id="le-acc-order">
+        <div class="le-acc-head" onclick="toggleLeAcc('order')">
+          <span>🔀 Orden y Visibilidad de Secciones</span>
+          <span>▾</span>
+        </div>
+        <div class="le-acc-body">
+          <div style="font-size:0.68rem; color:#666; margin-bottom:0.6rem;">Usa las flechas ↑ ↓ para reordenar bloques en la página o el ojo para mostrarlos/ocultarlos al instante:</div>
+          <div id="le-order-list"></div>
+        </div>
+      </div>
+
+      <!-- 1. BARRA SUPERIOR DE ANUNCIO -->
+      <div class="le-acc open" id="le-acc-announcement">
+        <div class="le-acc-head" onclick="toggleLeAcc('announcement')">
+          <span>📢 1. Barra Superior de Anuncio</span>
+          <span>▾</span>
+        </div>
+        <div class="le-acc-body">
+          <div class="le-toggle-row">
+            <span>Mostrar barra superior</span>
+            <input type="checkbox" id="le-ann-visible" checked onchange="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Texto principal</label>
+            <input type="text" id="le-ann-text" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Texto secundario (Desktop)</label>
+            <input type="text" id="le-ann-subtext" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-toggle-row">
+            <span>Mostrar bandera de Colombia 🇨🇴</span>
+            <input type="checkbox" id="le-ann-flag" checked onchange="onLandingInputChange()">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <div class="le-field">
+              <label>Color de Fondo</label>
+              <input type="color" id="le-ann-bg" value="#0a0a0a" oninput="onLandingInputChange()" style="width:100%; height:32px; border:1px solid #ccc; cursor:pointer;">
+            </div>
+            <div class="le-field">
+              <label>Color de Texto</label>
+              <input type="color" id="le-ann-color" value="#ffffff" oninput="onLandingInputChange()" style="width:100%; height:32px; border:1px solid #ccc; cursor:pointer;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. BARRA CUENTA REGRESIVA (PRE-HERO) -->
+      <div class="le-acc" id="le-acc-countdown">
+        <div class="le-acc-head" onclick="toggleLeAcc('countdown')">
+          <span>⏳ 2. Cuenta Regresiva (Pre-Hero)</span>
+          <span>▾</span>
+        </div>
+        <div class="le-acc-body">
+          <div class="le-toggle-row">
+            <span>Mostrar barra de cuenta regresiva</span>
+            <input type="checkbox" id="le-cd-visible" checked onchange="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Título del Lanzamiento / Drop</label>
+            <input type="text" id="le-cd-eyebrow" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Fecha y Hora Objetivo</label>
+            <input type="datetime-local" id="le-cd-date" onchange="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Texto del Botón</label>
+            <input type="text" id="le-cd-cta" oninput="onLandingInputChange()">
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. SECCIÓN HERO PRINCIPAL -->
+      <div class="le-acc" id="le-acc-hero">
+        <div class="le-acc-head" onclick="toggleLeAcc('hero')">
+          <span>🖼️ 3. Portada Principal (Hero)</span>
+          <span>▾</span>
+        </div>
+        <div class="le-acc-body">
+          <div class="le-toggle-row">
+            <span>Mostrar sección Hero</span>
+            <input type="checkbox" id="le-hero-visible" checked onchange="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Etiqueta Superior (Prefijo)</label>
+            <input type="text" id="le-hero-label" oninput="onLandingInputChange()">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <div class="le-field">
+              <label>Palabra rotatoria 1</label>
+              <input type="text" id="le-hero-w1" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>Palabra rotatoria 2</label>
+              <input type="text" id="le-hero-w2" oninput="onLandingInputChange()">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.4rem;">
+            <div class="le-field">
+              <label>Título Línea 1</label>
+              <input type="text" id="le-hero-t1" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>Título Línea 2</label>
+              <input type="text" id="le-hero-t2" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>Palabra Cursiva</label>
+              <input type="text" id="le-hero-ti" oninput="onLandingInputChange()">
+            </div>
+          </div>
+          <div class="le-field">
+            <label>Subtítulo / Descripción</label>
+            <textarea id="le-hero-sub" oninput="onLandingInputChange()"></textarea>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <div class="le-field">
+              <label>Botón Principal (Texto)</label>
+              <input type="text" id="le-hero-cta1-txt" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>Botón Principal (Link)</label>
+              <input type="text" id="le-hero-cta1-url" oninput="onLandingInputChange()">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <div class="le-field">
+              <label>Botón Secundario (Texto)</label>
+              <input type="text" id="le-hero-cta2-txt" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>Botón Secundario (Link)</label>
+              <input type="text" id="le-hero-cta2-url" oninput="onLandingInputChange()">
+            </div>
+          </div>
+
+          <div class="le-field" style="border-top:1px solid #eee; padding-top:0.75rem; margin-top:0.25rem;">
+            <label>Foto Principal del Hero (Elige del catálogo o sube una nueva)</label>
+            <div class="le-img-grid" id="le-hero-img-presets"></div>
+            <div style="margin-top:0.6rem; display:flex; gap:0.5rem; align-items:center;">
+              <label for="le-hero-upload" class="btn btn-sm btn-negro" style="cursor:pointer; margin:0; text-transform:none; font-size:0.7rem; width:100%; text-align:center;">📁 Subir Foto Nueva desde tu Dispositivo</label>
+              <input type="file" id="le-hero-upload" accept="image/*" style="display:none" onchange="subirImagenHeroLanding(this)">
+            </div>
+            <div style="margin-top:0.5rem;">
+              <label>Ruta o URL de la imagen activa</label>
+              <input type="text" id="le-hero-img" oninput="onLandingInputChange()">
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <div class="le-field">
+              <label>Encuadre de Foto</label>
+              <select id="le-hero-pos" onchange="onLandingInputChange()">
+                <option value="center top">Arriba (Ideal Rostro/Cuerpo)</option>
+                <option value="center center">Centrado</option>
+                <option value="center bottom">Abajo</option>
+              </select>
+            </div>
+            <div class="le-field">
+              <label>Color Fondo Imagen</label>
+              <input type="color" id="le-hero-bg" value="#f5f4f0" oninput="onLandingInputChange()" style="width:100%; height:32px; border:1px solid #ccc; cursor:pointer;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. SECCIÓN DROPS EDITORIAL -->
+      <div class="le-acc" id="le-acc-drops">
+        <div class="le-acc-head" onclick="toggleLeAcc('drops')">
+          <span>🔥 4. Sección Drops (Editorial)</span>
+          <span>▾</span>
+        </div>
+        <div class="le-acc-body">
+          <div class="le-toggle-row">
+            <span>Mostrar sección Drops</span>
+            <input type="checkbox" id="le-drops-visible" checked onchange="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Etiqueta Superior</label>
+            <input type="text" id="le-drops-eye" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Titular Izquierdo — Parte Superior</label>
+            <textarea id="le-drops-htop" style="min-height:42px;" oninput="onLandingInputChange()"></textarea>
+          </div>
+          <div class="le-field">
+            <label>Titular Izquierdo — Palabra en Cursiva</label>
+            <input type="text" id="le-drops-hit" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Titular Izquierdo — Parte Inferior</label>
+            <textarea id="le-drops-hbot" style="min-height:42px;" oninput="onLandingInputChange()"></textarea>
+          </div>
+          <div class="le-field">
+            <label>Pie de Titular</label>
+            <input type="text" id="le-drops-sub" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Párrafo 1</label>
+            <textarea id="le-drops-p1" oninput="onLandingInputChange()"></textarea>
+          </div>
+          <div class="le-field">
+            <label>Frase Destacada (Cita)</label>
+            <input type="text" id="le-drops-quote" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Párrafo 2</label>
+            <textarea id="le-drops-p2" oninput="onLandingInputChange()"></textarea>
+          </div>
+          <div class="le-field">
+            <label>Párrafo 3</label>
+            <textarea id="le-drops-p3" oninput="onLandingInputChange()"></textarea>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <div class="le-field">
+              <label>Texto Botón CTA</label>
+              <input type="text" id="le-drops-cta-txt" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>Link Botón CTA</label>
+              <input type="text" id="le-drops-cta-url" oninput="onLandingInputChange()">
+            </div>
+          </div>
+          <div class="le-field">
+            <label>Texto Link Suscripción</label>
+            <input type="text" id="le-drops-sublink" oninput="onLandingInputChange()">
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. SECCIÓN NOSOTROS (4 PILARES) -->
+      <div class="le-acc" id="le-acc-nosotros">
+        <div class="le-acc-head" onclick="toggleLeAcc('nosotros')">
+          <span>✨ 5. Por qué YOSSICO es diferente (4 Tarjetas)</span>
+          <span>▾</span>
+        </div>
+        <div class="le-acc-body">
+          <div class="le-toggle-row">
+            <span>Mostrar sección 4 Pilares</span>
+            <input type="checkbox" id="le-nos-visible" checked onchange="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Etiqueta Superior</label>
+            <input type="text" id="le-nos-eye" oninput="onLandingInputChange()">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.4rem;">
+            <div class="le-field">
+              <label>Título Inicio</label>
+              <input type="text" id="le-nos-tp" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>En Cursiva</label>
+              <input type="text" id="le-nos-ti" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>Título Final</label>
+              <input type="text" id="le-nos-ts" oninput="onLandingInputChange()">
+            </div>
+          </div>
+          <div style="border-top:1px solid #eee; padding-top:0.6rem; margin-top:0.3rem;">
+            <div class="le-field">
+              <label>Tarjeta 01 — Título y Texto</label>
+              <input type="text" id="le-nos-c1-t" style="margin-bottom:4px" oninput="onLandingInputChange()">
+              <textarea id="le-nos-c1-p" oninput="onLandingInputChange()"></textarea>
+            </div>
+            <div class="le-field">
+              <label>Tarjeta 02 — Título y Texto</label>
+              <input type="text" id="le-nos-c2-t" style="margin-bottom:4px" oninput="onLandingInputChange()">
+              <textarea id="le-nos-c2-p" oninput="onLandingInputChange()"></textarea>
+            </div>
+            <div class="le-field">
+              <label>Tarjeta 03 — Título y Texto</label>
+              <input type="text" id="le-nos-c3-t" style="margin-bottom:4px" oninput="onLandingInputChange()">
+              <textarea id="le-nos-c3-p" oninput="onLandingInputChange()"></textarea>
+            </div>
+            <div class="le-field">
+              <label>Tarjeta 04 — Título y Texto</label>
+              <input type="text" id="le-nos-c4-t" style="margin-bottom:4px" oninput="onLandingInputChange()">
+              <textarea id="le-nos-c4-p" oninput="onLandingInputChange()"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. SECCIÓN CONTACTO CTA FINAL -->
+      <div class="le-acc" id="le-acc-contactoCta">
+        <div class="le-acc-head" onclick="toggleLeAcc('contactoCta')">
+          <span>💬 6. Sección Cierre / Contacto</span>
+          <span>▾</span>
+        </div>
+        <div class="le-acc-body">
+          <div class="le-toggle-row">
+            <span>Mostrar sección de cierre</span>
+            <input type="checkbox" id="le-cc-visible" checked onchange="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Etiqueta Superior</label>
+            <input type="text" id="le-cc-eye" oninput="onLandingInputChange()">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.4rem;">
+            <div class="le-field">
+              <label>Título Inicio</label>
+              <input type="text" id="le-cc-tp" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>En Cursiva</label>
+              <input type="text" id="le-cc-ti" oninput="onLandingInputChange()">
+            </div>
+            <div class="le-field">
+              <label>Título Final</label>
+              <input type="text" id="le-cc-ts" oninput="onLandingInputChange()">
+            </div>
+          </div>
+          <div class="le-field">
+            <label>Subtítulo</label>
+            <input type="text" id="le-cc-sub" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Número de WhatsApp (con código país, ej. 573127300661)</label>
+            <input type="text" id="le-cc-wa-num" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Mensaje Predeterminado de WhatsApp</label>
+            <input type="text" id="le-cc-wa-txt" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Enlace de Instagram</label>
+            <input type="text" id="le-cc-ig" oninput="onLandingInputChange()">
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. POPUP DE SUSCRIPCIÓN (10% OFF) -->
+      <div class="le-acc" id="le-acc-popup">
+        <div class="le-acc-head" onclick="toggleLeAcc('popup')">
+          <span>🎁 7. Popup de Bienvenida (10% OFF)</span>
+          <span>▾</span>
+        </div>
+        <div class="le-acc-body">
+          <button type="button" class="btn btn-sm btn-negro" style="width:100%; margin-bottom:0.75rem;" onclick="scrollPreviewToSection('popup')">👁️ Abrir Popup en la Vista Previa</button>
+          <div class="le-field">
+            <label>Etiqueta Superior Izquierda</label>
+            <input type="text" id="le-pop-tag" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Titular Izquierdo (Líneas superiores)</label>
+            <textarea id="le-pop-htop" style="min-height:42px;" oninput="onLandingInputChange()"></textarea>
+          </div>
+          <div class="le-field">
+            <label>Titular Izquierdo (En Cursiva)</label>
+            <input type="text" id="le-pop-hit" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Texto del Beneficio / Descuento</label>
+            <input type="text" id="le-pop-disc" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Nombre del Drop Inferior</label>
+            <input type="text" id="le-pop-drop" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Título del Formulario</label>
+            <input type="text" id="le-pop-ftitle" oninput="onLandingInputChange()">
+          </div>
+          <div class="le-field">
+            <label>Descripción del Formulario</label>
+            <textarea id="le-pop-fsub" oninput="onLandingInputChange()"></textarea>
+          </div>
+          <div class="le-field">
+            <label>Texto del Botón de Envío</label>
+            <input type="text" id="le-pop-fbtn" oninput="onLandingInputChange()">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Vista Previa Interactiva en Vivo -->
+    <div class="le-preview-pane">
+      <div class="le-iframe-wrap" id="le-iframe-wrap">
+        <div style="background:#f3f4f6; border-bottom:1px solid #e5e7eb; padding:0.35rem 0.75rem; display:flex; align-items:center; justify-content:space-between; font-size:0.68rem; color:#6b7280;">
+          <div style="display:flex; gap:5px; align-items:center;">
+            <span style="width:9px; height:9px; border-radius:50%; background:#ef4444; display:inline-block;"></span>
+            <span style="width:9px; height:9px; border-radius:50%; background:#f59e0b; display:inline-block;"></span>
+            <span style="width:9px; height:9px; border-radius:50%; background:#10b981; display:inline-block;"></span>
+            <span style="margin-left:8px; font-family:monospace; color:#374151;">https://yossico.com/index.html (Vista Previa en Vivo)</span>
+          </div>
+          <button type="button" onclick="recargarIframeLanding()" style="background:none; border:none; cursor:pointer; color:#374151; font-size:0.7rem;">↻ Recargar vista</button>
+        </div>
+        <iframe id="landing-preview-iframe" src="index.html?preview=1" style="width:100%; flex:1; border:none; background:#fff;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
   </div><!-- /main -->
   </div><!-- /admin-wrapper -->
 </div>
@@ -2327,6 +2944,8 @@ function cambiarTab(tab, btn) {
       (!window.todasSubs || window.todasSubs.length === 0) ? cargarSuscriptoras() : Promise.resolve(),
       (!window.todosChatLeads || window.todosChatLeads.length === 0) ? cargarChatLeads() : Promise.resolve()
     ]).then(() => cargarAuditoriaLegal());
+  } else if (tab === 'landing') {
+    initLandingEditor();
   }
 }
 
@@ -6080,6 +6699,571 @@ async function marcarEntregado(id) {
   mostrarToast('Pedido marcado como Entregado ✓', 'ok');
   cargarPedidos();
 }
+
+// ── EDITOR WEB / LANDING ESTILO SHOPIFY ──────────────────────────────────────
+const LANDING_DEFAULT_CONFIG = {
+  sectionOrder: ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta'],
+  announcement: {
+    visible: true,
+    text: 'Envío gratis en compras superiores a $450.000',
+    subtext: 'Exclusivo para Colombia',
+    showFlag: true,
+    bgColor: '#0a0a0a',
+    textColor: '#ffffff'
+  },
+  countdown: {
+    visible: true,
+    eyebrow: 'DROP 01 — APERTURA',
+    targetDate: '2026-12-01T00:00',
+    ctaText: 'Avisarme al abrir'
+  },
+  hero: {
+    visible: true,
+    labelPrefix: 'Uniformes Médicos · ',
+    wordSwap1: 'Colombia',
+    wordSwap2: 'YOSSICO',
+    titleLine1: 'Vestidos',
+    titleLine2: 'para',
+    titleItalic: 'sanar.',
+    subtitle: 'Uniformes para mujer diseñados para quienes dan todo en su día a día, hechos con muchísima precisión, identidad y orgullo para ellas.',
+    ctaPrimaryText: 'Ver Colección',
+    ctaPrimaryUrl: 'coleccion.html',
+    ctaSecondaryText: 'Nuestra historia',
+    ctaSecondaryUrl: 'historia.html',
+    image: 'img/hero_model_cutout.webp',
+    imagePosition: 'center top',
+    rightBgColor: '#f5f4f0'
+  },
+  drops: {
+    visible: true,
+    eyebrow: 'Modelo de lanzamiento',
+    headlineTop: 'Algunas\nprendas',
+    headlineItalic: 'regresan.',
+    headlineBottom: 'Pero nunca\nestán siempre.',
+    sub: 'Ediciones limitadas · Ventanas de disponibilidad · Colombia',
+    p1: 'YOSSICO no opera como una marca tradicional. Lanzamos por drops: colecciones disponibles en ventanas específicas del año, en cantidades que no se repiten.',
+    pullQuote: '"Cuando se acaba, se acaba."',
+    p2: 'Algunos modelos regresan. Otros no. En ambos casos, la regla es la misma: cada prenda tiene su momento, y quien la elige lo sabe.',
+    p3: 'Queremos que cada persona que vista YOSSICO lo haga porque eligió estar ahí.',
+    ctaText: 'VER COLECCIÓN DISPONIBLE',
+    ctaUrl: 'coleccion.html',
+    subLinkText: 'Suscríbete para el próximo drop'
+  },
+  nosotros: {
+    visible: true,
+    eyebrow: 'Por qué somos diferentes',
+    titlePrefix: 'Por qué',
+    titleItalic: 'YOSSICO',
+    titleSuffix: 'es diferente.',
+    cards: [
+      {
+        title: 'Telas de alto desempeño',
+        text: 'Materiales seleccionados para resistir largas jornadas: antifluidos, transpirables, duraderos. Tu comodidad no se negocia.'
+      },
+      {
+        title: 'Identidad en cada detalle',
+        text: 'Cortes diseñados para el cuerpo en movimiento. Bordados de precisión. Un uniforme que te representa, no que te uniforma.'
+      },
+      {
+        title: 'Entrega y experiencia',
+        text: 'Cada pedido llega con una presentación pensada al detalle. Porque la primera vez que tocas un uniforme YOSSICO también hace parte de la experiencia.'
+      },
+      {
+        title: 'Solo para ellas',
+        text: 'Diseñada desde el principio para la mujer en la salud. Cada corte, cada detalle, cada decisión — pensados para quien da todo en cada turno.'
+      }
+    ]
+  },
+  contactoCta: {
+    visible: true,
+    eyebrow: 'Habla con nosotros',
+    titlePrefix: '¿Listo para',
+    titleItalic: 'elevar',
+    titleSuffix: 'tu imagen?',
+    subtitle: 'Pedidos, tallas, guía de uniformes — estamos en WhatsApp.',
+    whatsappNumber: '573127300661',
+    whatsappText: 'Hola, quiero información sobre los uniformes YOSSICO',
+    instagramUrl: 'https://www.instagram.com/yossico.col?igsh=MWN0ZGZqbGd3ZTlhdA=='
+  },
+  popup: {
+    tag: 'YOSSICO Drops',
+    headlineTop: 'Sé el primero\nen saber',
+    headlineItalic: 'cuándo abre.',
+    discountLabel: '10% de descuento en tu primera compra',
+    dropWord: 'DROP 01',
+    formTitle: 'Únete al drop',
+    formSub: 'Cuéntanos quién eres y te avisamos antes de que abra el próximo drop — más tu descuento de bienvenida.',
+    btnText: 'Quiero mi descuento →'
+  }
+};
+
+const LANDING_HERO_PRESETS = [
+  { src: 'img/hero_model_cutout.webp', label: 'Hero Original' },
+  { src: 'img/oslo_black_front.webp', label: 'Oslo Negro' },
+  { src: 'img/oslo_navy_front.webp', label: 'Oslo Marino' },
+  { src: 'img/oslo_burgundy_front.webp', label: 'Oslo Vinotinto' },
+  { src: 'img/lima_black_front.webp', label: 'Lima Negro' },
+  { src: 'img/lima_teal_front.webp', label: 'Lima Pacífico' },
+  { src: 'img/lima_olive_front.webp', label: 'Lima Oliva' },
+  { src: 'img/manta_navy_1.webp', label: 'Manta Marino' },
+  { src: 'img/manta_vino_1.webp', label: 'Manta Vino' },
+  { src: 'img/manta_black_1.webp', label: 'Manta Negro' },
+  { src: 'img/bogota_navy_front.webp', label: 'Bogotá' },
+  { src: 'img/embajadora-hero.webp', label: 'Embajadora' }
+];
+
+let currentLandingConfig = JSON.parse(JSON.stringify(LANDING_DEFAULT_CONFIG));
+let landingEditorInitialized = false;
+
+function deepMergeLanding(base, custom) {
+  const out = JSON.parse(JSON.stringify(base));
+  if (!custom || typeof custom !== 'object') return out;
+  Object.keys(custom).forEach(k => {
+    if (Array.isArray(custom[k])) {
+      out[k] = JSON.parse(JSON.stringify(custom[k]));
+    } else if (custom[k] && typeof custom[k] === 'object' && out[k] && typeof out[k] === 'object') {
+      out[k] = Object.assign({}, out[k], custom[k]);
+    } else if (custom[k] !== undefined) {
+      out[k] = custom[k];
+    }
+  });
+  return out;
+}
+
+async function initLandingEditor() {
+  renderHeroPresetGallery();
+
+  if (!landingEditorInitialized) {
+    landingEditorInitialized = true;
+    const iframe = document.getElementById('landing-preview-iframe');
+    if (iframe) {
+      iframe.addEventListener('load', () => {
+        pushConfigToPreviewIframe();
+      });
+    }
+  }
+
+  let loaded = null;
+  try {
+    const { data, error } = await sb.rpc('get_config', { p_clave: 'landing_config' });
+    if (!error && data && typeof data === 'object' && Object.keys(data).length > 0) {
+      loaded = data;
+      localStorage.setItem('yossico_landing_config', JSON.stringify(data));
+    }
+  } catch (_) {}
+
+  if (!loaded) {
+    try {
+      loaded = JSON.parse(localStorage.getItem('yossico_landing_config') || 'null');
+    } catch (_) {}
+  }
+
+  currentLandingConfig = deepMergeLanding(LANDING_DEFAULT_CONFIG, loaded);
+  populateLandingForm(currentLandingConfig);
+  renderSectionOrderList();
+  pushConfigToPreviewIframe();
+  setLandingStatusBadge('synced');
+}
+
+function renderHeroPresetGallery() {
+  const grid = document.getElementById('le-hero-img-presets');
+  if (!grid) return;
+  const activeImg = currentLandingConfig?.hero?.image || '';
+  grid.innerHTML = LANDING_HERO_PRESETS.map(p => `
+    <div class="le-img-thumb ${activeImg === p.src ? 'selected' : ''}" onclick="seleccionarFotoHeroPreset('${p.src}')" title="${p.label}">
+      <img src="${p.src}" alt="${p.label}" loading="lazy">
+      <span>${p.label}</span>
+    </div>
+  `).join('');
+}
+
+window.seleccionarFotoHeroPreset = function(src) {
+  const input = document.getElementById('le-hero-img');
+  if (input) input.value = src;
+  onLandingInputChange();
+  renderHeroPresetGallery();
+};
+
+window.subirImagenHeroLanding = function(fileInput) {
+  const file = fileInput?.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = function() {
+      const maxDim = 1280;
+      let w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+        else { w = Math.round((w * maxDim) / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/webp', 0.84);
+      const urlInput = document.getElementById('le-hero-img');
+      if (urlInput) urlInput.value = dataUrl;
+      onLandingInputChange();
+      renderHeroPresetGallery();
+      mostrarToast('Imagen cargada en la vista previa ✓ Haz clic en Guardar y Publicar', 'ok');
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+function populateLandingForm(cfg) {
+  const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v != null ? v : ''; };
+  const setChk = (id, v) => { const el = document.getElementById(id); if (el) el.checked = v !== false; };
+
+  /* 1. Announcement */
+  const a = cfg.announcement || {};
+  setChk('le-ann-visible', a.visible);
+  setVal('le-ann-text', a.text);
+  setVal('le-ann-subtext', a.subtext);
+  setChk('le-ann-flag', a.showFlag);
+  setVal('le-ann-bg', a.bgColor || '#0a0a0a');
+  setVal('le-ann-color', a.textColor || '#ffffff');
+
+  /* 2. Countdown */
+  const c = cfg.countdown || {};
+  setChk('le-cd-visible', c.visible);
+  setVal('le-cd-eyebrow', c.eyebrow);
+  setVal('le-cd-date', (c.targetDate || '2026-12-01T00:00').slice(0, 16));
+  setVal('le-cd-cta', c.ctaText);
+
+  /* 3. Hero */
+  const h = cfg.hero || {};
+  setChk('le-hero-visible', h.visible);
+  setVal('le-hero-label', h.labelPrefix);
+  setVal('le-hero-w1', h.wordSwap1);
+  setVal('le-hero-w2', h.wordSwap2);
+  setVal('le-hero-t1', h.titleLine1);
+  setVal('le-hero-t2', h.titleLine2);
+  setVal('le-hero-ti', h.titleItalic);
+  setVal('le-hero-sub', h.subtitle);
+  setVal('le-hero-cta1-txt', h.ctaPrimaryText);
+  setVal('le-hero-cta1-url', h.ctaPrimaryUrl);
+  setVal('le-hero-cta2-txt', h.ctaSecondaryText);
+  setVal('le-hero-cta2-url', h.ctaSecondaryUrl);
+  setVal('le-hero-img', h.image);
+  setVal('le-hero-pos', h.imagePosition || 'center top');
+  setVal('le-hero-bg', h.rightBgColor || '#f5f4f0');
+
+  /* 4. Drops */
+  const d = cfg.drops || {};
+  setChk('le-drops-visible', d.visible);
+  setVal('le-drops-eye', d.eyebrow);
+  setVal('le-drops-htop', d.headlineTop);
+  setVal('le-drops-hit', d.headlineItalic);
+  setVal('le-drops-hbot', d.headlineBottom);
+  setVal('le-drops-sub', d.sub);
+  setVal('le-drops-p1', d.p1);
+  setVal('le-drops-quote', d.pullQuote);
+  setVal('le-drops-p2', d.p2);
+  setVal('le-drops-p3', d.p3);
+  setVal('le-drops-cta-txt', d.ctaText);
+  setVal('le-drops-cta-url', d.ctaUrl);
+  setVal('le-drops-sublink', d.subLinkText);
+
+  /* 5. Nosotros */
+  const n = cfg.nosotros || {};
+  setChk('le-nos-visible', n.visible);
+  setVal('le-nos-eye', n.eyebrow);
+  setVal('le-nos-tp', n.titlePrefix);
+  setVal('le-nos-ti', n.titleItalic);
+  setVal('le-nos-ts', n.titleSuffix);
+  const cards = n.cards || [];
+  for (let i = 0; i < 4; i++) {
+    setVal(`le-nos-c${i+1}-t`, cards[i]?.title || '');
+    setVal(`le-nos-c${i+1}-p`, cards[i]?.text || '');
+  }
+
+  /* 6. Contacto CTA */
+  const cc = cfg.contactoCta || {};
+  setChk('le-cc-visible', cc.visible);
+  setVal('le-cc-eye', cc.eyebrow);
+  setVal('le-cc-tp', cc.titlePrefix);
+  setVal('le-cc-ti', cc.titleItalic);
+  setVal('le-cc-ts', cc.titleSuffix);
+  setVal('le-cc-sub', cc.subtitle);
+  setVal('le-cc-wa-num', cc.whatsappNumber);
+  setVal('le-cc-wa-txt', cc.whatsappText);
+  setVal('le-cc-ig', cc.instagramUrl);
+
+  /* 7. Popup */
+  const p = cfg.popup || {};
+  setVal('le-pop-tag', p.tag);
+  setVal('le-pop-htop', p.headlineTop);
+  setVal('le-pop-hit', p.headlineItalic);
+  setVal('le-pop-disc', p.discountLabel);
+  setVal('le-pop-drop', p.dropWord);
+  setVal('le-pop-ftitle', p.formTitle);
+  setVal('le-pop-fsub', p.formSub);
+  setVal('le-pop-fbtn', p.btnText);
+
+  renderHeroPresetGallery();
+}
+
+function readLandingFormIntoConfig() {
+  const getVal = id => document.getElementById(id)?.value ?? '';
+  const getChk = id => !!document.getElementById(id)?.checked;
+
+  currentLandingConfig = {
+    sectionOrder: currentLandingConfig.sectionOrder || ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta'],
+    announcement: {
+      visible: getChk('le-ann-visible'),
+      text: getVal('le-ann-text'),
+      subtext: getVal('le-ann-subtext'),
+      showFlag: getChk('le-ann-flag'),
+      bgColor: getVal('le-ann-bg'),
+      textColor: getVal('le-ann-color')
+    },
+    countdown: {
+      visible: getChk('le-cd-visible'),
+      eyebrow: getVal('le-cd-eyebrow'),
+      targetDate: getVal('le-cd-date'),
+      ctaText: getVal('le-cd-cta')
+    },
+    hero: {
+      visible: getChk('le-hero-visible'),
+      labelPrefix: getVal('le-hero-label'),
+      wordSwap1: getVal('le-hero-w1'),
+      wordSwap2: getVal('le-hero-w2'),
+      titleLine1: getVal('le-hero-t1'),
+      titleLine2: getVal('le-hero-t2'),
+      titleItalic: getVal('le-hero-ti'),
+      subtitle: getVal('le-hero-sub'),
+      ctaPrimaryText: getVal('le-hero-cta1-txt'),
+      ctaPrimaryUrl: getVal('le-hero-cta1-url'),
+      ctaSecondaryText: getVal('le-hero-cta2-txt'),
+      ctaSecondaryUrl: getVal('le-hero-cta2-url'),
+      image: getVal('le-hero-img'),
+      imagePosition: getVal('le-hero-pos'),
+      rightBgColor: getVal('le-hero-bg')
+    },
+    drops: {
+      visible: getChk('le-drops-visible'),
+      eyebrow: getVal('le-drops-eye'),
+      headlineTop: getVal('le-drops-htop'),
+      headlineItalic: getVal('le-drops-hit'),
+      headlineBottom: getVal('le-drops-hbot'),
+      sub: getVal('le-drops-sub'),
+      p1: getVal('le-drops-p1'),
+      pullQuote: getVal('le-drops-quote'),
+      p2: getVal('le-drops-p2'),
+      p3: getVal('le-drops-p3'),
+      ctaText: getVal('le-drops-cta-txt'),
+      ctaUrl: getVal('le-drops-cta-url'),
+      subLinkText: getVal('le-drops-sublink')
+    },
+    nosotros: {
+      visible: getChk('le-nos-visible'),
+      eyebrow: getVal('le-nos-eye'),
+      titlePrefix: getVal('le-nos-tp'),
+      titleItalic: getVal('le-nos-ti'),
+      titleSuffix: getVal('le-nos-ts'),
+      cards: [
+        { title: getVal('le-nos-c1-t'), text: getVal('le-nos-c1-p') },
+        { title: getVal('le-nos-c2-t'), text: getVal('le-nos-c2-p') },
+        { title: getVal('le-nos-c3-t'), text: getVal('le-nos-c3-p') },
+        { title: getVal('le-nos-c4-t'), text: getVal('le-nos-c4-p') }
+      ]
+    },
+    contactoCta: {
+      visible: getChk('le-cc-visible'),
+      eyebrow: getVal('le-cc-eye'),
+      titlePrefix: getVal('le-cc-tp'),
+      titleItalic: getVal('le-cc-ti'),
+      titleSuffix: getVal('le-cc-ts'),
+      subtitle: getVal('le-cc-sub'),
+      whatsappNumber: getVal('le-cc-wa-num'),
+      whatsappText: getVal('le-cc-wa-txt'),
+      instagramUrl: getVal('le-cc-ig')
+    },
+    popup: {
+      tag: getVal('le-pop-tag'),
+      headlineTop: getVal('le-pop-htop'),
+      headlineItalic: getVal('le-pop-hit'),
+      discountLabel: getVal('le-pop-disc'),
+      dropWord: getVal('le-pop-drop'),
+      formTitle: getVal('le-pop-ftitle'),
+      formSub: getVal('le-pop-fsub'),
+      btnText: getVal('le-pop-fbtn')
+    }
+  };
+  return currentLandingConfig;
+}
+
+function renderSectionOrderList() {
+  const container = document.getElementById('le-order-list');
+  if (!container) return;
+  const labels = {
+    countdown: '⏳ Cuenta Regresiva (Pre-Hero)',
+    hero: '🖼️ Portada Principal (Hero)',
+    drops: '🔥 Sección Drops (Editorial)',
+    nosotros: '✨ Por qué YOSSICO (4 Pilares)',
+    contactoCta: '💬 Cierre / Contacto'
+  };
+  const order = currentLandingConfig.sectionOrder || ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta'];
+  container.innerHTML = order.map((key, idx) => {
+    const isVis = currentLandingConfig[key]?.visible !== false;
+    return `
+      <div class="le-order-item">
+        <span style="font-weight:600; ${isVis ? 'color:#111;' : 'color:#9ca3af;text-decoration:line-through;'}">${idx + 1}. ${labels[key] || key}</span>
+        <div style="display:flex; gap:4px; align-items:center;">
+          <button type="button" onclick="toggleSectionVisQuick('${key}')" style="background:${isVis ? '#e8f5e9' : '#fee2e2'}; color:${isVis ? '#1b5e20' : '#991b1b'}; border:1px solid #d1d5db; border-radius:3px; padding:2px 6px; font-size:0.65rem; cursor:pointer;" title="Mostrar / Ocultar">${isVis ? '👁️ Visible' : '🚫 Oculto'}</button>
+          <button type="button" onclick="moverSeccionLanding(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} style="background:#f3f4f6; border:1px solid #d1d5db; border-radius:3px; padding:2px 6px; font-size:0.65rem; cursor:pointer;">↑</button>
+          <button type="button" onclick="moverSeccionLanding(${idx}, 1)" ${idx === order.length - 1 ? 'disabled' : ''} style="background:#f3f4f6; border:1px solid #d1d5db; border-radius:3px; padding:2px 6px; font-size:0.65rem; cursor:pointer;">↓</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.moverSeccionLanding = function(idx, dir) {
+  const order = (currentLandingConfig.sectionOrder || ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta']).slice();
+  const target = idx + dir;
+  if (target < 0 || target >= order.length) return;
+  const tmp = order[idx];
+  order[idx] = order[target];
+  order[target] = tmp;
+  currentLandingConfig.sectionOrder = order;
+  renderSectionOrderList();
+  pushConfigToPreviewIframe();
+  setLandingStatusBadge('dirty');
+};
+
+window.toggleSectionVisQuick = function(key) {
+  const chkMap = {
+    countdown: 'le-cd-visible',
+    hero: 'le-hero-visible',
+    drops: 'le-drops-visible',
+    nosotros: 'le-nos-visible',
+    contactoCta: 'le-cc-visible'
+  };
+  const chk = document.getElementById(chkMap[key]);
+  if (chk) {
+    chk.checked = !chk.checked;
+    onLandingInputChange();
+  }
+};
+
+window.onLandingInputChange = function() {
+  readLandingFormIntoConfig();
+  renderSectionOrderList();
+  pushConfigToPreviewIframe();
+  setLandingStatusBadge('dirty');
+};
+
+function pushConfigToPreviewIframe() {
+  const iframe = document.getElementById('landing-preview-iframe');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({
+      type: 'YOSSICO_LANDING_PREVIEW',
+      config: currentLandingConfig
+    }, '*');
+  }
+}
+
+window.scrollPreviewToSection = function(section) {
+  const iframe = document.getElementById('landing-preview-iframe');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({
+      type: 'YOSSICO_LANDING_SCROLL',
+      section
+    }, '*');
+  }
+};
+
+window.toggleLeAcc = function(sectionKey) {
+  const acc = document.getElementById('le-acc-' + sectionKey);
+  if (!acc) return;
+  const wasOpen = acc.classList.contains('open');
+  document.querySelectorAll('#le-sidebar-controls .le-acc').forEach(el => el.classList.remove('open'));
+  if (!wasOpen) {
+    acc.classList.add('open');
+    if (sectionKey !== 'order') scrollPreviewToSection(sectionKey);
+  }
+};
+
+window.setLandingPreviewMode = function(mode) {
+  const wrap = document.getElementById('le-iframe-wrap');
+  const btnD = document.getElementById('le-btn-desktop');
+  const btnM = document.getElementById('le-btn-mobile');
+  if (!wrap) return;
+  if (mode === 'mobile') {
+    wrap.classList.add('mobile-mode');
+    if (btnM) { btnM.style.background = '#333'; btnM.style.color = '#fff'; }
+    if (btnD) { btnD.style.background = 'transparent'; btnD.style.color = '#ccc'; }
+  } else {
+    wrap.classList.remove('mobile-mode');
+    if (btnD) { btnD.style.background = '#333'; btnD.style.color = '#fff'; }
+    if (btnM) { btnM.style.background = 'transparent'; btnM.style.color = '#ccc'; }
+  }
+};
+
+window.recargarIframeLanding = function() {
+  const iframe = document.getElementById('landing-preview-iframe');
+  if (iframe) iframe.src = 'index.html?preview=1&t=' + Date.now();
+};
+
+function setLandingStatusBadge(state) {
+  const badge = document.getElementById('le-status-badge');
+  if (!badge) return;
+  if (state === 'dirty') {
+    badge.textContent = '● Cambios sin publicar';
+    badge.style.background = 'rgba(245, 158, 11, 0.25)';
+    badge.style.color = '#fcd34d';
+    badge.style.borderColor = '#f59e0b';
+  } else {
+    badge.textContent = '● Publicado en vivo';
+    badge.style.background = 'rgba(46, 125, 50, 0.3)';
+    badge.style.color = '#a5d6a7';
+    badge.style.borderColor = '#4caf50';
+  }
+}
+
+window.guardarLandingEnVivo = async function() {
+  const cfg = readLandingFormIntoConfig();
+  localStorage.setItem('yossico_landing_config', JSON.stringify(cfg));
+  try {
+    const { error } = await sb.rpc('set_config', {
+      p_clave: 'landing_config',
+      p_valor: cfg,
+      pin: adminPin || 'yossico2025'
+    });
+    if (error) {
+      mostrarToast('Guardado en el Panel Admin (Aviso nube: ' + error.message + ')', 'warn');
+    } else {
+      mostrarToast('¡Landing publicada en vivo para todos los visitantes! ✓', 'ok');
+    }
+  } catch (e) {
+    mostrarToast('Guardado en el Panel Admin ✓', 'ok');
+  }
+  setLandingStatusBadge('synced');
+  pushConfigToPreviewIframe();
+};
+
+window.restaurarLandingOriginal = async function() {
+  if (!confirm('¿Restaurar todos los textos, fotos y secciones de la Landing a su diseño original de fábrica?')) return;
+  currentLandingConfig = JSON.parse(JSON.stringify(LANDING_DEFAULT_CONFIG));
+  localStorage.removeItem('yossico_landing_config');
+  try {
+    await sb.rpc('set_config', {
+      p_clave: 'landing_config',
+      p_valor: {},
+      pin: adminPin || 'yossico2025'
+    });
+  } catch (_) {}
+  populateLandingForm(currentLandingConfig);
+  renderSectionOrderList();
+  recargarIframeLanding();
+  setLandingStatusBadge('synced');
+  mostrarToast('Landing restaurada al diseño original ✓', 'ok');
+};
 
 </script>
 </body>
