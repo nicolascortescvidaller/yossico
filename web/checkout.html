@@ -489,7 +489,27 @@
               price:  i.price
             }));
 
-            const { data: pedidoInsertado, error: insertError } = await sb.from('pedidos').insert({
+            const legalAudit = {
+              terminos_aceptados:   true,
+              privacidad_aceptada:  true,
+              retracto_informado:   true,
+              timestamp_utc:        new Date().toISOString(),
+              version_terminos:     '2.0-2026',
+              version_privacidad:   '2.0-2026',
+              version_reembolsos:   '2.0-2026',
+              user_agent:           navigator.userAgent,
+              canal:                'checkout_web',
+              texto_autorizacion:   'Aceptación expresa de Términos, Retracto y Autorización informada para Tratamiento de Datos Personales (Ley 1581 / Ley 1480).'
+            };
+
+            const legalAuditStr = `[SIC HABEAS DATA]: Términos v2.0 (Aceptado), Privacidad v2.0 (Aceptado), Retracto 5 días (Informado). Fecha: ${new Date().toISOString()}. UA: ${navigator.userAgent.slice(0, 100)}`;
+            const notaFinal = notas ? `${notas}\n\n${legalAuditStr}` : legalAuditStr;
+
+            let pedidoInsertado = null;
+            let insertError = null;
+
+            // Inserción segura: compatible con y sin columna adicional en Postgres
+            const payloadCompleto = {
               cliente_nombre:       nombre,
               cliente_telefono:     tel || null,
               cliente_email:        email || null,
@@ -500,18 +520,42 @@
               estado:               'pendiente',
               codigo_descuento:     dcode || null,
               drop_numero:          'Drop 1',
-              consentimiento_legal: {
-                terminos_aceptados:   true,
-                privacidad_aceptada:  true,
-                timestamp_utc:        new Date().toISOString(),
-                version_terminos:     '2.0-2026',
-                version_privacidad:   '2.0-2026',
-                version_reembolsos:   '2.0-2026',
-                user_agent:           navigator.userAgent,
-                canal:                'checkout_web',
-                texto_autorizacion:   'Aceptación expresa de Términos, Retracto y Autorización informada para Tratamiento de Datos Personales (Ley 1581 / Ley 1480).'
+              nota_interna:         notaFinal,
+              consentimiento_legal: legalAudit
+            };
+
+            try {
+              const res1 = await sb.from('pedidos').insert(payloadCompleto).select('id').single();
+              if (res1.error) {
+                // Fallback sin la columna consentimiento_legal (todo queda asegurado en nota_interna)
+                delete payloadCompleto.consentimiento_legal;
+                const res2 = await sb.from('pedidos').insert(payloadCompleto).select('id').single();
+                pedidoInsertado = res2.data;
+                insertError = res2.error;
+              } else {
+                pedidoInsertado = res1.data;
               }
-            }).select('id').single();
+            } catch (errIn) {
+              console.warn('[checkout] insert attempt failed, retrying minimal:', errIn);
+              try {
+                delete payloadCompleto.consentimiento_legal;
+                const res3 = await sb.from('pedidos').insert(payloadCompleto).select('id').single();
+                pedidoInsertado = res3.data;
+                insertError = res3.error;
+              } catch (_) {}
+            }
+
+            // Respaldo local de auditoría para el panel admin
+            try {
+              const localLog = JSON.parse(localStorage.getItem('yossico_legal_pedidos_log') || '[]');
+              localLog.unshift({
+                id: pedidoInsertado?.id || ('PED-' + Date.now()),
+                nombre, tel, email, ciudad, dir, total: finalTotal,
+                timestamp: new Date().toISOString(),
+                audit: legalAudit
+              });
+              localStorage.setItem('yossico_legal_pedidos_log', JSON.stringify(localLog.slice(0, 100)));
+            } catch (_) {}
 
             if (insertError) {
               console.error('[checkout] INSERT pedido error:', insertError.message);

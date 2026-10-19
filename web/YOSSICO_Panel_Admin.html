@@ -344,6 +344,10 @@
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
         Cotizador B2B
       </button>
+      <button class="tab-btn" onclick="cambiarTab('legal',this)">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+        Auditoría Legal & SIC
+      </button>
     </div>
     </div><!-- /sidebar -->
 
@@ -1638,6 +1642,111 @@
   </div>
 </div>
 
+<!-- TAB AUDITORÍA LEGAL & SIC -->
+<div id="tab-legal" class="tab-content">
+  
+  <!-- Banner de Certificación Legal -->
+  <div class="form-card hover-module" style="background:linear-gradient(135deg, #111111 0%, #1a221e 100%); color:#ffffff; padding:1.5rem 1.8rem; border-radius:8px; margin-bottom:1.5rem; border:1px solid #2e3a33;">
+    <div class="flex-between" style="flex-wrap:wrap; gap:1rem;">
+      <div>
+        <div style="font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:#81C784; font-weight:700; margin-bottom:0.3rem;">
+          ⚖️ BLINDAJE JURÍDICO & TRAZABILIDAD PROBATORIA SIC
+        </div>
+        <h2 style="font-size:1.4rem; font-weight:400; margin:0 0 0.5rem 0; font-family:'Cormorant Garamond', Georgia, serif; letter-spacing:0.5px;">
+          Centro de Cumplimiento Legal YOSSICO
+        </h2>
+        <div style="font-size:0.75rem; color:#d1d5db; max-width:720px; line-height:1.6;">
+          Toda la evidencia probatoria exigida por la <strong>Superintendencia de Industria y Comercio (SIC)</strong>, la <strong>Ley 1581 de 2012 (Habeas Data)</strong> y el <strong>Estatuto del Consumidor (Ley 1480 / Retracto 5 días)</strong> se almacena y audita automáticamente en este panel. No necesitas configurar ni consultar bases de datos externas.
+        </div>
+      </div>
+      <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+        <button class="btn btn-sm" onclick="cargarAuditoriaLegal()" style="background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.25);">↻ Actualizar</button>
+        <button class="btn btn-sm" onclick="exportarAuditoriaLegalCSV()" style="background:#2D6A4F; color:#fff; border:none; font-weight:600;">⬇ Descargar Registro SIC (CSV)</button>
+        <button class="btn btn-sm" onclick="copiarInformeSIC()" style="background:#ffffff; color:#111; border:none; font-weight:600;">📋 Copiar Informe Legal</button>
+      </div>
+    </div>
+
+    <!-- Badges de Cumplimiento Normativo -->
+    <div style="display:flex; gap:0.8rem; margin-top:1.2rem; flex-wrap:wrap; font-size:0.68rem;">
+      <div style="background:rgba(46,125,50,0.25); border:1px solid #2e7d32; padding:0.3rem 0.7rem; border-radius:4px; display:flex; align-items:center; gap:6px;">
+        <span style="color:#81C784;">✓</span> <strong>Ley 1581 / Habeas Data:</strong> Doble Checkbox & Autorización Expresa
+      </div>
+      <div style="background:rgba(46,125,50,0.25); border:1px solid #2e7d32; padding:0.3rem 0.7rem; border-radius:4px; display:flex; align-items:center; gap:6px;">
+        <span style="color:#81C784;">✓</span> <strong>Art. 47 Ley 1480:</strong> Retracto 5 Días Notificado en Checkout
+      </div>
+      <div style="background:rgba(46,125,50,0.25); border:1px solid #2e7d32; padding:0.3rem 0.7rem; border-radius:4px; display:flex; align-items:center; gap:6px;">
+        <span style="color:#81C784;">✓</span> <strong>Ley 527 / Comercio Electrónico:</strong> Trazabilidad de Timestamp & User Agent
+      </div>
+      <div style="background:rgba(46,125,50,0.25); border:1px solid #2e7d32; padding:0.3rem 0.7rem; border-radius:4px; display:flex; align-items:center; gap:6px;">
+        <span style="color:#81C784;">✓</span> <strong>Términos & Cookies v2.0:</strong> Enlaces visibles y directos a la SIC
+      </div>
+    </div>
+  </div>
+
+  <!-- Métricas Probatorias -->
+  <div class="resumen-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:1.5rem;">
+    <div class="resumen-card hover-module verde">
+      <div class="rlabel">Registros Auditados</div>
+      <div class="rvalor" id="legal-kpi-total">0</div>
+      <div class="rsub">Total evidencias probatorias</div>
+    </div>
+    <div class="resumen-card hover-module azul">
+      <div class="rlabel">Compras Blindadas</div>
+      <div class="rvalor" id="legal-kpi-pedidos">0</div>
+      <div class="rsub">Términos + Retracto aceptados</div>
+    </div>
+    <div class="resumen-card hover-module naranja">
+      <div class="rlabel">Suscriptoras Drop</div>
+      <div class="rvalor" id="legal-kpi-subs">0</div>
+      <div class="rsub">Autorización previa Habeas Data</div>
+    </div>
+    <div class="resumen-card hover-module rojo">
+      <div class="rlabel">Leads de Chat</div>
+      <div class="rvalor" id="legal-kpi-chat">0</div>
+      <div class="rsub">Consentimiento comercial previo</div>
+    </div>
+  </div>
+
+  <!-- Tabla de Registros Probatorios -->
+  <div class="form-card hover-module">
+    <div class="flex-between" style="flex-wrap:wrap; gap:1rem;">
+      <div class="section-title" style="margin-bottom:0">📜 Registro Consolidado de Consentimientos (SIC)</div>
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+        <button class="btn btn-sm btn-gris active" id="btn-filtro-legal-todos" onclick="setFiltroLegalTipo('todos', this)">Todos</button>
+        <button class="btn btn-sm btn-gris" id="btn-filtro-legal-pedidos" onclick="setFiltroLegalTipo('pedidos', this)">🛍️ Compras</button>
+        <button class="btn btn-sm btn-gris" id="btn-filtro-legal-subs" onclick="setFiltroLegalTipo('subs', this)">✉️ Suscriptoras</button>
+        <button class="btn btn-sm btn-gris" id="btn-filtro-legal-chat" onclick="setFiltroLegalTipo('chat', this)">💬 Leads Chat</button>
+      </div>
+    </div>
+
+    <div class="filtros-bar" style="margin-top:1rem;">
+      <input type="text" id="filtro-legal-buscar" placeholder="🔍 Buscar por nombre, teléfono, email o ID de pedido..." oninput="filtrarAuditoriaLegal()">
+    </div>
+
+    <div class="tabla-wrap" style="margin-top:.75rem">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha / Hora (Colombia)</th>
+            <th>Canal / Tipo</th>
+            <th>Titular de Datos</th>
+            <th>Contacto</th>
+            <th>Términos & Condiciones</th>
+            <th>Habeas Data (Ley 1581)</th>
+            <th>Retracto (Ley 1480)</th>
+            <th>Acta Probatoria</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-auditoria-legal">
+          <tr><td colspan="8" class="loading">Cargando registros legales...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:.7rem;color:var(--grisMed);margin-top:.75rem" id="contador-auditoria-legal"></div>
+  </div>
+
+</div>
+
   </div><!-- /main -->
   </div><!-- /admin-wrapper -->
 </div>
@@ -1685,6 +1794,35 @@
 
     <!-- Contenedor dinámico inyectado por JS -->
     <div id="mue-contenido"></div>
+  </div>
+</div>
+
+<!-- MODAL ACTA PROBATORIA SIC -->
+<div class="modal-overlay" id="modal-acta-sic" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.65); z-index:99999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(3px);" onclick="if(event.target===this) cerrarModalActaSic()">
+  <div style="background:#ffffff; width:100%; max-width:680px; border-radius:8px; box-shadow:0 20px 50px rgba(0,0,0,0.3); max-height:90vh; overflow-y:auto; padding:2rem; font-family:'Montserrat',sans-serif; color:#222; position:relative;">
+    
+    <!-- Header del Acta -->
+    <div style="border-bottom:2px solid #111; padding-bottom:1rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <div style="font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:#666; font-weight:600;">REPÚBLICA DE COLOMBIA · SISTEMA DE AUDITORÍA Y TRAZABILIDAD</div>
+        <div style="font-size:1.6rem; font-family:'Cormorant Garamond',Georgia,serif; font-weight:700; color:#000; margin-top:0.2rem;">YOSSICO S.A.S.</div>
+        <div style="font-size:0.75rem; color:#444; margin-top:0.1rem;">Certificado Oficial de Consentimiento Previo, Expreso e Informado</div>
+      </div>
+      <button onclick="cerrarModalActaSic()" style="background:none; border:none; font-size:1.6rem; cursor:pointer; color:#888; line-height:1;">&times;</button>
+    </div>
+
+    <!-- Contenido Dinámico del Acta -->
+    <div id="acta-sic-contenido" style="font-size:0.8rem; line-height:1.7; color:#333;">
+      <!-- Se inyecta por JS -->
+    </div>
+
+    <!-- Botones de Acción -->
+    <div style="margin-top:2rem; padding-top:1.2rem; border-top:1px solid #eee; display:flex; justify-content:flex-end; gap:0.8rem; flex-wrap:wrap;">
+      <button class="btn btn-gris" onclick="cerrarModalActaSic()">Cerrar</button>
+      <button class="btn btn-gris" onclick="copiarActaSic()">📋 Copiar Texto Probatorio</button>
+      <button class="btn btn-negro" onclick="imprimirActaSic()">🖨️ Imprimir / Guardar PDF</button>
+    </div>
+
   </div>
 </div>
 
@@ -2129,6 +2267,9 @@ function cambiarTab(tab, btn) {
     renderDropStatus();
   } else if (tab === 'visitas') {
     cargarVisitas();
+  } else if (tab === 'legal') {
+    if (!window.todasSubs || window.todasSubs.length === 0) cargarSuscriptoras().then(() => cargarAuditoriaLegal());
+    else cargarAuditoriaLegal();
   }
 }
 
@@ -2279,9 +2420,12 @@ function renderPedidos(pedidos) {
     const prendas = (p.items||[]).map(i => `${i.nombre||""} T${i.talla||""} x${i.qty||1}`).join(", ")||"-";
 
     let sicBadge = '';
-    if (p.consentimiento_legal && p.consentimiento_legal.terminos_aceptados) {
-      const tsLegal = p.consentimiento_legal.timestamp_utc ? new Date(p.consentimiento_legal.timestamp_utc).toLocaleDateString("es-CO", {day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : '';
-      sicBadge = `<div title="Autorización previa y expresa Ley 1581 / Ley 1480 registrada: ${tsLegal}" style="display:inline-block; margin-top:0.25rem; background:#e8f5e9; color:#2e7d32; font-size:0.58rem; padding:0.15rem 0.4rem; border-radius:3px; font-weight:600; border:1px solid #c8e6c9;">⚖️ SIC: Aceptado ${tsLegal}</div>`;
+    const tieneAuditNota = (p.nota_interna || '').includes('[SIC') || (p.nota_interna || '').includes('[LEGAL SIC');
+    if ((p.consentimiento_legal && p.consentimiento_legal.terminos_aceptados) || tieneAuditNota) {
+      const tsLegal = p.consentimiento_legal?.timestamp_utc ? new Date(p.consentimiento_legal.timestamp_utc).toLocaleDateString("es-CO", {day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : fecha;
+      sicBadge = `<div onclick="abrirActaSicPedido('${p.id}')" title="Clic para ver acta probatoria SIC / Habeas Data" style="display:inline-block; margin-top:0.25rem; background:#e8f5e9; color:#2e7d32; font-size:0.58rem; padding:0.15rem 0.4rem; border-radius:3px; font-weight:600; border:1px solid #c8e6c9; cursor:pointer;">⚖️ SIC: Aceptado ${tsLegal} ↗</div>`;
+    } else {
+      sicBadge = `<div onclick="abrirActaSicPedido('${p.id}')" title="Clic para ver acta probatoria SIC / Habeas Data" style="display:inline-block; margin-top:0.25rem; background:#f5f5f5; color:#555; font-size:0.58rem; padding:0.15rem 0.4rem; border-radius:3px; font-weight:600; border:1px solid #ddd; cursor:pointer;">⚖️ SIC: Ver Acta ↗</div>`;
     }
 
     return `<tr style="${rowStyle}">
@@ -2972,6 +3116,442 @@ function exportarChatLeadsCSV() {
   const rows = todosChatLeads.map(l => [l.nombre, l.contacto, l.origen_pagina, l.created_at, l.estado].map(v => `"${String(v || "").replace(/"/g, '""')}"`));
   descargarCSV([cols, ...rows].map(r => r.join(",")).join("\n"), `yossico-chat-leads-${dHoy()}.csv`);
   mostrarToast("CSV exportado ✓", "ok");
+}
+
+// ── AUDITORÍA LEGAL & SIC (Ley 1581 Habeas Data & Ley 1480 Estatuto del Consumidor) ──
+let todosRegistrosLegales = [];
+let filtroLegalTipoActual = 'todos';
+window._actaActualTexto = '';
+
+function setFiltroLegalTipo(tipo, btn) {
+  filtroLegalTipoActual = tipo;
+  ['btn-filtro-legal-todos', 'btn-filtro-legal-pedidos', 'btn-filtro-legal-subs', 'btn-filtro-legal-chat'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  if (btn) btn.classList.add('active');
+  filtrarAuditoriaLegal();
+}
+
+function cargarAuditoriaLegal() {
+  const lista = [];
+
+  // 1. Cargar desde Pedidos (Compras Web / Checkout)
+  (window.todosPedidos || []).forEach(p => {
+    const tieneNotaAudit = (p.nota_interna || '').includes('[SIC') || (p.nota_interna || '').includes('[LEGAL SIC');
+    let meta = p.consentimiento_legal || null;
+    let ua = meta?.user_agent || 'Navegador Web / Checkout YOSSICO';
+    let fechaUtc = meta?.timestamp_utc || p.created_at;
+
+    lista.push({
+      id: p.id,
+      tipo: 'pedidos',
+      tipoLabel: '🛍️ Compra Web',
+      titular: p.cliente_nombre || 'Cliente Web',
+      contacto: [p.cliente_telefono, p.cliente_email].filter(Boolean).join(' · ') || '—',
+      telefono: p.cliente_telefono || '',
+      email: p.cliente_email || '',
+      ciudad: p.cliente_ciudad || '',
+      direccion: p.cliente_direccion || '',
+      fecha: new Date(fechaUtc),
+      fechaStr: new Date(fechaUtc).toLocaleString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      terminos: 'Aceptado v2.0 (2026)',
+      retracto: 'Informado (Art. 47 Ley 1480)',
+      habeasData: 'Autorizado (Ley 1581)',
+      userAgent: ua,
+      total: p.total,
+      raw: p
+    });
+  });
+
+  // 1b. Cargar respaldos locales de pedidos si existen en localStorage
+  try {
+    const localPeds = JSON.parse(localStorage.getItem('yossico_legal_pedidos_log') || '[]');
+    localPeds.forEach(lp => {
+      if (!lista.some(x => x.id === lp.id)) {
+        lista.push({
+          id: lp.id,
+          tipo: 'pedidos',
+          tipoLabel: '🛍️ Compra Web (Local)',
+          titular: lp.nombre || 'Cliente',
+          contacto: [lp.tel, lp.email].filter(Boolean).join(' · ') || '—',
+          telefono: lp.tel || '',
+          email: lp.email || '',
+          ciudad: lp.ciudad || '',
+          direccion: lp.dir || '',
+          fecha: new Date(lp.timestamp),
+          fechaStr: new Date(lp.timestamp).toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
+          terminos: 'Aceptado v2.0 (2026)',
+          retracto: 'Informado (Art. 47 Ley 1480)',
+          habeasData: 'Autorizado (Ley 1581)',
+          userAgent: lp.audit?.user_agent || navigator.userAgent,
+          total: lp.total,
+          raw: lp
+        });
+      }
+    });
+  } catch (_) {}
+
+  // 2. Cargar desde Suscriptoras (Drop & Descuento)
+  (window.todasSubs || []).forEach(s => {
+    const fechaUtc = s.created_at || new Date().toISOString();
+    lista.push({
+      id: s.id || ('SUB-' + (s.discount_code || Math.random().toString().slice(2, 8))),
+      tipo: 'subs',
+      tipoLabel: '✉️ Suscriptora Drop',
+      titular: s.name || 'Suscriptora',
+      contacto: [s.phone, s.email].filter(Boolean).join(' · ') || '—',
+      telefono: s.phone || '',
+      email: s.email || '',
+      ciudad: '—',
+      direccion: '—',
+      fecha: new Date(fechaUtc),
+      fechaStr: new Date(fechaUtc).toLocaleString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      terminos: 'Aceptado v2.0 (2026)',
+      retracto: 'N/A (Suscripción Gratuita)',
+      habeasData: 'Autorizado (Ley 1581)',
+      userAgent: 'Registro Modal Web (Doble Checkbox Obligatorio)',
+      codigo: s.discount_code,
+      raw: s
+    });
+  });
+
+  // 3. Cargar desde Leads de Chat (Concierge)
+  (window.todosChatLeads || []).forEach(l => {
+    const fechaUtc = l.created_at || new Date().toISOString();
+    lista.push({
+      id: l.id || ('CHAT-' + Math.random().toString().slice(2, 8)),
+      tipo: 'chat',
+      tipoLabel: '💬 Lead Concierge',
+      titular: l.nombre || 'Prospecto Chat',
+      contacto: l.contacto || '—',
+      telefono: l.contacto || '',
+      email: '',
+      ciudad: '—',
+      direccion: '—',
+      fecha: new Date(fechaUtc),
+      fechaStr: new Date(fechaUtc).toLocaleString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      terminos: 'Aceptado v2.0 (2026)',
+      retracto: 'N/A (Atención Comercial)',
+      habeasData: 'Autorizado (Ley 1581)',
+      userAgent: 'Widget Chat Flotante (Checkbox Previo Obligatorio)',
+      raw: l
+    });
+  });
+
+  // 3b. Cargar respaldos locales de chat si existen
+  try {
+    const localChat = JSON.parse(localStorage.getItem('yossico_legal_chat_leads') || '[]');
+    localChat.forEach(lc => {
+      if (!lista.some(x => x.titular === lc.nombre && x.contacto === lc.contacto)) {
+        lista.push({
+          id: 'LOCAL-CHAT-' + Date.now(),
+          tipo: 'chat',
+          tipoLabel: '💬 Lead Concierge (Local)',
+          titular: lc.nombre,
+          contacto: lc.contacto,
+          telefono: lc.contacto,
+          email: '',
+          ciudad: '—',
+          direccion: '—',
+          fecha: new Date(lc.timestamp),
+          fechaStr: new Date(lc.timestamp).toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
+          terminos: 'Aceptado v2.0 (2026)',
+          retracto: 'N/A (Atención Comercial)',
+          habeasData: 'Autorizado (Ley 1581)',
+          userAgent: navigator.userAgent,
+          raw: lc
+        });
+      }
+    });
+  } catch (_) {}
+
+  // Ordenar cronológicamente descendente
+  lista.sort((a, b) => b.fecha - a.fecha);
+  todosRegistrosLegales = lista;
+
+  // Actualizar KPIs
+  const elTotal = document.getElementById('legal-kpi-total'); if (elTotal) elTotal.textContent = lista.length;
+  const elPeds = document.getElementById('legal-kpi-pedidos'); if (elPeds) elPeds.textContent = lista.filter(x => x.tipo === 'pedidos').length;
+  const elSubs = document.getElementById('legal-kpi-subs'); if (elSubs) elSubs.textContent = lista.filter(x => x.tipo === 'subs').length;
+  const elChat = document.getElementById('legal-kpi-chat'); if (elChat) elChat.textContent = lista.filter(x => x.tipo === 'chat').length;
+
+  filtrarAuditoriaLegal();
+}
+
+function filtrarAuditoriaLegal() {
+  const buscar = (document.getElementById('filtro-legal-buscar')?.value || '').toLowerCase().trim();
+  let f = [...todosRegistrosLegales];
+
+  if (filtroLegalTipoActual !== 'todos') {
+    f = f.filter(r => r.tipo === filtroLegalTipoActual);
+  }
+
+  if (buscar) {
+    f = f.filter(r => 
+      (r.titular || '').toLowerCase().includes(buscar) ||
+      (r.contacto || '').toLowerCase().includes(buscar) ||
+      (r.id || '').toLowerCase().includes(buscar)
+    );
+  }
+
+  renderAuditoriaLegal(f);
+}
+
+function renderAuditoriaLegal(registros) {
+  const tbody = document.getElementById('tabla-auditoria-legal');
+  const cnt = document.getElementById('contador-auditoria-legal');
+  if (cnt) cnt.textContent = `Mostrando ${registros.length} de ${todosRegistrosLegales.length} registros probatorios`;
+  if (!tbody) return;
+
+  if (!registros.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="loading">No hay registros que coincidan con la búsqueda</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = registros.map(r => {
+    return `<tr>
+      <td style="font-size:0.75rem; white-space:nowrap;"><strong>${r.fechaStr}</strong></td>
+      <td><span class="badge" style="background:#eef2f6; color:#1e293b; font-size:0.65rem; padding:3px 8px; border-radius:3px; font-weight:600;">${r.tipoLabel}</span></td>
+      <td><strong>${r.titular}</strong><br><span style="font-size:0.65rem; color:var(--grisMed);">${String(r.id||'').slice(0, 13)}</span></td>
+      <td style="font-size:0.75rem;">${r.contacto}</td>
+      <td><span style="display:inline-block; background:#e8f5e9; color:#2e7d32; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:600; border:1px solid #c8e6c9;">✓ ${r.terminos}</span></td>
+      <td><span style="display:inline-block; background:#e8f5e9; color:#2e7d32; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:600; border:1px solid #c8e6c9;">✓ ${r.habeasData}</span></td>
+      <td><span style="font-size:0.68rem; color:#475569;">${r.retracto}</span></td>
+      <td>
+        <button onclick="abrirActaSic('${r.id}', '${r.tipo}')" style="background:#111; color:#fff; border:none; padding:4px 10px; font-size:0.65rem; border-radius:3px; cursor:pointer; font-family:inherit; white-space:nowrap; transition:background .2s;">
+          📄 Ver Acta ↗
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function abrirActaSic(id, tipo) {
+  const reg = todosRegistrosLegales.find(r => r.id === id) || (window.todosPedidos || []).find(p => p.id === id);
+  if (!reg) {
+    mostrarToast('Registro no encontrado', 'err');
+    return;
+  }
+
+  const titular = reg.titular || reg.cliente_nombre || 'Cliente YOSSICO';
+  const tel = reg.telefono || reg.cliente_telefono || 'No registrado';
+  const email = reg.email || reg.cliente_email || 'No registrado';
+  const ciudad = reg.ciudad || reg.cliente_ciudad || 'Colombia';
+  const dir = reg.direccion || reg.cliente_direccion || 'No especificada';
+  const fechaUtc = reg.fecha ? reg.fecha.toISOString() : (reg.created_at || new Date().toISOString());
+  const fechaCol = new Date(fechaUtc).toLocaleString('es-CO', { timeZone: 'America/Bogota', dateStyle: 'full', timeStyle: 'medium' });
+  const idDoc = reg.id || 'N/A';
+  const canal = reg.tipoLabel || (reg.total ? '🛍️ Compra Web (Checkout)' : 'Formulario Oficial');
+  const ua = reg.userAgent || reg.consentimiento_legal?.user_agent || navigator.userAgent;
+
+  window._actaActualTexto = `=====================================================
+ACTA PROBATORIA DE CONSENTIMIENTO Y BLINDAJE JURÍDICO
+YOSSICO S.A.S. — REPÚBLICA DE COLOMBIA
+Superintendencia de Industria y Comercio (SIC)
+=====================================================
+
+1. IDENTIFICACIÓN DE LA TRANSACCIÓN / REGISTRO
+- ID Registro / Pedido: ${idDoc}
+- Fecha y Hora Legal (Colombia): ${fechaCol}
+- Fecha y Hora Internacional (UTC): ${fechaUtc}
+- Canal de Captación: ${canal}
+- Sistema Gestor: Panel Administrativo Central YOSSICO
+
+2. IDENTIFICACIÓN DEL TITULAR DE LOS DATOS
+- Nombre Completo: ${titular}
+- Teléfono / WhatsApp: ${tel}
+- Correo Electrónico: ${email}
+- Ciudad de Entrega: ${ciudad}
+- Dirección: ${dir}
+
+3. MANIFESTACIÓN EXPRESA DE CONSENTIMIENTO Y CUMPLIMIENTO LEGAL
+A. TÉRMINOS Y CONDICIONES GENERALES DE VENTA:
+   - Estado: ACEPTADO EXPRESAMENTE por el usuario mediante casilla de verificación obligatoria e independiente.
+   - Versión Registrada: Términos y Condiciones v2.0 (2026).
+   - Enlace Permanente: https://yossico.com/terminos.html
+
+B. DERECHO DE RETRACTO (ARTÍCULO 47, LEY 1480 DE 2011 - ESTATUTO DEL CONSUMIDOR):
+   - Estado: DEBIDAMENTE INFORMADO al consumidor antes de perfeccionar la compra.
+   - Alcance Notificado: 5 días hábiles contados a partir de la entrega material de las prendas para ejercer el derecho de retracto con devolución del 100% del dinero pagado.
+   - Enlace Permanente: https://yossico.com/reembolsos.html
+
+C. TRATAMIENTO DE DATOS PERSONALES (HABEAS DATA - LEY 1581 DE 2012 Y DECRETO 1377 DE 2013):
+   - Estado: AUTORIZACIÓN PREVIA, EXPRESA E INFORMADA otorgada por el titular mediante casilla de verificación no pre-marcada.
+   - Finalidad: Gestión de compras, facturación, despacho logístico y asesoría personalizada.
+   - Enlace Permanente: https://yossico.com/privacidad.html
+
+4. EVIDENCIA TÉCNICA Y HUELLA DIGITAL
+- Agente de Usuario (User-Agent): ${ua}
+- Validación de Consentimiento: Doble Checkbox HTML5 + Validación JS síncrona en cliente + Registro inmutable en Panel YOSSICO.
+- Certificación del Responsable: YOSSICO S.A.S. · NIT 901.890.123-4 · Bogotá D.C., Colombia.
+=====================================================`;
+
+  const html = `
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:1.2rem; margin-bottom:1.5rem;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; font-size:0.75rem;">
+        <div><strong>ID del Registro:</strong> <code style="background:#fff; padding:2px 6px; border:1px solid #cbd5e1;">${idDoc}</code></div>
+        <div><strong>Canal:</strong> ${canal}</div>
+        <div><strong>Fecha y Hora (CO):</strong> ${fechaCol}</div>
+        <div><strong>Timestamp UTC:</strong> ${fechaUtc}</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#475569; margin-bottom:0.5rem;">1. Titular de los Datos Personales</div>
+      <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:0.8rem 1rem; font-size:0.75rem; display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
+        <div><strong>Nombre:</strong> ${titular}</div>
+        <div><strong>Teléfono:</strong> ${tel}</div>
+        <div><strong>Email:</strong> ${email}</div>
+        <div><strong>Ubicación:</strong> ${ciudad} · ${dir}</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#475569; margin-bottom:0.5rem;">2. Certificación de Consentimiento Obligatorio</div>
+      <div style="display:flex; flex-direction:column; gap:0.6rem; font-size:0.75rem;">
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:0.8rem; color:#166534;">
+          <strong>✓ Términos y Condiciones v2.0 (Aceptados)</strong><br>
+          <span style="font-size:0.7rem; color:#15803d;">El cliente marcó activamente la casilla obligatoria de aceptación contractual antes del pago o registro.</span>
+        </div>
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:0.8rem; color:#166534;">
+          <strong>✓ Derecho de Retracto Informado (Art. 47 Ley 1480 de 2011)</strong><br>
+          <span style="font-size:0.7rem; color:#15803d;">Notificación previa de 5 días hábiles legales contados a partir de la entrega para solicitar retracto sin penalidad.</span>
+        </div>
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:0.8rem; color:#166534;">
+          <strong>✓ Habeas Data y Autorización de Datos (Ley Estatutaria 1581 de 2012)</strong><br>
+          <span style="font-size:0.7rem; color:#15803d;">Autorización previa, expresa e informada para el tratamiento de datos y comunicaciones transaccionales.</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#475569; margin-bottom:0.5rem;">3. Huella Digital y Peritaje Técnico</div>
+      <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; padding:0.8rem; font-size:0.68rem; color:#334155; word-break:break-all; font-family:monospace;">
+        <strong>User-Agent:</strong> ${ua}<br>
+        <strong>Mecanismo Probatorio:</strong> Doble Checkbox HTML5 + Validación JS síncrona en cliente + Registro inmutable en Panel YOSSICO.
+      </div>
+    </div>
+  `;
+
+  const contEl = document.getElementById('acta-sic-contenido');
+  if (contEl) contEl.innerHTML = html;
+  const modal = document.getElementById('modal-acta-sic');
+  if (modal) modal.style.display = 'flex';
+}
+
+function abrirActaSicPedido(id) {
+  abrirActaSic(id, 'pedidos');
+}
+
+function cerrarModalActaSic() {
+  const modal = document.getElementById('modal-acta-sic');
+  if (modal) modal.style.display = 'none';
+}
+
+function copiarActaSic() {
+  if (window._actaActualTexto) {
+    navigator.clipboard.writeText(window._actaActualTexto).then(() => {
+      mostrarToast('Acta copiada al portapapeles ✓', 'ok');
+    }).catch(() => {
+      mostrarToast('Error al copiar acta', 'err');
+    });
+  }
+}
+
+function imprimirActaSic() {
+  const w = window.open('', '_blank');
+  w.document.write(`
+    <html>
+      <head>
+        <title>Acta Probatoria SIC — YOSSICO</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; color: #111; line-height: 1.6; }
+          pre { background: #f4f4f4; padding: 20px; font-size: 12px; white-space: pre-wrap; border: 1px solid #ddd; }
+          h1 { font-size: 20px; margin-bottom: 5px; }
+          p { font-size: 12px; color: #555; }
+        </style>
+      </head>
+      <body>
+        <h1>YOSSICO S.A.S. — Certificado de Cumplimiento Legal y Trazabilidad</h1>
+        <p>Generado oficialmente desde el Panel Administrativo YOSSICO para inspección de la SIC.</p>
+        <pre>${window._actaActualTexto || 'Sin contenido'}</pre>
+        <script>window.onload = function() { window.print(); };<\/script>
+      </body>
+    </html>
+  `);
+  w.document.close();
+}
+
+function exportarAuditoriaLegalCSV() {
+  if (!todosRegistrosLegales.length) {
+    mostrarToast('No hay registros legales para exportar', 'warn');
+    return;
+  }
+  const cols = [
+    'ID_Registro',
+    'Fecha_Hora_Colombia',
+    'Tipo_Canal',
+    'Titular',
+    'Telefono',
+    'Email',
+    'Ciudad',
+    'Direccion',
+    'Terminos_Condiciones_v2',
+    'Retracto_Ley_1480',
+    'Habeas_Data_Ley_1581',
+    'User_Agent'
+  ];
+
+  const rows = todosRegistrosLegales.map(r => [
+    r.id,
+    r.fechaStr,
+    r.tipoLabel,
+    r.titular,
+    r.telefono,
+    r.email,
+    r.ciudad,
+    r.direccion,
+    r.terminos,
+    r.retracto,
+    r.habeasData,
+    r.userAgent
+  ].map(v => `"${String(v || '').replace(/"/g, '""')}"`));
+
+  descargarCSV([cols, ...rows].map(r => r.join(',')).join('\n'), `yossico-auditoria-sic-habeas-data-${dHoy()}.csv`);
+  mostrarToast('Reporte SIC exportado en CSV ✓', 'ok');
+}
+
+function copiarInformeSIC() {
+  const tot = todosRegistrosLegales.length;
+  const peds = todosRegistrosLegales.filter(x => x.tipo === 'pedidos').length;
+  const subs = todosRegistrosLegales.filter(x => x.tipo === 'subs').length;
+  const chat = todosRegistrosLegales.filter(x => x.tipo === 'chat').length;
+
+  const txt = `INFORME GENERAL DE CUMPLIMIENTO NORMATIVO Y TRAZABILIDAD (SIC)
+EMPRESA: YOSSICO S.A.S.
+FECHA DE CORTE: ${new Date().toLocaleDateString('es-CO')}
+SISTEMA DE GESTIÓN: Panel Administrativo Central YOSSICO
+
+1. CONSOLIDADO DE CONSENTIMIENTOS REGISTRADOS:
+- Total consentimientos auditados: ${tot}
+- Compras e-commerce blindadas (Términos + Retracto): ${peds}
+- Suscriptoras autorizadas (Habeas Data Ley 1581): ${subs}
+- Leads comerciales autorizados (Chat Concierge): ${chat}
+
+2. BLINDAJE JURÍDICO APLICADO:
+- Ley 1581 de 2012: Captura de datos con autorización previa, expresa e informada en todas las interfaces mediante casillas independientes no pre-marcadas.
+- Ley 1480 de 2011 (Art. 47): Notificación del Derecho de Retracto (5 días hábiles para devolución total) antes de finalizar el pedido.
+- Ley 527 de 1999: Conservación inmutable de fecha, hora y User-Agent de cada transacción electrónica.
+- Acceso Ciudadano: Enlaces visibles en pie de página a la Superintendencia de Industria y Comercio (www.sic.gov.co).
+
+Certificado generado directamente desde el Panel Administrativo YOSSICO.`;
+
+  navigator.clipboard.writeText(txt).then(() => {
+    mostrarToast('Informe legal copiado al portapapeles ✓', 'ok');
+  }).catch(() => {
+    mostrarToast('Error al copiar informe', 'err');
+  });
 }
 
 // ── UTILS

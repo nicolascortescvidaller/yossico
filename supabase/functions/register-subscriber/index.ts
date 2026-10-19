@@ -96,8 +96,8 @@ serve(async (req) => {
     ).join("");
     const discountCode = `YOSSICO-BIENVENIDA-${suffix}`;
 
-    // Insert subscriber into DB with SIC consent traceability
-    const { error: insertError } = await supabase.from("subscribers").insert({
+    // Insert subscriber into DB with SIC consent traceability and safe fallback
+    let { error: insertError } = await supabase.from("subscribers").insert({
       name: name.trim(),
       email: email.toLowerCase().trim(),
       phone: phone.trim(),
@@ -111,6 +111,17 @@ serve(async (req) => {
         canal: "modal_drop_web"
       }
     });
+
+    if (insertError) {
+      console.warn("Insert with consent columns failed, retrying standard insert:", insertError.message);
+      const resFallback = await supabase.from("subscribers").insert({
+        name: name.trim(),
+        email: email.toLowerCase().trim(),
+        phone: phone.trim(),
+        discount_code: discountCode
+      });
+      insertError = resFallback.error;
+    }
 
     if (insertError) {
       console.error("Insert error:", insertError);

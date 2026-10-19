@@ -198,13 +198,14 @@
     launcher.addEventListener('click', function () { toggleChat(); });
     closeBtn.addEventListener('click', function () { toggleChat(false); });
 
-    // Save lead to Supabase database (chat_leads table)
+    // Save lead to database with safe fallback for any schema
     function persistLead(nombre, contacto) {
       try {
-        var payload = {
+        var metaOrigen = (window.location.pathname || '/') + ' [Habeas Data Ley 1581 Aceptado]';
+        var payload5 = {
           p_nombre: nombre,
           p_contacto: contacto,
-          p_origen: window.location.pathname || '/',
+          p_origen: metaOrigen,
           p_acepto_datos: true,
           p_consentimiento_meta: {
             timestamp_utc: new Date().toISOString(),
@@ -213,6 +214,21 @@
             canal: 'chat_widget_concierge'
           }
         };
+
+        // Respaldo local en el navegador
+        try {
+          var localLeads = JSON.parse(localStorage.getItem('yossico_legal_chat_leads') || '[]');
+          localLeads.unshift({
+            nombre: nombre,
+            contacto: contacto,
+            origen: metaOrigen,
+            timestamp: new Date().toISOString(),
+            canal: 'chat_concierge',
+            acepto_datos: true
+          });
+          localStorage.setItem('yossico_legal_chat_leads', JSON.stringify(localLeads.slice(0, 100)));
+        } catch (_) {}
+
         fetch(SUPABASE_URL + '/rest/v1/rpc/guardar_chat_lead', {
           method: 'POST',
           headers: {
@@ -220,15 +236,31 @@
             'apikey': SUPABASE_KEY,
             'Authorization': 'Bearer ' + SUPABASE_KEY
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(payload5)
         }).then(function (r) {
+          if (!r.ok) {
+            // Si la versión de 5 argumentos no está disponible, enviar versión estándar de 3 argumentos
+            return fetch(SUPABASE_URL + '/rest/v1/rpc/guardar_chat_lead', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY
+              },
+              body: JSON.stringify({
+                p_nombre: nombre,
+                p_contacto: contacto,
+                p_origen: metaOrigen
+              })
+            }).then(function (r2) { return r2.json(); });
+          }
           return r.json();
         }).then(function (res) {
           if (res && res.ok) {
             console.log('[YOSSICO Concierge] Lead registrado ✓ ID:', res.id);
           }
         }).catch(function (err) {
-          console.warn('[YOSSICO Concierge] Error al registrar lead:', err);
+          console.warn('[YOSSICO Concierge] Fallo de guardado lead:', err);
         });
       } catch (err) {
         console.warn('[YOSSICO Concierge] Fallo de conexión lead:', err);
