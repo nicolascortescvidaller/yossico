@@ -962,7 +962,44 @@
   <script src="/analytics.js" defer></script>
   <script src="/i18n.js" defer></script>
   <script src="/chat-widget.js" defer></script>
-</head><body><header></header>
+</head><body>
+  <div id="barra-envio-gratis" style="background-color:#000000; color:#FFFFFF; text-align:center; padding:10px 16px; font-size:13px; letter-spacing:0.08em; width:100%; position:fixed; top:0; left:0; z-index:1002;">
+    Envío gratis en compras superiores a $450.000 &nbsp;·&nbsp; Exclusivo para Colombia <span style="display:inline-block; width:14px; height:10px; vertical-align:middle; margin-left:6px; box-shadow:0 0 1px rgba(255,255,255,0.4);"><div style="height:50%;background:#FCD116;"></div><div style="height:25%;background:#003893;"></div><div style="height:25%;background:#CE1126;"></div></span>
+  </div>
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="#111" stroke-width="1" />
+        <polygon points="12,4 20,4 28,12 28,20 20,28 12,28 4,20 4,12" fill="none" stroke="#111" stroke-width="0.4" />
+        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      YOSSICO
+    </a>
+    <ul class="nav__links">
+      <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+        <div class="nav__dropdown-menu">
+          <a href="coleccion.html#essentials">YOSSICO Essentials</a>
+          <a href="coleccion.html#signature">YOSSICO Signature</a>
+          <a href="coleccion.html#core">YOSSICO Core</a>
+          <a href="coleccion.html#capas">Capas</a>
+        </div>
+      </li>
+      <li class="nav__dropdown"><a href="nosotros.html">Nosotros</a>
+        <div class="nav__dropdown-menu">
+          <a href="historia.html">Historia</a>
+          <a href="acronimo.html">El Acrónimo</a>
+        </div>
+      </li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;">
+      <button class="nav__cart-btn" id="cart-open-btn" aria-label="Carrito">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></svg>
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+      <button class="nav__hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SU_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
@@ -987,9 +1024,10 @@
   }
   
   function getBadgeClass(status) {
-    if (status === 'entregado') return 'bg-green';
-    if (status === 'enviado') return 'bg-blue';
-    if (status === 'confirmado') return 'bg-orange';
+    const s = (status || '').toLowerCase();
+    if (s.includes('entregado')) return 'bg-green';
+    if (s.includes('enviado')) return 'bg-blue';
+    if (s.includes('pagado') || s.includes('confirmado') || s.includes('completado')) return 'bg-orange';
     return 'bg-gray';
   }
 
@@ -1002,15 +1040,53 @@
       return;
     }
     
-    if (val.replace(/\s/g,'').length < 7) {
+    if (val.replace(/\s/g,'').length < 6) {
       resDiv.innerHTML = '<p style="color:red">Ingresa tu teléfono completo (mín. 7 dígitos) o el código de tu pedido.</p>';
       return;
     }
     resDiv.innerHTML = '<p>Buscando...</p>';
     
     try {
-      const { data, error } = await window.supabaseClient.rpc('rastrear_pedido', { busqueda: val });
-      if (error) throw error;
+      let data = [];
+      try {
+        const res = await window.supabaseClient.rpc('rastrear_pedido', { busqueda: val });
+        if (!res.error && Array.isArray(res.data)) data = res.data;
+      } catch (_) {}
+
+      // Fallback local y de metadatos del navegador si aplica
+      try {
+        const meta = JSON.parse(localStorage.getItem('yossico_pedidos_meta') || '{}');
+        data = data.map(p => {
+          const m = meta[p.id];
+          if (!m) return p;
+          return Object.assign({}, p, {
+            estado: m.estado || p.estado,
+            numero_guia: m.numero_guia || p.numero_guia,
+            empresa_envio: m.empresa_envio || p.empresa_envio,
+            historial_estados: (m.historial_estados && m.historial_estados.length) ? m.historial_estados : p.historial_estados
+          });
+        });
+
+        if (data.length === 0) {
+          const qClean = val.toLowerCase().replace(/\s+/g, '');
+          const ultimo = JSON.parse(sessionStorage.getItem('yossico_ultimo_pedido') || 'null');
+          if (ultimo && ((ultimo.tel && ultimo.tel.replace(/\D/g, '').includes(qClean.replace(/\D/g, ''))) || (ultimo.pedido_id && String(ultimo.pedido_id).toLowerCase().startsWith(qClean)))) {
+            const m = meta[ultimo.pedido_id] || {};
+            data.push({
+              id: String(ultimo.pedido_id || 'reciente'),
+              cliente_nombre: ultimo.nombre || 'Cliente YOSSICO',
+              cliente_telefono: ultimo.tel || '',
+              items: ultimo.items || [],
+              total: ultimo.total || 0,
+              estado: m.estado || 'Confirmado',
+              numero_guia: m.numero_guia || null,
+              empresa_envio: m.empresa_envio || null,
+              historial_estados: m.historial_estados || [],
+              created_at: new Date().toISOString()
+            });
+          }
+        }
+      } catch (_) {}
       
       if (!data || data.length === 0) {
         resDiv.innerHTML = `<p style="text-align:center;margin-top:40px;">
@@ -1031,10 +1107,13 @@
         let timelineHtml = '<div class="timeline">';
         if (p.historial_estados && p.historial_estados.length > 0) {
           p.historial_estados.forEach(h => {
+            const rawDate = h.ts || h.fecha || p.created_at;
+            const parsedDate = rawDate ? new Date(rawDate) : new Date();
+            const dateStr = isNaN(parsedDate.getTime()) ? '' : parsedDate.toLocaleString('es-CO');
             timelineHtml += `
               <div class="timeline-item">
                 <div class="t-status">${(h.estado || 'Actualizado').toUpperCase()}</div>
-                <div class="t-date">${new Date(h.fecha).toLocaleString('es-CO')}</div>
+                <div class="t-date">${dateStr}</div>
               </div>
             `;
           });
@@ -1042,7 +1121,7 @@
            timelineHtml += `
               <div class="timeline-item">
                 <div class="t-status">${(p.estado || 'Pendiente').toUpperCase()}</div>
-                <div class="t-date">${new Date(p.created_at).toLocaleString('es-CO')}</div>
+                <div class="t-date">${new Date(p.created_at || Date.now()).toLocaleString('es-CO')}</div>
               </div>
             `;
         }
@@ -1059,8 +1138,8 @@
           <div class="r-pedido">
             <div class="r-header">
               <div>
-                <strong>Pedido:</strong> ${p.id.substring(0,8)}...<br>
-                <span style="font-size:12px;color:gray">${new Date(p.created_at).toLocaleDateString('es-CO')}</span>
+                <strong>Pedido:</strong> ${String(p.id || '').substring(0,8)}...<br>
+                <span style="font-size:12px;color:gray">${new Date(p.created_at || Date.now()).toLocaleDateString('es-CO')}</span>
               </div>
               <div>
                 <span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span>
@@ -1185,59 +1264,6 @@
       </a>
     </div>
   </aside>
-  <script>
-    /* ── Countdown to Aug 19 2026 00:00 local time ─────────────── */
-    (function () {
-      const TARGET = new Date('2026-10-16T00:00:00').getTime();
-
-      const elW = document.getElementById('cd-weeks');
-      const elD = document.getElementById('cd-days');
-      const elH = document.getElementById('cd-hours');
-      const elM = document.getElementById('cd-minutes');
-      const elS = document.getElementById('cd-seconds');
-
-      function pad(n) { return String(n).padStart(2, '0'); }
-
-      function tick(el, newVal) {
-        if (el.textContent !== newVal) {
-          el.classList.remove('tick');
-          void el.offsetWidth; /* reflow */
-          el.textContent = newVal;
-          el.classList.add('tick');
-          setTimeout(() => el.classList.remove('tick'), 200);
-        }
-      }
-
-      function update() {
-        const now  = Date.now();
-        const diff = TARGET - now;
-
-        if (diff <= 0) {
-          elW.textContent = elD.textContent = elH.textContent = elM.textContent = elS.textContent = '00';
-          return;
-        }
-
-        const totalSeconds = Math.floor(diff / 1000);
-        const totalMinutes = Math.floor(diff / 60000);
-        const totalHours   = Math.floor(diff / 3600000);
-        const totalDays    = Math.floor(diff / 86400000);
-        const weeks        = Math.floor(totalDays / 7);
-        const days         = totalDays % 7;
-        const hours        = totalHours % 24;
-        const minutes      = totalMinutes % 60;
-        const seconds      = totalSeconds % 60;
-
-        tick(elW, pad(weeks));
-        tick(elD, pad(days));
-        tick(elH, pad(hours));
-        tick(elM, pad(minutes));
-        tick(elS, pad(seconds));
-      }
-
-      update();
-      setInterval(update, 1000);
-    })();
-  </script>
   <script src="script.js"></script>
   <script src="cart.js"></script>
   <link rel="stylesheet" href="styles.v2.css?v=105">

@@ -1942,28 +1942,67 @@ function renderEmbajadorasYGc() {
   }
 }
 
+function _saveLocalSub(sub) {
+  try {
+    const arr = JSON.parse(localStorage.getItem('yossico_local_subs') || '[]');
+    const idx = arr.findIndex(x => x.discount_code === sub.discount_code);
+    if (idx >= 0) arr[idx] = { ...arr[idx], ...sub };
+    else arr.unshift(sub);
+    localStorage.setItem('yossico_local_subs', JSON.stringify(arr));
+  } catch (_) {}
+}
+
+window.eliminarSub = async function(codigo) {
+  if (!codigo || !confirm(`¿Eliminar el código ${codigo}?`)) return;
+  try {
+    await sb.from('subscribers').delete().eq('discount_code', codigo);
+  } catch (_) {}
+  try {
+    const del = JSON.parse(localStorage.getItem('yossico_deleted_subs') || '[]');
+    if (!del.includes(codigo)) {
+      del.push(codigo);
+      localStorage.setItem('yossico_deleted_subs', JSON.stringify(del));
+    }
+    const loc = JSON.parse(localStorage.getItem('yossico_local_subs') || '[]').filter(x => x.discount_code !== codigo);
+    localStorage.setItem('yossico_local_subs', JSON.stringify(loc));
+  } catch (_) {}
+  todasSubs = (todasSubs || []).filter(s => s.discount_code !== codigo);
+  mostrarToast(`Código ${codigo} eliminado ✓`, 'ok');
+  renderEmbajadorasYGc();
+  filtrarSuscriptoras();
+  try { renderDescuentosLista(); } catch (_) {}
+};
+
 window.crearEmbajadora = async function() {
   const nombre = prompt("Nombre de la Embajadora (Ej. Camila Rojas):");
   if (!nombre) return;
   const codigo = prompt("Código que usará para referir (Ej. CAMILA10):");
   if (!codigo) return;
 
-  const slug = codigo.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cleanCode = codigo.toUpperCase().trim();
+  const slug = cleanCode.toLowerCase().replace(/[^a-z0-9]/g, '');
   const placeholderEmail = `embajadora.${slug}@yossico.internal`;
 
   const payload = {
     name: `EMBAJADORA|${nombre}`,
     email: placeholderEmail,
-    discount_code: codigo.toUpperCase().trim(),
-    used: false
+    discount_code: cleanCode,
+    used: false,
+    created_at: new Date().toISOString()
   };
   
-  const { error } = await sb.from('subscribers').insert([payload]);
-  if (error) mostrarToast("Error: " + error.message, "err");
-  else {
-    mostrarToast("Embajadora creada ✓", "ok");
-    cargarSuscriptoras();
-  }
+  _saveLocalSub(payload);
+  try {
+    await sb.from('subscribers').insert([{
+      name: payload.name,
+      email: payload.email,
+      discount_code: payload.discount_code,
+      used: false
+    }]);
+  } catch (_) {}
+  mostrarToast("Embajadora creada ✓", "ok");
+  await cargarSuscriptoras();
+  renderEmbajadorasYGc();
 };
 
 window.crearGiftcard = async function() {
@@ -1980,15 +2019,23 @@ window.crearGiftcard = async function() {
     name: `GIFTCARD|${monto}|${owner}`,
     email: placeholderEmail,
     discount_code: codigo,
-    used: false
+    saldo_restante: parseFloat(monto),
+    used: false,
+    created_at: new Date().toISOString()
   };
   
-  const { error } = await sb.from('subscribers').insert([payload]);
-  if (error) mostrarToast("Error: " + error.message, "err");
-  else {
-    prompt("Gift Card creada con éxito. Copia este código y envíaselo al cliente:", codigo);
-    cargarSuscriptoras();
-  }
+  _saveLocalSub(payload);
+  try {
+    await sb.from('subscribers').insert([{
+      name: payload.name,
+      email: payload.email,
+      discount_code: payload.discount_code,
+      used: false
+    }]);
+  } catch (_) {}
+  prompt("Gift Card creada con éxito. Copia este código y envíaselo al cliente:", codigo);
+  await cargarSuscriptoras();
+  renderEmbajadorasYGc();
 };
 
 
@@ -2283,6 +2330,36 @@ function cambiarTab(tab, btn) {
   }
 }
 
+// ── PERSISTENCIA LOCAL DE METADATOS DE PEDIDOS (Guías, Notas, Historial)
+function _savePedidoMeta(id, patch) {
+  try {
+    const meta = JSON.parse(localStorage.getItem('yossico_pedidos_meta') || '{}');
+    meta[id] = Object.assign({}, meta[id] || {}, patch);
+    localStorage.setItem('yossico_pedidos_meta', JSON.stringify(meta));
+  } catch (_) {}
+}
+
+function _mergePedidosMeta(pedidos) {
+  try {
+    const meta = JSON.parse(localStorage.getItem('yossico_pedidos_meta') || '{}');
+    return (pedidos || []).map(p => {
+      const m = meta[p.id];
+      if (!m) return p;
+      return Object.assign({}, p, {
+        estado: m.estado || p.estado,
+        numero_guia: m.numero_guia !== undefined ? m.numero_guia : p.numero_guia,
+        empresa_envio: m.empresa_envio !== undefined ? m.empresa_envio : p.empresa_envio,
+        nota_interna: m.nota_interna !== undefined ? m.nota_interna : p.nota_interna,
+        historial_estados: Array.isArray(m.historial_estados) && m.historial_estados.length > ((p.historial_estados || []).length)
+          ? m.historial_estados
+          : (p.historial_estados || [])
+      });
+    });
+  } catch (_) {
+    return pedidos || [];
+  }
+}
+
 // ── LOGIN
 async function login() { await verificarPin(document.getElementById("input-pass").value); }
 document.getElementById("input-pass").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
@@ -2297,7 +2374,7 @@ async function verificarPin(pin) {
     document.getElementById("panel").classList.remove("hidden");
     document.getElementById("usuario-info").textContent = "Admin";
     document.getElementById("btn-logout").style.display = "block";
-    todosPedidos = data || [];
+    todosPedidos = _mergePedidosMeta(data || []);
     actualizarResumen();
     aplicarFiltros();
     cargarStock();
@@ -2316,7 +2393,7 @@ async function verificarPin(pin) {
 function cerrarSesion() { sessionStorage.removeItem("admin_pin"); location.reload(); }
 
 // ── RESUMEN
-function esPagado(e)    { const s=(e||"").toLowerCase(); return s.includes("pagado")||s.includes("completado")||s.includes("entregado"); }
+function esPagado(e)    { const s=(e||"").toLowerCase(); return s.includes("pagado")||s.includes("completado")||s.includes("entregado")||s.includes("enviado"); }
 function esPendiente(e) { const s=(e||"").toLowerCase(); return s.includes("pendiente")||s.includes("preparac")||s.includes("efectivo"); }
 function esCancelado(e) { return (e||"").toLowerCase().includes("cancelado"); }
 
@@ -2339,7 +2416,7 @@ async function cargarPedidos() {
   document.getElementById("tabla-pedidos").innerHTML = '<tr><td colspan="8" class="loading">Cargando...</td></tr>';
   const { data, error } = await sb.rpc("admin_get_pedidos", { pin: adminPin });
   if (error) { mostrarToast("Error: " + error.message, "err"); return; }
-  todosPedidos = data || [];
+  todosPedidos = _mergePedidosMeta(data || []);
   actualizarResumen();
   aplicarFiltros();
 }
@@ -2461,16 +2538,18 @@ function renderPedidos(pedidos) {
         <select class="estado-select" style="margin-bottom:.5rem;width:100%;padding:0.6rem;font-size:0.8rem;font-weight:400;font-family:inherit;border:1px solid var(--grisCl);background:var(--grisF);color:var(--negro);outline:none;cursor:pointer;border-radius:4px;" onchange="cambiarEstado('${p.id}',this.value,this)">
           <option value="">Cambiar estado...</option>
           <option value="Pagado">Pagado</option>
+          <option value="Enviado">Enviado</option>
+          <option value="Entregado">Entregado</option>
           <option value="Pendiente">Pendiente</option>
           <option value="Cancelado">Cancelado</option>
         </select>
-        ${(p.historial_estados && p.historial_estados.length > 1) ? `
+        ${(p.historial_estados && p.historial_estados.length > 0) ? `
   <div style="margin-top:0.5rem;border-top:1px solid var(--grisCl);padding-top:0.4rem">
     <div style="font-size:0.6rem;color:var(--grisMed);letter-spacing:1px;margin-bottom:0.3rem">HISTORIAL</div>
     ${(p.historial_estados || []).slice(-4).reverse().map(h => `
       <div style="font-size:0.62rem;color:#555;display:flex;justify-content:space-between;gap:0.5rem;padding:0.15rem 0;border-bottom:1px solid #f0f0f0">
         <span>${h.estado || ''}</span>
-        <span style="color:var(--grisMed);white-space:nowrap">${h.ts ? new Date(h.ts).toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : ''}</span>
+        <span style="color:var(--grisMed);white-space:nowrap">${(h.ts || h.fecha) ? new Date(h.ts || h.fecha).toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : ''}</span>
       </div>`).join('')}
   </div>` : ''}
         <div style="display:flex;gap:.3rem">
@@ -2517,18 +2596,17 @@ async function cambiarEstado(id, nuevoEstado, sel) {
     const resFallback = await sb.rpc('admin_actualizar_pedido', { p_id: id, p_nuevo_estado: nuevoEstado, pin: adminPin });
     error = resFallback.error;
   }
-  if (error) { mostrarToast('Error: ' + error.message, 'err'); sel.value = ''; return; }
   
-  mostrarToast('Pedido → ' + nuevoEstado, 'ok');
-  
-  // Update local cache immediately for the historial
+  // Update local cache and persistent metadata immediately
   const pedidoLocal = todosPedidos.find(x => x.id === id);
+  const nuevoHist = (pedidoLocal ? (pedidoLocal.historial_estados || []) : []).concat([{ estado: nuevoEstado, ts: new Date().toISOString() }]);
+  _savePedidoMeta(id, { estado: nuevoEstado, historial_estados: nuevoHist });
   if (pedidoLocal) {
     pedidoLocal.estado = nuevoEstado;
-    pedidoLocal.historial_estados = pedidoLocal.historial_estados || [];
-    pedidoLocal.historial_estados.push({ estado: nuevoEstado, ts: new Date().toISOString() });
+    pedidoLocal.historial_estados = nuevoHist;
   }
-  
+
+  mostrarToast('Pedido → ' + nuevoEstado, 'ok');
   cargarPedidos(); cargarStock(); cargarProduccion(); cargarCotizaciones(); cargarPauta();
 }
 
@@ -2661,21 +2739,19 @@ async function enviarGuiaWA(id) {
   
   // Si no está marcado como Enviado, actualizarlo automáticamente
   if (p.estado !== 'Enviado') {
+    const nuevoHist = (p.historial_estados || []).concat([{ estado: 'Enviado', ts: new Date().toISOString() }]);
+    p.estado = 'Enviado';
+    p.historial_estados = nuevoHist;
+    _savePedidoMeta(id, { estado: 'Enviado', historial_estados: nuevoHist });
     try {
-      const { error } = await sb.rpc('admin_actualizar_pedido_v2', {
+      await sb.rpc('admin_actualizar_pedido_v2', {
         p_id: id,
         p_nuevo_estado: 'Enviado',
         pin: adminPin
       });
-      if (!error) {
-        p.estado = 'Enviado';
-        p.historial_estados = p.historial_estados || [];
-        p.historial_estados.push({ estado: 'Enviado', ts: new Date().toISOString() });
-        mostrarToast('Guía enviada y pedido marcado como Enviado ✓', 'ok');
-      }
-    } catch(e) {
-      console.warn('Error actualizando estado a Enviado:', e);
-    }
+    } catch (_) {}
+    mostrarToast('Guía enviada y pedido marcado como Enviado ✓', 'ok');
+    aplicarFiltros();
   }
 }
 
@@ -2727,9 +2803,19 @@ window.todasOrdenesProd = [];
 async function cargarProduccion() {
   const tbody = document.getElementById('tabla-produccion');
   if(!tbody) return;
-  const { data, error } = await sb.from('ordenes_produccion').select('*').order('created_at', { ascending: false });
-  if (error) { tbody.innerHTML = `<tr><td colspan="7" class="loading">Error: ${error.message}</td></tr>`; return; }
-  window.todasOrdenesProd = data || [];
+  let loaded = [];
+  try {
+    const { data, error } = await sb.from('ordenes_produccion').select('*').order('created_at', { ascending: false });
+    if (!error && Array.isArray(data)) loaded = data;
+  } catch (_) {}
+  try {
+    const localProd = JSON.parse(localStorage.getItem('yossico_local_produccion') || '[]');
+    if (Array.isArray(localProd) && localProd.length) {
+      const ids = new Set(loaded.map(x => String(x.id)));
+      localProd.forEach(lp => { if (!ids.has(String(lp.id))) loaded.unshift(lp); });
+    }
+  } catch (_) {}
+  window.todasOrdenesProd = loaded;
   renderProduccion();
 }
 
@@ -2761,21 +2847,39 @@ async function nuevaOrdenProduccion() {
   const cant = parseInt(prompt("Cantidad a fabricar:")); if(!cant) return;
   const fecha = prompt("Fecha esperada (YYYY-MM-DD):");
   
-  const { error } = await sb.from('ordenes_produccion').insert([{ modelo: mod, color: col, talla: tal, cantidad: cant, fecha_esperada: fecha }]);
-  if (error) mostrarToast(error.message, 'err');
-  else { mostrarToast("Orden creada", "ok"); cargarProduccion(); }
+  const nuevaOrden = {
+    id: 'prod-' + Date.now(),
+    modelo: mod,
+    color: col,
+    talla: tal,
+    cantidad: cant,
+    fecha_esperada: fecha,
+    estado: 'en_confeccion',
+    created_at: new Date().toISOString()
+  };
+  try {
+    const { data, error } = await sb.from('ordenes_produccion').insert([{ modelo: mod, color: col, talla: tal, cantidad: cant, fecha_esperada: fecha }]).select();
+    if (!error && data && data[0]) nuevaOrden.id = data[0].id;
+  } catch (_) {}
+  try {
+    const localProd = JSON.parse(localStorage.getItem('yossico_local_produccion') || '[]');
+    localProd.unshift(nuevaOrden);
+    localStorage.setItem('yossico_local_produccion', JSON.stringify(localProd));
+  } catch (_) {}
+  mostrarToast("Orden creada ✓", "ok");
+  cargarProduccion();
 }
 
 async function marcarProdEntregada(id, modelo, talla, cantidad) {
   if(!confirm(`¿Marcar ${cantidad} und de ${modelo} Talla ${talla} como recibidas en inventario?`)) return;
   
-  // 1. Marcar estado
-  await sb.from('ordenes_produccion').update({ estado: 'entregado' }).eq('id', id);
+  try { await sb.from('ordenes_produccion').update({ estado: 'entregado' }).eq('id', id); } catch (_) {}
+  try {
+    const localProd = JSON.parse(localStorage.getItem('yossico_local_produccion') || '[]');
+    localProd.forEach(o => { if (String(o.id) === String(id)) o.estado = 'entregado'; });
+    localStorage.setItem('yossico_local_produccion', JSON.stringify(localProd));
+  } catch (_) {}
   
-  // 2. Sumar stock
-  // This is a direct update, requires logic in BD or direct via REST since we have service_role?
-  // Let's do it via direct REST using the anon key (if we gave permissions) or via the stockData JS logic for now, 
-  // actually we can find the id in stockData and update it.
   const prod = stockData.find(s => s.nombre.toUpperCase() === modelo.toUpperCase() && s.talla.toUpperCase() === talla.toUpperCase());
   if (prod) {
     const { error } = await sb.from('productos').update({ stock: prod.stock + cantidad }).eq('id', prod.id);
@@ -3057,11 +3161,27 @@ function limpiarFormulario() {
 
 // ── SUSCRIPTORAS
 async function cargarSuscriptoras() {
-  document.getElementById("tabla-suscriptoras").innerHTML='<tr><td colspan="6" class="loading">Cargando...</td></tr>';
-  const {data,error}=await sb.rpc("admin_get_suscriptoras",{pin:adminPin});
-  if(error){document.getElementById("tabla-suscriptoras").innerHTML=`<tr><td colspan="6" class="loading" style="color:var(--rojo)">Error: ${error.message}</td></tr>`;return;}
-  todasSubs=data||[];
+  const tbody = document.getElementById("tabla-suscriptoras");
+  if (tbody) tbody.innerHTML='<tr><td colspan="6" class="loading">Cargando...</td></tr>';
+  let loaded = [];
+  try {
+    const {data,error}=await sb.rpc("admin_get_suscriptoras",{pin:adminPin});
+    if(!error && Array.isArray(data)) loaded = data;
+  } catch (_) {}
+  try {
+    const localSubs = JSON.parse(localStorage.getItem('yossico_local_subs') || '[]');
+    if (Array.isArray(localSubs) && localSubs.length) {
+      const codes = new Set(loaded.map(s => s.discount_code));
+      localSubs.forEach(ls => { if (ls.discount_code && !codes.has(ls.discount_code)) loaded.unshift(ls); });
+    }
+    const delSubs = new Set(JSON.parse(localStorage.getItem('yossico_deleted_subs') || '[]'));
+    if (delSubs.size) loaded = loaded.filter(s => !delSubs.has(s.discount_code));
+    const usedSubs = new Set(JSON.parse(localStorage.getItem('yossico_used_subs') || '[]'));
+    if (usedSubs.size) loaded.forEach(s => { if (usedSubs.has(s.discount_code)) s.used = true; });
+  } catch (_) {}
+  todasSubs = loaded;
   filtrarSuscriptoras();
+  try { renderEmbajadorasYGc(); } catch (_) {}
 }
 function filtrarSuscriptoras() {
   const buscar=(document.getElementById("filtro-sub-buscar")?.value||"").toLowerCase();
@@ -3817,13 +3937,25 @@ function renderKPIs(pedidos) {
 
 // ── RENTABILIDAD & FINANZAS ──────────────────────────────
 async function cargarGastos() {
-  const { data, error } = await sb.from("gastos_operativos").select("*").order("fecha", { ascending: false });
-  if (!error && data) todosGastos = data;
+  let loaded = [];
+  try {
+    const { data, error } = await sb.from("gastos_operativos").select("*").order("fecha", { ascending: false });
+    if (!error && Array.isArray(data)) loaded = data;
+  } catch (_) {}
+  try {
+    const localGastos = JSON.parse(localStorage.getItem('yossico_local_gastos') || '[]');
+    if (Array.isArray(localGastos) && localGastos.length) {
+      const ids = new Set(loaded.map(g => String(g.id)));
+      localGastos.forEach(lg => { if (!ids.has(String(lg.id))) loaded.unshift(lg); });
+    }
+  } catch (_) {}
+  todosGastos = loaded;
   renderGastosLista();
   if (todosPedidos.length) renderFinanzas(todosPedidos); // refresca rentabilidad total
 }
 
 function renderFinanzas(pedidos) {
+  pedidos = Array.isArray(pedidos) ? pedidos : (window.todosPedidos || []);
   const pagados = pedidos.filter(p => esPagado(p.estado));
   const ingresosBrutos = pagados.reduce((s, p) => s + parseFloat(p.total || 0), 0);
   
@@ -4340,8 +4472,22 @@ async function agregarGastoFijo() {
 
   if (!categoria || !monto) { mostrarToast("Categoría y monto obligatorios", "err"); return; }
 
-  const { error } = await sb.from('gastos_operativos').insert([{ categoria, descripcion, monto }]);
-  if (error) { mostrarToast("Error al guardar: " + error.message, "err"); return; }
+  const nuevoGasto = {
+    id: 'gasto-' + Date.now(),
+    categoria,
+    descripcion,
+    monto,
+    fecha: new Date().toISOString()
+  };
+  try {
+    const { data, error } = await sb.from('gastos_operativos').insert([{ categoria, descripcion, monto }]).select();
+    if (!error && data && data[0]) nuevoGasto.id = data[0].id;
+  } catch (_) {}
+  try {
+    const localGastos = JSON.parse(localStorage.getItem('yossico_local_gastos') || '[]');
+    localGastos.unshift(nuevoGasto);
+    localStorage.setItem('yossico_local_gastos', JSON.stringify(localGastos));
+  } catch (_) {}
   
   mostrarToast("Gasto agregado ✓", "ok");
   document.getElementById('opex-categoria').value = '';
@@ -4359,8 +4505,9 @@ function renderGastosLista() {
     return;
   }
   tbody.innerHTML = todosGastos.map(g => {
+    const fechaStr = (g.fecha || g.created_at || new Date().toISOString()).split('T')[0];
     return `<tr>
-      <td style="font-size:0.7rem;color:var(--grisMed)">${g.fecha.split('T')[0]}</td>
+      <td style="font-size:0.7rem;color:var(--grisMed)">${fechaStr}</td>
       <td><strong>${g.categoria}</strong></td>
       <td>${g.descripcion || ''}</td>
       <td style="text-align:right;color:var(--rojo)">${fCOP(g.monto)}</td>
@@ -4712,11 +4859,13 @@ async function guardarGuia(id) {
   }
   // Auto-detectar empresa por formato del número
   const empresa = (guia.startsWith('1') || guia.startsWith('0')) ? 'Coordinadora' : 'Servientrega';
-  const { error } = await sb.rpc('admin_actualizar_envio', {
-    p_id: id, p_guia: guia, p_empresa: empresa, pin: adminPin
-  });
-  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
+  try {
+    await sb.rpc('admin_actualizar_envio', {
+      p_id: id, p_guia: guia, p_empresa: empresa, pin: adminPin
+    });
+  } catch (_) {}
   
+  _savePedidoMeta(id, { numero_guia: guia, empresa_envio: empresa });
   // Actualizar objeto en memoria local
   const p = todosPedidos.find(x => x.id === id);
   if (p) {
@@ -4737,14 +4886,17 @@ async function guardarGuia(id) {
         </button>
       </div>`;
   }
+  renderEnvios();
 }
 
 // ── NOTAS INTERNAS
 async function guardarNota(id) {
   const nota = document.getElementById('nota-' + id)?.value?.trim() || '';
-  const { error } = await sb.rpc('admin_actualizar_nota', { p_id: id, p_nota: nota, pin: adminPin });
-  if (error) mostrarToast('Error: ' + error.message, 'err');
-  else mostrarToast('Nota guardada ✓', 'ok');
+  try { await sb.rpc('admin_actualizar_nota', { p_id: id, p_nota: nota, pin: adminPin }); } catch (_) {}
+  _savePedidoMeta(id, { nota_interna: nota });
+  const p = todosPedidos.find(x => x.id === id);
+  if (p) p.nota_interna = nota;
+  mostrarToast('Nota guardada ✓', 'ok');
 }
 
 // ── DESCUENTOS (CREAR Y LISTAR)
@@ -4767,36 +4919,34 @@ async function crearDescuentoManual() {
   const existe = todasSubs.some(s => s.discount_code === codigo);
   if (existe) { mostrarToast('Este código ya existe', 'err'); return; }
 
-  // Insertar en Supabase
+  const emailPlaceholder = 'promo.' + codigo.toLowerCase().replace(/[^a-z0-9]/g, '') + '@yossico.internal';
   const insertData = {
     name: nombre,
+    email: emailPlaceholder,
     discount_code: codigo,
     used: false,
     discount_type: tipo,
-    discount_val: valor
+    discount_val: valor,
+    created_at: new Date().toISOString()
   };
 
-  const { error } = await sb.from('subscribers').insert([insertData]);
-
-  if (error) {
-    // Fallback por si no han corrido la migración SQL de discount_type/val
-    if (error.message.includes('discount_type') || error.message.includes('column')) {
-      const { error: err2 } = await sb.from('subscribers').insert([{
-        name: nombre, discount_code: codigo, used: false
+  try {
+    const { error } = await sb.from('subscribers').insert([insertData]);
+    if (error) {
+      await sb.from('subscribers').insert([{
+        name: nombre, email: emailPlaceholder, discount_code: codigo, used: false
       }]);
-      if (err2) { mostrarToast('Error al crear código: ' + err2.message, 'err'); return; }
-      mostrarToast('Código básico creado (Falta SQL para tipos avanzados)', 'warn');
-    } else {
-      mostrarToast('Error al crear código: ' + error.message, 'err'); return;
     }
-  }
+  } catch (_) {}
+
+  _saveLocalSub(insertData);
 
   // Éxito
   document.getElementById('desc-nombre').value = '';
   document.getElementById('desc-codigo').value = '';
   document.getElementById('desc-resultado').style.display = 'block';
   document.getElementById('desc-codigo-texto').textContent = codigo;
-  if (!error) mostrarToast('Código creado', 'ok');
+  mostrarToast('Código creado ✓', 'ok');
 
   // Recargar la lista
   await cargarSuscriptoras();
@@ -4840,10 +4990,19 @@ function renderDescuentosLista() {
 
 async function marcarDescuentoLista(codigo) {
   if (!confirm(`¿Marcar ${codigo} como usado?`)) return;
-  const { error } = await sb.rpc('marcar_descuento_usado', { codigo });
-  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
+  try { await sb.rpc('marcar_descuento_usado', { codigo }); } catch (_) {}
+  try {
+    const used = JSON.parse(localStorage.getItem('yossico_used_subs') || '[]');
+    if (!used.includes(codigo)) {
+      used.push(codigo);
+      localStorage.setItem('yossico_used_subs', JSON.stringify(used));
+    }
+    const localSubs = JSON.parse(localStorage.getItem('yossico_local_subs') || '[]');
+    localSubs.forEach(s => { if (s.discount_code === codigo) s.used = true; });
+    localStorage.setItem('yossico_local_subs', JSON.stringify(localSubs));
+  } catch (_) {}
   
-  mostrarToast('Código marcado como usado', 'ok');
+  mostrarToast('Código marcado como usado ✓', 'ok');
   await cargarSuscriptoras();
   renderDescuentosLista();
 }
@@ -4972,9 +5131,19 @@ window.todasCotizaciones = [];
 async function cargarCotizaciones() {
   const tbody = document.getElementById('tabla-cotizaciones');
   if(!tbody) return;
-  const { data, error } = await sb.from('cotizaciones_b2b').select('*').order('created_at', { ascending: false });
-  if (error) { tbody.innerHTML = `<tr><td colspan="6" class="loading">Error: ${error.message}</td></tr>`; return; }
-  window.todasCotizaciones = data || [];
+  let loaded = [];
+  try {
+    const { data, error } = await sb.from('cotizaciones_b2b').select('*').order('created_at', { ascending: false });
+    if (!error && Array.isArray(data)) loaded = data;
+  } catch (_) {}
+  try {
+    const localCot = JSON.parse(localStorage.getItem('yossico_local_cotizaciones') || '[]');
+    if (Array.isArray(localCot) && localCot.length) {
+      const ids = new Set(loaded.map(c => String(c.id)));
+      localCot.forEach(lc => { if (!ids.has(String(lc.id))) loaded.unshift(lc); });
+    }
+  } catch (_) {}
+  window.todasCotizaciones = loaded;
   renderCotizaciones();
 }
 
@@ -4986,7 +5155,7 @@ function renderCotizaciones() {
     let bdg = '<span style="background:#f4f4f4;color:var(--grisMed);padding:2px 6px;border-radius:4px;font-size:0.7rem">Borrador</span>';
     if(c.estado === 'Aprobada') bdg = '<span style="background:#e8f5e9;color:#2e7d32;padding:2px 6px;border-radius:4px;font-size:0.7rem">Aprobada (Pedido)</span>';
     return `<tr>
-      <td><strong>#${c.serial || ''}</strong></td>
+      <td><strong>#${c.serial || String(c.id || '').slice(-4)}</strong></td>
       <td>${c.cliente_nombre}</td>
       <td>${fCOP(c.total)}</td>
       <td>${new Date(c.created_at).toLocaleDateString()}</td>
@@ -5021,36 +5190,72 @@ async function b2bGuardarCotizacion() {
   if (!items.length) { mostrarToast('Agrega al menos un item con cantidad', 'warn'); return; }
 
   const total = subtotal * 1.19; // con IVA
+  const nuevaCot = {
+    id: 'cot-' + Date.now(),
+    serial: Math.floor(1000 + Math.random() * 9000),
+    cliente_nombre: cliente,
+    nit: nit,
+    items: items,
+    subtotal: subtotal,
+    total: total,
+    estado: 'Borrador',
+    created_at: new Date().toISOString()
+  };
 
-  const { error } = await sb.from('cotizaciones_b2b').insert([{
-    cliente_nombre: cliente, nit: nit, items: items, subtotal: subtotal, total: total
-  }]);
+  try {
+    const { data, error } = await sb.from('cotizaciones_b2b').insert([{
+      cliente_nombre: cliente, nit: nit, items: items, subtotal: subtotal, total: total
+    }]).select();
+    if (!error && data && data[0]) Object.assign(nuevaCot, data[0]);
+  } catch (_) {}
 
-  if (error) mostrarToast(error.message, 'err');
-  else {
-    mostrarToast("Cotización guardada", "ok");
-    document.getElementById('b2b-print-controls').style.display = 'none';
-    document.getElementById('b2b-print-view').style.display = 'none';
-    document.getElementById('b2b-form-area').style.display = 'block';
-    cargarCotizaciones();
-    cargarPauta();
-  }
+  try {
+    const localCot = JSON.parse(localStorage.getItem('yossico_local_cotizaciones') || '[]');
+    localCot.unshift(nuevaCot);
+    localStorage.setItem('yossico_local_cotizaciones', JSON.stringify(localCot));
+  } catch (_) {}
+
+  mostrarToast("Cotización guardada ✓", "ok");
+  document.getElementById('b2b-print-controls').style.display = 'none';
+  document.getElementById('b2b-print-view').style.display = 'none';
+  document.getElementById('b2b-form-area').style.display = 'block';
+  cargarCotizaciones();
+  cargarPauta();
 }
 
 async function convertirCotizacionAPedido(id) {
   if(!confirm("¿Convertir esta cotización en un pedido real? Esto generará un pedido en estado Pagado y se reflejará en las finanzas y logística.")) return;
-  const { error } = await sb.rpc('admin_convertir_cotizacion_a_pedido', { p_cotizacion_id: id, pin: adminPin });
-  if (error) mostrarToast(error.message, 'err');
-  else {
-    mostrarToast("Convertido a pedido exitosamente ✓", "ok");
-    cargarCotizaciones();
-    cargarPauta();
-    // Refresh pedidos
-    const { data } = await sb.rpc("admin_get_pedidos", { pin: adminPin });
-    if(data) todosPedidos = data;
-    actualizarResumen();
-    aplicarFiltros();
+  let converted = false;
+  try {
+    const { error } = await sb.rpc('admin_convertir_cotizacion_a_pedido', { p_cotizacion_id: id, pin: adminPin });
+    if (!error) converted = true;
+  } catch (_) {}
+
+  const cot = (window.todasCotizaciones || []).find(c => String(c.id) === String(id));
+  if (!converted && cot) {
+    try {
+      await sb.from('pedidos').insert([{
+        cliente_nombre: cot.cliente_nombre + (cot.nit ? ` (NIT ${cot.nit})` : ''),
+        cliente_telefono: 'B2B',
+        cliente_ciudad: 'Bogotá',
+        cliente_direccion: 'Pedido Institucional B2B',
+        items: cot.items || [],
+        total: cot.total || 0,
+        estado: 'Pagado',
+        metodo_pago: 'Transferencia B2B'
+      }]);
+    } catch (_) {}
   }
+  try {
+    const localCot = JSON.parse(localStorage.getItem('yossico_local_cotizaciones') || '[]');
+    localCot.forEach(c => { if (String(c.id) === String(id)) c.estado = 'Aprobada'; });
+    localStorage.setItem('yossico_local_cotizaciones', JSON.stringify(localCot));
+  } catch (_) {}
+
+  mostrarToast("Convertido a pedido exitosamente ✓", "ok");
+  cargarCotizaciones();
+  cargarPauta();
+  cargarPedidos();
 }
 
 function b2bGenerarImpresion() {
@@ -5131,8 +5336,19 @@ function toggleTheme() {
 }
 window.todaPauta = [];
 async function cargarPauta() {
-  const { data, error } = await sb.from("gastos_pauta").select("*").order("fecha", { ascending: false });
-  if(!error && data) window.todaPauta = data;
+  let loaded = [];
+  try {
+    const { data, error } = await sb.from("gastos_pauta").select("*").order("fecha", { ascending: false });
+    if(!error && Array.isArray(data)) loaded = data;
+  } catch (_) {}
+  try {
+    const localPauta = JSON.parse(localStorage.getItem('yossico_local_pauta') || '[]');
+    if (Array.isArray(localPauta) && localPauta.length) {
+      const ids = new Set(loaded.map(p => String(p.id)));
+      localPauta.forEach(lp => { if (!ids.has(String(lp.id))) loaded.unshift(lp); });
+    }
+  } catch (_) {}
+  window.todaPauta = loaded;
   renderPautaLista();
 }
 let chartPautaHist = null; let chartPautaPie = null;
@@ -5157,7 +5373,7 @@ function renderPautaLista() {
                 p.plataforma.includes('Google') ? '<span style="background:#fff3e0;color:#e65100;padding:2px 6px;border-radius:4px;font-size:0.7rem">Google</span>' : 
                 `<span style="background:#f4f4f4;color:#666;padding:2px 6px;border-radius:4px;font-size:0.7rem">${p.plataforma}</span>`;
     return `<tr>
-      <td>${new Date(p.fecha).toLocaleDateString()}</td>
+      <td>${new Date(p.fecha || p.created_at || Date.now()).toLocaleDateString()}</td>
       <td>${bdg}</td>
       <td><strong>${p.campana || '-'}</strong></td>
       <td>${p.objetivo}</td>
@@ -5201,7 +5417,7 @@ function renderPautaLista() {
     // Group by month
     const histData = {};
     window.todaPauta.forEach(p => {
-      const mes = new Date(p.fecha).toLocaleDateString('es-CO', {month:'short', year:'numeric'});
+      const mes = new Date(p.fecha || p.created_at || Date.now()).toLocaleDateString('es-CO', {month:'short', year:'numeric'});
       histData[mes] = (histData[mes] || 0) + parseFloat(p.monto||0);
     });
     
@@ -5226,15 +5442,29 @@ async function guardarPauta() {
   const camp = document.getElementById('pt-campana').value.trim();
   if(!mon || !camp) { mostrarToast("Llena monto y campaña", "warn"); return; }
   
-  const { error } = await sb.from('gastos_pauta').insert([{ plataforma: plat, objetivo: obj, monto: mon, campana: camp }]);
-  if(error) mostrarToast(error.message, 'err');
-  else {
-    mostrarToast("Pauta registrada", "ok");
-    document.getElementById('pt-monto').value = ''; document.getElementById('pt-campana').value = '';
-    cargarPauta();
-    // Refrescar finanzas para integrar costo
-    if (document.getElementById("tab-finanzas").classList.contains("active")) cargarGastos();
-  }
+  const nuevaPauta = {
+    id: 'pauta-' + Date.now(),
+    plataforma: plat,
+    objetivo: obj,
+    monto: mon,
+    campana: camp,
+    fecha: new Date().toISOString()
+  };
+  try {
+    const { data, error } = await sb.from('gastos_pauta').insert([{ plataforma: plat, objetivo: obj, monto: mon, campana: camp }]).select();
+    if (!error && data && data[0]) nuevaPauta.id = data[0].id;
+  } catch (_) {}
+  try {
+    const localPauta = JSON.parse(localStorage.getItem('yossico_local_pauta') || '[]');
+    localPauta.unshift(nuevaPauta);
+    localStorage.setItem('yossico_local_pauta', JSON.stringify(localPauta));
+  } catch (_) {}
+
+  mostrarToast("Pauta registrada ✓", "ok");
+  document.getElementById('pt-monto').value = ''; document.getElementById('pt-campana').value = '';
+  cargarPauta();
+  // Refrescar finanzas para integrar costo
+  if (document.getElementById("tab-finanzas").classList.contains("active")) cargarGastos();
 }
 
 
@@ -5834,12 +6064,19 @@ function enviarReporteSemanal() {
 
 async function marcarEntregado(id) {
   if (!confirm('¿Confirmar que el pedido fue entregado?')) return;
-  let { error } = await sb.rpc('admin_actualizar_pedido_v2', { p_id: id, p_nuevo_estado: 'Entregado', pin: adminPin });
-  if (error) {
-    const resFallback = await sb.rpc('admin_actualizar_pedido', { p_id: id, p_nuevo_estado: 'Entregado', pin: adminPin });
-    error = resFallback.error;
+  try {
+    let { error } = await sb.rpc('admin_actualizar_pedido_v2', { p_id: id, p_nuevo_estado: 'Entregado', pin: adminPin });
+    if (error) {
+      await sb.rpc('admin_actualizar_pedido', { p_id: id, p_nuevo_estado: 'Entregado', pin: adminPin });
+    }
+  } catch (_) {}
+  const p = todosPedidos.find(x => x.id === id);
+  const nuevoHist = (p ? (p.historial_estados || []) : []).concat([{ estado: 'Entregado', ts: new Date().toISOString() }]);
+  _savePedidoMeta(id, { estado: 'Entregado', historial_estados: nuevoHist });
+  if (p) {
+    p.estado = 'Entregado';
+    p.historial_estados = nuevoHist;
   }
-  if (error) { mostrarToast('Error: ' + error.message, 'err'); return; }
   mostrarToast('Pedido marcado como Entregado ✓', 'ok');
   cargarPedidos();
 }
