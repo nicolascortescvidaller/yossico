@@ -1647,7 +1647,7 @@
         function applyFilter(filter) {
             filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
             cards.forEach(card => {
-                const isHidden = filter !== 'all' && card.dataset.line !== filter;
+                const isHidden = card.dataset.cmsHidden === '1' || (filter !== 'all' && card.dataset.line !== filter);
                 card.classList.toggle('hidden', isHidden);
                 if (!isHidden) {
                     loadCardImages(card);
@@ -2069,11 +2069,14 @@
 
         /* ── Hero text rotation ── */
         (function() {
-            const words = ["definen.", "identifican.", "elevan.", "distinguen."];
+            window.__YOSSICO_COL_WORDS = ["definen.", "identifican.", "elevan.", "distinguen."];
             let i = 0;
             const el = document.getElementById('hero-rotating-word');
             if (el) {
                 setInterval(() => {
+                    const words = (Array.isArray(window.__YOSSICO_COL_WORDS) && window.__YOSSICO_COL_WORDS.length > 0)
+                        ? window.__YOSSICO_COL_WORDS
+                        : ["definen."];
                     el.classList.add('fade-out');
                     setTimeout(() => {
                         i = (i + 1) % words.length;
@@ -2132,6 +2135,308 @@
   }
   
   initDropBanner();
+})();
+</script>
+
+<!-- ── YOSSICO Colección CMS Engine (Admin Studio Live Customizer) ── -->
+<script>
+(function () {
+  const SUPA_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+  const SUPA_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
+
+  function escHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  window.applyYossicoColeccionConfig = function (cfg) {
+    if (!cfg || typeof cfg !== 'object') return;
+
+    /* 1. Barra Superior de Anuncio */
+    if (cfg.announcement) {
+      const a = cfg.announcement;
+      const bar = document.getElementById('barra-envio-gratis');
+      if (bar) {
+        const vis = a.visible !== false;
+        bar.style.display = vis ? '' : 'none';
+        const nav = document.querySelector('.nav');
+        if (nav) nav.style.top = vis ? '' : '0px';
+        document.body.style.paddingTop = vis ? '' : '0px';
+        if (a.bgColor) bar.style.backgroundColor = a.bgColor;
+        if (a.textColor) bar.style.color = a.textColor;
+        if (a.text !== undefined || a.subtext !== undefined || a.showFlag !== undefined) {
+          const mainTxt = escHtml(a.text !== undefined ? a.text : 'Envío gratis en compras superiores a $450.000');
+          const subTxt = a.subtext ? ` &nbsp;·&nbsp; ${escHtml(a.subtext)}` : '';
+          const flagHtml = (a.showFlag !== false)
+            ? ` <span style="display:inline-block; width:14px; height:10px; vertical-align:middle; margin-left:6px; box-shadow:0 0 1px rgba(255,255,255,0.4);"><div style="height:50%;background:#FCD116;"></div><div style="height:25%;background:#003893;"></div><div style="height:25%;background:#CE1126;"></div></span>`
+            : '';
+          bar.innerHTML = mainTxt + subTxt + flagHtml;
+        }
+      }
+    }
+
+    /* 2. Encabezado de Página (Page Header) */
+    if (cfg.header) {
+      const h = cfg.header;
+      const ph = document.querySelector('.page-header');
+      if (ph) {
+        ph.style.display = (h.visible !== false) ? '' : 'none';
+        const lbl = ph.querySelector('.page-header__label');
+        if (lbl && h.label !== undefined) lbl.textContent = h.label;
+
+        if (h.rotatingWords !== undefined) {
+          const arr = String(h.rotatingWords).split(',').map(s => s.trim()).filter(Boolean);
+          if (arr.length > 0) window.__YOSSICO_COL_WORDS = arr;
+        }
+
+        const titleEl = ph.querySelector('.page-header__title');
+        if (titleEl && (h.titlePrefix !== undefined || h.rotatingWords !== undefined)) {
+          const pref = escHtml(h.titlePrefix !== undefined ? h.titlePrefix : 'Scrubs que te');
+          const firstWord = escHtml((window.__YOSSICO_COL_WORDS && window.__YOSSICO_COL_WORDS[0]) || 'definen.');
+          titleEl.innerHTML = `${pref} <em id="hero-rotating-word">${firstWord}</em>`;
+        }
+      }
+    }
+
+    /* 3. Barra de Filtros */
+    if (cfg.filters) {
+      const f = cfg.filters;
+      const fb = document.querySelector('#linea-uniformes .filter-bar');
+      if (fb) {
+        fb.style.display = (f.visible !== false) ? '' : 'none';
+        const btnSig = fb.querySelector('[data-filter="signature"]');
+        const btnEss = fb.querySelector('[data-filter="essentials"]');
+        const btnCore = fb.querySelector('[data-filter="core"]');
+        const btnAll = fb.querySelector('[data-filter="all"]');
+        if (btnSig && f.labelSignature !== undefined) btnSig.textContent = f.labelSignature;
+        if (btnEss && f.labelEssentials !== undefined) btnEss.textContent = f.labelEssentials;
+        if (btnCore && f.labelCore !== undefined) btnCore.textContent = f.labelCore;
+        if (btnAll && f.labelAll !== undefined) btnAll.textContent = f.labelAll;
+      }
+    }
+
+    /* 4. Tarjetas de Productos */
+    if (cfg.products && typeof cfg.products === 'object') {
+      Object.keys(cfg.products).forEach(pid => {
+        const pCfg = cfg.products[pid];
+        if (!pCfg) return;
+        const gallery = document.getElementById('gallery-' + pid);
+        if (!gallery) return;
+        const card = gallery.closest('.product-card');
+        if (!card) return;
+
+        /* Visibilidad */
+        const isVis = pCfg.visible !== false;
+        card.dataset.cmsHidden = isVis ? '0' : '1';
+        card.style.display = isVis ? '' : 'none';
+
+        /* Línea / Categoría */
+        if (pCfg.line) {
+          card.dataset.line = pCfg.line;
+        }
+        if (pCfg.tag !== undefined) {
+          gallery.dataset.lineName = pCfg.tag;
+          const tagEl = gallery.querySelector('.product-card__tag');
+          if (tagEl) tagEl.textContent = pCfg.tag;
+        }
+
+        /* Nombre, Subtítulo, Precio, Descripción, Tela */
+        if (pCfg.name !== undefined) {
+          gallery.dataset.name = pCfg.name;
+          const nameEl = card.querySelector('.product-card__name');
+          if (nameEl) nameEl.textContent = pCfg.name;
+        }
+        if (pCfg.sub !== undefined) {
+          gallery.dataset.sub = pCfg.sub;
+          const subEl = card.querySelector('.product-card__sub');
+          if (subEl) subEl.textContent = pCfg.sub;
+        }
+        if (pCfg.price !== undefined) {
+          gallery.dataset.price = pCfg.price;
+          const priceEl = card.querySelector('.product-card__price');
+          if (priceEl) priceEl.textContent = pCfg.price;
+        }
+        if (pCfg.desc !== undefined) {
+          gallery.dataset.desc = pCfg.desc;
+        }
+        if (pCfg.fabric !== undefined) {
+          gallery.dataset.fabric = pCfg.fabric;
+        }
+        if (pCfg.ctaText !== undefined) {
+          const ctaEl = card.querySelector('.product-card__cta');
+          if (ctaEl) ctaEl.innerHTML = `${escHtml(pCfg.ctaText)} <span class="arrow">→</span>`;
+        }
+        if (pCfg.addBtnText !== undefined) {
+          const addEl = card.querySelector('.add-to-cart-btn');
+          if (addEl) addEl.textContent = pCfg.addBtnText;
+        }
+
+        /* Actualizar fotos por color si se definieron en pCfg.colors */
+        if (Array.isArray(pCfg.colors)) {
+          const swatches = card.querySelectorAll('.color-swatch');
+          pCfg.colors.forEach((cObj, cIdx) => {
+            const sw = swatches[cIdx];
+            if (!sw || !cObj) return;
+            if (cObj.label !== undefined) sw.dataset.label = cObj.label;
+            if (cObj.hex) sw.style.background = cObj.hex;
+            if (Array.isArray(cObj.imgs)) {
+              cObj.imgs.forEach((imgSrc, imgIdx) => {
+                if (imgSrc) {
+                  sw.setAttribute('data-img-' + imgIdx, imgSrc);
+                  sw.setAttribute('data-img' + imgIdx, imgSrc);
+                }
+              });
+            }
+          });
+        }
+
+        /* Si se cambió la imagen principal de portada o los swatches, refrescar el slide activo */
+        if (pCfg.mainImg) {
+          const selSwatch = card.querySelector('.color-swatch.selected') || card.querySelector('.color-swatch');
+          if (selSwatch) {
+            selSwatch.setAttribute('data-img-0', pCfg.mainImg);
+            selSwatch.setAttribute('data-img0', pCfg.mainImg);
+          }
+          const firstSlideImg = gallery.querySelector('.gallery__slide img');
+          if (firstSlideImg) {
+            firstSlideImg.src = pCfg.mainImg;
+            firstSlideImg.removeAttribute('data-src');
+          }
+        } else {
+          const selSwatch = card.querySelector('.color-swatch.selected');
+          if (selSwatch) {
+            const slides = gallery.querySelectorAll('.gallery__slide img');
+            slides.forEach((imgEl, sIdx) => {
+              const sSrc = selSwatch.getAttribute('data-img-' + sIdx) || selSwatch.getAttribute('data-img' + sIdx);
+              if (sSrc) {
+                imgEl.src = sSrc;
+                imgEl.removeAttribute('data-src');
+              }
+            });
+          }
+        }
+      });
+    }
+
+    /* 5. Orden de las tarjetas en la cuadrícula principal */
+    if (Array.isArray(cfg.productOrder) && cfg.productOrder.length > 0) {
+      const mainGrid = document.querySelector('#linea-uniformes .product-grid');
+      if (mainGrid) {
+        cfg.productOrder.forEach(pid => {
+          const gal = document.getElementById('gallery-' + pid);
+          const card = gal ? gal.closest('.product-card') : null;
+          if (card && card.parentNode === mainGrid) {
+            mainGrid.appendChild(card);
+          }
+        });
+      }
+    }
+
+    /* 6. Sección Capas / Complementos */
+    if (cfg.capasSection) {
+      const cs = cfg.capasSection;
+      const sec = document.getElementById('linea-capas');
+      if (sec) {
+        sec.style.display = (cs.visible !== false) ? '' : 'none';
+        const lbl = sec.querySelector('.filter-bar .label');
+        if (lbl && cs.label !== undefined) lbl.textContent = cs.label;
+        const h2 = sec.querySelector('.filter-bar h2');
+        if (h2 && cs.title !== undefined) h2.innerHTML = `${escHtml(cs.title)}<em style="font-style:italic;">.</em>`;
+        const badge = sec.querySelector('.filter-bar h2 + span');
+        if (badge && cs.badge !== undefined) badge.textContent = cs.badge;
+        const wlText = sec.querySelector('.waitlist-capas > p');
+        if (wlText && cs.waitlistText !== undefined) wlText.innerHTML = escHtml(cs.waitlistText).replace(/\n/g, '<br>');
+        const wlBtn = document.getElementById('wl-submit');
+        if (wlBtn && cs.waitlistBtn !== undefined) wlBtn.textContent = cs.waitlistBtn;
+      }
+    }
+
+    /* 7. Sección Cierre / Contacto CTA */
+    if (cfg.ctaSection) {
+      const ct = cfg.ctaSection;
+      const sec = document.querySelector('section.contacto-cta');
+      if (sec) {
+        sec.style.display = (ct.visible !== false) ? '' : 'none';
+        const tEl = sec.querySelector('.contacto-cta__title');
+        if (tEl && ct.title !== undefined) tEl.textContent = ct.title;
+        const pEl = sec.querySelector('p');
+        if (pEl && ct.subtitle !== undefined) pEl.textContent = ct.subtitle;
+        const aEl = sec.querySelector('a.btn');
+        if (aEl) {
+          if (ct.whatsappNumber !== undefined || ct.whatsappMsg !== undefined) {
+            const num = String(ct.whatsappNumber || '573127300661').replace(/\D/g, '');
+            const msg = encodeURIComponent(ct.whatsappMsg || 'Hola, quiero información sobre los uniformes YOSSICO');
+            aEl.setAttribute('href', `https://wa.me/${num}?text=${msg}`);
+          }
+          if (ct.btnText !== undefined) {
+            const svg = aEl.querySelector('svg');
+            aEl.innerHTML = '';
+            if (svg) aEl.appendChild(svg);
+            aEl.appendChild(document.createTextNode(' ' + ct.btnText));
+          }
+        }
+      }
+    }
+  };
+
+  /* Aplicar caché local inmediatamente */
+  try {
+    const cached = JSON.parse(localStorage.getItem('yossico_coleccion_config') || 'null');
+    if (cached) window.applyYossicoColeccionConfig(cached);
+  } catch (_) {}
+
+  /* Sincronizar configuración global publicada desde el Panel Admin */
+  async function fetchRemoteColeccionConfig() {
+    try {
+      const res = await fetch(`${SUPA_URL}/rest/v1/rpc/get_config`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPA_KEY,
+          'Authorization': 'Bearer ' + SUPA_KEY
+        },
+        body: JSON.stringify({ p_clave: 'coleccion_config' })
+      });
+      if (!res.ok) return;
+      const remoteCfg = await res.json();
+      if (remoteCfg && typeof remoteCfg === 'object' && Object.keys(remoteCfg).length > 0) {
+        localStorage.setItem('yossico_coleccion_config', JSON.stringify(remoteCfg));
+        window.applyYossicoColeccionConfig(remoteCfg);
+      }
+    } catch (_) {}
+  }
+
+  fetchRemoteColeccionConfig();
+
+  /* Escuchar cambios en vivo desde YOSSICO_Editor_Web.html */
+  window.addEventListener('message', function (e) {
+    if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === 'YOSSICO_COLECCION_PREVIEW') {
+      window.applyYossicoColeccionConfig(e.data.config);
+    } else if (e.data.type === 'YOSSICO_COLECCION_SCROLL') {
+      const sKey = e.data.section || '';
+      let target = null;
+      if (sKey === 'announcement') target = document.getElementById('barra-envio-gratis');
+      else if (sKey === 'header') target = document.querySelector('.page-header');
+      else if (sKey === 'filters') target = document.querySelector('#linea-uniformes .filter-bar');
+      else if (sKey === 'capasSection') target = document.getElementById('linea-capas');
+      else if (sKey === 'ctaSection') target = document.querySelector('section.contacto-cta');
+      else if (sKey.startsWith('prod-')) {
+        const pid = sKey.replace('prod-', '');
+        const gal = document.getElementById('gallery-' + pid);
+        target = gal ? gal.closest('.product-card') : null;
+      }
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.transition = 'outline 0.25s ease';
+        target.style.outline = '2px solid #0C4E57';
+        target.style.outlineOffset = '4px';
+        setTimeout(() => { target.style.outline = ''; }, 1400);
+      }
+    }
+  });
 })();
 </script>
 </body>

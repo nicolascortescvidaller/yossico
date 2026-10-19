@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>YOSSICO Studio — Editor Web & Colección</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #111315;
+      --bg-panel: #ffffff;
+      --bg-canvas: #e5e7eb;
+      --border: #e2e8f0;
+      --accent: #0C4E57;
+      --green: #25D366;
+      --text: #111827;
+      --muted: #6b7280;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-canvas);
+      color: var(--text);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOP STUDIO BAR ── */
+    .studio-topbar {
+      height: 56px;
+      background: var(--bg-dark);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      gap: 0.75rem;
+      border-bottom: 1px solid #26292e;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+    .studio-topbar__left,
+    .studio-topbar__center,
+    .studio-topbar__right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .studio-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #d1d5db;
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.38rem 0.65rem;
+      border-radius: 5px;
+      background: #1f2428;
+      border: 1px solid #32373d;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .studio-back-btn:hover { background: #2d3339; color: #fff; }
+    .studio-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      font-weight: 600;
+      color: #fff;
+      padding-right: 0.4rem;
+    }
+    .studio-status {
+      font-size: 0.66rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 99px;
+      background: rgba(46, 125, 50, 0.28);
+      color: #a5d6a7;
+      border: 1px solid #4caf50;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Page Switcher Pills (Inicio vs Coleccion) */
+    .studio-page-tabs {
+      display: flex;
+      background: #1d2024;
+      padding: 3px;
+      border-radius: 7px;
+      border: 1px solid #32373d;
+    }
+    .studio-page-tab {
+      background: transparent;
+      color: #9ca3af;
+      border: none;
+      padding: 0.38rem 0.85rem;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .studio-page-tab.active {
+      background: #ffffff;
+      color: #111;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    }
+
+    .studio-btn {
+      font-family: inherit;
+      font-size: 0.71rem;
+      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      border-radius: 5px;
+      border: 1px solid #374151;
+      background: #1f2428;
+      color: #e5e7eb;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .studio-btn:hover { background: #2d3339; color: #fff; }
+    .studio-btn.active { background: #374151; color: #fff; border-color: #6b7280; }
+    .studio-btn--danger { color: #fca5a5; border-color: #7f1d1d; background: #261717; }
+    .studio-btn--danger:hover { background: #451a1a; }
+    .studio-btn--publish {
+      background: var(--green);
+      color: #051b0d;
+      border-color: #1ebea5;
+      font-weight: 700;
+      padding: 0.45rem 1rem;
+    }
+    .studio-btn--publish:hover { background: #20bd5a; color: #000; }
+
+    /* ── MAIN WORKSPACE (FULL SCREEN) ── */
+    .studio-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Left Sidebar Inspector */
+    .studio-sidebar {
+      width: 410px;
+      min-width: 410px;
+      height: 100%;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      transition: margin-left 0.25s ease;
+      z-index: 10;
+    }
+    .studio-sidebar.collapsed {
+      margin-left: -410px;
+    }
+    .studio-sidebar__header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.73rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #334155;
+    }
+    .studio-sidebar__scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    /* Accordion Cards */
+    .st-acc {
+      border: 1px solid #e2e8f0;
+      border-radius: 7px;
+      background: #ffffff;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .st-acc.open {
+      border-color: #111827;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    }
+    .st-acc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0.9rem;
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #111827;
+      background: #f8fafc;
+    }
+    .st-acc.open .st-acc-head {
+      background: #111827;
+      color: #ffffff;
+    }
+    .st-acc-body {
+      display: none;
+      padding: 0.9rem;
+      border-top: 1px solid #f1f5f9;
+      font-size: 0.74rem;
+    }
+    .st-acc.open .st-acc-body {
+      display: block;
+    }
+
+    /* Form Controls */
+    .st-field { margin-bottom: 0.75rem; }
+    .st-field:last-child { margin-bottom: 0; }
+    .st-field label {
+      display: block;
+      font-size: 0.66rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #475569;
+      margin-bottom: 0.28rem;
+    }
+    .st-field input[type="text"],
+    .st-field input[type="datetime-local"],
+    .st-field select,
+    .st-field textarea {
+      width: 100%;
+      padding: 0.48rem 0.6rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      color: #0f172a;
+      background: #fff;
+      transition: border-color 0.15s;
+    }
+    .st-field input:focus,
+    .st-field select:focus,
+    .st-field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .st-field textarea {
+      resize: vertical;
+      min-height: 56px;
+      line-height: 1.45;
+    }
+    .st-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.48rem 0.65rem;
+      background: #f1f5f9;
+      border-radius: 5px;
+      margin-bottom: 0.75rem;
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .st-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .st-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.4rem; }
+
+    /* Visual Image Preset Grid */
+    .st-img-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 0.4rem;
+    }
+    .st-img-thumb {
+      border: 2px solid transparent;
+      border-radius: 5px;
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 3/4;
+      background: #f1f5f9;
+      position: relative;
+    }
+    .st-img-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .st-img-thumb.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(12,78,87,0.3);
+    }
+    .st-img-thumb span {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.72);
+      color: #fff;
+      font-size: 0.55rem;
+      padding: 2px 3px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Order / Visibility List */
+    .st-order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.42rem 0.6rem;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      margin-bottom: 0.35rem;
+      font-size: 0.72rem;
+    }
+    .st-mini-btn {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 0.65rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+    }
+    .st-mini-btn:disabled { opacity: 0.35; cursor: default; }
+
+    /* Product Selector Pills in Colección */
+    .st-prod-pills {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      margin-bottom: 0.85rem;
+    }
+    .st-prod-pill {
+      padding: 0.42rem 0.3rem;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      color: #334155;
+      transition: all 0.15s;
+    }
+    .st-prod-pill.active {
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
+    }
+
+    /* Right Preview Canvas */
+    .studio-canvas {
+      flex: 1;
+      height: 100%;
+      background: #dfe3e8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.65rem;
+      overflow: hidden;
+    }
+    .studio-frame-wrap {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.16);
+      display: flex;
+      flex-direction: column;
+      transition: max-width 0.3s ease, border-radius 0.3s ease;
+    }
+    .studio-frame-wrap.mobile-mode {
+      max-width: 400px;
+      border: 9px solid #1f2937;
+      border-radius: 28px;
+    }
+    .studio-frame-bar {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0.35rem 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      color: #64748b;
+      flex-shrink: 0;
+    }
+    .studio-iframe {
+      width: 100%;
+      flex: 1;
+      border: none;
+      background: #fff;
+    }
+
+    /* Toast */
+    .studio-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #111827;
+      color: #fff;
+      padding: 0.7rem 1.1rem;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+    .studio-toast.show { opacity: 1; transform: translateY(0); }
+
+    /* Login Overlay if opened without session */
+    .studio-login {
+      position: fixed;
+      inset: 0;
+      background: #0f1113;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+    }
+    .studio-login__card {
+      background: #fff;
+      padding: 2.2rem;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Fallback si entra directo sin haber iniciado sesión en el Panel -->
+  <div class="studio-login" id="studio-login">
+    <div class="studio-login__card">
+      <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; margin-bottom:0.3rem;">YOSSICO Studio</h2>
+      <p style="font-size:0.75rem; color:#666; margin-bottom:1.2rem;">Ingresa el PIN de administrador para abrir el personalizador</p>
+      <input type="password" id="studio-pin-input" placeholder="••••••••" style="width:100%; padding:0.65rem; border:1px solid #ccc; border-radius:4px; margin-bottom:0.8rem; text-align:center; font-size:0.9rem;" onkeydown="if(event.key==='Enter') verificarPinStudio()">
+      <button class="studio-btn studio-btn--publish" style="width:100%; justify-content:center; padding:0.65rem;" onclick="verificarPinStudio()">Entrar al Studio →</button>
+    </div>
+  </div>
+
+  <!-- ── BARRA SUPERIOR FULL-SCREEN ESTILO SHOPIFY ── -->
+  <header class="studio-topbar">
+    <div class="studio-topbar__left">
+      <a href="YOSSICO_Panel_Admin.html" class="studio-back-btn" title="Volver al Panel Administrativo">← Panel Admin</a>
+      <button type="button" class="studio-btn" id="btn-toggle-sidebar" onclick="toggleStudioSidebar()" title="Ocultar o mostrar el panel izquierdo para ver pantalla completa">◀ Ocultar Controles</button>
+      <span class="studio-brand">YOSSICO STUDIO</span>
+      <span class="studio-status" id="studio-status-badge">● Sincronizado</span>
+    </div>
+
+    <!-- Selector Central de Página: Inicio vs Colección -->
+    <div class="studio-topbar__center">
+      <div class="studio-page-tabs">
+        <button type="button" class="studio-page-tab active" id="tab-page-landing" onclick="switchStudioPage('landing')">
+          🏠 Página de Inicio (Landing)
+        </button>
+        <button type="button" class="studio-page-tab" id="tab-page-coleccion" onclick="switchStudioPage('coleccion')">
+          👗 Página de Colección (Catálogo)
+        </button>
+      </div>
+    </div>
+
+    <div class="studio-topbar__right">
+      <button type="button" class="studio-btn active" id="btn-dev-desktop" onclick="setStudioDevice('desktop')">🖥️ Computador</button>
+      <button type="button" class="studio-btn" id="btn-dev-mobile" onclick="setStudioDevice('mobile')">📱 Celular</button>
+      <a href="index.html" target="_blank" class="studio-btn" id="btn-open-live">↗ Ver Página Real</a>
+      <button type="button" class="studio-btn studio-btn--danger" onclick="restaurarPaginaActual()">↺ Restaurar</button>
+      <button type="button" class="studio-btn studio-btn--publish" onclick="guardarYPublicarTodo()">💾 Guardar y Publicar en Vivo</button>
+    </div>
+  </header>
+
+  <!-- ── ÁREA PRINCIPAL: INSPECTOR IZQUIERDO + LIENZO DERECHO ── -->
+  <div class="studio-body">
+
+    <!-- Inspector Lateral -->
+    <aside class="studio-sidebar" id="studio-sidebar">
+      <div class="studio-sidebar__header">
+        <span id="sidebar-title-text">Editando: Página de Inicio</span>
+        <span style="font-size:0.65rem; color:var(--accent); font-weight:600;">En vivo</span>
+      </div>
+
+      <!-- =================================================================
+           CONTROLES PÁGINA 1: LANDING (INDEX.HTML)
+           ================================================================= -->
+      <div class="studio-sidebar__scroll" id="inspector-landing">
+
+        <!-- 0. Orden y Visibilidad -->
+        <div class="st-acc" id="acc-l-order">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'order')">
+            <span>🔀 Orden y Visibilidad de Bloques</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <p style="font-size:0.68rem; color:#64748b; margin-bottom:0.6rem;">Reordena las secciones con ↑ ↓ o apágalas/préndelas según la campaña:</p>
+            <div id="l-order-list"></div>
+          </div>
+        </div>
+
+        <!-- 1. Barra de Anuncio -->
+        <div class="st-acc open" id="acc-l-announcement">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'announcement')">
+            <span>📢 1. Barra Superior de Anuncio</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar barra superior</span>
+              <input type="checkbox" id="le-ann-visible" checked onchange="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Texto Principal</label>
+              <input type="text" id="le-ann-text" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Texto Secundario (Desktop)</label>
+              <input type="text" id="le-ann-subtext" oninput="onLandingChange()">
+            </div>
+            <div class="st-toggle">
+              <span>Mostrar bandera de Colombia 🇨🇴</span>
+              <input type="checkbox" id="le-ann-flag" checked onchange="onLandingChange()">
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Color Fondo</label>
+                <input type="color" id="le-ann-bg" value="#0a0a0a" oninput="onLandingChange()" style="width:100%; height:32px; border:1px solid #cbd5e1; border-radius:4px; cursor:pointer;">
+              </div>
+              <div class="st-field">
+                <label>Color Texto</label>
+                <input type="color" id="le-ann-color" value="#ffffff" oninput="onLandingChange()" style="width:100%; height:32px; border:1px solid #cbd5e1; border-radius:4px; cursor:pointer;">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Cuenta Regresiva -->
+        <div class="st-acc" id="acc-l-countdown">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'countdown')">
+            <span>⏳ 2. Cuenta Regresiva (Pre-Hero)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar barra de cuenta regresiva</span>
+              <input type="checkbox" id="le-cd-visible" checked onchange="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Título del Drop</label>
+              <input type="text" id="le-cd-eyebrow" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Fecha y Hora Objetivo</label>
+              <input type="datetime-local" id="le-cd-date" onchange="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Texto del Botón</label>
+              <input type="text" id="le-cd-cta" oninput="onLandingChange()">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Hero Principal -->
+        <div class="st-acc" id="acc-l-hero">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'hero')">
+            <span>🖼️ 3. Portada Principal (Hero)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar sección Hero</span>
+              <input type="checkbox" id="le-hero-visible" checked onchange="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Etiqueta Superior (Prefijo)</label>
+              <input type="text" id="le-hero-label" oninput="onLandingChange()">
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Palabra Rotatoria 1</label>
+                <input type="text" id="le-hero-w1" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Palabra Rotatoria 2</label>
+                <input type="text" id="le-hero-w2" oninput="onLandingChange()">
+              </div>
+            </div>
+            <div class="st-grid-3">
+              <div class="st-field">
+                <label>Título Línea 1</label>
+                <input type="text" id="le-hero-t1" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Título Línea 2</label>
+                <input type="text" id="le-hero-t2" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>En Cursiva</label>
+                <input type="text" id="le-hero-ti" oninput="onLandingChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Subtítulo / Descripción</label>
+              <textarea id="le-hero-sub" oninput="onLandingChange()"></textarea>
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Botón 1 (Texto)</label>
+                <input type="text" id="le-hero-cta1-txt" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Botón 1 (Link)</label>
+                <input type="text" id="le-hero-cta1-url" oninput="onLandingChange()">
+              </div>
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Botón 2 (Texto)</label>
+                <input type="text" id="le-hero-cta2-txt" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Botón 2 (Link)</label>
+                <input type="text" id="le-hero-cta2-url" oninput="onLandingChange()">
+              </div>
+            </div>
+
+            <div class="st-field" style="border-top:1px solid #e2e8f0; padding-top:0.75rem; margin-top:0.4rem;">
+              <label>Foto Principal del Hero (Clic para elegir o sube una propia)</label>
+              <div class="st-img-grid" id="le-hero-img-presets"></div>
+              <div style="margin-top:0.6rem;">
+                <label for="le-hero-upload" class="studio-btn" style="width:100%; justify-content:center; background:#111827; color:#fff; cursor:pointer; padding:0.5rem;">📁 Subir Foto desde tu Computador / Celular</label>
+                <input type="file" id="le-hero-upload" accept="image/*" style="display:none" onchange="uploadImageToInput(this, 'le-hero-img', 'landing')">
+              </div>
+              <div style="margin-top:0.5rem;">
+                <label>Ruta o URL de imagen</label>
+                <input type="text" id="le-hero-img" oninput="onLandingChange()">
+              </div>
+            </div>
+
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Encuadre Foto</label>
+                <select id="le-hero-pos" onchange="onLandingChange()">
+                  <option value="center top">Arriba (Rostro/Cuerpo)</option>
+                  <option value="center center">Centrado</option>
+                  <option value="center bottom">Abajo</option>
+                </select>
+              </div>
+              <div class="st-field">
+                <label>Fondo Recuadro</label>
+                <input type="color" id="le-hero-bg" value="#f5f4f0" oninput="onLandingChange()" style="width:100%; height:32px; border:1px solid #cbd5e1; border-radius:4px; cursor:pointer;">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Sección Drops -->
+        <div class="st-acc" id="acc-l-drops">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'drops')">
+            <span>🔥 4. Sección Drops (Editorial)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar sección Drops</span>
+              <input type="checkbox" id="le-drops-visible" checked onchange="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Etiqueta Superior</label>
+              <input type="text" id="le-drops-eye" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Titular — Parte Superior</label>
+              <textarea id="le-drops-htop" style="min-height:42px;" oninput="onLandingChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Titular — Palabra en Cursiva</label>
+              <input type="text" id="le-drops-hit" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Titular — Parte Inferior</label>
+              <textarea id="le-drops-hbot" style="min-height:42px;" oninput="onLandingChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Pie de Titular</label>
+              <input type="text" id="le-drops-sub" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Párrafo 1</label>
+              <textarea id="le-drops-p1" oninput="onLandingChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Frase Destacada (Cita)</label>
+              <input type="text" id="le-drops-quote" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Párrafo 2</label>
+              <textarea id="le-drops-p2" oninput="onLandingChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Párrafo 3</label>
+              <textarea id="le-drops-p3" oninput="onLandingChange()"></textarea>
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Texto Botón CTA</label>
+                <input type="text" id="le-drops-cta-txt" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Link Botón CTA</label>
+                <input type="text" id="le-drops-cta-url" oninput="onLandingChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Texto Link Suscripción</label>
+              <input type="text" id="le-drops-sublink" oninput="onLandingChange()">
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Por qué YOSSICO es diferente -->
+        <div class="st-acc" id="acc-l-nosotros">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'nosotros')">
+            <span>✨ 5. Por qué YOSSICO (4 Pilares)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar sección 4 Pilares</span>
+              <input type="checkbox" id="le-nos-visible" checked onchange="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Etiqueta Superior</label>
+              <input type="text" id="le-nos-eye" oninput="onLandingChange()">
+            </div>
+            <div class="st-grid-3">
+              <div class="st-field">
+                <label>Título Inicio</label>
+                <input type="text" id="le-nos-tp" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>En Cursiva</label>
+                <input type="text" id="le-nos-ti" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Título Final</label>
+                <input type="text" id="le-nos-ts" oninput="onLandingChange()">
+              </div>
+            </div>
+            <div style="border-top:1px solid #e2e8f0; padding-top:0.6rem; margin-top:0.3rem;">
+              <div class="st-field">
+                <label>Tarjeta 01 — Título y Descripción</label>
+                <input type="text" id="le-nos-c1-t" style="margin-bottom:4px" oninput="onLandingChange()">
+                <textarea id="le-nos-c1-p" oninput="onLandingChange()"></textarea>
+              </div>
+              <div class="st-field">
+                <label>Tarjeta 02 — Título y Descripción</label>
+                <input type="text" id="le-nos-c2-t" style="margin-bottom:4px" oninput="onLandingChange()">
+                <textarea id="le-nos-c2-p" oninput="onLandingChange()"></textarea>
+              </div>
+              <div class="st-field">
+                <label>Tarjeta 03 — Título y Descripción</label>
+                <input type="text" id="le-nos-c3-t" style="margin-bottom:4px" oninput="onLandingChange()">
+                <textarea id="le-nos-c3-p" oninput="onLandingChange()"></textarea>
+              </div>
+              <div class="st-field">
+                <label>Tarjeta 04 — Título y Descripción</label>
+                <input type="text" id="le-nos-c4-t" style="margin-bottom:4px" oninput="onLandingChange()">
+                <textarea id="le-nos-c4-p" oninput="onLandingChange()"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Contacto CTA -->
+        <div class="st-acc" id="acc-l-contactoCta">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'contactoCta')">
+            <span>💬 6. Sección Cierre / Contacto</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar sección de cierre</span>
+              <input type="checkbox" id="le-cc-visible" checked onchange="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Etiqueta Superior</label>
+              <input type="text" id="le-cc-eye" oninput="onLandingChange()">
+            </div>
+            <div class="st-grid-3">
+              <div class="st-field">
+                <label>Título Inicio</label>
+                <input type="text" id="le-cc-tp" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>En Cursiva</label>
+                <input type="text" id="le-cc-ti" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Título Final</label>
+                <input type="text" id="le-cc-ts" oninput="onLandingChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Subtítulo</label>
+              <input type="text" id="le-cc-sub" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Número WhatsApp</label>
+              <input type="text" id="le-cc-wa-num" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Mensaje WhatsApp</label>
+              <input type="text" id="le-cc-wa-txt" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Link Instagram</label>
+              <input type="text" id="le-cc-ig" oninput="onLandingChange()">
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Popup Suscripción -->
+        <div class="st-acc" id="acc-l-popup">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'popup')">
+            <span>🎁 7. Popup de Bienvenida (10% OFF)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <button type="button" class="studio-btn" style="width:100%; justify-content:center; background:#111827; color:#fff; margin-bottom:0.75rem;" onclick="scrollPreview('landing', 'popup')">👁️ Abrir Popup en la Vista Previa</button>
+            <div class="st-field">
+              <label>Etiqueta Superior</label>
+              <input type="text" id="le-pop-tag" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Titular Izquierdo</label>
+              <textarea id="le-pop-htop" style="min-height:42px;" oninput="onLandingChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Titular en Cursiva</label>
+              <input type="text" id="le-pop-hit" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Texto Beneficio / Descuento</label>
+              <input type="text" id="le-pop-disc" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Nombre del Drop</label>
+              <input type="text" id="le-pop-drop" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Título Formulario</label>
+              <input type="text" id="le-pop-ftitle" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Descripción Formulario</label>
+              <textarea id="le-pop-fsub" oninput="onLandingChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Texto Botón</label>
+              <input type="text" id="le-pop-fbtn" oninput="onLandingChange()">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- =================================================================
+           CONTROLES PÁGINA 2: COLECCIÓN (COLECCION.HTML)
+           ================================================================= -->
+      <div class="studio-sidebar__scroll" id="inspector-coleccion" style="display:none;">
+
+        <!-- 0. Orden y Visibilidad de Prendas -->
+        <div class="st-acc" id="acc-c-order">
+          <div class="st-acc-head" onclick="toggleAcc('c', 'order')">
+            <span>🔀 Orden y Visibilidad de Prendas</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <p style="font-size:0.68rem; color:#64748b; margin-bottom:0.6rem;">Cambia el orden en que aparecen los uniformes en el catálogo o apaga/prende cualquier referencia:</p>
+            <div id="c-order-list"></div>
+          </div>
+        </div>
+
+        <!-- 1. Encabezado y Filtros de Colección -->
+        <div class="st-acc" id="acc-c-header">
+          <div class="st-acc-head" onclick="toggleAcc('c', 'header')">
+            <span>✨ 1. Encabezado y Barra de Filtros</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar Barra Envío Gratis</span>
+              <input type="checkbox" id="ce-ann-visible" checked onchange="onColeccionChange()">
+            </div>
+            <div class="st-field">
+              <label>Texto Barra Superior</label>
+              <input type="text" id="ce-ann-text" oninput="onColeccionChange()">
+            </div>
+            <div class="st-field" style="border-top:1px solid #e2e8f0; padding-top:0.65rem; margin-top:0.4rem;">
+              <label>Etiqueta Superior (Ej: Colección 2026)</label>
+              <input type="text" id="ce-hdr-label" oninput="onColeccionChange()">
+            </div>
+            <div class="st-field">
+              <label>Título Principal (Prefijo)</label>
+              <input type="text" id="ce-hdr-prefix" oninput="onColeccionChange()">
+            </div>
+            <div class="st-field">
+              <label>Palabras Rotatorias en Cursiva (separadas por coma)</label>
+              <input type="text" id="ce-hdr-words" placeholder="definen., identifican., elevan., distinguen." oninput="onColeccionChange()">
+            </div>
+            <div class="st-field" style="border-top:1px solid #e2e8f0; padding-top:0.65rem; margin-top:0.4rem;">
+              <label>Nombres de los Botones de Filtro</label>
+              <div class="st-grid-2">
+                <input type="text" id="ce-flt-sig" placeholder="Signature" oninput="onColeccionChange()">
+                <input type="text" id="ce-flt-ess" placeholder="Essentials" oninput="onColeccionChange()">
+                <input type="text" id="ce-flt-core" placeholder="Core" oninput="onColeccionChange()">
+                <input type="text" id="ce-flt-all" placeholder="Todo" oninput="onColeccionChange()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Editor Individual de Prendas del Catálogo -->
+        <div class="st-acc open" id="acc-c-products">
+          <div class="st-acc-head" onclick="toggleAcc('c', 'products')">
+            <span>👗 2. Editar Prendas, Precios, Colores y Fotos</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <label style="display:block; font-size:0.66rem; font-weight:700; text-transform:uppercase; color:#475569; margin-bottom:0.4rem;">Selecciona la prenda a editar:</label>
+            <div class="st-prod-pills" id="ce-prod-pills"></div>
+
+            <!-- Formulario dinámico de la prenda activa -->
+            <div id="ce-active-prod-form" style="border-top:1px solid #e2e8f0; padding-top:0.75rem;">
+              <div class="st-toggle">
+                <span id="ce-prod-vis-label">Mostrar OSLO en el catálogo</span>
+                <input type="checkbox" id="ce-prod-visible" checked onchange="onActiveProductFieldChange()">
+              </div>
+
+              <div class="st-grid-2">
+                <div class="st-field">
+                  <label>Nombre de la Prenda</label>
+                  <input type="text" id="ce-prod-name" oninput="onActiveProductFieldChange()">
+                </div>
+                <div class="st-field">
+                  <label>Precio Visible</label>
+                  <input type="text" id="ce-prod-price" placeholder="$275.900 COP" oninput="onActiveProductFieldChange()">
+                </div>
+              </div>
+
+              <div class="st-grid-2">
+                <div class="st-field">
+                  <label>Línea (Filtro)</label>
+                  <select id="ce-prod-line" onchange="onActiveProductFieldChange()">
+                    <option value="essentials">Essentials</option>
+                    <option value="signature">Signature</option>
+                    <option value="core">Core</option>
+                  </select>
+                </div>
+                <div class="st-field">
+                  <label>Etiqueta sobre la Foto</label>
+                  <input type="text" id="ce-prod-tag" placeholder="Essentials / Nuevo" oninput="onActiveProductFieldChange()">
+                </div>
+              </div>
+
+              <div class="st-field">
+                <label>Subtítulo (Bajo el nombre)</label>
+                <input type="text" id="ce-prod-sub" oninput="onActiveProductFieldChange()">
+              </div>
+
+              <div class="st-field">
+                <label>Composición de la Tela</label>
+                <input type="text" id="ce-prod-fabric" oninput="onActiveProductFieldChange()">
+              </div>
+
+              <div class="st-field">
+                <label>Descripción del Producto (Modal / Detalle)</label>
+                <textarea id="ce-prod-desc" oninput="onActiveProductFieldChange()"></textarea>
+              </div>
+
+              <div class="st-grid-2">
+                <div class="st-field">
+                  <label>Texto Botón Pedir</label>
+                  <input type="text" id="ce-prod-cta" oninput="onActiveProductFieldChange()">
+                </div>
+                <div class="st-field">
+                  <label>Texto Botón Carrito</label>
+                  <input type="text" id="ce-prod-addbtn" oninput="onActiveProductFieldChange()">
+                </div>
+              </div>
+
+              <!-- Editor de Fotos por Color de esta prenda -->
+              <div style="border-top:1px solid #e2e8f0; padding-top:0.75rem; margin-top:0.4rem;">
+                <label style="display:block; font-size:0.68rem; font-weight:700; text-transform:uppercase; color:#0C4E57; margin-bottom:0.5rem;">🎨 Colores y Fotos de esta Prenda</label>
+                <div id="ce-prod-colors-editor"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Sección Capas / Complementos -->
+        <div class="st-acc" id="acc-c-capasSection">
+          <div class="st-acc-head" onclick="toggleAcc('c', 'capasSection')">
+            <span>🧥 3. Sección Capas & Lista de Espera</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar sección Capas</span>
+              <input type="checkbox" id="ce-capas-visible" checked onchange="onColeccionChange()">
+            </div>
+            <div class="st-grid-3">
+              <div class="st-field">
+                <label>Etiqueta</label>
+                <input type="text" id="ce-capas-label" oninput="onColeccionChange()">
+              </div>
+              <div class="st-field">
+                <label>Título</label>
+                <input type="text" id="ce-capas-title" oninput="onColeccionChange()">
+              </div>
+              <div class="st-field">
+                <label>Badge</label>
+                <input type="text" id="ce-capas-badge" oninput="onColeccionChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Texto Lista de Espera</label>
+              <textarea id="ce-capas-wltext" oninput="onColeccionChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Texto Botón Lista de Espera</label>
+              <input type="text" id="ce-capas-wlbtn" oninput="onColeccionChange()">
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Sección Cierre ¿No encuentras tu talla? -->
+        <div class="st-acc" id="acc-c-ctaSection">
+          <div class="st-acc-head" onclick="toggleAcc('c', 'ctaSection')">
+            <span>💬 4. Sección Cierre (¿No encuentras tu talla?)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar sección de cierre</span>
+              <input type="checkbox" id="ce-cta-visible" checked onchange="onColeccionChange()">
+            </div>
+            <div class="st-field">
+              <label>Título</label>
+              <input type="text" id="ce-cta-title" oninput="onColeccionChange()">
+            </div>
+            <div class="st-field">
+              <label>Subtítulo</label>
+              <input type="text" id="ce-cta-sub" oninput="onColeccionChange()">
+            </div>
+            <div class="st-field">
+              <label>Texto del Botón</label>
+              <input type="text" id="ce-cta-btn" oninput="onColeccionChange()">
+            </div>
+            <div class="st-field">
+              <label>Número de WhatsApp</label>
+              <input type="text" id="ce-cta-wa" oninput="onColeccionChange()">
+            </div>
+            <div class="st-field">
+              <label>Mensaje de WhatsApp</label>
+              <input type="text" id="ce-cta-wamsg" oninput="onColeccionChange()">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Lienzo Derecho (Vista Previa Interactiva a Pantalla Completa) -->
+    <main class="studio-canvas">
+      <div class="studio-frame-wrap" id="studio-frame-wrap">
+        <div class="studio-frame-bar">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#ef4444; display:inline-block;"></span>
+            <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b; display:inline-block;"></span>
+            <span style="width:10px; height:10px; border-radius:50%; background:#10b981; display:inline-block;"></span>
+            <span id="studio-url-indicator" style="margin-left:8px; font-family:monospace; color:#334155;">https://yossico.com/index.html (Vista Previa Interactiva)</span>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span style="font-size:0.65rem; color:#64748b;">💡 Puedes navegar e interactuar dentro de la vista previa</span>
+            <button type="button" onclick="reloadStudioIframe()" style="background:none; border:none; cursor:pointer; color:#0f172a; font-weight:600; font-size:0.7rem;">↻ Recargar</button>
+          </div>
+        </div>
+        <iframe id="studio-iframe" class="studio-iframe" src="index.html?preview=1"></iframe>
+      </div>
+    </main>
+
+  </div>
+
+  <div class="studio-toast" id="studio-toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const SUPA_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+    const SUPA_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
+    let sb = null;
+    let adminPin = sessionStorage.getItem('admin_pin') || 'yossico2025';
+    let activeStudioPage = 'landing'; // 'landing' | 'coleccion'
+    let activeProductKey = 'oslo';
+
+    /* ── CONFIGURACIÓN POR DEFECTO: LANDING ── */
+    const DEFAULT_LANDING = {
+      sectionOrder: ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta'],
+      announcement: {
+        visible: true,
+        text: 'Envío gratis en compras superiores a $450.000',
+        subtext: 'Exclusivo para Colombia',
+        showFlag: true,
+        bgColor: '#0a0a0a',
+        textColor: '#ffffff'
+      },
+      countdown: {
+        visible: true,
+        eyebrow: 'DROP 01 — APERTURA',
+        targetDate: '2026-12-01T00:00',
+        ctaText: 'Avisarme al abrir'
+      },
+      hero: {
+        visible: true,
+        labelPrefix: 'Uniformes Médicos · ',
+        wordSwap1: 'Colombia',
+        wordSwap2: 'YOSSICO',
+        titleLine1: 'Vestidos',
+        titleLine2: 'para',
+        titleItalic: 'sanar.',
+        subtitle: 'Uniformes para mujer diseñados para quienes dan todo en su día a día, hechos con muchísima precisión, identidad y orgullo para ellas.',
+        ctaPrimaryText: 'Ver Colección',
+        ctaPrimaryUrl: 'coleccion.html',
+        ctaSecondaryText: 'Nuestra historia',
+        ctaSecondaryUrl: 'historia.html',
+        image: 'img/hero_model_cutout.webp',
+        imagePosition: 'center top',
+        rightBgColor: '#f5f4f0'
+      },
+      drops: {
+        visible: true,
+        eyebrow: 'Modelo de lanzamiento',
+        headlineTop: 'Algunas\nprendas',
+        headlineItalic: 'regresan.',
+        headlineBottom: 'Pero nunca\nestán siempre.',
+        sub: 'Ediciones limitadas · Ventanas de disponibilidad · Colombia',
+        p1: 'YOSSICO no opera como una marca tradicional. Lanzamos por drops: colecciones disponibles en ventanas específicas del año, en cantidades que no se repiten.',
+        pullQuote: '"Cuando se acaba, se acaba."',
+        p2: 'Algunos modelos regresan. Otros no. En ambos casos, la regla es la misma: cada prenda tiene su momento, y quien la elige lo sabe.',
+        p3: 'Queremos que cada persona que vista YOSSICO lo haga porque eligió estar ahí.',
+        ctaText: 'VER COLECCIÓN DISPONIBLE',
+        ctaUrl: 'coleccion.html',
+        subLinkText: 'Suscríbete para el próximo drop'
+      },
+      nosotros: {
+        visible: true,
+        eyebrow: 'Por qué somos diferentes',
+        titlePrefix: 'Por qué',
+        titleItalic: 'YOSSICO',
+        titleSuffix: 'es diferente.',
+        cards: [
+          { title: 'Telas de alto desempeño', text: 'Materiales seleccionados para resistir largas jornadas: antifluidos, transpirables, duraderos. Tu comodidad no se negocia.' },
+          { title: 'Identidad en cada detalle', text: 'Cortes diseñados para el cuerpo en movimiento. Bordados de precisión. Un uniforme que te representa, no que te uniforma.' },
+          { title: 'Entrega y experiencia', text: 'Cada pedido llega con una presentación pensada al detalle. Porque la primera vez que tocas un uniforme YOSSICO también hace parte de la experiencia.' },
+          { title: 'Solo para ellas', text: 'Diseñada desde el principio para la mujer en la salud. Cada corte, cada detalle, cada decisión — pensados para quien da todo en cada turno.' }
+        ]
+      },
+      contactoCta: {
+        visible: true,
+        eyebrow: 'Habla con nosotros',
+        titlePrefix: '¿Listo para',
+        titleItalic: 'elevar',
+        titleSuffix: 'tu imagen?',
+        subtitle: 'Pedidos, tallas, guía de uniformes — estamos en WhatsApp.',
+        whatsappNumber: '573127300661',
+        whatsappText: 'Hola, quiero información sobre los uniformes YOSSICO',
+        instagramUrl: 'https://www.instagram.com/yossico.col?igsh=MWN0ZGZqbGd3ZTlhdA=='
+      },
+      popup: {
+        tag: 'YOSSICO Drops',
+        headlineTop: 'Sé el primero\nen saber',
+        headlineItalic: 'cuándo abre.',
+        discountLabel: '10% de descuento en tu primera compra',
+        dropWord: 'DROP 01',
+        formTitle: 'Únete al drop',
+        formSub: 'Cuéntanos quién eres y te avisamos antes de que abra el próximo drop — más tu descuento de bienvenida.',
+        btnText: 'Quiero mi descuento →'
+      }
+    };
+
+    /* ── CONFIGURACIÓN POR DEFECTO: COLECCIÓN ── */
+    const DEFAULT_COLECCION = {
+      productOrder: ['oslo', 'milan', 'kyoto', 'lima', 'bogota', 'manta'],
+      announcement: {
+        visible: true,
+        text: 'Envío gratis en compras superiores a $450.000',
+        subtext: 'Exclusivo para Colombia',
+        showFlag: true
+      },
+      header: {
+        visible: true,
+        label: 'Colección 2026',
+        titlePrefix: 'Scrubs que te',
+        rotatingWords: 'definen., identifican., elevan., distinguen.'
+      },
+      filters: {
+        visible: true,
+        labelSignature: 'Signature',
+        labelEssentials: 'Essentials',
+        labelCore: 'Core',
+        labelAll: 'Todo'
+      },
+      products: {
+        oslo: {
+          visible: true,
+          name: 'OSLO',
+          line: 'essentials',
+          tag: 'Essentials',
+          sub: 'Set · Scrub Femenino · Top + Pantalón',
+          price: '$275.900 COP',
+          fabric: '92% poliéster + 8% spandex — 170g/m²',
+          desc: 'Inspirado en la serenidad escandinava, el Set OSLO combina líneas limpias y una paleta verde salvia con una confección estructurada. Pensado para la profesional que valora el confort sin sacrificar la elegancia.',
+          ctaText: 'Pedir',
+          addBtnText: '+ Agregar al carrito',
+          colors: [
+            { label: 'Negro', imgs: ['img/oslo_black_front.webp', 'img/oslo_black_half.webp', 'img/oslo_black_back.webp', 'img/oslo_black_labels.webp'] },
+            { label: 'Azul Marino', imgs: ['img/oslo_navy_front.webp', 'img/oslo_navy_half.webp', 'img/oslo_navy_back.webp', 'img/oslo_navy_labels.webp'] },
+            { label: 'Vinotinto', imgs: ['img/oslo_burgundy_front.webp', 'img/oslo_burgundy_half.webp', 'img/oslo_burgundy_back.webp', 'img/oslo_burgundy_labels.webp'] }
+          ]
+        },
+        milan: {
+          visible: true,
+          name: 'MILAN',
+          line: 'signature',
+          tag: 'Signature',
+          sub: 'Set · Scrub Femenino · Top + Pantalón',
+          price: '$339.900 COP',
+          fabric: '72% poliéster + 21% rayón + 7% spandex — 210g/m²',
+          desc: 'El Set MILAN captura la elegancia italiana con un top de cuello mao, corte entallado y pantalón recto de alta precisión. En navy profundo, proyecta autoridad y sofisticación en cada turno.',
+          ctaText: 'Pedir',
+          addBtnText: '+ Agregar al carrito',
+          colors: [
+            { label: 'Negro', imgs: ['img/milan_front.webp', 'img/milan_detail.webp', 'img/milan_back.webp', 'img/milan_black_labels.webp'] }
+          ]
+        },
+        kyoto: {
+          visible: true,
+          name: 'KYOTO',
+          line: 'signature',
+          tag: 'Signature',
+          sub: 'Set · Scrub Femenino · Top + Pantalón',
+          price: '$339.900 COP',
+          fabric: '72% poliéster + 21% rayón + 7% spandex — 210g/m²',
+          desc: 'KYOTO encarna la filosofía zen japonesa: un top cruzado en marfil suave con pantalón palazzo de caída impecable. Para la profesional que busca fluidez, calma y presencia.',
+          ctaText: 'Pedir',
+          addBtnText: '+ Agregar al carrito',
+          colors: [
+            { label: 'Azul Marino', imgs: ['img/kyoto_front.webp', 'img/kyoto_detail.webp', 'img/kyoto_back.webp', 'img/kyoto_navy_labels.webp'] }
+          ]
+        },
+        lima: {
+          visible: true,
+          name: 'LIMA',
+          line: 'essentials',
+          tag: 'Essentials',
+          sub: 'Set · Scrub Femenino · Top + Pantalón',
+          price: '$275.900 COP',
+          fabric: '72% poliéster + 22% rayón + 6% spandex — 166g/m²',
+          desc: 'LIMA captura la calidez y el ritmo latinoamericano en un rosa palo atemporal. Top suelto con cuello V redondeado y pantalón palazzo de caída fluida, pensado para quienes buscan comodidad sin perder el estilo.',
+          ctaText: 'Pedir',
+          addBtnText: '+ Agregar al carrito',
+          colors: [
+            { label: 'Negro', imgs: ['img/lima_black_front.webp', 'img/lima_black_half.webp', 'img/lima_black_back.webp', 'img/lima_black_labels.webp'] },
+            { label: 'Azul Pacífico', imgs: ['img/lima_teal_front.webp', 'img/lima_teal_half.webp', 'img/lima_teal_back.webp', 'img/lima_teal_labels.webp'] },
+            { label: 'Verde Oliva', imgs: ['img/lima_olive_front.webp', 'img/lima_olive_half.webp', 'img/lima_olive_back.webp', 'img/lima_olive_labels.webp'] }
+          ]
+        },
+        bogota: {
+          visible: true,
+          name: 'BOGOTÁ',
+          line: 'core',
+          tag: 'Core',
+          sub: 'Set · Top + Pantalón · Tela Técnica',
+          price: '$229.900 COP',
+          fabric: '94% poliéster + 6% spandex — 120g/m²',
+          desc: 'BOGOTÁ es el primer uniforme de la línea Core. Confección limpia, corte funcional y tela técnica de alto rendimiento para la profesional que da sus primeros pasos con YOSSICO.',
+          ctaText: 'Pedir',
+          addBtnText: '+ Agregar al carrito',
+          colors: [
+            { label: 'Azul Marino', imgs: ['img/bogota_navy_front.webp', 'img/bogota_navy_half.webp', 'img/bogota_navy_back.webp', 'img/bogota_navy_side.webp', 'img/bogota_navy_closeup.webp'] }
+          ]
+        },
+        manta: {
+          visible: true,
+          name: 'MANTA',
+          line: 'core',
+          tag: 'Core',
+          sub: 'Set · Top + Pantalón · Tela Técnica',
+          price: '$229.900 COP',
+          fabric: '94% poliéster + 6% spandex — 120g/m²',
+          desc: 'MANTA es el segundo uniforme de la línea Core. Un diseño depurado y funcional con corte que prioriza el movimiento. Disponible en Azul Marino, un color que transmite calma y profesionalismo en cada turno.',
+          ctaText: 'Pedir',
+          addBtnText: '+ Agregar al carrito',
+          colors: [
+            { label: 'Azul Marino', imgs: ['img/manta_navy_1.webp', 'img/manta_navy_2.webp', 'img/manta_navy_3.webp', 'img/manta_navy_4.webp', 'img/manta_navy_5.webp', 'img/manta_navy_labels.webp'] },
+            { label: 'Vinotinto', imgs: ['img/manta_vino_1.webp', 'img/manta_vino_2.webp', 'img/manta_vino_3.webp', 'img/manta_vino_4.webp', 'img/manta_vino_5.webp', 'img/manta_vino_labels.webp'] },
+            { label: 'Negro', imgs: ['img/manta_black_1.webp', 'img/manta_black_2.webp', 'img/manta_black_3.webp', 'img/manta_black_4.webp', 'img/manta_black_5.webp', 'img/manta_black_labels.webp'] }
+          ]
+        },
+        hoodie: {
+          visible: true,
+          name: 'HOODIE',
+          line: 'essentials',
+          tag: 'Capas',
+          sub: 'Sudadera · Capucha · Canguro',
+          price: '$159.400 COP',
+          fabric: 'Algodón premium perchado',
+          desc: 'Sudadera oversize en algodón premium con capucha ajustable, bolsillo canguro frontal y puños acanalados. La capa perfecta para antes y después del turno.',
+          ctaText: 'Pedir',
+          addBtnText: '+ Agregar al carrito',
+          colors: [
+            { label: 'Negro', imgs: ['img/capa-hoodie.webp', 'img/capa-hoodie-azul.webp'] },
+            { label: 'Azul Marino', imgs: ['img/capa-hoodie-azul.webp', 'img/capa-hoodie.webp'] }
+          ]
+        }
+      },
+      capasSection: {
+        visible: true,
+        label: 'Complementos',
+        title: 'Capas',
+        badge: 'Próximamente',
+        waitlistText: 'Próximamente — déjanos tus datos\ny te avisamos cuando lleguen',
+        waitlistBtn: 'Avisarme'
+      },
+      ctaSection: {
+        visible: true,
+        title: '¿No encuentras tu talla?',
+        subtitle: 'Escríbenos directamente y te asesoramos.',
+        btnText: 'Contactar por WhatsApp',
+        whatsappNumber: '573127300661',
+        whatsappMsg: 'Hola, quiero información sobre los uniformes YOSSICO'
+      }
+    };
+
+    const HERO_PRESETS = [
+      { src: 'img/hero_model_cutout.webp', label: 'Hero Original' },
+      { src: 'img/oslo_black_front.webp', label: 'Oslo Negro' },
+      { src: 'img/oslo_navy_front.webp', label: 'Oslo Marino' },
+      { src: 'img/oslo_burgundy_front.webp', label: 'Oslo Vinotinto' },
+      { src: 'img/lima_black_front.webp', label: 'Lima Negro' },
+      { src: 'img/lima_teal_front.webp', label: 'Lima Pacífico' },
+      { src: 'img/lima_olive_front.webp', label: 'Lima Oliva' },
+      { src: 'img/manta_navy_1.webp', label: 'Manta Marino' },
+      { src: 'img/manta_vino_1.webp', label: 'Manta Vino' },
+      { src: 'img/manta_black_1.webp', label: 'Manta Negro' },
+      { src: 'img/bogota_navy_front.webp', label: 'Bogotá' },
+      { src: 'img/embajadora-hero.webp', label: 'Embajadora' }
+    ];
+
+    let landingCfg = JSON.parse(JSON.stringify(DEFAULT_LANDING));
+    let coleccionCfg = JSON.parse(JSON.stringify(DEFAULT_COLECCION));
+
+    function deepMerge(base, custom) {
+      const out = JSON.parse(JSON.stringify(base));
+      if (!custom || typeof custom !== 'object') return out;
+      Object.keys(custom).forEach(k => {
+        if (Array.isArray(custom[k])) {
+          out[k] = JSON.parse(JSON.stringify(custom[k]));
+        } else if (custom[k] && typeof custom[k] === 'object' && out[k] && typeof out[k] === 'object') {
+          out[k] = deepMerge(out[k], custom[k]);
+        } else if (custom[k] !== undefined) {
+          out[k] = custom[k];
+        }
+      });
+      return out;
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('studio-toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(window.__studioToastTimer);
+      window.__studioToastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+    function setStatusBadge(state) {
+      const b = document.getElementById('studio-status-badge');
+      if (!b) return;
+      if (state === 'dirty') {
+        b.textContent = '● Cambios sin publicar';
+        b.style.background = 'rgba(245, 158, 11, 0.25)';
+        b.style.color = '#fcd34d';
+        b.style.borderColor = '#f59e0b';
+      } else {
+        b.textContent = '● Publicado en vivo';
+        b.style.background = 'rgba(46, 125, 50, 0.28)';
+        b.style.color = '#a5d6a7';
+        b.style.borderColor = '#4caf50';
+      }
+    }
+
+    function verificarPinStudio() {
+      const val = document.getElementById('studio-pin-input')?.value?.trim();
+      if (val === 'yossico2025') {
+        adminPin = val;
+        sessionStorage.setItem('admin_pin', val);
+        document.getElementById('studio-login').style.display = 'none';
+      } else {
+        alert('PIN incorrecto');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      sb = window.YOSSICO_AUTH ? window.YOSSICO_AUTH.getSb() : window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const initPage = urlParams.get('page');
+
+      const iframe = document.getElementById('studio-iframe');
+      if (iframe) {
+        iframe.addEventListener('load', () => {
+          pushLivePreview();
+        });
+      }
+
+      await loadAllConfigs();
+
+      if (initPage === 'coleccion') {
+        switchStudioPage('coleccion');
+      } else {
+        renderLandingInspector();
+        pushLivePreview();
+      }
+    });
+
+    async function loadAllConfigs() {
+      /* 1. Landing */
+      let lData = null;
+      try {
+        const { data } = await sb.rpc('get_config', { p_clave: 'landing_config' });
+        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+          lData = data;
+          localStorage.setItem('yossico_landing_config', JSON.stringify(data));
+        }
+      } catch (_) {}
+      if (!lData) {
+        try { lData = JSON.parse(localStorage.getItem('yossico_landing_config') || 'null'); } catch (_) {}
+      }
+      landingCfg = deepMerge(DEFAULT_LANDING, lData);
+
+      /* 2. Colección */
+      let cData = null;
+      try {
+        const { data } = await sb.rpc('get_config', { p_clave: 'coleccion_config' });
+        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+          cData = data;
+          localStorage.setItem('yossico_coleccion_config', JSON.stringify(data));
+        }
+      } catch (_) {}
+      if (!cData) {
+        try { cData = JSON.parse(localStorage.getItem('yossico_coleccion_config') || 'null'); } catch (_) {}
+      }
+      coleccionCfg = deepMerge(DEFAULT_COLECCION, cData);
+
+      renderLandingInspector();
+      renderColeccionInspector();
+      setStatusBadge('synced');
+    }
+
+    /* ── CAMBIO DE PÁGINA EN EL STUDIO (LANDING <-> COLECCION) ── */
+    window.switchStudioPage = function(page) {
+      activeStudioPage = page;
+      document.getElementById('tab-page-landing').classList.toggle('active', page === 'landing');
+      document.getElementById('tab-page-coleccion').classList.toggle('active', page === 'coleccion');
+
+      document.getElementById('inspector-landing').style.display = (page === 'landing') ? 'flex' : 'none';
+      document.getElementById('inspector-coleccion').style.display = (page === 'coleccion') ? 'flex' : 'none';
+
+      document.getElementById('sidebar-title-text').textContent = (page === 'landing')
+        ? 'Editando: Página de Inicio (Landing)'
+        : 'Editando: Página de Colección (Catálogo)';
+
+      const targetFile = (page === 'landing') ? 'index.html' : 'coleccion.html';
+      document.getElementById('studio-url-indicator').textContent = `https://yossico.com/${targetFile} (Vista Previa Interactiva)`;
+      document.getElementById('btn-open-live').setAttribute('href', targetFile);
+
+      const iframe = document.getElementById('studio-iframe');
+      if (iframe) {
+        iframe.src = `${targetFile}?preview=1`;
+      }
+    };
+
+    window.toggleStudioSidebar = function() {
+      const sbEl = document.getElementById('studio-sidebar');
+      const btn = document.getElementById('btn-toggle-sidebar');
+      const collapsed = sbEl.classList.toggle('collapsed');
+      btn.textContent = collapsed ? '▶ Mostrar Controles' : '◀ Ocultar Controles';
+    };
+
+    window.setStudioDevice = function(mode) {
+      const wrap = document.getElementById('studio-frame-wrap');
+      document.getElementById('btn-dev-desktop').classList.toggle('active', mode === 'desktop');
+      document.getElementById('btn-dev-mobile').classList.toggle('active', mode === 'mobile');
+      wrap.classList.toggle('mobile-mode', mode === 'mobile');
+    };
+
+    window.reloadStudioIframe = function() {
+      const targetFile = (activeStudioPage === 'landing') ? 'index.html' : 'coleccion.html';
+      document.getElementById('studio-iframe').src = `${targetFile}?preview=1&t=${Date.now()}`;
+    };
+
+    window.toggleAcc = function(prefix, key) {
+      const container = document.getElementById(prefix === 'l' ? 'inspector-landing' : 'inspector-coleccion');
+      const acc = document.getElementById(`acc-${prefix}-${key}`);
+      if (!acc || !container) return;
+      const wasOpen = acc.classList.contains('open');
+      container.querySelectorAll('.st-acc').forEach(el => el.classList.remove('open'));
+      if (!wasOpen) {
+        acc.classList.add('open');
+        if (key !== 'order' && key !== 'products') {
+          scrollPreview(prefix === 'l' ? 'landing' : 'coleccion', key);
+        }
+      }
+    };
+
+    window.scrollPreview = function(page, section) {
+      const iframe = document.getElementById('studio-iframe');
+      if (!iframe || !iframe.contentWindow) return;
+      iframe.contentWindow.postMessage({
+        type: page === 'landing' ? 'YOSSICO_LANDING_SCROLL' : 'YOSSICO_COLECCION_SCROLL',
+        section
+      }, '*');
+    };
+
+    function pushLivePreview() {
+      const iframe = document.getElementById('studio-iframe');
+      if (!iframe || !iframe.contentWindow) return;
+      if (activeStudioPage === 'landing') {
+        iframe.contentWindow.postMessage({ type: 'YOSSICO_LANDING_PREVIEW', config: landingCfg }, '*');
+      } else {
+        iframe.contentWindow.postMessage({ type: 'YOSSICO_COLECCION_PREVIEW', config: coleccionCfg }, '*');
+      }
+    }
+
+    /* ── SUBIDA DE IMÁGENES OPTIMIZADAS A WEBP ── */
+    window.uploadImageToInput = function(fileInput, targetInputId, mode) {
+      const file = fileInput?.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 1280;
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/webp', 0.84);
+          const inp = document.getElementById(targetInputId);
+          if (inp) {
+            inp.value = dataUrl;
+            if (mode === 'landing') {
+              onLandingChange();
+              renderHeroPresets();
+            } else {
+              onActiveProductFieldChange();
+            }
+          }
+          showToast('Foto cargada en la vista previa ✓');
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    /* =========================================================================
+       LÓGICA INSPECTOR 1: LANDING
+       ========================================================================= */
+    function renderHeroPresets() {
+      const grid = document.getElementById('le-hero-img-presets');
+      if (!grid) return;
+      const cur = landingCfg?.hero?.image || '';
+      grid.innerHTML = HERO_PRESETS.map(p => `
+        <div class="st-img-thumb ${cur === p.src ? 'selected' : ''}" onclick="selectHeroPreset('${p.src}')">
+          <img src="${p.src}" alt="${p.label}" loading="lazy">
+          <span>${p.label}</span>
+        </div>
+      `).join('');
+    }
+
+    window.selectHeroPreset = function(src) {
+      document.getElementById('le-hero-img').value = src;
+      onLandingChange();
+      renderHeroPresets();
+    };
+
+    function renderLandingOrderList() {
+      const el = document.getElementById('l-order-list');
+      if (!el) return;
+      const labels = {
+        countdown: '⏳ Cuenta Regresiva (Pre-Hero)',
+        hero: '🖼️ Portada Principal (Hero)',
+        drops: '🔥 Sección Drops (Editorial)',
+        nosotros: '✨ Por qué YOSSICO (4 Pilares)',
+        contactoCta: '💬 Cierre / Contacto'
+      };
+      const order = landingCfg.sectionOrder || ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta'];
+      el.innerHTML = order.map((k, idx) => {
+        const vis = landingCfg[k]?.visible !== false;
+        return `
+          <div class="st-order-item">
+            <span style="font-weight:600; ${vis ? '' : 'color:#9ca3af;text-decoration:line-through;'}">${idx + 1}. ${labels[k] || k}</span>
+            <div style="display:flex; gap:4px;">
+              <button type="button" class="st-mini-btn" style="background:${vis ? '#e8f5e9' : '#fee2e2'}; color:${vis ? '#1b5e20' : '#991b1b'};" onclick="toggleLandingSecVis('${k}')">${vis ? '👁️ Visible' : '🚫 Oculto'}</button>
+              <button type="button" class="st-mini-btn" onclick="moveLandingSec(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>↑</button>
+              <button type="button" class="st-mini-btn" onclick="moveLandingSec(${idx}, 1)" ${idx === order.length - 1 ? 'disabled' : ''}>↓</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.moveLandingSec = function(idx, dir) {
+      const order = (landingCfg.sectionOrder || []).slice();
+      const target = idx + dir;
+      if (target < 0 || target >= order.length) return;
+      const tmp = order[idx]; order[idx] = order[target]; order[target] = tmp;
+      landingCfg.sectionOrder = order;
+      renderLandingOrderList();
+      pushLivePreview();
+      setStatusBadge('dirty');
+    };
+
+    window.toggleLandingSecVis = function(key) {
+      const map = { countdown: 'le-cd-visible', hero: 'le-hero-visible', drops: 'le-drops-visible', nosotros: 'le-nos-visible', contactoCta: 'le-cc-visible' };
+      const chk = document.getElementById(map[key]);
+      if (chk) { chk.checked = !chk.checked; onLandingChange(); }
+    };
+
+    function renderLandingInspector() {
+      const setV = (id, v) => { const e = document.getElementById(id); if (e) e.value = v ?? ''; };
+      const setC = (id, v) => { const e = document.getElementById(id); if (e) e.checked = v !== false; };
+
+      const a = landingCfg.announcement || {};
+      setC('le-ann-visible', a.visible);
+      setV('le-ann-text', a.text);
+      setV('le-ann-subtext', a.subtext);
+      setC('le-ann-flag', a.showFlag);
+      setV('le-ann-bg', a.bgColor || '#0a0a0a');
+      setV('le-ann-color', a.textColor || '#ffffff');
+
+      const c = landingCfg.countdown || {};
+      setC('le-cd-visible', c.visible);
+      setV('le-cd-eyebrow', c.eyebrow);
+      setV('le-cd-date', (c.targetDate || '2026-12-01T00:00').slice(0, 16));
+      setV('le-cd-cta', c.ctaText);
+
+      const h = landingCfg.hero || {};
+      setC('le-hero-visible', h.visible);
+      setV('le-hero-label', h.labelPrefix);
+      setV('le-hero-w1', h.wordSwap1);
+      setV('le-hero-w2', h.wordSwap2);
+      setV('le-hero-t1', h.titleLine1);
+      setV('le-hero-t2', h.titleLine2);
+      setV('le-hero-ti', h.titleItalic);
+      setV('le-hero-sub', h.subtitle);
+      setV('le-hero-cta1-txt', h.ctaPrimaryText);
+      setV('le-hero-cta1-url', h.ctaPrimaryUrl);
+      setV('le-hero-cta2-txt', h.ctaSecondaryText);
+      setV('le-hero-cta2-url', h.ctaSecondaryUrl);
+      setV('le-hero-img', h.image);
+      setV('le-hero-pos', h.imagePosition || 'center top');
+      setV('le-hero-bg', h.rightBgColor || '#f5f4f0');
+
+      const d = landingCfg.drops || {};
+      setC('le-drops-visible', d.visible);
+      setV('le-drops-eye', d.eyebrow);
+      setV('le-drops-htop', d.headlineTop);
+      setV('le-drops-hit', d.headlineItalic);
+      setV('le-drops-hbot', d.headlineBottom);
+      setV('le-drops-sub', d.sub);
+      setV('le-drops-p1', d.p1);
+      setV('le-drops-quote', d.pullQuote);
+      setV('le-drops-p2', d.p2);
+      setV('le-drops-p3', d.p3);
+      setV('le-drops-cta-txt', d.ctaText);
+      setV('le-drops-cta-url', d.ctaUrl);
+      setV('le-drops-sublink', d.subLinkText);
+
+      const n = landingCfg.nosotros || {};
+      setC('le-nos-visible', n.visible);
+      setV('le-nos-eye', n.eyebrow);
+      setV('le-nos-tp', n.titlePrefix);
+      setV('le-nos-ti', n.titleItalic);
+      setV('le-nos-ts', n.titleSuffix);
+      const cards = n.cards || [];
+      for (let i = 0; i < 4; i++) {
+        setV(`le-nos-c${i+1}-t`, cards[i]?.title || '');
+        setV(`le-nos-c${i+1}-p`, cards[i]?.text || '');
+      }
+
+      const cc = landingCfg.contactoCta || {};
+      setC('le-cc-visible', cc.visible);
+      setV('le-cc-eye', cc.eyebrow);
+      setV('le-cc-tp', cc.titlePrefix);
+      setV('le-cc-ti', cc.titleItalic);
+      setV('le-cc-ts', cc.titleSuffix);
+      setV('le-cc-sub', cc.subtitle);
+      setV('le-cc-wa-num', cc.whatsappNumber);
+      setV('le-cc-wa-txt', cc.whatsappText);
+      setV('le-cc-ig', cc.instagramUrl);
+
+      const p = landingCfg.popup || {};
+      setV('le-pop-tag', p.tag);
+      setV('le-pop-htop', p.headlineTop);
+      setV('le-pop-hit', p.headlineItalic);
+      setV('le-pop-disc', p.discountLabel);
+      setV('le-pop-drop', p.dropWord);
+      setV('le-pop-ftitle', p.formTitle);
+      setV('le-pop-fsub', p.formSub);
+      setV('le-pop-fbtn', p.btnText);
+
+      renderHeroPresets();
+      renderLandingOrderList();
+    }
+
+    window.onLandingChange = function() {
+      const getV = id => document.getElementById(id)?.value ?? '';
+      const getC = id => !!document.getElementById(id)?.checked;
+
+      landingCfg = {
+        sectionOrder: landingCfg.sectionOrder || ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta'],
+        announcement: {
+          visible: getC('le-ann-visible'),
+          text: getV('le-ann-text'),
+          subtext: getV('le-ann-subtext'),
+          showFlag: getC('le-ann-flag'),
+          bgColor: getV('le-ann-bg'),
+          textColor: getV('le-ann-color')
+        },
+        countdown: {
+          visible: getC('le-cd-visible'),
+          eyebrow: getV('le-cd-eyebrow'),
+          targetDate: getV('le-cd-date'),
+          ctaText: getV('le-cd-cta')
+        },
+        hero: {
+          visible: getC('le-hero-visible'),
+          labelPrefix: getV('le-hero-label'),
+          wordSwap1: getV('le-hero-w1'),
+          wordSwap2: getV('le-hero-w2'),
+          titleLine1: getV('le-hero-t1'),
+          titleLine2: getV('le-hero-t2'),
+          titleItalic: getV('le-hero-ti'),
+          subtitle: getV('le-hero-sub'),
+          ctaPrimaryText: getV('le-hero-cta1-txt'),
+          ctaPrimaryUrl: getV('le-hero-cta1-url'),
+          ctaSecondaryText: getV('le-hero-cta2-txt'),
+          ctaSecondaryUrl: getV('le-hero-cta2-url'),
+          image: getV('le-hero-img'),
+          imagePosition: getV('le-hero-pos'),
+          rightBgColor: getV('le-hero-bg')
+        },
+        drops: {
+          visible: getC('le-drops-visible'),
+          eyebrow: getV('le-drops-eye'),
+          headlineTop: getV('le-drops-htop'),
+          headlineItalic: getV('le-drops-hit'),
+          headlineBottom: getV('le-drops-hbot'),
+          sub: getV('le-drops-sub'),
+          p1: getV('le-drops-p1'),
+          pullQuote: getV('le-drops-quote'),
+          p2: getV('le-drops-p2'),
+          p3: getV('le-drops-p3'),
+          ctaText: getV('le-drops-cta-txt'),
+          ctaUrl: getV('le-drops-cta-url'),
+          subLinkText: getV('le-drops-sublink')
+        },
+        nosotros: {
+          visible: getC('le-nos-visible'),
+          eyebrow: getV('le-nos-eye'),
+          titlePrefix: getV('le-nos-tp'),
+          titleItalic: getV('le-nos-ti'),
+          titleSuffix: getV('le-nos-ts'),
+          cards: [
+            { title: getV('le-nos-c1-t'), text: getV('le-nos-c1-p') },
+            { title: getV('le-nos-c2-t'), text: getV('le-nos-c2-p') },
+            { title: getV('le-nos-c3-t'), text: getV('le-nos-c3-p') },
+            { title: getV('le-nos-c4-t'), text: getV('le-nos-c4-p') }
+          ]
+        },
+        contactoCta: {
+          visible: getC('le-cc-visible'),
+          eyebrow: getV('le-cc-eye'),
+          titlePrefix: getV('le-cc-tp'),
+          titleItalic: getV('le-cc-ti'),
+          titleSuffix: getV('le-cc-ts'),
+          subtitle: getV('le-cc-sub'),
+          whatsappNumber: getV('le-cc-wa-num'),
+          whatsappText: getV('le-cc-wa-txt'),
+          instagramUrl: getV('le-cc-ig')
+        },
+        popup: {
+          tag: getV('le-pop-tag'),
+          headlineTop: getV('le-pop-htop'),
+          headlineItalic: getV('le-pop-hit'),
+          discountLabel: getV('le-pop-disc'),
+          dropWord: getV('le-pop-drop'),
+          formTitle: getV('le-pop-ftitle'),
+          formSub: getV('le-pop-fsub'),
+          btnText: getV('le-pop-fbtn')
+        }
+      };
+
+      renderLandingOrderList();
+      pushLivePreview();
+      setStatusBadge('dirty');
+    };
+
+    /* =========================================================================
+       LÓGICA INSPECTOR 2: COLECCIÓN (COLECCION.HTML)
+       ========================================================================= */
+    function renderColeccionOrderList() {
+      const el = document.getElementById('c-order-list');
+      if (!el) return;
+      const order = coleccionCfg.productOrder || ['oslo', 'milan', 'kyoto', 'lima', 'bogota', 'manta'];
+      el.innerHTML = order.map((pid, idx) => {
+        const p = coleccionCfg.products?.[pid] || {};
+        const vis = p.visible !== false;
+        return `
+          <div class="st-order-item">
+            <span style="font-weight:700; ${vis ? '' : 'color:#9ca3af;text-decoration:line-through;'}">${idx + 1}. ${p.name || pid.toUpperCase()} <small style="font-weight:400;color:#64748b;">(${p.price || ''})</small></span>
+            <div style="display:flex; gap:4px;">
+              <button type="button" class="st-mini-btn" style="background:${vis ? '#e8f5e9' : '#fee2e2'}; color:${vis ? '#1b5e20' : '#991b1b'};" onclick="toggleProdVisQuick('${pid}')">${vis ? '👁️ Visible' : '🚫 Oculto'}</button>
+              <button type="button" class="st-mini-btn" onclick="moveColeccionProd(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>↑</button>
+              <button type="button" class="st-mini-btn" onclick="moveColeccionProd(${idx}, 1)" ${idx === order.length - 1 ? 'disabled' : ''}>↓</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.moveColeccionProd = function(idx, dir) {
+      const order = (coleccionCfg.productOrder || []).slice();
+      const target = idx + dir;
+      if (target < 0 || target >= order.length) return;
+      const tmp = order[idx]; order[idx] = order[target]; order[target] = tmp;
+      coleccionCfg.productOrder = order;
+      renderColeccionOrderList();
+      pushLivePreview();
+      setStatusBadge('dirty');
+    };
+
+    window.toggleProdVisQuick = function(pid) {
+      if (!coleccionCfg.products[pid]) return;
+      coleccionCfg.products[pid].visible = !(coleccionCfg.products[pid].visible !== false);
+      renderColeccionOrderList();
+      if (activeProductKey === pid) populateActiveProductForm(pid);
+      pushLivePreview();
+      setStatusBadge('dirty');
+    };
+
+    function renderProductPills() {
+      const container = document.getElementById('ce-prod-pills');
+      if (!container) return;
+      const keys = ['oslo', 'milan', 'kyoto', 'lima', 'bogota', 'manta', 'hoodie'];
+      container.innerHTML = keys.map(k => {
+        const p = coleccionCfg.products?.[k] || {};
+        return `<button type="button" class="st-prod-pill ${activeProductKey === k ? 'active' : ''}" onclick="selectProductToEdit('${k}')">${p.name || k.toUpperCase()}</button>`;
+      }).join('');
+    }
+
+    window.selectProductToEdit = function(pid) {
+      activeProductKey = pid;
+      renderProductPills();
+      populateActiveProductForm(pid);
+      scrollPreview('coleccion', 'prod-' + pid);
+    };
+
+    function populateActiveProductForm(pid) {
+      const p = coleccionCfg.products?.[pid];
+      if (!p) return;
+      document.getElementById('ce-prod-vis-label').textContent = `Mostrar ${p.name || pid.toUpperCase()} en el catálogo`;
+      document.getElementById('ce-prod-visible').checked = p.visible !== false;
+      document.getElementById('ce-prod-name').value = p.name || '';
+      document.getElementById('ce-prod-price').value = p.price || '';
+      document.getElementById('ce-prod-line').value = p.line || 'essentials';
+      document.getElementById('ce-prod-tag').value = p.tag || '';
+      document.getElementById('ce-prod-sub').value = p.sub || '';
+      document.getElementById('ce-prod-fabric').value = p.fabric || '';
+      document.getElementById('ce-prod-desc').value = p.desc || '';
+      document.getElementById('ce-prod-cta').value = p.ctaText || 'Pedir';
+      document.getElementById('ce-prod-addbtn').value = p.addBtnText || '+ Agregar al carrito';
+
+      /* Renderizar editor de colores y sus fotos */
+      const colorsWrap = document.getElementById('ce-prod-colors-editor');
+      const colors = p.colors || [];
+      colorsWrap.innerHTML = colors.map((cObj, cIdx) => {
+        const imgs = cObj.imgs || [];
+        return `
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:0.65rem; margin-bottom:0.6rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem;">
+              <strong style="font-size:0.72rem; color:#111827;">Color ${cIdx + 1}: ${cObj.label || ''}</strong>
+              <input type="text" value="${cObj.label || ''}" placeholder="Nombre del color" style="width:130px; padding:3px 6px; font-size:0.7rem; border:1px solid #cbd5e1; border-radius:4px;" oninput="updateProdColorLabel(${cIdx}, this.value)">
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(${Math.min(imgs.length, 4)}, 1fr); gap:6px; margin-bottom:0.45rem;">
+              ${imgs.map((imgSrc, imgIdx) => `
+                <div style="text-align:center;">
+                  <div style="aspect-ratio:3/4; border-radius:4px; overflow:hidden; border:1px solid #cbd5e1; background:#fff; margin-bottom:3px;">
+                    <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; object-position:top center;">
+                  </div>
+                  <label style="display:block; background:#111827; color:#fff; font-size:0.58rem; padding:3px 2px; border-radius:3px; cursor:pointer; text-transform:none;">
+                    📁 Foto ${imgIdx + 1}
+                    <input type="file" accept="image/*" style="display:none" onchange="uploadProdColorPhoto(this, ${cIdx}, ${imgIdx})">
+                  </label>
+                </div>
+              `).join('')}
+            </div>
+            ${imgs.map((imgSrc, imgIdx) => `
+              <div style="display:flex; align-items:center; gap:4px; margin-top:3px;">
+                <span style="font-size:0.62rem; color:#64748b; width:46px;">Foto ${imgIdx + 1}:</span>
+                <input type="text" value="${imgSrc}" style="flex:1; padding:3px 6px; font-size:0.68rem; border:1px solid #cbd5e1; border-radius:4px;" oninput="updateProdColorImg(${cIdx}, ${imgIdx}, this.value)">
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.updateProdColorLabel = function(cIdx, val) {
+      const p = coleccionCfg.products?.[activeProductKey];
+      if (!p || !p.colors || !p.colors[cIdx]) return;
+      p.colors[cIdx].label = val;
+      pushLivePreview();
+      setStatusBadge('dirty');
+    };
+
+    window.updateProdColorImg = function(cIdx, imgIdx, val) {
+      const p = coleccionCfg.products?.[activeProductKey];
+      if (!p || !p.colors || !p.colors[cIdx]) return;
+      p.colors[cIdx].imgs[imgIdx] = val;
+      pushLivePreview();
+      setStatusBadge('dirty');
+    };
+
+    window.uploadProdColorPhoto = function(fileInput, cIdx, imgIdx) {
+      const file = fileInput?.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 1200;
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/webp', 0.84);
+          updateProdColorImg(cIdx, imgIdx, dataUrl);
+          populateActiveProductForm(activeProductKey);
+          showToast('Foto actualizada en tiempo real ✓');
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.onActiveProductFieldChange = function() {
+      const p = coleccionCfg.products?.[activeProductKey];
+      if (!p) return;
+      p.visible = !!document.getElementById('ce-prod-visible')?.checked;
+      p.name = document.getElementById('ce-prod-name')?.value ?? '';
+      p.price = document.getElementById('ce-prod-price')?.value ?? '';
+      p.line = document.getElementById('ce-prod-line')?.value ?? 'essentials';
+      p.tag = document.getElementById('ce-prod-tag')?.value ?? '';
+      p.sub = document.getElementById('ce-prod-sub')?.value ?? '';
+      p.fabric = document.getElementById('ce-prod-fabric')?.value ?? '';
+      p.desc = document.getElementById('ce-prod-desc')?.value ?? '';
+      p.ctaText = document.getElementById('ce-prod-cta')?.value ?? 'Pedir';
+      p.addBtnText = document.getElementById('ce-prod-addbtn')?.value ?? '+ Agregar al carrito';
+
+      renderProductPills();
+      renderColeccionOrderList();
+      pushLivePreview();
+      setStatusBadge('dirty');
+    };
+
+    function renderColeccionInspector() {
+      const setV = (id, v) => { const e = document.getElementById(id); if (e) e.value = v ?? ''; };
+      const setC = (id, v) => { const e = document.getElementById(id); if (e) e.checked = v !== false; };
+
+      const a = coleccionCfg.announcement || {};
+      setC('ce-ann-visible', a.visible);
+      setV('ce-ann-text', a.text);
+
+      const h = coleccionCfg.header || {};
+      setV('ce-hdr-label', h.label);
+      setV('ce-hdr-prefix', h.titlePrefix);
+      setV('ce-hdr-words', h.rotatingWords);
+
+      const f = coleccionCfg.filters || {};
+      setV('ce-flt-sig', f.labelSignature);
+      setV('ce-flt-ess', f.labelEssentials);
+      setV('ce-flt-core', f.labelCore);
+      setV('ce-flt-all', f.labelAll);
+
+      const cs = coleccionCfg.capasSection || {};
+      setC('ce-capas-visible', cs.visible);
+      setV('ce-capas-label', cs.label);
+      setV('ce-capas-title', cs.title);
+      setV('ce-capas-badge', cs.badge);
+      setV('ce-capas-wltext', cs.waitlistText);
+      setV('ce-capas-wlbtn', cs.waitlistBtn);
+
+      const ct = coleccionCfg.ctaSection || {};
+      setC('ce-cta-visible', ct.visible);
+      setV('ce-cta-title', ct.title);
+      setV('ce-cta-sub', ct.subtitle);
+      setV('ce-cta-btn', ct.btnText);
+      setV('ce-cta-wa', ct.whatsappNumber);
+      setV('ce-cta-wamsg', ct.whatsappMsg);
+
+      renderColeccionOrderList();
+      renderProductPills();
+      populateActiveProductForm(activeProductKey);
+    }
+
+    window.onColeccionChange = function() {
+      const getV = id => document.getElementById(id)?.value ?? '';
+      const getC = id => !!document.getElementById(id)?.checked;
+
+      coleccionCfg.announcement = {
+        visible: getC('ce-ann-visible'),
+        text: getV('ce-ann-text'),
+        subtext: 'Exclusivo para Colombia',
+        showFlag: true
+      };
+      coleccionCfg.header = {
+        visible: true,
+        label: getV('ce-hdr-label'),
+        titlePrefix: getV('ce-hdr-prefix'),
+        rotatingWords: getV('ce-hdr-words')
+      };
+      coleccionCfg.filters = {
+        visible: true,
+        labelSignature: getV('ce-flt-sig'),
+        labelEssentials: getV('ce-flt-ess'),
+        labelCore: getV('ce-flt-core'),
+        labelAll: getV('ce-flt-all')
+      };
+      coleccionCfg.capasSection = {
+        visible: getC('ce-capas-visible'),
+        label: getV('ce-capas-label'),
+        title: getV('ce-capas-title'),
+        badge: getV('ce-capas-badge'),
+        waitlistText: getV('ce-capas-wltext'),
+        waitlistBtn: getV('ce-capas-wlbtn')
+      };
+      coleccionCfg.ctaSection = {
+        visible: getC('ce-cta-visible'),
+        title: getV('ce-cta-title'),
+        subtitle: getV('ce-cta-sub'),
+        btnText: getV('ce-cta-btn'),
+        whatsappNumber: getV('ce-cta-wa'),
+        whatsappMsg: getV('ce-cta-wamsg')
+      };
+
+      pushLivePreview();
+      setStatusBadge('dirty');
+    };
+
+    /* ── GUARDAR Y PUBLICAR EN VIVO (LANDING + COLECCIÓN) ── */
+    window.guardarYPublicarTodo = async function() {
+      localStorage.setItem('yossico_landing_config', JSON.stringify(landingCfg));
+      localStorage.setItem('yossico_coleccion_config', JSON.stringify(coleccionCfg));
+
+      try {
+        await Promise.all([
+          sb.rpc('set_config', { p_clave: 'landing_config', p_valor: landingCfg, pin: adminPin || 'yossico2025' }),
+          sb.rpc('set_config', { p_clave: 'coleccion_config', p_valor: coleccionCfg, pin: adminPin || 'yossico2025' })
+        ]);
+        showToast('¡Cambios publicados en vivo en Landing y Colección! ✓');
+      } catch (e) {
+        showToast('Cambios guardados en el Panel Admin ✓');
+      }
+      setStatusBadge('synced');
+      pushLivePreview();
+    };
+
+    window.restaurarPaginaActual = async function() {
+      const nombrePag = activeStudioPage === 'landing' ? 'la Página de Inicio (Landing)' : 'la Página de Colección';
+      if (!confirm(`¿Restaurar todos los textos, fotos y orden de ${nombrePag} a su estado original de fábrica?`)) return;
+
+      if (activeStudioPage === 'landing') {
+        landingCfg = JSON.parse(JSON.stringify(DEFAULT_LANDING));
+        localStorage.removeItem('yossico_landing_config');
+        try { await sb.rpc('set_config', { p_clave: 'landing_config', p_valor: {}, pin: adminPin || 'yossico2025' }); } catch (_) {}
+        renderLandingInspector();
+      } else {
+        coleccionCfg = JSON.parse(JSON.stringify(DEFAULT_COLECCION));
+        localStorage.removeItem('yossico_coleccion_config');
+        try { await sb.rpc('set_config', { p_clave: 'coleccion_config', p_valor: {}, pin: adminPin || 'yossico2025' }); } catch (_) {}
+        renderColeccionInspector();
+      }
+      reloadStudioIframe();
+      setStatusBadge('synced');
+      showToast('Página restaurada al diseño original ✓');
+    };
+  </script>
+</body>
+</html>
