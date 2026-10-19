@@ -336,10 +336,10 @@
   <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
   Drop / Lanzamiento
 </button>
-      <button class="tab-btn" onclick="cambiarTab('landing',this)" style="border-left: 3px solid #0C4E57;">
+      <a href="YOSSICO_Editor_Web.html" target="_blank" class="tab-btn" style="border-left: 3px solid #0C4E57; text-decoration: none;">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
-        Editor Web &amp; Colección
-      </button>
+        Editor Web &amp; Colección ↗
+      </a>
       <button class="tab-btn" onclick="cambiarTab('visitas',this)">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 14l4-4 3 3 5-6"></path></svg>
         Visitas Web
@@ -2938,6 +2938,10 @@ function renderVisitas(rows, dias) {
 }
 
 function cambiarTab(tab, btn) {
+  if (tab === 'landing') {
+    window.open('YOSSICO_Editor_Web.html', '_blank');
+    return;
+  }
   if (tab === 'finanzas') {
     if (sessionStorage.getItem('rent_auth') !== 'true') {
       const pass = prompt("Acceso Restringido. Ingresa la contraseña maestra para ver Finanzas:");
