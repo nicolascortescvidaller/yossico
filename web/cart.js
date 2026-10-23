@@ -96,7 +96,7 @@ function renderCart() {
     body.innerHTML = items.map(item => `
         <div class="cart-item" data-key="${escHtml(item.key)}">
             <div class="cart-item__img">
-                <img src="${escHtml(item.img)}" alt="${escHtml(item.name)}">
+                <img src="${escHtml(normalizeCartImg(item.img) || CART_IMG_PLACEHOLDER)}" alt="${escHtml(item.name)}" data-name="${escHtml(item.name)}" data-key="${escHtml(item.key)}" decoding="async" onerror="cartImgFallback(this)">
             </div>
             <div class="cart-item__info">
                 <span class="cart-item__name">${escHtml(item.name)}</span>
@@ -129,6 +129,68 @@ function renderCart() {
             window.location.href = 'checkout.html';
         };
     }
+}
+
+/* ── Imágenes del carrito: rutas robustas + respaldo ─────────
+   - Normaliza rutas relativas a absolutas desde la raíz (/img/...) para que
+     funcionen desde cualquier URL (clean URLs, 404, subrutas).
+   - Respeta data:/blob:/http(s) (fotos subidas desde el Studio).
+   - Si una imagen falla (carrito antiguo con archivos renombrados), busca la
+     foto actual del catálogo y, si no existe, muestra un placeholder de marca. */
+const CART_IMG_PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 90"><rect width="72" height="90" fill="#e5e3e0"/>' +
+    '<text x="36" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="30" fill="#111" letter-spacing="2">Y</text></svg>'
+);
+
+function normalizeCartImg(src) {
+    if (!src) return '';
+    src = String(src).trim();
+    if (!src) return '';
+    if (/^(data:|blob:|https?:|\/\/)/i.test(src)) return src;
+    return '/' + src.replace(/^(\.\/|\/)+/, '');
+}
+
+const CART_CATALOG_FALLBACK = {
+    OSLO:   { def: 'oslo_black_front',  navy: 'oslo_navy_front', marino: 'oslo_navy_front', vino: 'oslo_burgundy_front', negro: 'oslo_black_front' },
+    MILAN:  { def: 'milan_front' },
+    KYOTO:  { def: 'kyoto_front' },
+    LIMA:   { def: 'lima_black_front',  pac: 'lima_teal_front', teal: 'lima_teal_front', oliva: 'lima_olive_front', negro: 'lima_black_front' },
+    BOGOTA: { def: 'bogota_navy_front' },
+    MANTA:  { def: 'manta_navy_1',      vino: 'manta_vino_1', negro: 'manta_black_1', azul: 'manta_navy_1', marino: 'manta_navy_1' },
+    HOODIE: { def: 'capa-hoodie',       azul: 'capa-hoodie-azul' }
+};
+
+function lookupCatalogImg(name) {
+    const raw = String(name || '');
+    const base = raw.split('(')[0].trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const color = (raw.match(/\(([^)]+)\)/) || [])[1] || '';
+    const col = color.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const key = Object.keys(CART_CATALOG_FALLBACK).find(k => base.startsWith(k));
+    if (!key) return '';
+    const map = CART_CATALOG_FALLBACK[key];
+    const hit = Object.keys(map).find(k => k !== 'def' && col.includes(k));
+    return '/img/' + map[hit || 'def'] + '.webp';
+}
+
+function cartImgFallback(el) {
+    if (!el || el.dataset.fb === 'done') return;
+    if (!el.dataset.fb) {
+        el.dataset.fb = '1';
+        const alt = lookupCatalogImg(el.dataset.name);
+        if (alt && alt !== el.getAttribute('src')) {
+            el.src = alt;
+            /* Reparar el carrito guardado para que no vuelva a fallar */
+            try {
+                const items = Cart.items;
+                const it = items.find(i => i.key === el.dataset.key);
+                if (it) { it.img = alt; Cart.save(items); }
+            } catch (_) {}
+            return;
+        }
+    }
+    el.dataset.fb = 'done';
+    el.onerror = null;
+    el.src = CART_IMG_PLACEHOLDER;
 }
 
 function escHtml(str) {
@@ -213,7 +275,7 @@ document.addEventListener('click', e => {
             name: gallery.dataset.name + colorLabel,
             size: sizeBtn?.textContent || '',
             price: parseCOP(gallery.dataset.price),
-            img: gallery.dataset.imgs.split(',')[0].trim(),
+            img: cardCartImage(card, gallery, colorBtn),
             line: gallery.dataset.lineName
         });
         return;
@@ -234,7 +296,7 @@ document.addEventListener('click', e => {
             name: (name || '') + colorLabel,
             size: sizeBtn?.textContent || '',
             price: parseCOP(price),
-            img: img.replace(window.location.origin, '').replace(window.location.pathname.replace(/[^/]+$/, ''), ''),
+            img: (img || '').replace(window.location.origin, ''),
             line: tag || ''
         });
         return;
@@ -244,6 +306,24 @@ document.addEventListener('click', e => {
 function parseCOP(str) {
     if (!str) return 0;
     return parseInt(str.replace(/[^0-9]/g, ''), 10) || 0;
+}
+
+/* Foto para el carrito desde una tarjeta: prioriza la del color elegido.
+   No usa split(',') sobre data-imgs porque las fotos subidas desde el Studio
+   son data-URLs que contienen comas. */
+function cardCartImage(card, gallery, colorBtn) {
+    const fromSwatch = colorBtn && (colorBtn.getAttribute('data-img-0') || colorBtn.getAttribute('data-img0'));
+    if (fromSwatch) return fromSwatch;
+    const slideImg = card && card.querySelector('.gallery__slide img');
+    if (slideImg) {
+        const s = slideImg.getAttribute('src') || '';
+        if (s && !/^data:image\/svg\+xml/i.test(s)) return s;
+        const ds = slideImg.getAttribute('data-src');
+        if (ds) return ds;
+    }
+    const imgs = (gallery && gallery.dataset.imgs) || '';
+    if (/^data:/i.test(imgs)) return imgs.replace(/,(?=data:)/g, '\n').split('\n')[0].trim();
+    return imgs.split(',')[0].trim();
 }
 
 /* ── Keyboard close ───────────────────────────── */

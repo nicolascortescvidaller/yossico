@@ -169,7 +169,7 @@
   </aside>
 
   <script src="script.js"></script>
-  <script src="cart.js"></script>
+  <script src="cart.js?v=2"></script>
   <script>
     /* ── Checkout page logic ─────────────────────────────── */
     // WA_NUMBER and CART_KEY are already declared in cart.js (global scope)
@@ -206,7 +206,7 @@
           <div class="ck-items">
             ${items.map(i => `
               <div class="ck-item">
-                <img loading="lazy" class="ck-item__img" src="${esc(i.img)}" alt="${esc(i.name)}">
+                <img loading="lazy" class="ck-item__img" src="${esc(normalizeCartImg(i.img) || CART_IMG_PLACEHOLDER)}" alt="${esc(i.name)}" data-name="${esc(i.name)}" data-key="${esc(i.key || '')}" onerror="cartImgFallback(this)">
                 <div>
                   <p class="ck-item__name">${esc(i.name)}</p>
                   <p class="ck-item__meta">${i.line ? esc(i.line) + ' · ' : ''}Talla ${esc(i.size)} · ×${i.qty}</p>
