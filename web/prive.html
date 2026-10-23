@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO -->
+    <meta name="description" content="Club YOSSICO Privé — Membresía mensual de alta costura médica. Uniformes exclusivos, 15% OFF permanente y acceso anticipado para la mujer en salud.">
+    <meta name="keywords" content="club prive yossico, suscripcion uniformes medicos, ropa medica exclusiva, scrubs lujo colombia">
+    <meta name="author" content="YOSSICO">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="YOSSICO">
+    <meta property="og:title" content="Club YOSSICO Privé — Membresía Exclusiva">
+    <meta property="og:description" content="Acceso a uniformes de edición limitada, 15% OFF permanente y acceso anticipado de 48h a cada drop.">
+    <meta property="og:image" content="https://yossico.com/img/og-yossico.jpg">
+    <meta property="og:url" content="https://yossico.com/prive.html">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Club YOSSICO Privé — Membresía Exclusiva">
+    <meta name="twitter:description" content="La membresía mensual que redefine la exclusividad en la ropa médica femenina.">
+    <meta name="twitter:image" content="https://yossico.com/img/og-yossico.jpg">
+
+    <title>Club Privé — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.v2.css?v=106">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="canonical" href="https://yossico.com/prive.html">
+
+    <style>
+        body {
+            background: #ffffff;
+            color: var(--black, #111111);
+            font-family: var(--font-body, 'Montserrat', sans-serif);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .prive-hero {
+            padding: 140px 24px 60px;
+            max-width: 880px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .prive-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 10px;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: #b38a49;
+            padding: 7px 18px;
+            border: 1px solid #d4c5a9;
+            background: #fbf9f4;
+            margin-bottom: 24px;
+        }
+
+        .prive-hero__title {
+            font-family: var(--font-display, 'Cormorant Garamond', serif);
+            font-weight: 300;
+            font-size: clamp(34px, 5.5vw, 62px);
+            line-height: 1.05;
+            letter-spacing: -0.5px;
+            color: #111;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+        }
+
+        .prive-hero__title em {
+            font-style: italic;
+            font-family: var(--font-display, 'Cormorant Garamond', serif);
+            text-transform: none;
+            color: #b38a49;
+        }
+
+        .prive-hero__subtitle {
+            font-size: clamp(14px, 1.8vw, 17px);
+            font-weight: 300;
+            color: #555;
+            line-height: 1.7;
+            max-width: 680px;
+            margin: 0 auto 40px;
+        }
+
+        /* Showcase split */
+        .prive-showcase {
+            max-width: 1080px;
+            margin: 0 auto 90px;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .prive-locked-preview {
+            position: relative;
+            background: #111;
+            aspect-ratio: 4 / 5;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+        }
+
+        .prive-locked-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.75) contrast(1.05);
+            display: block;
+        }
+
+        .prive-overlay-curtain {
+            position: absolute;
+            inset: 0;
+            background: rgba(14, 14, 14, 0.55);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .prive-lock-icon-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 197, 169, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: #d4c5a9;
+        }
+
+        .prive-curtain-tag {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #d4c5a9;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .prive-curtain-title {
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .prive-curtain-desc {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            max-width: 300px;
+            margin-bottom: 24px;
+        }
+
+        .prive-pricing-plans {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .plan-card {
+            border: 1px solid #e5e3dc;
+            padding: 28px;
+            background: #faf9f6;
+            cursor: pointer;
+            transition: all 0.25s;
+            position: relative;
+        }
+
+        .plan-card.selected {
+            border-color: #111;
+            background: #ffffff;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+
+        .plan-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .plan-card__title {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #111;
+        }
+
+        .plan-card__badge {
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: #111;
+            color: #d4c5a9;
+            padding: 4px 10px;
+        }
+
+        .plan-card__price {
+            font-family: var(--font-display);
+            font-size: 34px;
+            font-weight: 400;
+            color: #111;
+            margin-bottom: 8px;
+        }
+
+        .plan-card__price small {
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: #777;
+            letter-spacing: 1px;
+        }
+
+        .plan-card__desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Pillars grid */
+        .prive-pillars {
+            max-width: 1040px;
+            margin: 0 auto 90px;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .pillar-card {
+            padding: 32px 24px;
+            border: 1px solid #ebe9e4;
+            background: #faf9f6;
+        }
+
+        .pillar-card__icon {
+            font-size: 22px;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .pillar-card__title {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #111;
+            margin-bottom: 10px;
+        }
+
+        .pillar-card__desc {
+            font-size: 12px;
+            font-weight: 300;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Form Card */
+        .prive-form-card {
+            max-width: 680px;
+            margin: 0 auto 120px;
+            padding: 48px 36px;
+            border: 1px solid #e8e6e1;
+            background: #fff;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            border: 1px solid #d5d3ce;
+            padding: 13px 14px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: #111;
+            background: #fff;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-submit-prive {
+            background: #111;
+            color: #fbf9f4;
+            border: 1px solid #111;
+            padding: 18px 32px;
+            width: 100%;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-top: 12px;
+        }
+
+        .btn-submit-prive:hover {
+            background: #2b2b2b;
+        }
+
+        .success-prive-box {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .prive-hero {
+                padding: 120px 20px 40px;
+            }
+            .prive-showcase {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .prive-pillars {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .prive-form-card {
+                padding: 32px 20px;
+                margin-bottom: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Shipping bar -->
+    <div class="shipping-bar">
+        <span>ENVIOS GRATIS A TODA COLOMBIA · PAGO SEGURO CON WOMPI O CONTRAENTREGA</span>
+    </div>
+
+    <!-- Navegación -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">YOSSICO</a>
+        <div class="nav__links">
+            <a href="coleccion.html" class="nav__link">Colección</a>
+            <a href="prive.html" class="nav__link active" style="color:#b38a49;font-weight:500;">Privé 🔒</a>
+            <a href="estudiantes.html" class="nav__link">Campus 🎓</a>
+            <a href="nosotros.html" class="nav__link">Nosotros</a>
+            <a href="contacto.html" class="nav__link">Contacto</a>
+        </div>
+        <div class="nav__actions">
+            <a href="coleccion.html" class="nav__link nav__link--cta">Ver Colección</a>
+            <a href="javascript:void(0)" class="nav__cart-btn" onclick="openDrawer()" aria-label="Abrir carrito">
+                <span class="cart-icon-wrap">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Drawer del Carrito -->
+    <div class="cart-overlay" id="cart-overlay" onclick="closeDrawer()"></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito de compras">
+        <div class="cart-drawer__header">
+            <span class="cart-drawer__title">Bolsa de compra</span>
+            <button class="cart-drawer__close" onclick="closeDrawer()" aria-label="Cerrar bolsa">✕</button>
+        </div>
+        <div class="cart-drawer__body" id="cart-items"></div>
+        <div class="cart-drawer__footer" id="cart-footer">
+            <div class="cart-drawer__subtotal">
+                <span>Subtotal</span>
+                <span id="cart-subtotal">$0 COP</span>
+            </div>
+            <a href="checkout.html" class="btn btn--primary" style="width:100%;text-align:center;display:block;box-sizing:border-box;">Finalizar Pedido</a>
+        </div>
+    </aside>
+
+    <!-- Hero -->
+    <section class="prive-hero">
+        <div class="prive-badge">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            CLUB YOSSICO PRIVÉ · MEMBRESÍA MENSUAL
+        </div>
+        <h1 class="prive-hero__title">
+            Uniformes que pocos pueden vestir.<br>
+            <em>Privilegios</em> para ti.
+        </h1>
+        <p class="prive-hero__subtitle">
+            Un círculo privado para profesionales de la salud que buscan distinción absoluta.
+            Uniformes exclusivos que jamás salen a la venta general, 15% de descuento adicional permanente y acceso anticipado a cada drop.
+        </p>
+    </section>
+
+    <!-- Showcase + Pricing -->
+    <section class="prive-showcase">
+        <!-- Preview locked card -->
+        <div class="prive-locked-preview">
+            <img src="img/kyoto_original.webp" alt="Pieza Privé YOSSICO">
+            <div class="prive-overlay-curtain">
+                <div class="prive-lock-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <span class="prive-curtain-tag">PIEZA RESERVADA</span>
+                <h3 class="prive-curtain-title">Étoile Privé</h3>
+                <p class="prive-curtain-desc">
+                    Confeccionado en microfibra técnica de tacto seda con herrajes negro mate. Exclusivo para miembros.
+                </p>
+                <a href="#unirme-prive" class="btn" style="background:#d4c5a9;color:#111;padding:12px 24px;font-size:10px;letter-spacing:2px;font-weight:600;">
+                    DESBLOQUEAR MIEMBRESÍA
+                </a>
+            </div>
+        </div>
+
+        <!-- Pricing selection -->
+        <div class="prive-pricing-plans">
+            <div class="plan-card selected" id="card-mensual" onclick="seleccionarPlan('mensual')">
+                <div class="plan-card__header">
+                    <span class="plan-card__title">Plan Mensual</span>
+                    <span class="plan-card__badge">MÁS POPULAR</span>
+                </div>
+                <div class="plan-card__price">
+                    $29.900 <small>COP / MES</small>
+                </div>
+                <p class="plan-card__desc">
+                    Cancela en cualquier momento sin permanencia mínima. Con 1 compra cada 2 meses con tu 15% OFF, la suscripción se paga sola.
+                </p>
+            </div>
+
+            <div class="plan-card" id="card-anual" onclick="seleccionarPlan('anual')">
+                <div class="plan-card__header">
+                    <span class="plan-card__title">Plan Anual</span>
+                    <span class="plan-card__badge" style="background:#b38a49;color:#fff;">AHORRA 2 MESES</span>
+                </div>
+                <div class="plan-card__price">
+                    $290.000 <small>COP / AÑO</small>
+                </div>
+                <p class="plan-card__desc">
+                    12 meses de privilegios al precio de 10. Incluye estuche de cuero vegano y kit de bienvenida de autor en tu primer paquete.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pilares -->
+    <section class="prive-pillars">
+        <div class="pillar-card">
+            <span class="pillar-card__icon">🔒</span>
+            <h4 class="pillar-card__title">Uniformes Exclusivos</h4>
+            <p class="pillar-card__desc">Prendas con cortes de alta costura médica y colores de edición limitada que no se exhiben en la tienda general.</p>
+        </div>
+        <div class="pillar-card">
+            <span class="pillar-card__icon">⚡</span>
+            <h4 class="pillar-card__title">Early Access 48 Horas</h4>
+            <p class="pillar-card__desc">Acceso prioritario 2 días antes de cada lanzamiento oficial para asegurar tu talla y color sin filas ni agotados.</p>
+        </div>
+        <div class="pillar-card">
+            <span class="pillar-card__icon">🏷️</span>
+            <h4 class="pillar-card__title">15% OFF Extra Permanente</h4>
+            <p class="pillar-card__desc">Descuento recurrente en cada orden de uniformes regulares Essentials, Signature y Core durante toda tu membresía.</p>
+        </div>
+        <div class="pillar-card">
+            <span class="pillar-card__icon">📦</span>
+            <h4 class="pillar-card__title">Envíos Prioritarios Gratis</h4>
+            <p class="pillar-card__desc">Despacho express a toda Colombia sin importe mínimo de compra garantizado en cada uno de tus pedidos.</p>
+        </div>
+        <div class="pillar-card">
+            <span class="pillar-card__icon">🎁</span>
+            <h4 class="pillar-card__title">Detalles de Autor</h4>
+            <p class="pillar-card__desc">Sorpresas trimestrales en tu paquete: accesorios de diseño, estuches de fonoendoscopio y detalles de marca.</p>
+        </div>
+        <div class="pillar-card">
+            <span class="pillar-card__icon">💬</span>
+            <h4 class="pillar-card__title">Concierge Privé WhatsApp</h4>
+            <p class="pillar-card__desc">Línea VIP directa con nuestro equipo de confección y estilo para asesoría de tallas y pedidos especiales.</p>
+        </div>
+    </section>
+
+    <!-- Formulario de Suscripción -->
+    <section class="prive-form-card" id="unirme-prive">
+        <div id="prive-form-container">
+            <div style="text-align:center;margin-bottom:32px;">
+                <span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#b38a49;display:block;margin-bottom:8px;">SOLICITUD DE INGRESO</span>
+                <h3 style="font-family:var(--font-display);font-size:30px;font-weight:400;text-transform:uppercase;">Únete al Club Privé</h3>
+                <p style="font-size:12px;color:#777;">Activa tu membresía hoy y recibe tu código VIP de inmediato.</p>
+            </div>
+
+            <form id="prive-form" onsubmit="enviarSolicitudPrive(event)">
+                <input type="hidden" id="prive-plan-val" value="mensual">
+
+                <div class="form-group">
+                    <label for="pv-nombre">Nombre y Apellido *</label>
+                    <input type="text" id="pv-nombre" placeholder="Ej. Dra. Sofía Restrepo" required autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="pv-tel">Teléfono (WhatsApp) *</label>
+                    <input type="tel" id="pv-tel" placeholder="Ej. 312 345 6789" required autocomplete="tel">
+                </div>
+
+                <div class="form-group">
+                    <label for="pv-correo">Correo Electrónico *</label>
+                    <input type="email" id="pv-correo" placeholder="tu.correo@ejemplo.com" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="pv-ciudad">Ciudad de Entrega *</label>
+                    <input type="text" id="pv-ciudad" placeholder="Ej. Bogotá, Medellín, Cali, Barranquilla..." required>
+                </div>
+
+                <div style="margin:20px 0 10px;">
+                    <label style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#555;line-height:1.4;cursor:pointer;">
+                        <input type="checkbox" required style="margin-top:2px;accent-color:#111;">
+                        <span>Acepto los <a href="terminos.html" target="_blank" style="color:#111;text-decoration:underline;">Términos</a> y la <a href="privacidad.html" target="_blank" style="color:#111;text-decoration:underline;">Política de Privacidad</a> de YOSSICO.</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="btn-submit-pv" class="btn-submit-prive">
+                    ACTIVAR MEMBRESÍA (<span id="btn-plan-price">$29.900 COP / MES</span>) →
+                </button>
+            </form>
+        </div>
+
+        <div class="success-prive-box" id="prive-success">
+            <div style="font-size:36px;color:#b38a49;margin-bottom:16px;">✦</div>
+            <h4 style="font-family:var(--font-display);font-size:32px;font-weight:400;text-transform:uppercase;margin-bottom:12px;">Bienvenida a YOSSICO Privé</h4>
+            <p id="prive-success-text" style="font-size:13px;color:#555;line-height:1.7;max-width:480px;margin:0 auto 28px;">
+                Tu membresía está registrada. Tu código exclusivo de 15% OFF ha sido generado. Haz clic abajo para coordinar la activación con nuestro Concierge en WhatsApp.
+            </p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                <a id="prive-wa-link" href="#" target="_blank" rel="noopener" class="btn" style="background:#111;color:#fbf9f4;padding:16px 30px;font-size:10px;letter-spacing:2px;">
+                    CONTACTAR CONCIERGE VIP →
+                </a>
+                <a href="coleccion.html?linea=prive" class="btn btn--outline-dark" style="padding:16px 24px;font-size:10px;letter-spacing:2px;">
+                    VER PIEZAS PRIVÉ
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__columns">
+            <div class="footer__col">
+                <span class="footer__brand">YOSSICO</span>
+                <p class="footer__brand-sub">Bogotá, Colombia</p>
+                <p class="footer__tagline">Uniformes médicos premium para la mujer en salud.</p>
+                <div class="footer__sic">
+                    <img src="img/sic-logo.png" alt="Superintendencia de Industria y Comercio" loading="lazy">
+                    <span>Vigilado por la Superintendencia de Industria y Comercio</span>
+                </div>
+            </div>
+            <div class="footer__col">
+                <span class="footer__col-title">Colección</span>
+                <ul class="footer__links">
+                    <li><a href="coleccion.html">Ver Todo</a></li>
+                    <li><a href="prive.html" style="color:#b38a49;">Club Privé 🔒</a></li>
+                    <li><a href="estudiantes.html">Programa Estudiantil 🎓</a></li>
+                    <li><a href="guia-de-tallas.html">Guía de Tallas</a></li>
+                    <li><a href="cuidado-de-tus-prendas.html">Cuidado de Prendas</a></li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <span class="footer__col-title">Compañía</span>
+                <ul class="footer__links">
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="historia.html">Historia</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                    <li><a href="rastreo.html">Rastrear Pedido</a></li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <span class="footer__col-title">Legal</span>
+                <ul class="footer__links">
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Política de Privacidad</a></li>
+                    <li><a href="reembolsos.html">Política de Devoluciones</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <p class="footer__copy">© 2026 YOSSICO. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="cart.js?v=2"></script>
+    <script>
+        const SUPABASE_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function seleccionarPlan(plan) {
+            document.getElementById('card-mensual').classList.toggle('selected', plan === 'mensual');
+            document.getElementById('card-anual').classList.toggle('selected', plan === 'anual');
+            document.getElementById('prive-plan-val').value = plan;
+            document.getElementById('btn-plan-price').textContent = plan === 'mensual' ? '$29.900 COP / MES' : '$290.000 COP / AÑO';
+        }
+
+        async function enviarSolicitudPrive(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-pv');
+            btn.disabled = true;
+            btn.textContent = 'PROCESANDO MEMBRESÍA...';
+
+            const nombre = document.getElementById('pv-nombre').value.trim();
+            const tel = document.getElementById('pv-tel').value.trim();
+            const correo = document.getElementById('pv-correo').value.trim().toLowerCase();
+            const ciudad = document.getElementById('pv-ciudad').value.trim();
+            const plan = document.getElementById('prive-plan-val').value;
+
+            try {
+                let codigoGenerado = 'PRIVE-' + Math.random().toString(36).substring(2,6).toUpperCase();
+
+                const { data, error } = await sb.rpc('registrar_solicitud_prive', {
+                    p_nombre: nombre,
+                    p_telefono: tel,
+                    p_correo: correo,
+                    p_ciudad: ciudad,
+                    p_plan: plan
+                });
+
+                if (data && data.codigo) {
+                    codigoGenerado = data.codigo;
+                } else if (error) {
+                    console.warn('RPC fallback to direct insert:', error.message);
+                    await sb.from('solicitudes_prive').insert([{
+                        nombre, telefono: tel, correo, ciudad, plan, estado: 'activa'
+                    }]);
+                    await sb.from('subscribers').insert([{
+                        name: `PRIVE|${plan}|${ciudad}`,
+                        email: correo,
+                        phone: tel,
+                        discount_code: codigoGenerado,
+                        discount_type: 'porcentaje',
+                        discount_val: 15,
+                        used: false
+                    }]);
+                }
+
+                document.getElementById('prive-form-container').style.display = 'none';
+                document.getElementById('prive-success').style.display = 'block';
+
+                const waText = encodeURIComponent(
+                    `Hola YOSSICO Concierge ✨ Quiero confirmar mi membresía YOSSICO Privé:%0A` +
+                    `Nombre: ${nombre}%0A` +
+                    `Plan: ${plan.toUpperCase()}%0A` +
+                    `Teléfono: ${tel}%0A` +
+                    `Correo: ${correo}%0A` +
+                    `Ciudad: ${ciudad}%0A` +
+                    `Código VIP: ${codigoGenerado}%0A` +
+                    `¿Me comparten el enlace de pago seguro para activar mi suscripción? ¡Gracias!`
+                );
+                document.getElementById('prive-wa-link').href = `https://wa.me/573219937221?text=${waText}`;
+
+                document.getElementById('unirme-prive').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (err) {
+                console.error('Error suscribiendo a Privé:', err);
+                alert('No pudimos procesar tu registro. Por favor contáctanos directamente a WhatsApp para activar tu membresía.');
+                btn.disabled = false;
+                btn.textContent = 'ACTIVAR MEMBRESÍA →';
+            }
+        }
+    </script>
+</body>
+</html>

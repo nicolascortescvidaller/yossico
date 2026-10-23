@@ -363,6 +363,17 @@
           if (data.usado) {
             msg.style.color = '#c0392b'; msg.textContent = 'Este código ya fue utilizado.'; msg.style.display = 'block'; return;
           }
+
+          // Validación del Programa Estudiantil: no aplica sobre piezas exclusivas Privé
+          if (code.startsWith('CAMPUS-') || code.startsWith('STUDENT-')) {
+            const soloPrive = items.length > 0 && items.every(i => (i.line || '').toLowerCase().includes('prive') || (i.name || '').toUpperCase().includes('PRIVÉ'));
+            if (soloPrive) {
+              msg.style.color = '#c0392b';
+              msg.textContent = 'El descuento estudiantil aplica en uniformes regulares y no incluye piezas exclusivas Privé.';
+              msg.style.display = 'block';
+              return;
+            }
+          }
           
           const dType = data.tipo || 'porcentaje';
           const dVal = parseFloat(data.valor) || 10;

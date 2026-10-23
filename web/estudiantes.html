@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO -->
+    <meta name="description" content="Programa Estudiantil YOSSICO Campus — 15% de descuento permanente en uniformes médicos para estudiantes del área de salud en Colombia.">
+    <meta name="keywords" content="uniformes médicos estudiantes, descuento medicina enfermería, scrubs colombia, YOSSICO Campus">
+    <meta name="author" content="YOSSICO">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="YOSSICO">
+    <meta property="og:title" content="Programa Estudiantil Campus — YOSSICO">
+    <meta property="og:description" content="15% de descuento permanente en uniformes médicos para estudiantes de medicina, enfermería y áreas de salud.">
+    <meta property="og:image" content="https://yossico.com/img/og-yossico.jpg">
+    <meta property="og:url" content="https://yossico.com/estudiantes.html">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Programa Estudiantil Campus — YOSSICO">
+    <meta name="twitter:description" content="15% OFF en uniformes médicos premium para estudiantes de salud en Colombia.">
+    <meta name="twitter:image" content="https://yossico.com/img/og-yossico.jpg">
+
+    <title>Programa Estudiantil Campus — YOSSICO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.v2.css?v=106">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="canonical" href="https://yossico.com/estudiantes.html">
+
+    <style>
+        body {
+            background: #ffffff;
+            color: var(--black, #111111);
+            font-family: var(--font-body, 'Montserrat', sans-serif);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .campus-hero {
+            padding: 140px 24px 60px;
+            max-width: 840px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .campus-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 10px;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: #555;
+            padding: 7px 18px;
+            border: 1px solid #e0dfdb;
+            background: #faf9f6;
+            margin-bottom: 24px;
+        }
+
+        .campus-hero__title {
+            font-family: var(--font-display, 'Cormorant Garamond', serif);
+            font-weight: 300;
+            font-size: clamp(34px, 5.2vw, 56px);
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+            color: #111;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .campus-hero__title em {
+            font-style: italic;
+            font-family: var(--font-display, 'Cormorant Garamond', serif);
+            text-transform: none;
+            color: #0C4E57;
+        }
+
+        .campus-hero__subtitle {
+            font-size: clamp(14px, 1.8vw, 17px);
+            font-weight: 300;
+            color: #555;
+            line-height: 1.7;
+            max-width: 680px;
+            margin: 0 auto 36px;
+        }
+
+        .campus-benefits {
+            max-width: 1040px;
+            margin: 0 auto 80px;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .campus-benefit-card {
+            background: #faf9f6;
+            border: 1px solid #ebe9e4;
+            padding: 36px 28px;
+            position: relative;
+            transition: transform 0.25s ease, border-color 0.25s ease;
+        }
+
+        .campus-benefit-card:hover {
+            transform: translateY(-3px);
+            border-color: #111;
+        }
+
+        .campus-benefit-card__num {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 300;
+            color: #888;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .campus-benefit-card__title {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #111;
+            margin-bottom: 12px;
+        }
+
+        .campus-benefit-card__desc {
+            font-size: 12px;
+            font-weight: 300;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .campus-notice-box {
+            max-width: 760px;
+            margin: 0 auto 50px;
+            padding: 16px 22px;
+            background: #f4f5f5;
+            border-left: 3px solid #0C4E57;
+            font-size: 12px;
+            color: #444;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .campus-form-wrapper {
+            max-width: 680px;
+            margin: 0 auto 120px;
+            padding: 48px 36px;
+            border: 1px solid #e8e6e1;
+            background: #ffffff;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        }
+
+        .campus-form__heading {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .campus-form__heading h3 {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .campus-form__heading p {
+            font-size: 12px;
+            color: #777;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            border: 1px solid #d5d3ce;
+            padding: 13px 14px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: #111;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #111;
+        }
+
+        .form-group .helper-text {
+            font-size: 11px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #d5d3ce;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            background: #faf9f6;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: #111;
+            background: #f4f3ef;
+        }
+
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-upload-box span {
+            font-size: 12px;
+            color: #555;
+            display: block;
+        }
+
+        .file-preview {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #0C4E57;
+            font-weight: 500;
+            display: none;
+        }
+
+        .btn-submit-campus {
+            background: #111;
+            color: #fff;
+            border: 1px solid #111;
+            padding: 18px 32px;
+            width: 100%;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-top: 16px;
+        }
+
+        .btn-submit-campus:hover {
+            background: #2b2b2b;
+            color: #fff;
+        }
+
+        .btn-submit-campus:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .success-box {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-box__icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #e8f5e9;
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 26px;
+        }
+
+        .success-box h4 {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .success-box p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.7;
+            max-width: 460px;
+            margin: 0 auto 28px;
+        }
+
+        @media (max-width: 768px) {
+            .campus-hero {
+                padding: 120px 20px 40px;
+            }
+            .campus-benefits {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .campus-form-wrapper {
+                padding: 32px 20px;
+                margin-bottom: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Envío gratis bar -->
+    <div class="shipping-bar">
+        <span>ENVIOS GRATIS A TODA COLOMBIA · PAGO SEGURO CON WOMPI O CONTRAENTREGA</span>
+    </div>
+
+    <!-- Navegación -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">YOSSICO</a>
+        <div class="nav__links">
+            <a href="coleccion.html" class="nav__link">Colección</a>
+            <a href="coleccion.html?linea=prive" class="nav__link" style="color:#b38a49;">Privé 🔒</a>
+            <a href="estudiantes.html" class="nav__link active" style="font-weight:500;">Campus 🎓</a>
+            <a href="nosotros.html" class="nav__link">Nosotros</a>
+            <a href="contacto.html" class="nav__link">Contacto</a>
+        </div>
+        <div class="nav__actions">
+            <a href="coleccion.html" class="nav__link nav__link--cta">Ver Colección</a>
+            <a href="javascript:void(0)" class="nav__cart-btn" onclick="openDrawer()" aria-label="Abrir carrito">
+                <span class="cart-icon-wrap">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Drawer del Carrito -->
+    <div class="cart-overlay" id="cart-overlay" onclick="closeDrawer()"></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito de compras">
+        <div class="cart-drawer__header">
+            <span class="cart-drawer__title">Bolsa de compra</span>
+            <button class="cart-drawer__close" onclick="closeDrawer()" aria-label="Cerrar bolsa">✕</button>
+        </div>
+        <div class="cart-drawer__body" id="cart-items"></div>
+        <div class="cart-drawer__footer" id="cart-footer">
+            <div class="cart-drawer__subtotal">
+                <span>Subtotal</span>
+                <span id="cart-subtotal">$0 COP</span>
+            </div>
+            <a href="checkout.html" class="btn btn--primary" style="width:100%;text-align:center;display:block;box-sizing:border-box;">Finalizar Pedido</a>
+        </div>
+    </aside>
+
+    <!-- Hero -->
+    <section class="campus-hero">
+        <div class="campus-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+            </svg>
+            YOSSICO CAMPUS · COMUNIDAD DE SALUD
+        </div>
+        <h1 class="campus-hero__title">
+            Tu vocación empieza aquí.<br>
+            Tu uniforme, a la <em>altura.</em>
+        </h1>
+        <p class="campus-hero__subtitle">
+            Sabemos lo exigentes que son tus turnos de prácticas, rotaciones hospitalarias e internado.
+            Por eso te acompañamos con un <strong>15% de descuento permanente</strong> en todos tus uniformes médicos durante tu carrera.
+        </p>
+    </section>
+
+    <!-- Beneficios Grid -->
+    <section class="campus-benefits">
+        <div class="campus-benefit-card">
+            <span class="campus-benefit-card__num">01</span>
+            <h3 class="campus-benefit-card__title">15% OFF Permanente</h3>
+            <p class="campus-benefit-card__desc">Aplica de manera ilimitada en nuestras líneas Essentials, Core y Capas durante todo tu periodo de formación académica.</p>
+        </div>
+        <div class="campus-benefit-card">
+            <span class="campus-benefit-card__num">02</span>
+            <h3 class="campus-benefit-card__title">Vigencia hasta tu Grado</h3>
+            <p class="campus-benefit-card__desc">Solo debes registrar tu año estimado de graduación. Tu beneficio permanece activo sin trámites engorrosos en cada semestre.</p>
+        </div>
+        <div class="campus-benefit-card">
+            <span class="campus-benefit-card__num">03</span>
+            <h3 class="campus-benefit-card__title">Rendimiento en Turnos</h3>
+            <p class="campus-benefit-card__desc">Telas técnicas antifluido de máxima durabilidad y libertad de movimiento, creadas para soportar rotaciones de 24 horas continuas.</p>
+        </div>
+    </section>
+
+    <!-- Nota transparente -->
+    <div class="campus-notice-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0C4E57" stroke-width="1.8" style="flex-shrink:0;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>
+            <strong>Condición del programa:</strong> El beneficio estudiantil aplica sobre prendas y sets regulares de nuestro catálogo. No es acumulable con piezas exclusivas o reservas del <em>Club YOSSICO Privé</em>.
+        </span>
+    </div>
+
+    <!-- Formulario de Verificación -->
+    <section class="campus-form-wrapper" id="formulario-estudiantes">
+        <div id="form-container">
+            <div class="campus-form__heading">
+                <h3>Valida tu Estado de Estudiante</h3>
+                <p>Completa tus datos y adjunta tu carnet para recibir tu código personal en WhatsApp.</p>
+            </div>
+
+            <form id="campus-form" onsubmit="enviarSolicitudEstudiante(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="est-nombre">Nombre y Apellido *</label>
+                        <input type="text" id="est-nombre" placeholder="Ej. Camila Morales" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="est-tel">Teléfono (WhatsApp) *</label>
+                        <input type="tel" id="est-tel" placeholder="Ej. 312 345 6789" required autocomplete="tel">
+                        <span class="helper-text">Aquí te enviaremos tu código activo.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="est-correo">Correo Electrónico *</label>
+                    <input type="email" id="est-correo" placeholder="Ej. tu.nombre@javeriana.edu.co" required autocomplete="email">
+                    <span class="helper-text">Si usas correo institucional (.edu.co), tu validación es prioritaria.</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="est-universidad">Universidad / Institución *</label>
+                        <select id="est-universidad" required>
+                            <option value="" disabled selected>Selecciona tu institución</option>
+                            <option value="Pontificia Universidad Javeriana">Pontificia Universidad Javeriana</option>
+                            <option value="Universidad Nacional de Colombia">Universidad Nacional de Colombia</option>
+                            <option value="Universidad del Rosario">Universidad del Rosario</option>
+                            <option value="Universidad de los Andes">Universidad de los Andes</option>
+                            <option value="Universidad de Antioquia">Universidad de Antioquia</option>
+                            <option value="Universidad CES">Universidad CES</option>
+                            <option value="Universidad del Valle">Universidad del Valle</option>
+                            <option value="Universidad Industrial de Santander (UIS)">Universidad Industrial de Santander (UIS)</option>
+                            <option value="Universidad del Norte">Universidad del Norte</option>
+                            <option value="Universidad El Bosque">Universidad El Bosque</option>
+                            <option value="Universidad de La Sabana">Universidad de La Sabana</option>
+                            <option value="Universidad Militar Nueva Granada">Universidad Militar Nueva Granada</option>
+                            <option value="Fundación Universitaria de Ciencias de la Salud (FUCS)">FUCS</option>
+                            <option value="Universidad de Caldas">Universidad de Caldas</option>
+                            <option value="Universidad Libre">Universidad Libre</option>
+                            <option value="Universidad Santiago de Cali">Universidad Santiago de Cali</option>
+                            <option value="Otra Institución">Otra Institución</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="est-carrera">Carrera en Salud *</label>
+                        <select id="est-carrera" required>
+                            <option value="" disabled selected>Selecciona tu carrera</option>
+                            <option value="Medicina">Medicina</option>
+                            <option value="Enfermería">Enfermería</option>
+                            <option value="Odontología">Odontología</option>
+                            <option value="Instrumentación Quirúrgica">Instrumentación Quirúrgica</option>
+                            <option value="Fisioterapia">Fisioterapia</option>
+                            <option value="Bacteriología y Laboratorio">Bacteriología y Laboratorio</option>
+                            <option value="Nutrición y Dietética">Nutrición y Dietética</option>
+                            <option value="Terapia Ocupacional / Fonoaudiología">Terapia Ocupacional / Fonoaudiología</option>
+                            <option value="Veterinaria">Medicina Veterinaria</option>
+                            <option value="Otra Carrera">Otra carrera del área de la salud</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="est-semestre">Semestre Actual *</label>
+                        <select id="est-semestre" required>
+                            <option value="1° - 2° Semestre">1° - 2° Semestre (Básicas)</option>
+                            <option value="3° - 4° Semestre">3° - 4° Semestre</option>
+                            <option value="5° - 6° Semestre">5° - 6° Semestre (Preclínicas)</option>
+                            <option value="7° - 8° Semestre">7° - 8° Semestre (Clínicas)</option>
+                            <option value="9° - 10° Semestre">9° - 10° Semestre (Rotaciones)</option>
+                            <option value="11° - 12° Semestre / Internado">11° - 12° Semestre / Internado</option>
+                            <option value="Posgrado / Residencia">Posgrado / Residencia Médica</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="est-ano">Año Estimado de Graduación *</label>
+                        <select id="est-ano" required>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                            <option value="2031">2031</option>
+                            <option value="2032">2032</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Carnet upload -->
+                <div class="form-group">
+                    <label>Carnet Estudiantil Vigente o Certificado de Matrícula *</label>
+                    <div class="file-upload-box" id="drop-area">
+                        <input type="file" id="est-file" accept="image/*,application/pdf" onchange="manejarArchivo(event)">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="1.5" style="margin:0 auto 8px;display:block;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span id="file-label">Toca aquí o arrastra una foto de tu carnet universitario</span>
+                        <div class="file-preview" id="file-preview"></div>
+                    </div>
+                    <span class="helper-text">Formatos: JPG, PNG o PDF (máx. 8MB). Puedes tomarle una foto clara desde tu celular.</span>
+                </div>
+
+                <div style="margin: 20px 0 10px; display:flex; flex-direction:column; gap:10px;">
+                    <label style="display:flex; align-items:flex-start; gap:8px; font-size:11px; color:#555; line-height:1.4; cursor:pointer;">
+                        <input type="checkbox" id="est-certifico" required style="margin-top:2px; accent-color:#111;">
+                        <span>Certifico que actualmente me encuentro cursando estudios activos en el área de salud.</span>
+                    </label>
+                    <label style="display:flex; align-items:flex-start; gap:8px; font-size:11px; color:#555; line-height:1.4; cursor:pointer;">
+                        <input type="checkbox" id="est-habeas" required style="margin-top:2px; accent-color:#111;">
+                        <span>Acepto la <a href="privacidad.html" target="_blank" style="color:#111;text-decoration:underline;">Política de Tratamiento de Datos</a> (Ley 1581) de YOSSICO.</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="btn-submit" class="btn-submit-campus">
+                    SOLICITAR 15% OFF ESTUDIANTIL →
+                </button>
+            </form>
+        </div>
+
+        <!-- Pantalla de Éxito -->
+        <div class="success-box" id="success-container">
+            <div class="success-box__icon">✓</div>
+            <h4>¡Solicitud Recibida!</h4>
+            <p id="success-msg">
+                Hemos registrado tus datos correctamente. Nuestro equipo verificará tu carnet en menos de 24 horas y te enviaremos tu código personal de 15% OFF directamente a tu WhatsApp.
+            </p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                <a href="coleccion.html" class="btn btn--primary" style="padding:16px 28px;font-size:10px;letter-spacing:2px;">
+                    EXPLORAR UNIFORMES
+                </a>
+                <a id="wa-expedite-btn" href="#" target="_blank" rel="noopener" class="btn" style="background:#25D366;color:#fff;border:none;padding:16px 28px;font-size:10px;letter-spacing:2px;display:inline-flex;align-items:center;gap:8px;">
+                    <span>Agilizar por WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__columns">
+            <div class="footer__col">
+                <span class="footer__brand">YOSSICO</span>
+                <p class="footer__brand-sub">Bogotá, Colombia</p>
+                <p class="footer__tagline">Uniformes médicos premium para la mujer en salud.</p>
+                <div class="footer__sic">
+                    <img src="img/sic-logo.png" alt="Superintendencia de Industria y Comercio" loading="lazy">
+                    <span>Vigilado por la Superintendencia de Industria y Comercio</span>
+                </div>
+            </div>
+            <div class="footer__col">
+                <span class="footer__col-title">Colección</span>
+                <ul class="footer__links">
+                    <li><a href="coleccion.html">Ver Todo</a></li>
+                    <li><a href="coleccion.html?linea=prive" style="color:#b38a49;">Club Privé 🔒</a></li>
+                    <li><a href="estudiantes.html">Programa Estudiantil 🎓</a></li>
+                    <li><a href="guia-de-tallas.html">Guía de Tallas</a></li>
+                    <li><a href="cuidado-de-tus-prendas.html">Cuidado de Prendas</a></li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <span class="footer__col-title">Compañía</span>
+                <ul class="footer__links">
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="historia.html">Historia</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                    <li><a href="rastreo.html">Rastrear Pedido</a></li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <span class="footer__col-title">Legal</span>
+                <ul class="footer__links">
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Política de Privacidad</a></li>
+                    <li><a href="reembolsos.html">Política de Devoluciones</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <p class="footer__copy">© 2026 YOSSICO. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="cart.js?v=2"></script>
+    <script>
+        const SUPABASE_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let documentoBase64 = null;
+        let documentoNombre = '';
+
+        function manejarArchivo(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 8 * 1024 * 1024) {
+                alert('El archivo supera los 8MB. Por favor sube una imagen más liviana.');
+                e.target.value = '';
+                return;
+            }
+
+            documentoNombre = file.name;
+            const preview = document.getElementById('file-preview');
+            const label = document.getElementById('file-label');
+            label.textContent = 'Archivo seleccionado: ' + file.name;
+            preview.style.display = 'block';
+            preview.textContent = '✓ Listo para enviar (' + Math.round(file.size / 1024) + ' KB)';
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                documentoBase64 = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function enviarSolicitudEstudiante(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            btn.disabled = true;
+            btn.textContent = 'PROCESANDO SOLICITUD...';
+
+            const nombre = document.getElementById('est-nombre').value.trim();
+            const tel = document.getElementById('est-tel').value.trim();
+            const correo = document.getElementById('est-correo').value.trim().toLowerCase();
+            const universidad = document.getElementById('est-universidad').value;
+            const carrera = document.getElementById('est-carrera').value;
+            const semestre = document.getElementById('est-semestre').value;
+            const anoGraduacion = parseInt(document.getElementById('est-ano').value, 10);
+
+            // Validar año
+            const anoActual = new Date().getFullYear();
+            if (anoGraduacion < anoActual) {
+                alert('El año estimado de graduación debe ser ' + anoActual + ' o posterior.');
+                btn.disabled = false;
+                btn.textContent = 'SOLICITAR 15% OFF ESTUDIANTIL →';
+                return;
+            }
+
+            try {
+                // 1. Intentar RPC en Supabase
+                const { data, error } = await sb.rpc('registrar_solicitud_estudiante', {
+                    p_nombre: nombre,
+                    p_telefono: tel,
+                    p_correo: correo,
+                    p_universidad: universidad,
+                    p_carrera: carrera,
+                    p_semestre: semestre,
+                    p_ano_graduacion: anoGraduacion,
+                    p_documento_url: documentoBase64
+                });
+
+                if (error) {
+                    console.warn('RPC fallback to direct insert:', error.message);
+                    // Fallback a inserción directa
+                    const { error: insErr } = await sb.from('solicitudes_estudiantes').insert([{
+                        nombre: nombre,
+                        telefono: tel,
+                        correo: correo,
+                        universidad: universidad,
+                        carrera: carrera,
+                        semestre: semestre,
+                        ano_graduacion: anoGraduacion,
+                        documento_url: documentoBase64,
+                        estado: 'pendiente'
+                    }]);
+                    if (insErr) {
+                        // Fallback de emergencia a subscribers
+                        await sb.from('subscribers').insert([{
+                            name: `ESTUDIANTE|${universidad}|${carrera}|${anoGraduacion}`,
+                            email: correo,
+                            phone: tel,
+                            discount_code: 'CAMPUS-' + Math.random().toString(36).substring(2,6).toUpperCase(),
+                            discount_type: 'porcentaje',
+                            discount_val: 15,
+                            used: false
+                        }]);
+                    }
+                }
+
+                // Configurar mensaje de éxito
+                document.getElementById('form-container').style.display = 'none';
+                document.getElementById('success-container').style.display = 'block';
+
+                const esEdu = correo.includes('.edu.co') || correo.includes('.edu');
+                if (esEdu) {
+                    document.getElementById('success-msg').innerHTML = 
+                        `¡Excelente! Detectamos tu correo institucional <strong>${correo}</strong>. Tu validación está en curso prioritario. Recibirás tu código del 15% OFF en tu WhatsApp en los próximos minutos.`;
+                }
+
+                // WhatsApp de agilización
+                const waClean = tel.replace(/\D/g, '');
+                const waText = encodeURIComponent(
+                    `Hola YOSSICO ✨ Acabo de enviar mi solicitud para el Programa Estudiantil Campus:%0A` +
+                    `Nombre: ${nombre}%0A` +
+                    `Universidad: ${universidad}%0A` +
+                    `Carrera: ${carrera}%0A` +
+                    `Año de Grado: ${anoGraduacion}%0A` +
+                    `Correo: ${correo}%0A` +
+                    `¿Me podrían ayudar a confirmar mi código de 15% OFF? ¡Gracias!`
+                );
+                document.getElementById('wa-expedite-btn').href = `https://wa.me/573219937221?text=${waText}`;
+
+                // Scroll suave a la confirmación
+                document.getElementById('formulario-estudiantes').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (err) {
+                console.error('Error registrando estudiante:', err);
+                alert('Ocurrió un error al enviar tu solicitud. Por favor escríbenos directamente por WhatsApp para activar tu descuento.');
+                btn.disabled = false;
+                btn.textContent = 'SOLICITAR 15% OFF ESTUDIANTIL →';
+            }
+        }
+    </script>
+</body>
+</html>
