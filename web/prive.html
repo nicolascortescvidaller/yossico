@@ -29,6 +29,9 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="canonical" href="https://yossico.com/prive.html">
+    <script src="/analytics.js" defer></script>
+    <script src="/i18n.js" defer></script>
+    <script src="/chat-widget.js" defer></script>
 
     <style>
         body {
@@ -384,11 +387,12 @@
                     <a href="coleccion.html?linea=essentials">Essentials</a>
                     <a href="coleccion.html?linea=signature">Signature</a>
                     <a href="coleccion.html?linea=core">Core</a>
+                    <a href="coleccion.html?linea=prive" style="color:#b38a49;">Privé 🔒 (Solo Miembros)</a>
                     <div class="nav__dropdown-divider"></div>
                     <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
                 </div>
             </li>
-            <li><a href="prive.html" style="color:#b38a49;">Privé 🔒</a></li>
+            <li><a href="prive.html" class="active" style="color:#b38a49;">Privé 🔒</a></li>
             <li><a href="estudiantes.html">Campus 🎓</a></li>
             <li><a href="acronimo.html">El Acrónimo</a></li>
             <li><a href="historia.html">Historia</a></li>
@@ -602,49 +606,62 @@
     <footer class="footer">
         <div class="footer__columns">
             <div class="footer__col">
-                <span class="footer__brand">YOSSICO</span>
-                <p class="footer__brand-sub">Bogotá, Colombia</p>
-                <p class="footer__tagline">Uniformes médicos premium para la mujer en salud.</p>
-                <div class="footer__sic">
-                    <img src="img/sic-logo.png" alt="Superintendencia de Industria y Comercio" loading="lazy">
-                    <span>Vigilado por la Superintendencia de Industria y Comercio</span>
+                <div class="footer__logo">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="11,2 21,2 30,11 30,21 21,30 11,30 2,21 2,11" fill="none" stroke="white" stroke-width="1" />
+                        <polyline points="4,17 9,17 11,13 13,21 15,15 16.5,11 18,17 22,17 24,14 26,17 28,17" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    YOSSICO
+                </div>
+                <div class="footer__links">
+                    <a href="coleccion.html">Colección Completa</a>
+                    <a href="prive.html" style="color:#d4c5a9;">Club Privé 🔒</a>
+                    <a href="estudiantes.html">Programa Estudiantil 🎓</a>
+                    <a href="institucional.html">YOSSICO Institucional</a>
+                    <a href="embajadoras.html">Embajadoras YOSSICO</a>
                 </div>
             </div>
+            
             <div class="footer__col">
-                <span class="footer__col-title">Colección</span>
-                <ul class="footer__links">
-                    <li><a href="coleccion.html">Ver Todo</a></li>
-                    <li><a href="prive.html" style="color:#b38a49;">Club Privé 🔒</a></li>
-                    <li><a href="estudiantes.html">Programa Estudiantil 🎓</a></li>
-                    <li><a href="guia-de-tallas.html">Guía de Tallas</a></li>
-                    <li><a href="cuidado-de-tus-prendas.html">Cuidado de Prendas</a></li>
-                </ul>
+                <h4 class="footer__col-title">LEGAL Y GARANTÍAS</h4>
+                <div class="footer__links">
+                    <a href="terminos.html">Términos y Condiciones</a>
+                    <a href="privacidad.html">Política de Privacidad (Habeas Data)</a>
+                    <a href="reembolsos.html">Política de Reembolso y Retracto</a>
+                    <a href="cookies.html">Política de Cookies</a>
+                    <a href="guia-de-tallas.html">Guía de Tallas</a>
+                    <a href="rastreo.html">Rastreo de pedido</a>
+                </div>
             </div>
+
             <div class="footer__col">
-                <span class="footer__col-title">Compañía</span>
-                <ul class="footer__links">
-                    <li><a href="nosotros.html">Nosotros</a></li>
-                    <li><a href="historia.html">Historia</a></li>
-                    <li><a href="contacto.html">Contacto</a></li>
-                    <li><a href="rastreo.html">Rastrear Pedido</a></li>
-                </ul>
-            </div>
-            <div class="footer__col">
-                <span class="footer__col-title">Legal</span>
-                <ul class="footer__links">
-                    <li><a href="terminos.html">Términos y Condiciones</a></li>
-                    <li><a href="privacidad.html">Política de Privacidad</a></li>
-                    <li><a href="reembolsos.html">Política de Devoluciones</a></li>
-                </ul>
+                <h4 class="footer__col-title">CONTACTO Y PQRs</h4>
+                <div class="footer__links">
+                    <span>WhatsApp: +57 321 993 7221</span>
+                    <span>Email: customerserviceyossico@gmail.com</span>
+                    <span>Bogotá D.C., Colombia</span>
+                    <span>Horario: Lunes a viernes, 9:00 a.m. – 5:00 p.m.</span>
+                </div>
             </div>
         </div>
-        <div class="footer__bottom">
-            <p class="footer__copy">© 2026 YOSSICO. Todos los derechos reservados.</p>
+
+        <div class="footer__bottom-bar">
+            <div class="footer__copy">
+                © 2026 YOSSICO · Colombia · <a href="terminos.html">Términos</a> · <a href="privacidad.html">Privacidad</a> · <a href="reembolsos.html">Reembolsos</a>
+            </div>
+            <a href="https://www.sic.gov.co" target="_blank" rel="noopener noreferrer" class="footer__sic" style="display: flex; align-items: center; justify-content: flex-end; opacity: 0.9; text-decoration: none;" title="Superintendencia de Industria y Comercio — Colombia">
+                <div style="font-family: var(--font-body); color: #FFFFFF; text-align: left; line-height: 1.2;">
+                    <span style="font-size: 8px; letter-spacing: 1px; font-weight: 300;">SUPERINTENDENCIA DE</span><br>
+                    <strong style="font-size: 11px; letter-spacing: 0.5px; font-weight: 400;">INDUSTRIA Y COMERCIO</strong>
+                    <div style="height: 1px; background: #FFFFFF; width: 100%; margin-top: 4px;"></div>
+                </div>
+            </a>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/auth.js"></script>
     <script src="cart.js?v=2"></script>
     <script>
         const SUPABASE_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
@@ -684,32 +701,60 @@
                 if (data && data.codigo) {
                     codigoGenerado = data.codigo;
                 } else if (error) {
-                    console.warn('RPC fallback to direct insert:', error.message);
-                    await sb.from('solicitudes_prive').insert([{
-                        nombre, telefono: tel, correo, ciudad, plan, estado: 'activa'
-                    }]);
-                    await sb.from('subscribers').insert([{
+                    console.warn('RPC fallback:', error.message);
+                    try {
+                        await sb.from('solicitudes_prive').insert([{
+                            nombre, telefono: tel, correo, ciudad, plan, estado: 'activa'
+                        }]);
+                    } catch (_) {}
+                    try {
+                        await sb.rpc('guardar_chat_lead', {
+                            p_nombre: nombre,
+                            p_telefono: tel,
+                            p_origen: 'PRIVE|' + JSON.stringify({
+                                nombre, telefono: tel, correo, ciudad, plan, codigo: codigoGenerado, estado: 'activa'
+                            })
+                        });
+                    } catch (_) {}
+                }
+
+                // Guardar respaldo local para que el Panel Admin y Checkout funcionen inmediatamente en este navegador
+                try {
+                    const localPv = JSON.parse(localStorage.getItem('yossico_local_prive') || '[]');
+                    localPv.unshift({
+                        id: 'pv-' + Date.now(),
+                        nombre, telefono: tel, correo, ciudad, plan,
+                        estado: 'activa',
+                        codigo_descuento: codigoGenerado,
+                        created_at: new Date().toISOString()
+                    });
+                    localStorage.setItem('yossico_local_prive', JSON.stringify(localPv.slice(0, 100)));
+
+                    const localSubs = JSON.parse(localStorage.getItem('yossico_local_subs') || '[]');
+                    localSubs.unshift({
                         name: `PRIVE|${plan}|${ciudad}`,
                         email: correo,
                         phone: tel,
                         discount_code: codigoGenerado,
                         discount_type: 'porcentaje',
                         discount_val: 15,
-                        used: false
-                    }]);
-                }
+                        used: false,
+                        created_at: new Date().toISOString()
+                    });
+                    localStorage.setItem('yossico_local_subs', JSON.stringify(localSubs.slice(0, 200)));
+                } catch (_) {}
 
                 document.getElementById('prive-form-container').style.display = 'none';
                 document.getElementById('prive-success').style.display = 'block';
 
                 const waText = encodeURIComponent(
-                    `Hola YOSSICO Concierge ✨ Quiero confirmar mi membresía YOSSICO Privé:%0A` +
-                    `Nombre: ${nombre}%0A` +
-                    `Plan: ${plan.toUpperCase()}%0A` +
-                    `Teléfono: ${tel}%0A` +
-                    `Correo: ${correo}%0A` +
-                    `Ciudad: ${ciudad}%0A` +
-                    `Código VIP: ${codigoGenerado}%0A` +
+                    `Hola YOSSICO Concierge ✨ Quiero confirmar mi membresía YOSSICO Privé:\n` +
+                    `Nombre: ${nombre}\n` +
+                    `Plan: ${plan.toUpperCase()}\n` +
+                    `Teléfono: ${tel}\n` +
+                    `Correo: ${correo}\n` +
+                    `Ciudad: ${ciudad}\n` +
+                    `Código VIP: ${codigoGenerado}\n` +
                     `¿Me comparten el enlace de pago seguro para activar mi suscripción? ¡Gracias!`
                 );
                 document.getElementById('prive-wa-link').href = `https://wa.me/573219937221?text=${waText}`;

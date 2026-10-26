@@ -293,3 +293,77 @@ BEGIN
 END;
 $$;
 GRANT EXECUTE ON FUNCTION admin_get_prive(TEXT) TO anon;
+
+-- 9. ACTUALIZACIÓN DE validar_descuento: respeta discount_val (15% OFF) y año de graduación estudiantil
+ALTER TABLE subscribers ADD COLUMN IF NOT EXISTS discount_type TEXT DEFAULT 'porcentaje';
+ALTER TABLE subscribers ADD COLUMN IF NOT EXISTS discount_val NUMERIC DEFAULT 10;
+
+DROP FUNCTION IF EXISTS validar_descuento(text);
+
+CREATE OR REPLACE FUNCTION validar_descuento(codigo text)
+RETURNS json
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  registro record;
+  d_tipo text := 'porcentaje';
+  d_valor numeric := 10;
+  v_ano_grad integer;
+  v_ano_actual integer;
+BEGIN
+  SELECT name, used, saldo_restante, discount_type, discount_val
+  INTO registro
+  FROM subscribers
+  WHERE UPPER(discount_code) = UPPER(codigo)
+  LIMIT 1;
+  
+  IF NOT FOUND THEN 
+    RETURN json_build_object('valido', false); 
+  END IF;
+  
+  IF registro.used THEN
+    RETURN json_build_object('valido', true, 'usado', true);
+  END IF;
+
+  -- Verificar vigencia por año de graduación si es un código estudiantil (ESTUDIANTE|Universidad|Año)
+  IF registro.name LIKE 'ESTUDIANTE|%' THEN
+    BEGIN
+      v_ano_grad := NULLIF( regexp_replace(split_part(registro.name, '|', 3), '[^0-9]', '', 'g'), '' )::integer;
+      v_ano_actual := EXTRACT(YEAR FROM NOW())::integer;
+      IF v_ano_grad IS NOT NULL AND v_ano_grad < v_ano_actual THEN
+        RETURN json_build_object(
+          'valido', true,
+          'usado', true,
+          'motivo_expirado', 'Tu beneficio estudiantil expiró al finalizar tu año de graduación (' || v_ano_grad || ').'
+        );
+      END IF;
+    EXCEPTION WHEN OTHERS THEN
+      NULL;
+    END;
+  END IF;
+
+  d_tipo := COALESCE(registro.discount_type, 'porcentaje');
+  d_valor := COALESCE(registro.discount_val, 10);
+
+  IF UPPER(codigo) LIKE 'CAMPUS-%' OR UPPER(codigo) LIKE 'PRIVE-%' THEN
+    d_valor := GREATEST(d_valor, 15);
+  END IF;
+  
+  -- Si es Gift Card: usar saldo_restante real
+  IF registro.name LIKE 'GIFTCARD|%' THEN
+    d_tipo := 'monto';
+    d_valor := COALESCE(registro.saldo_restante, NULLIF(split_part(registro.name, '|', 2), '')::numeric, d_valor);
+  END IF;
+
+  RETURN json_build_object(
+    'valido', true, 
+    'usado', false, 
+    'tipo', d_tipo, 
+    'valor', d_valor
+  );
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION validar_descuento(text) TO anon;

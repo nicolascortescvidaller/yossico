@@ -342,6 +342,7 @@
       /* Discount apply */
       let discountPct = 0;
       let discountMonto = 0;
+      let appliedFinalTotal = t;
       document.getElementById('ck-apply-discount').addEventListener('click', async () => {
         const code = document.getElementById('ck-discount').value.trim().toUpperCase();
         const msg  = document.getElementById('ck-discount-msg');
@@ -349,9 +350,30 @@
 
         // Query Supabase via RPC to validate discount (bypasses RLS securely)
         try {
-          if (!window.YOSSICO_AUTH) throw new Error('auth not ready');
-          const { data, error } = await window.YOSSICO_AUTH.getSb()
-            .rpc('validar_descuento', { codigo: code });
+          let data = null;
+          let error = null;
+          if (window.YOSSICO_AUTH) {
+            const res = await window.YOSSICO_AUTH.getSb()
+              .rpc('validar_descuento', { codigo: code });
+            data = res.data;
+            error = res.error;
+          }
+
+          // Fallback local para códigos generados en el navegador (Privé / Campus / Suscriptoras)
+          if ((!data || !data.valido) && !error) {
+            try {
+              const localSubs = JSON.parse(localStorage.getItem('yossico_local_subs') || '[]');
+              const hit = localSubs.find(s => String(s.discount_code || '').toUpperCase() === code);
+              if (hit) {
+                data = {
+                  valido: true,
+                  usado: Boolean(hit.used),
+                  tipo: hit.discount_type || 'porcentaje',
+                  valor: hit.discount_val || 15
+                };
+              }
+            } catch (_) {}
+          }
 
           if (error) {
             console.warn('RPC error:', error);
@@ -361,38 +383,45 @@
             msg.style.color = '#c0392b'; msg.textContent = 'Código no válido o inexistente.'; msg.style.display = 'block'; return;
           }
           if (data.usado) {
-            msg.style.color = '#c0392b'; msg.textContent = 'Este código ya fue utilizado.'; msg.style.display = 'block'; return;
+            msg.style.color = '#c0392b'; msg.textContent = data.motivo_expirado || 'Este código ya fue utilizado o expiró.'; msg.style.display = 'block'; return;
           }
 
           // Validación del Programa Estudiantil: no aplica sobre piezas exclusivas Privé
-          if (code.startsWith('CAMPUS-') || code.startsWith('STUDENT-')) {
-            const soloPrive = items.length > 0 && items.every(i => (i.line || '').toLowerCase().includes('prive') || (i.name || '').toUpperCase().includes('PRIVÉ'));
-            if (soloPrive) {
+          const isCampusCode = code.startsWith('CAMPUS-') || code.startsWith('STUDENT-');
+          let baseEligibleTotal = t;
+          if (isCampusCode) {
+            const nonPriveItems = items.filter(i => !(i.line || '').toLowerCase().includes('prive') && !(i.name || '').toUpperCase().includes('PRIVÉ'));
+            if (nonPriveItems.length === 0) {
               msg.style.color = '#c0392b';
               msg.textContent = 'El descuento estudiantil aplica en uniformes regulares y no incluye piezas exclusivas Privé.';
               msg.style.display = 'block';
               return;
             }
+            baseEligibleTotal = nonPriveItems.reduce((sum, i) => sum + (i.price * i.qty), 0);
           }
           
           const dType = data.tipo || 'porcentaje';
-          const dVal = parseFloat(data.valor) || 10;
+          let dVal = parseFloat(data.valor) || 10;
+          if ((isCampusCode || code.startsWith('PRIVE-')) && dVal === 10) {
+            dVal = 15; // Garantizar 15% OFF en Campus y Privé
+          }
           
           let newTotal = t;
           let labelDesc = '';
           
           if (dType === 'porcentaje') {
             discountPct = dVal;
-            newTotal = t * (1 - (discountPct / 100));
+            const descValue = Math.round(baseEligibleTotal * (discountPct / 100));
+            newTotal = Math.max(0, t - descValue);
             labelDesc = `−${discountPct}%`;
           } else if (dType === 'monto') {
             newTotal = Math.max(0, t - dVal);
             labelDesc = `−${fmtPrice(dVal)}`;
           } else if (dType === 'envio') {
-            newTotal = t; // Asumimos que el total ya es de las prendas, el envío gratis se refleja en el resumen
+            newTotal = t;
             labelDesc = `Envío Gratis`;
           } else if (dType === 'efectivo') {
-            newTotal = t; // El pago en efectivo puede ser solo informativo o aplicar un descuento (ej 5%) si así se configuró en el panel
+            newTotal = t;
             if (dVal > 0 && dVal <= 100) {
               newTotal = t * (1 - (dVal / 100));
               labelDesc = `−${dVal}% (Pago en Efectivo)`;
@@ -406,11 +435,11 @@
           msg.textContent = `¡Código aplicado! ${labelDesc}`; 
           msg.style.display = 'block';
           
-          // Actualizamos variables globales para el momento de pagar
-          finalTotal = newTotal;
-          discountPct = dType === 'porcentaje' ? dVal : 0; // Para el mensaje WA
-          discountMonto = dType === 'monto' ? dVal : 0;
-          window.__ckDesc = { pct: discountPct, monto: discountMonto, code: code };
+          // Actualizamos variables para el momento de pagar
+          appliedFinalTotal = newTotal;
+          discountPct = dType === 'porcentaje' ? dVal : 0;
+          discountMonto = dType === 'monto' ? dVal : (t - newTotal);
+          window.__ckDesc = { pct: discountPct, monto: discountMonto, code: code, finalTotal: newTotal };
           
         } catch (err) {
           console.warn('Discount validation error:', err);
@@ -456,9 +485,7 @@
           return;
         }
 
-        let finalTotal = t;
-        if (discountPct > 0) finalTotal = t * (1 - discountPct / 100);
-        else if (discountMonto > 0) finalTotal = Math.max(0, t - discountMonto);
+        let finalTotal = (discountPct > 0 || discountMonto > 0) ? appliedFinalTotal : t;
 
         /* ── 1. Guardar datos para gracias.html ────────────────── */
         sessionStorage.setItem('yossico_ultimo_pedido', JSON.stringify({
@@ -605,14 +632,15 @@
             const { error: rpcError } = await sb.rpc('decrementar_stock', { items: stockItems });
             if (rpcError) console.warn('[checkout] decrementar_stock:', rpcError.message);
 
-            /* Consumir código de descuento (Gift Cards: saldo parcial; otros: marcar usado) */
+            /* Consumir código de descuento (Gift Cards: saldo parcial; Campus y Privé: beneficio recurrente; otros: marcar usado) */
             if (dcode) {
               const isGiftCard = dcode.startsWith('GC-');
+              const isRecurrentMember = dcode.startsWith('CAMPUS-') || dcode.startsWith('STUDENT-') || dcode.startsWith('PRIVE-');
               if (isGiftCard) {
                 const montoDescontado = t - finalTotal;
                 const { error: gcError } = await sb.rpc('usar_giftcard', { codigo: dcode, monto_a_descontar: montoDescontado });
                 if (gcError) console.warn('[checkout] usar_giftcard error:', gcError.message);
-              } else {
+              } else if (!isRecurrentMember) {
                 const { error: usedError } = await sb.rpc('marcar_descuento_usado', { codigo: dcode });
                 if (usedError) console.warn('[checkout] mark used error:', usedError.message);
               }

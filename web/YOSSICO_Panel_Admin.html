@@ -3116,6 +3116,15 @@ function cambiarTab(tab, btn) {
 
 
 // ── GESTIÓN DE PROGRAMA ESTUDIANTIL CAMPUS ──
+function escHtml(str) {
+  return String(str == null ? '' : str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 window.todosEstudiantes = [];
 
 async function cargarEstudiantes() {
@@ -3131,6 +3140,56 @@ async function cargarEstudiantes() {
       const { data: d2 } = await sb.from('solicitudes_estudiantes').select('*').order('created_at', { ascending: false });
       if (Array.isArray(d2)) list = d2;
     }
+
+    // Fallback: leer registros respaldados en chat_leads (ESTUDIANTE|{json}) y localStorage
+    const seenEmails = new Set(list.map(e => (e.correo || '').toLowerCase()));
+    try {
+      const { data: leads } = await sb.rpc('admin_get_chat_leads', { pin: adminPin });
+      if (Array.isArray(leads)) {
+        leads.forEach(l => {
+          const orig = String(l.origen_pagina || '');
+          if (orig.startsWith('ESTUDIANTE|')) {
+            try {
+              const meta = JSON.parse(orig.slice('ESTUDIANTE|'.length));
+              const emailKey = (meta.correo || '').toLowerCase();
+              if (emailKey && !seenEmails.has(emailKey)) {
+                seenEmails.add(emailKey);
+                list.push({
+                  id: meta.id || ('lead-' + l.id),
+                  nombre: l.nombre || meta.nombre || '',
+                  telefono: l.telefono || meta.telefono || '',
+                  correo: meta.correo || '',
+                  universidad: meta.universidad || '',
+                  carrera: meta.carrera || '',
+                  semestre: meta.semestre || '',
+                  ano_graduacion: parseInt(meta.ano_graduacion, 10) || new Date().getFullYear(),
+                  documento_url: meta.documento_url || null,
+                  estado: meta.estado || 'pendiente',
+                  codigo_descuento: meta.codigo_descuento || null,
+                  created_at: l.created_at || new Date().toISOString()
+                });
+              }
+            } catch (_) {}
+          }
+        });
+      }
+    } catch (_) {}
+
+    try {
+      const localEst = JSON.parse(localStorage.getItem('yossico_local_estudiantes') || '[]');
+      localEst.forEach(le => {
+        const emailKey = (le.correo || '').toLowerCase();
+        const existing = list.find(x => (x.correo || '').toLowerCase() === emailKey || String(x.id) === String(le.id));
+        if (existing) {
+          if (le.estado && le.estado !== 'pendiente') existing.estado = le.estado;
+          if (le.codigo_descuento) existing.codigo_descuento = le.codigo_descuento;
+          if (!existing.documento_url && le.documento_url) existing.documento_url = le.documento_url;
+        } else if (emailKey) {
+          seenEmails.add(emailKey);
+          list.push(le);
+        }
+      });
+    } catch (_) {}
 
     window.todosEstudiantes = list;
     renderEstudiantes(list);
@@ -3239,25 +3298,71 @@ window.aprobarEstudiante = async function(id) {
   if (!confirm('¿Aprobar solicitud estudiantil? Se generará un código personal de 15% OFF.')) return;
 
   try {
-    const { data, error } = await sb.rpc('admin_aprobar_estudiante', { p_id: id, pin: adminPin });
-    if (error) {
-      mostrarToast('Error: ' + error.message, 'err');
+    let resultData = null;
+    const estLocal = (window.todosEstudiantes || []).find(x => String(x.id) === String(id));
+    const numId = Number(id);
+
+    if (!isNaN(numId) && String(numId) === String(id)) {
+      const { data, error } = await sb.rpc('admin_aprobar_estudiante', { p_id: numId, pin: adminPin });
+      if (!error && data && data.ok !== false) {
+        resultData = data;
+      }
+    }
+
+    // Fallback si aún no se ha corrido el SQL de admin_aprobar_estudiante o es un registro de respaldo
+    if (!resultData && estLocal) {
+      const codigoGen = estLocal.codigo_descuento || ('CAMPUS-' + Math.random().toString(36).substring(2, 6).toUpperCase());
+      const subRow = {
+        name: `ESTUDIANTE|${estLocal.universidad || 'Universidad'}|${estLocal.ano_graduacion || new Date().getFullYear()}`,
+        email: estLocal.correo || null,
+        phone: estLocal.telefono || null,
+        discount_code: codigoGen,
+        discount_type: 'porcentaje',
+        discount_val: 15,
+        used: false,
+        created_at: new Date().toISOString()
+      };
+      try { await sb.from('subscribers').insert([subRow]); } catch (_) {}
+      if (typeof _saveLocalSub === 'function') _saveLocalSub(subRow);
+
+      estLocal.estado = 'aprobado';
+      estLocal.codigo_descuento = codigoGen;
+      try {
+        const localEst = JSON.parse(localStorage.getItem('yossico_local_estudiantes') || '[]');
+        const idx = localEst.findIndex(x => String(x.id) === String(id) || (x.correo && x.correo === estLocal.correo));
+        if (idx >= 0) localEst[idx] = Object.assign({}, localEst[idx], { estado: 'aprobado', codigo_descuento: codigoGen });
+        else localEst.unshift(estLocal);
+        localStorage.setItem('yossico_local_estudiantes', JSON.stringify(localEst));
+      } catch (_) {}
+
+      resultData = {
+        ok: true,
+        codigo: codigoGen,
+        telefono: estLocal.telefono,
+        nombre: estLocal.nombre,
+        universidad: estLocal.universidad,
+        ano_graduacion: estLocal.ano_graduacion
+      };
+    }
+
+    if (!resultData) {
+      mostrarToast('No se pudo aprobar la solicitud', 'err');
       return;
     }
 
-    mostrarToast('Estudiante aprobado ✓ Código: ' + (data?.codigo || 'Generado'), 'ok');
+    mostrarToast('Estudiante aprobado ✓ Código: ' + (resultData.codigo || 'Generado'), 'ok');
     
-    if (data && data.telefono) {
-      let telLimpio = data.telefono.replace(/\D/g, '');
+    if (resultData && resultData.telefono) {
+      let telLimpio = resultData.telefono.replace(/\D/g, '');
       if (!telLimpio.startsWith('57') && telLimpio.length === 10) telLimpio = '57' + telLimpio;
-      const nombre = (data.nombre || 'Colega').split(' ')[0];
+      const nombre = (resultData.nombre || 'Colega').split(' ')[0];
       const msg = encodeURIComponent(
-        `¡Hola ${nombre}! 🎓✨%0A%0A` +
-        `¡Tu solicitud para el *Programa Estudiantil YOSSICO Campus* ha sido APROBADA!%0A%0A` +
-        `Aquí tienes tu código personal de *15% OFF* permanente para tus uniformes médicos:%0A` +
-        `👉 *${data.codigo}*%0A%0A` +
-        `Vigente durante tus estudios hasta ${data.ano_graduacion} en ${data.universidad}. Puedes usarlo cuantas veces quieras en nuestras líneas regulares Essentials, Signature y Core.%0A%0A` +
-        `¡Mucho éxito en tus rotaciones y turnos! 💛%0Ahttps://yossico.com/coleccion.html`
+        `¡Hola ${nombre}! 🎓✨\n\n` +
+        `¡Tu solicitud para el *Programa Estudiantil YOSSICO Campus* ha sido APROBADA!\n\n` +
+        `Aquí tienes tu código personal de *15% OFF* permanente para tus uniformes médicos:\n` +
+        `👉 *${resultData.codigo}*\n\n` +
+        `Vigente durante tus estudios hasta ${resultData.ano_graduacion} en ${resultData.universidad}. Puedes usarlo cuantas veces quieras en nuestras líneas regulares Essentials, Signature y Core.\n\n` +
+        `¡Mucho éxito en tus rotaciones y turnos! 💛\nhttps://yossico.com/coleccion.html`
       );
       window.open(`https://wa.me/${telLimpio}?text=${msg}`, '_blank');
     }
@@ -3272,12 +3377,24 @@ window.rechazarEstudiante = async function(id) {
   const motivo = prompt('Motivo del rechazo (ej. carnet vencido, datos incompletos):', 'Carnet no vigente o ilegible');
   if (motivo === null) return;
 
-  const { error } = await sb.rpc('admin_rechazar_estudiante', { p_id: id, p_motivo: motivo, pin: adminPin });
-  if (error) mostrarToast('Error: ' + error.message, 'err');
-  else {
-    mostrarToast('Solicitud marcada como rechazada', 'ok');
-    cargarEstudiantes();
+  const numId = Number(id);
+  if (!isNaN(numId) && String(numId) === String(id)) {
+    await sb.rpc('admin_rechazar_estudiante', { p_id: numId, p_motivo: motivo, pin: adminPin });
   }
+  try {
+    const estLocal = (window.todosEstudiantes || []).find(x => String(x.id) === String(id));
+    if (estLocal) {
+      estLocal.estado = 'rechazado';
+      const localEst = JSON.parse(localStorage.getItem('yossico_local_estudiantes') || '[]');
+      const idx = localEst.findIndex(x => String(x.id) === String(id) || (x.correo && x.correo === estLocal.correo));
+      if (idx >= 0) localEst[idx].estado = 'rechazado';
+      else localEst.unshift(estLocal);
+      localStorage.setItem('yossico_local_estudiantes', JSON.stringify(localEst));
+    }
+  } catch (_) {}
+
+  mostrarToast('Solicitud marcada como rechazada', 'ok');
+  cargarEstudiantes();
 };
 
 // ── GESTIÓN DE CLUB PRIVÉ ──
@@ -3297,6 +3414,46 @@ async function cargarPrive() {
       if (Array.isArray(d2)) list = d2;
     }
 
+    const seenPhones = new Set(list.map(p => (p.telefono || '').replace(/\D/g, '')));
+    try {
+      const { data: leads } = await sb.rpc('admin_get_chat_leads', { pin: adminPin });
+      if (Array.isArray(leads)) {
+        leads.forEach(l => {
+          const orig = String(l.origen_pagina || '');
+          if (orig.startsWith('PRIVE|')) {
+            try {
+              const meta = JSON.parse(orig.slice('PRIVE|'.length));
+              const telKey = (l.telefono || meta.telefono || '').replace(/\D/g, '');
+              if (telKey && !seenPhones.has(telKey)) {
+                seenPhones.add(telKey);
+                list.push({
+                  id: meta.id || ('prive-lead-' + l.id),
+                  nombre: l.nombre || meta.nombre || '',
+                  telefono: l.telefono || meta.telefono || '',
+                  correo: meta.correo || '',
+                  ciudad: meta.ciudad || 'Colombia',
+                  plan: meta.plan || 'mensual',
+                  estado: meta.estado || 'activa',
+                  created_at: l.created_at || new Date().toISOString()
+                });
+              }
+            } catch (_) {}
+          }
+        });
+      }
+    } catch (_) {}
+
+    try {
+      const localPv = JSON.parse(localStorage.getItem('yossico_local_prive') || '[]');
+      localPv.forEach(lp => {
+        const telKey = (lp.telefono || '').replace(/\D/g, '');
+        if (telKey && !seenPhones.has(telKey)) {
+          seenPhones.add(telKey);
+          list.push(lp);
+        }
+      });
+    } catch (_) {}
+
     window.todosPrive = list;
     renderPrive(list);
   } catch(err) {
@@ -3309,8 +3466,9 @@ function renderPrive(list) {
   const tbody = document.getElementById('prive-tbody');
   if (!tbody) return;
 
-  const activas = list.filter(p => p.estado !== 'cancelada').length;
-  const mrr = activas * 29900;
+  const activasList = list.filter(p => p.estado !== 'cancelada');
+  const activas = activasList.length;
+  const mrr = activasList.reduce((acc, p) => acc + (p.plan === 'anual' ? Math.round(290000 / 12) : 29900), 0);
 
   const elA = document.getElementById('pv-cnt-activas'); if (elA) elA.textContent = activas;
   const elM = document.getElementById('pv-mrr'); if (elM) elM.textContent = fCOP(mrr);

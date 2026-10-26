@@ -68,6 +68,18 @@
             border-color: var(--black);
         }
 
+        .filter-btn--prive {
+            color: #b38a49;
+            border-color: #d4c5a9;
+        }
+
+        .filter-btn--prive:hover,
+        .filter-btn--prive.active {
+            background: var(--black);
+            color: #d4c5a9;
+            border-color: var(--black);
+        }
+
         .product-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -827,11 +839,15 @@
                 gap: 6px;
                 flex-wrap: nowrap;
             }
+            .filter-bar {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
             .filter-btn {
-                padding: 9px 8px;
+                padding: 9px 10px;
                 font-size: 8.5px;
-                letter-spacing: 1.6px;
-                flex: 1 1 0;
+                letter-spacing: 1.5px;
+                flex: 1 1 auto;
                 text-align: center;
                 white-space: nowrap;
             }
@@ -1060,7 +1076,7 @@
             <button class="filter-btn" data-filter="signature">Signature</button>
             <button class="filter-btn" data-filter="essentials">Essentials</button>
             <button class="filter-btn" data-filter="core">Core</button>
-            <button class="filter-btn" data-filter="prive" style="color:#b38a49; border-color:#d4c5a9;">Privé 🔒</button>
+            <button class="filter-btn filter-btn--prive" data-filter="prive">Privé 🔒</button>
             <button class="filter-btn active" data-filter="all">Todo</button>
         </div>
 
@@ -1655,6 +1671,8 @@
                     YOSSICO
                 </div>
                 <div class="footer__links">
+                    <a href="prive.html" style="color:#d4c5a9;">Club Privé 🔒</a>
+                    <a href="estudiantes.html">Programa Estudiantil 🎓</a>
                     <a href="institucional.html">YOSSICO Institucional</a>
                     <a href="embajadoras.html">Embajadoras YOSSICO</a>
                 </div>
@@ -2212,6 +2230,15 @@
                     return;
                 }
 
+                if (card && card.dataset.line === 'prive') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (typeof window.abrirModalPrive === 'function') {
+                        window.abrirModalPrive(gallery.dataset.name || 'ÉTOILE PRIVÉ');
+                    }
+                    return;
+                }
+
                 if (toDetail) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -2755,23 +2782,49 @@
       const correo = document.getElementById('pm-correo').value.trim().toLowerCase();
 
       try {
+          let codigoGenerado = 'PRIVE-' + Math.random().toString(36).substring(2,6).toUpperCase();
           if (window.supabase) {
               const client = window.supabase.createClient('https://mgzevtcipwfpqgolmpwm.supabase.co', 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19');
-              await client.rpc('registrar_solicitud_prive', {
+              const { data, error } = await client.rpc('registrar_solicitud_prive', {
                   p_nombre: nombre,
                   p_telefono: tel,
                   p_correo: correo,
                   p_ciudad: 'Colombia',
                   p_plan: 'mensual'
               });
+              if (data && data.codigo) codigoGenerado = data.codigo;
+              if (error) {
+                  try {
+                      await client.rpc('guardar_chat_lead', {
+                          p_nombre: nombre,
+                          p_telefono: tel,
+                          p_origen: 'PRIVE|' + JSON.stringify({
+                              nombre, telefono: tel, correo, ciudad: 'Colombia', plan: 'mensual', codigo: codigoGenerado, estado: 'activa'
+                          })
+                      });
+                  } catch (_) {}
+              }
           }
 
+          try {
+              const localPv = JSON.parse(localStorage.getItem('yossico_local_prive') || '[]');
+              localPv.unshift({
+                  id: 'pv-' + Date.now(),
+                  nombre, telefono: tel, correo, ciudad: 'Colombia', plan: 'mensual',
+                  estado: 'activa',
+                  codigo_descuento: codigoGenerado,
+                  created_at: new Date().toISOString()
+              });
+              localStorage.setItem('yossico_local_prive', JSON.stringify(localPv.slice(0, 100)));
+          } catch (_) {}
+
           const msg = encodeURIComponent(
-              `Hola YOSSICO Concierge ✨ Quiero unirme al Club Privé ($29.900/mes):%0A` +
-              `Nombre: ${nombre}%0A` +
-              `WhatsApp: ${tel}%0A` +
-              `Correo: ${correo}%0A` +
-              `Prenda de interés: ÉTOILE PRIVÉ%0A` +
+              `Hola YOSSICO Concierge ✨ Quiero unirme al Club Privé ($29.900/mes):\n` +
+              `Nombre: ${nombre}\n` +
+              `WhatsApp: ${tel}\n` +
+              `Correo: ${correo}\n` +
+              `Código VIP: ${codigoGenerado}\n` +
+              `Prenda de interés: ÉTOILE PRIVÉ\n` +
               `¿Me pueden compartir el link de pago seguro para activar mi suscripción? ¡Gracias!`
           );
           window.open(`https://wa.me/573219937221?text=${msg}`, '_blank');
