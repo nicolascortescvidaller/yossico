@@ -832,20 +832,16 @@
                 line-height: 1.02;
             }
             .coleccion {
-                padding: 18px 20px 44px;
+                padding: 24px 20px 56px;
             }
             .filter-bar {
-                margin-bottom: 22px;
-                gap: 6px;
-                flex-wrap: nowrap;
-            }
-            .filter-bar {
+                margin-bottom: 24px;
                 flex-wrap: wrap;
                 gap: 6px;
             }
             .filter-btn {
-                padding: 9px 10px;
-                font-size: 8.5px;
+                padding: 11px 12px;
+                font-size: 9.5px;
                 letter-spacing: 1.5px;
                 flex: 1 1 auto;
                 text-align: center;
@@ -854,6 +850,13 @@
             .product-grid {
                 grid-template-columns: 1fr;
                 gap: 48px;
+            }
+            .modal-prive-card {
+                padding: 36px 22px 28px;
+            }
+            .modal-prive-form-grid {
+                grid-template-columns: 1fr !important;
+                gap: 14px !important;
             }
         }
 
@@ -887,12 +890,12 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 7px 14px;
-            background: rgba(17, 17, 17, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            background: rgba(17, 17, 17, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.35);
             color: #ffffff;
             font-family: var(--font-body);
-            font-size: 8px;
+            font-size: 9.5px;
             letter-spacing: 3px;
             text-transform: uppercase;
         }
@@ -904,16 +907,16 @@
         }
 
         .prive-locked-subtitle {
-            font-size: 8px;
+            font-size: 9.5px;
             letter-spacing: 3.5px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 8px;
         }
 
         .prive-locked-title {
             font-family: var(--font-display);
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 300;
             color: #ffffff;
             text-transform: uppercase;
@@ -922,22 +925,22 @@
         }
 
         .prive-locked-desc {
-            font-size: 11px;
+            font-size: 12.5px;
             font-weight: 300;
-            color: rgba(255, 255, 255, 0.72);
-            line-height: 1.65;
-            max-width: 240px;
-            margin: 0 0 20px 0;
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.7;
+            max-width: 260px;
+            margin: 0 0 22px 0;
         }
 
         .prive-locked-btn {
             background: #ffffff;
             color: #111111;
             border: 1px solid #ffffff;
-            padding: 12px 24px;
+            padding: 14px 28px;
             font-family: var(--font-body);
-            font-size: 9px;
-            font-weight: 400;
+            font-size: 10.5px;
+            font-weight: 500;
             letter-spacing: 2.5px;
             text-transform: uppercase;
             cursor: pointer;
@@ -973,8 +976,8 @@
         .modal-prive-card {
             background: #ffffff;
             width: 100%;
-            max-width: 540px;
-            max-height: 90vh;
+            max-width: 560px;
+            max-height: 92vh;
             overflow-y: auto;
             position: relative;
             padding: 48px 40px 40px;
@@ -987,10 +990,10 @@
             right: 20px;
             background: none;
             border: none;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             color: var(--gray);
-            padding: 6px;
+            padding: 8px;
         }
     </style>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -1273,58 +1276,8 @@
                 </div>
             </div>
 
-            <!-- ÉTOILE PRIVÉ (Exclusivo Suscriptoras) -->
-            <div class="product-card reveal prive-card" data-delay="4" data-line="prive">
-                <div class="gallery" id="gallery-etoile" data-product="etoile"
-                    data-fabric="94% microfibra técnica + 6% spandex — 180g/m²" data-name="ÉTOILE PRIVÉ" data-line-name="Privé"
-                    data-sub="Set Exclusivo · Solo Miembros Privé" data-price="$359.900 COP"
-                    data-desc="Diseño de alta costura médica reservado exclusivamente para miembros de la membresía YOSSICO Privé. Confeccionado en tela técnica de tacto seda con propiedades antibacterianas y herrajes oscuros de autor."
-                    data-wa="Hola,%20quiero%20información%20sobre%20la%20Membresía%20YOSSICO%20Privé"
-                    data-imgs="img/kyoto_original.webp,img/kyoto_detail.webp">
-                    <div class="gallery__track">
-                        <div class="gallery__slide active"><img src="img/kyoto_original.webp" loading="eager" alt="Set ÉTOILE PRIVÉ — Exclusivo Suscriptoras"></div>
-                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/kyoto_detail.webp" alt="Detalle ÉTOILE PRIVÉ"></div>
-                    </div>
-                    
-                    <!-- Candado & Overlay Estético YOSSICO -->
-                    <div class="prive-locked-overlay" onclick="event.stopPropagation(); abrirModalPrive('ÉTOILE PRIVÉ')">
-                        <div class="prive-locked-badge">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="11" width="18" height="11" rx="0" ry="0"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
-                            <span>YOSSICO PRIVÉ</span>
-                        </div>
-                        <div class="prive-locked-content">
-                            <span class="prive-locked-subtitle">ARCHIVO PRIVADO</span>
-                            <h4 class="prive-locked-title">Solo Miembros</h4>
-                            <p class="prive-locked-desc">Pieza reservada exclusivamente para suscriptoras de YOSSICO Privé ($29.900 COP/mes).</p>
-                            <button type="button" class="prive-locked-btn" onclick="event.stopPropagation(); abrirModalPrive('ÉTOILE PRIVÉ');">
-                                DESBLOQUEAR PIEZA →
-                            </button>
-                        </div>
-                    </div>
-
-                    <span class="product-card__tag" style="background:#111;color:#fff;border:1px solid rgba(255,255,255,0.2);">Privé</span>
-                </div>
-                <div class="product-card__info">
-                    <span class="product-card__name" style="display:flex;align-items:center;justify-content:space-between;">
-                        ÉTOILE PRIVÉ
-                        <span style="font-size:8px;font-family:var(--font-body);letter-spacing:2.5px;color:var(--gray);text-transform:uppercase;">Solo Miembros</span>
-                    </span>
-                    <span class="product-card__sub">Edición Reservada · YOSSICO Privé</span>
-                    <div style="margin-top:8px;">
-                        <span class="product-card__price" style="text-decoration:line-through;color:var(--gray-light);font-size:13px;margin-right:8px;">$359.900 COP</span>
-                        <span class="product-card__price" style="color:var(--black);">$305.900 COP <span style="font-size:9px;font-family:var(--font-body);letter-spacing:1.5px;color:var(--gray);text-transform:uppercase;">· Miembros (−15%)</span></span>
-                    </div>
-                    <button type="button" onclick="abrirModalPrive('ÉTOILE PRIVÉ')" class="btn btn--primary" style="width:100%;margin-top:16px;padding:13px;font-size:9px;letter-spacing:2.5px;background:#111;color:#fff;border:1px solid #111;">
-                        SOLICITAR ACCESO PRIVÉ →
-                    </button>
-                </div>
-            </div>
-
             <!-- LIMA -->
-            <div class="product-card reveal" data-delay="5" data-line="essentials">
+            <div class="product-card reveal" data-delay="4" data-line="essentials">
                 <div class="gallery" id="gallery-lima" data-product="lima"
                     data-fabric="72% poliéster + 22% rayón + 6% spandex — 166g/m²" data-name="LIMA" data-line-name="Essentials"
                     data-sub="Set · Scrub Femenino · Top + Pantalón" data-price="$275.900 COP"
@@ -1390,7 +1343,7 @@
             </div>
 
             <!-- BOGOTÁ -->
-            <div class="product-card reveal" data-delay="6" data-line="core">
+            <div class="product-card reveal" data-delay="5" data-line="core">
                 <div class="gallery" id="gallery-bogota" data-product="bogota"
                     data-fabric="94% poliéster + 6% spandex — 120g/m²" data-name="BOGOTÁ" data-line-name="Core"
                     data-sub="Set · Top + Pantalón · Tela Técnica" data-price="$229.900 COP"
@@ -1459,7 +1412,7 @@
             </div>
 
             <!-- MANTA -->
-            <div class="product-card reveal" data-delay="7" data-line="core">
+            <div class="product-card reveal" data-delay="6" data-line="core">
                 <div class="gallery" id="gallery-manta" data-product="manta" data-name="MANTA" data-line-name="Core"
                     data-sub="Set · Top + Pantalón · Tela Técnica" data-price="$229.900 COP"
                     data-fabric="94% poliéster + 6% spandex — 120g/m²"
@@ -1546,22 +1499,95 @@
         </div>
     </section>
 
-    <!-- Capas -->
-    <section class="coleccion" id="linea-capas" style="background: var(--white);">
+    <!-- Privé (Archivo Privado) -->
+    <section class="coleccion" id="linea-prive" style="background: var(--white); border-top: 1px solid var(--border);">
         <div class="filter-bar reveal" style="margin-bottom:48px; justify-content:center;">
-            <div style="display:flex; flex-direction:column; gap:6px; align-items:center; text-align:center;">
+            <div style="display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center;">
+                <span class="label" style="color:var(--gray);">Archivo Privado</span>
+                <div style="display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; justify-content:center;">
+                    <h2 style="font-family:var(--font-display); font-weight:300; font-size:clamp(30px,3.2vw,46px); letter-spacing:-0.3px; color:var(--black);">
+                        Privé<em style="font-style:italic;">.</em>
+                    </h2>
+                    <span style="font-family:var(--font-body); font-weight:400; font-size:9px; letter-spacing:3.5px; text-transform:uppercase; color:var(--white); background:var(--black); padding:6px 14px;">Solo Miembros</span>
+                </div>
+                <p style="font-family:var(--font-body); font-size:13px; font-weight:300; color:var(--gray-mid); max-width:460px; line-height:1.8; margin-top:4px;">
+                    Piezas de alta costura médica reservadas exclusivamente para suscriptoras de <a href="prive.html" style="color:var(--black); text-decoration:underline; text-underline-offset:3px;">YOSSICO Privé</a>.
+                </p>
+            </div>
+        </div>
+        <div class="product-grid" style="grid-template-columns: 1fr; max-width: 440px; margin: 0 auto;">
+
+            <!-- ÉTOILE PRIVÉ (Exclusivo Suscriptoras) -->
+            <div class="product-card reveal prive-card" data-delay="1" data-line="prive">
+                <div class="gallery" id="gallery-etoile" data-product="etoile"
+                    data-fabric="94% microfibra técnica + 6% spandex — 180g/m²" data-name="ÉTOILE PRIVÉ" data-line-name="Privé"
+                    data-sub="Set Exclusivo · Solo Miembros Privé" data-price="$359.900 COP"
+                    data-desc="Diseño de alta costura médica reservado exclusivamente para miembros de la membresía YOSSICO Privé. Confeccionado en tela técnica de tacto seda con propiedades antibacterianas y herrajes oscuros de autor."
+                    data-wa="Hola,%20quiero%20información%20sobre%20la%20Membresía%20YOSSICO%20Privé"
+                    data-imgs="img/kyoto_original.webp,img/kyoto_detail.webp">
+                    <div class="gallery__track">
+                        <div class="gallery__slide active"><img src="img/kyoto_original.webp" loading="eager" alt="Set ÉTOILE PRIVÉ — Exclusivo Suscriptoras"></div>
+                        <div class="gallery__slide"><img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'/%3E" data-src="img/kyoto_detail.webp" alt="Detalle ÉTOILE PRIVÉ"></div>
+                    </div>
+                    
+                    <!-- Candado & Overlay Estético YOSSICO -->
+                    <div class="prive-locked-overlay" onclick="event.stopPropagation(); abrirModalPrive('ÉTOILE PRIVÉ')">
+                        <div class="prive-locked-badge">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="0" ry="0"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>YOSSICO PRIVÉ</span>
+                        </div>
+                        <div class="prive-locked-content">
+                            <span class="prive-locked-subtitle">ARCHIVO PRIVADO</span>
+                            <h4 class="prive-locked-title">Solo Miembros</h4>
+                            <p class="prive-locked-desc">Pieza reservada exclusivamente para suscriptoras de YOSSICO Privé ($29.900 COP/mes).</p>
+                            <button type="button" class="prive-locked-btn" onclick="event.stopPropagation(); abrirModalPrive('ÉTOILE PRIVÉ');">
+                                DESBLOQUEAR PIEZA →
+                            </button>
+                        </div>
+                    </div>
+
+                    <span class="product-card__tag" style="background:#111;color:#fff;border:1px solid rgba(255,255,255,0.2);">Privé</span>
+                </div>
+                <div class="product-card__info" style="text-align:center;">
+                    <span class="product-card__name" style="display:flex;align-items:center;justify-content:center;gap:12px;">
+                        ÉTOILE PRIVÉ
+                    </span>
+                    <span class="product-card__sub">Edición Reservada · YOSSICO Privé</span>
+                    <div style="margin-top:10px;">
+                        <span class="product-card__price" style="text-decoration:line-through;color:var(--gray-light);font-size:14px;margin-right:8px;">$359.900 COP</span>
+                        <span class="product-card__price" style="color:var(--black);">$305.900 COP <span style="font-size:10px;font-family:var(--font-body);letter-spacing:1.5px;color:var(--gray);text-transform:uppercase;">· Miembros (−15%)</span></span>
+                    </div>
+                    <button type="button" onclick="abrirModalPrive('ÉTOILE PRIVÉ')" class="btn btn--primary" style="width:100%;margin-top:18px;padding:16px 24px;font-size:11px;font-weight:500;letter-spacing:2.5px;background:#111;color:#fff;border:1px solid #111;">
+                        SOLICITAR ACCESO PRIVÉ →
+                    </button>
+                    <div style="margin-top:12px;">
+                        <a href="prive.html" style="font-family:var(--font-body);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);text-decoration:underline;text-underline-offset:4px;">Conocer beneficios de la membresía →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Capas -->
+    <section class="coleccion" id="linea-capas" style="background: var(--white); border-top: 1px solid var(--border);">
+        <div class="filter-bar reveal" style="margin-bottom:48px; justify-content:center;">
+            <div style="display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center;">
                 <span class="label" style="color:var(--gray);">Complementos</span>
-                <div style="display:flex; align-items:baseline; gap:16px;">
+                <div style="display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; justify-content:center;">
                     <h2
-                        style="font-family:var(--font-display); font-weight:300; font-size:clamp(28px,3vw,44px); letter-spacing:-0.3px; color:var(--black);">
+                        style="font-family:var(--font-display); font-weight:300; font-size:clamp(30px,3.2vw,46px); letter-spacing:-0.3px; color:var(--black);">
                         Capas<em style="font-style:italic;">.</em>
                     </h2>
                     <span
-                        style="font-family:var(--font-body); font-weight:200; font-size:8px; letter-spacing:4px; text-transform:uppercase; color:var(--white); background:var(--black); padding:5px 12px;">Próximamente</span>
+                        style="font-family:var(--font-body); font-weight:400; font-size:9px; letter-spacing:3.5px; text-transform:uppercase; color:var(--white); background:var(--black); padding:6px 14px;">Próximamente</span>
                 </div>
             </div>
         </div>
-        <div class="product-grid" style="grid-template-columns: 1fr; max-width: 420px; margin: 0 auto;">
+        <div class="product-grid" style="grid-template-columns: 1fr; max-width: 440px; margin: 0 auto;">
 
             <!-- HOODIE -->
             <div class="product-card reveal" data-delay="1" data-line="essentials">
@@ -1600,24 +1626,24 @@
                         <button class="size-btn">M</button>
                         <button class="size-btn">L</button>
                     </div>
-                    <div class="waitlist-capas" style="margin-top:20px;">
-                        <p style="font-family:var(--font-body);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:16px;line-height:1.7;">
+                    <div class="waitlist-capas" style="margin-top:22px;">
+                        <p style="font-family:var(--font-body);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:16px;line-height:1.75;">
                             Próximamente — déjanos tus datos<br>y te avisamos cuando lleguen
                         </p>
-                        <form id="waitlist-capas-form" style="display:flex;flex-direction:column;gap:10px;">
-                            <input id="wl-nombre" type="text" placeholder="Nombre" required
-                                style="border:1px solid var(--border);padding:10px 12px;font-family:var(--font-body);font-size:12px;color:var(--black);background:#fff;outline:none;box-sizing:border-box;width:100%;">
-                            <input id="wl-telefono" type="tel" placeholder="Teléfono" required
-                                style="border:1px solid var(--border);padding:10px 12px;font-family:var(--font-body);font-size:12px;color:var(--black);background:#fff;outline:none;box-sizing:border-box;width:100%;">
-                            <input id="wl-correo" type="email" placeholder="Correo" required
-                                style="border:1px solid var(--border);padding:10px 12px;font-family:var(--font-body);font-size:12px;color:var(--black);background:#fff;outline:none;box-sizing:border-box;width:100%;">
-                            <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
-                                <label style="display:flex;align-items:flex-start;gap:8px;font-family:var(--font-body);font-size:10px;color:var(--gray);line-height:1.4;cursor:pointer;">
-                                    <input type="checkbox" id="wl-terms" required style="margin-top:2px;accent-color:#000;flex-shrink:0;">
+                        <form id="waitlist-capas-form" style="display:flex;flex-direction:column;gap:12px;">
+                            <input id="wl-nombre" type="text" placeholder="Tu nombre completo" required
+                                style="border:1px solid var(--border);padding:13px 14px;font-family:var(--font-body);font-size:13.5px;color:var(--black);background:#fafafa;outline:none;box-sizing:border-box;width:100%;">
+                            <input id="wl-telefono" type="tel" placeholder="Teléfono (WhatsApp)" required
+                                style="border:1px solid var(--border);padding:13px 14px;font-family:var(--font-body);font-size:13.5px;color:var(--black);background:#fafafa;outline:none;box-sizing:border-box;width:100%;">
+                            <input id="wl-correo" type="email" placeholder="Correo electrónico" required
+                                style="border:1px solid var(--border);padding:13px 14px;font-family:var(--font-body);font-size:13.5px;color:var(--black);background:#fafafa;outline:none;box-sizing:border-box;width:100%;">
+                            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;text-align:left;">
+                                <label style="display:flex;align-items:flex-start;gap:10px;font-family:var(--font-body);font-size:11.5px;color:var(--gray-mid);line-height:1.5;cursor:pointer;">
+                                    <input type="checkbox" id="wl-terms" required style="margin-top:3px;accent-color:#000;flex-shrink:0;">
                                     <span>He leído y acepto los <a href="terminos.html" target="_blank" style="color:var(--black);text-decoration:underline;">Términos y Condiciones</a>.</span>
                                 </label>
-                                <label style="display:flex;align-items:flex-start;gap:8px;font-family:var(--font-body);font-size:10px;color:var(--gray);line-height:1.4;cursor:pointer;">
-                                    <input type="checkbox" id="wl-privacy" required style="margin-top:2px;accent-color:#000;flex-shrink:0;">
+                                <label style="display:flex;align-items:flex-start;gap:10px;font-family:var(--font-body);font-size:11.5px;color:var(--gray-mid);line-height:1.5;cursor:pointer;">
+                                    <input type="checkbox" id="wl-privacy" required style="margin-top:3px;accent-color:#000;flex-shrink:0;">
                                     <span>Autorizo el tratamiento de mis datos conforme a la <a href="privacidad.html" target="_blank" style="color:var(--black);text-decoration:underline;">Política de Privacidad</a> (Ley 1581).</span>
                                 </label>
                             </div>
@@ -1626,10 +1652,10 @@
                             <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-top: 4px;"></div>
                             
                             <button type="submit" id="wl-submit"
-                                style="background:var(--black);color:#fff;border:none;padding:13px 24px;font-family:var(--font-body);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;">
-                                Avisarme
+                                style="background:var(--black);color:#fff;border:none;padding:16px 24px;font-family:var(--font-body);font-size:11px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;">
+                                Avisarme cuando esté disponible →
                             </button>
-                            <p id="wl-msg" style="font-family:var(--font-body);font-size:10px;letter-spacing:0.5px;color:var(--gray);min-height:16px;margin:0;"></p>
+                            <p id="wl-msg" style="font-family:var(--font-body);font-size:11.5px;letter-spacing:0.5px;color:var(--gray);min-height:16px;margin:0;"></p>
                         </form>
                     </div>
                 </div>
@@ -1814,28 +1840,28 @@
     ════════════════════════════════════════ -->
     <div class="modal-prive-backdrop" id="modal-prive" onclick="if(event.target===this) cerrarModalPrive()">
         <div class="modal-prive-card">
-            <button class="modal-prive-close" onclick="cerrarModalPrive()">✕</button>
+            <button class="modal-prive-close" onclick="cerrarModalPrive()" aria-label="Cerrar">✕</button>
 
-            <div style="text-align: center; margin-bottom: 28px;">
-                <div style="display:inline-flex; align-items:center; gap:8px; font-size:8px; letter-spacing:3.5px; text-transform:uppercase; color:var(--black); padding:6px 14px; border:1px solid var(--border); background:#f7f7f7; margin-bottom:16px;">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="display:inline-flex; align-items:center; gap:8px; font-size:9.5px; letter-spacing:3.5px; text-transform:uppercase; color:var(--black); padding:7px 16px; border:1px solid var(--border); background:#f7f7f7; margin-bottom:16px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <rect x="3" y="11" width="18" height="11" rx="0" ry="0"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
                     YOSSICO PRIVÉ
                 </div>
-                <h3 style="font-family:var(--font-display); font-size:32px; font-weight:300; text-transform:uppercase; letter-spacing:-0.3px; margin:0 0 8px 0; color:var(--black);">
+                <h3 style="font-family:var(--font-display); font-size:clamp(28px, 4vw, 34px); font-weight:300; text-transform:uppercase; letter-spacing:-0.3px; margin:0 0 8px 0; color:var(--black);">
                     Pieza de Archivo Privé
                 </h3>
-                <p id="prive-modal-prenda" style="font-size:12px; font-weight:300; color:var(--gray); margin:0 0 22px 0;">
+                <p id="prive-modal-prenda" style="font-size:13.5px; font-weight:300; color:var(--gray-mid); margin:0 0 22px 0;">
                     Has seleccionado la prenda <strong>ÉTOILE PRIVÉ</strong>.
                 </p>
-                <div style="background:#f7f7f7; border:1px solid var(--border); padding:22px; text-align:left; margin-bottom:24px;">
-                    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
-                        <span style="font-size:9px; font-weight:400; letter-spacing:3px; text-transform:uppercase; color:var(--black);">Suscripción Mensual</span>
-                        <span style="font-family:var(--font-display); font-size:26px; color:var(--black); font-weight:400;">$29.900 <small style="font-size:9px; font-family:var(--font-body); letter-spacing:2px; color:var(--gray);">COP / MES</small></span>
+                <div style="background:#f7f7f7; border:1px solid var(--border); padding:22px 24px; text-align:left; margin-bottom:24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;">
+                        <span style="font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--black);">Suscripción Mensual</span>
+                        <span style="font-family:var(--font-display); font-size:28px; color:var(--black); font-weight:400;">$29.900 <small style="font-size:10px; font-family:var(--font-body); letter-spacing:2px; color:var(--gray);">COP / MES</small></span>
                     </div>
-                    <ul style="list-style:none; padding:0; margin:0; font-size:11px; font-weight:300; color:var(--gray-mid); line-height:2;">
+                    <ul style="list-style:none; padding:0; margin:0; font-size:12.5px; font-weight:300; color:var(--gray-mid); line-height:2;">
                         <li>— Desbloqueo inmediato de uniformes exclusivos Privé</li>
                         <li>— 15% OFF permanente en toda la colección regular</li>
                         <li>— Prelación de 48 horas en cada nuevo lanzamiento</li>
@@ -1845,27 +1871,27 @@
             </div>
 
             <form id="prive-modal-form" onsubmit="enviarPriveModal(event)">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                <div class="modal-prive-form-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
                     <div>
-                        <label style="font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--black); display:block; margin-bottom:4px;">Nombre *</label>
-                        <input type="text" id="pm-nombre" placeholder="Tu nombre" required style="width:100%; padding:10px 0; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:inherit; font-size:12px; outline:none; box-sizing:border-box;">
+                        <label style="font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--black); display:block; margin-bottom:6px;">Nombre *</label>
+                        <input type="text" id="pm-nombre" placeholder="Tu nombre completo" required style="width:100%; padding:13px 14px; border:1px solid var(--border); background:#fafafa; font-family:inherit; font-size:13.5px; color:var(--black); outline:none; box-sizing:border-box;">
                     </div>
                     <div>
-                        <label style="font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--black); display:block; margin-bottom:4px;">WhatsApp *</label>
-                        <input type="tel" id="pm-tel" placeholder="312 345 6789" required style="width:100%; padding:10px 0; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:inherit; font-size:12px; outline:none; box-sizing:border-box;">
+                        <label style="font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--black); display:block; margin-bottom:6px;">WhatsApp *</label>
+                        <input type="tel" id="pm-tel" placeholder="312 345 6789" required style="width:100%; padding:13px 14px; border:1px solid var(--border); background:#fafafa; font-family:inherit; font-size:13.5px; color:var(--black); outline:none; box-sizing:border-box;">
                     </div>
                 </div>
-                <div style="margin-bottom:24px;">
-                    <label style="font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--black); display:block; margin-bottom:4px;">Correo electrónico *</label>
-                    <input type="email" id="pm-correo" placeholder="tu.correo@ejemplo.com" required style="width:100%; padding:10px 0; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:inherit; font-size:12px; outline:none; box-sizing:border-box;">
+                <div style="margin-bottom:22px;">
+                    <label style="font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--black); display:block; margin-bottom:6px;">Correo electrónico *</label>
+                    <input type="email" id="pm-correo" placeholder="tu.correo@ejemplo.com" required style="width:100%; padding:13px 14px; border:1px solid var(--border); background:#fafafa; font-family:inherit; font-size:13.5px; color:var(--black); outline:none; box-sizing:border-box;">
                 </div>
-                <button type="submit" id="pm-submit-btn" style="background:var(--black); color:var(--white); border:1px solid var(--black); padding:16px; width:100%; font-family:inherit; font-size:10px; font-weight:400; letter-spacing:3px; text-transform:uppercase; cursor:pointer;">
+                <button type="submit" id="pm-submit-btn" style="background:var(--black); color:var(--white); border:1px solid var(--black); padding:18px 24px; width:100%; font-family:inherit; font-size:11px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; cursor:pointer;">
                     SOLICITAR MEMBRESÍA ($29.900 COP/MES) →
                 </button>
             </form>
 
             <div style="margin-top:18px; text-align:center;">
-                <a href="prive.html" style="font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gray); text-decoration:underline; text-underline-offset:4px;">Ver detalles y plan anual →</a>
+                <a href="prive.html" style="font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gray); text-decoration:underline; text-underline-offset:4px;">Ver detalles y plan anual →</a>
             </div>
         </div>
     </div>
@@ -1952,9 +1978,29 @@
 
         /* ── Filter ── */
         const filterBtns = document.querySelectorAll('.filter-btn');
-        const cards = document.querySelectorAll('.product-card[data-line]');
+        const cards = document.querySelectorAll('#linea-uniformes .product-card[data-line]');
         
-        function applyFilter(filter) {
+        function applyFilter(filter, shouldScroll = false) {
+            if (filter === 'prive') {
+                filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === 'prive'));
+                cards.forEach(card => {
+                    const isHidden = card.dataset.cmsHidden === '1';
+                    card.classList.toggle('hidden', isHidden);
+                    if (!isHidden) loadCardImages(card);
+                });
+                const priveSection = document.getElementById('linea-prive');
+                if (priveSection && shouldScroll) {
+                    priveSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
+            }
+            if (filter === 'capas') {
+                const capasSection = document.getElementById('linea-capas');
+                if (capasSection && shouldScroll) {
+                    capasSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
+            }
             filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
             cards.forEach(card => {
                 const isHidden = card.dataset.cmsHidden === '1' || (filter !== 'all' && card.dataset.line !== filter);
@@ -1967,7 +2013,7 @@
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                applyFilter(btn.dataset.filter);
+                applyFilter(btn.dataset.filter, true);
                 const newUrl = new URL(window.location);
                 newUrl.searchParams.set('linea', btn.dataset.filter);
                 window.history.pushState({}, '', newUrl);
@@ -1977,8 +2023,10 @@
         // Apply filter on page load if parameter exists
         const urlParams = new URLSearchParams(window.location.search);
         const initialFilter = urlParams.get('linea');
-        if (initialFilter && document.querySelector(`.filter-btn[data-filter="${initialFilter}"]`)) {
-            applyFilter(initialFilter);
+        if (initialFilter === 'prive' || initialFilter === 'capas') {
+            setTimeout(() => applyFilter(initialFilter, true), 150);
+        } else if (initialFilter && document.querySelector(`.filter-btn[data-filter="${initialFilter}"]`)) {
+            applyFilter(initialFilter, false);
         }
 
         /* ── Card gallery slider (crossfade) ── */

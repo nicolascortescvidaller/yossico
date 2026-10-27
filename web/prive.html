@@ -53,11 +53,12 @@
             align-items: center;
             gap: 8px;
             font-family: var(--font-body);
-            font-size: 9px;
-            letter-spacing: 4px;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 3.5px;
             text-transform: uppercase;
             color: var(--black);
-            padding: 7px 16px;
+            padding: 8px 18px;
             border: 1px solid var(--border);
             background: #f7f7f7;
             margin-bottom: 28px;
@@ -67,7 +68,7 @@
             font-family: var(--font-display, 'Cormorant Garamond', serif);
             font-weight: 400;
             font-size: clamp(40px, 5.8vw, 68px);
-            line-height: 1.02;
+            line-height: 1.04;
             letter-spacing: -0.8px;
             color: var(--black);
             margin-bottom: 28px;
@@ -80,11 +81,11 @@
         }
 
         .prive-hero__subtitle {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 400;
             color: var(--gray-mid);
-            line-height: 2;
-            max-width: 620px;
+            line-height: 1.95;
+            max-width: 640px;
             margin: 0 auto;
         }
 
@@ -131,8 +132,8 @@
         }
 
         .prive-lock-icon-wrap {
-            width: 56px;
-            height: 56px;
+            width: 58px;
+            height: 58px;
             border: 1px solid rgba(255, 255, 255, 0.35);
             display: flex;
             align-items: center;
@@ -142,17 +143,17 @@
         }
 
         .prive-curtain-tag {
-            font-size: 9px;
-            letter-spacing: 4px;
+            font-size: 10px;
+            letter-spacing: 3.5px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.65);
+            color: rgba(255, 255, 255, 0.72);
             margin-bottom: 10px;
             display: block;
         }
 
         .prive-curtain-title {
             font-family: var(--font-display);
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 300;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -160,11 +161,11 @@
         }
 
         .prive-curtain-desc {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 300;
-            color: rgba(255, 255, 255, 0.72);
+            color: rgba(255, 255, 255, 0.8);
             line-height: 1.75;
-            max-width: 280px;
+            max-width: 300px;
             margin-bottom: 28px;
         }
 
@@ -193,29 +194,32 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 14px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .plan-card__title {
             font-family: var(--font-body);
-            font-size: 10px;
-            font-weight: 400;
+            font-size: 11px;
+            font-weight: 500;
             letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--black);
         }
 
         .plan-card__badge {
-            font-size: 8px;
-            letter-spacing: 2.5px;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 2px;
             text-transform: uppercase;
             background: var(--black);
             color: var(--white);
-            padding: 5px 10px;
+            padding: 6px 12px;
         }
 
         .plan-card__price {
             font-family: var(--font-display);
-            font-size: 38px;
+            font-size: 42px;
             font-weight: 400;
             color: var(--black);
             margin-bottom: 10px;
@@ -223,13 +227,13 @@
 
         .plan-card__price small {
             font-family: var(--font-body);
-            font-size: 9px;
+            font-size: 10px;
             color: var(--gray);
             letter-spacing: 2.5px;
         }
 
         .plan-card__desc {
-            font-size: 12px;
+            font-size: 13.5px;
             font-weight: 400;
             color: var(--gray-mid);
             line-height: 1.85;
@@ -265,7 +269,7 @@
 
         .pillar-card__title {
             font-family: var(--font-display);
-            font-size: 23px;
+            font-size: 26px;
             font-weight: 400;
             letter-spacing: -0.3px;
             color: var(--black);
@@ -273,10 +277,10 @@
         }
 
         .pillar-card__desc {
-            font-size: 12px;
+            font-size: 13.5px;
             font-weight: 400;
             color: var(--gray-mid);
-            line-height: 1.95;
+            line-height: 1.9;
         }
 
         /* Form Card */
@@ -291,47 +295,47 @@
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             margin-bottom: 24px;
         }
 
         .form-group label {
-            font-size: 8px;
-            font-weight: 400;
-            letter-spacing: 3px;
+            font-size: 10.5px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
             color: var(--black);
         }
 
         .form-group input,
         .form-group select {
-            border: none;
-            border-bottom: 1px solid var(--border);
-            padding: 11px 0;
+            border: 1px solid var(--border);
+            padding: 14px 16px;
             font-family: var(--font-body);
-            font-size: 13px;
+            font-size: 14px;
             color: var(--black);
-            background: transparent;
+            background: #fafafa;
             outline: none;
             width: 100%;
             box-sizing: border-box;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.2s;
         }
 
         .form-group input:focus,
         .form-group select:focus {
-            border-bottom-color: var(--black);
+            border-color: var(--black);
+            background: #ffffff;
         }
 
         .btn-submit-prive {
             background: var(--black);
             color: var(--white);
             border: 1px solid var(--black);
-            padding: 18px 32px;
+            padding: 20px 32px;
             width: 100%;
             font-family: var(--font-body);
-            font-size: 10px;
-            font-weight: 400;
+            font-size: 11px;
+            font-weight: 500;
             letter-spacing: 3px;
             text-transform: uppercase;
             cursor: pointer;
@@ -349,21 +353,53 @@
             padding: 40px 20px;
         }
 
-        @media (max-width: 768px) {
-            .prive-hero {
-                padding: 120px 20px 48px;
-            }
+        @media (max-width: 900px) {
             .prive-showcase {
                 grid-template-columns: 1fr;
-                gap: 36px;
+                gap: 40px;
+                margin-bottom: 64px;
+            }
+            .prive-pillars {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-bottom: 64px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            #barra-envio-gratis {
+                font-size: 10px !important;
+                padding: 8px 10px !important;
+                letter-spacing: 0.03em !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .prive-hero {
+                padding: 115px 20px 44px;
+            }
+            .prive-hero__subtitle {
+                font-size: 14px;
+                line-height: 1.85;
             }
             .prive-pillars {
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
+            .pillar-card {
+                padding: 36px 26px;
+            }
+            .plan-card {
+                padding: 28px 24px;
+            }
             .prive-form-card {
-                padding: 36px 24px;
-                margin-bottom: 80px;
+                padding: 36px 22px;
+                margin: 0 16px 80px;
+            }
+            .btn-submit-prive {
+                padding: 18px 20px;
+                font-size: 10.5px;
+                letter-spacing: 2px;
             }
         }
     </style>
@@ -479,7 +515,7 @@
                 <p class="prive-curtain-desc">
                     Confeccionado en microfibra técnica de tacto seda con herrajes negro mate. Reservado para suscriptoras.
                 </p>
-                <a href="#unirme-prive" class="btn btn--white" style="padding:14px 28px;font-size:9px;letter-spacing:3px;">
+                <a href="#unirme-prive" class="btn btn--white" style="padding:16px 32px;font-size:11px;font-weight:500;letter-spacing:2.5px;">
                     SOLICITAR MEMBRESÍA →
                 </a>
             </div>
@@ -553,9 +589,9 @@
     <section class="prive-form-card" id="unirme-prive">
         <div id="prive-form-container">
             <div style="text-align:center;margin-bottom:40px;">
-                <span style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gray);display:block;margin-bottom:10px;">REGISTRO DE MIEMBRO</span>
-                <h3 style="font-family:var(--font-display);font-size:34px;font-weight:400;letter-spacing:-0.3px;">Únete a YOSSICO <em>Privé.</em></h3>
-                <p style="font-size:12px;color:var(--gray);margin-top:8px;">Activa tu suscripción y recibe tu código personal de miembro al instante.</p>
+                <span style="font-size:10px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--gray);display:block;margin-bottom:10px;">REGISTRO DE MIEMBRO</span>
+                <h3 style="font-family:var(--font-display);font-size:clamp(30px, 4vw, 38px);font-weight:400;letter-spacing:-0.3px;">Únete a YOSSICO <em>Privé.</em></h3>
+                <p style="font-size:13.5px;color:var(--gray-mid);margin-top:8px;line-height:1.7;">Activa tu suscripción y recibe tu código personal de miembro al instante.</p>
             </div>
 
             <form id="prive-form" onsubmit="enviarSolicitudPrive(event)">
@@ -582,8 +618,8 @@
                 </div>
 
                 <div style="margin:24px 0 12px;">
-                    <label style="display:flex;align-items:flex-start;gap:10px;font-size:11px;color:var(--gray-mid);line-height:1.5;cursor:pointer;">
-                        <input type="checkbox" required style="margin-top:2px;accent-color:#111;">
+                    <label style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--gray-mid);line-height:1.6;cursor:pointer;">
+                        <input type="checkbox" required style="margin-top:3px;accent-color:#111;flex-shrink:0;">
                         <span>He leído y acepto los <a href="terminos.html" target="_blank" style="color:#111;text-decoration:underline;">Términos y Condiciones</a> y la <a href="privacidad.html" target="_blank" style="color:#111;text-decoration:underline;">Política de Privacidad</a> de YOSSICO.</span>
                     </label>
                 </div>

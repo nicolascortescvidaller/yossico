@@ -1130,6 +1130,12 @@
       padding-top: 28px;
       border-top: 1px solid rgba(255,255,255,0.12);
     }
+    .prive-spotlight__actions {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
     @media (max-width: 900px) {
       .prive-spotlight {
         padding: 80px 24px;
@@ -1140,7 +1146,23 @@
       }
       .prive-spotlight__benefits {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 22px;
+      }
+    }
+    @media (max-width: 600px) {
+      .prive-spotlight {
+        padding: 64px 20px;
+      }
+      .prive-spotlight__actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+        text-align: center;
+      }
+      .prive-spotlight__actions .btn {
+        width: 100%;
+        justify-content: center;
+        box-sizing: border-box;
       }
     }
   </style>
@@ -1152,18 +1174,18 @@
           <img src="img/kyoto_original.webp" alt="Uniforme Exclusivo YOSSICO Privé" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.68) contrast(1.06);">
           <!-- Candado & Frosted Curtain -->
           <div style="position: absolute; inset: 0; background: rgba(12,12,12,0.62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 36px; text-align: center;">
-            <div style="width: 54px; height: 54px; border: 1px solid rgba(255,255,255,0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: #ffffff;">
+            <div style="width: 56px; height: 56px; border: 1px solid rgba(255,255,255,0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: #ffffff;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="0" ry="0"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
             </div>
-            <span style="font-family: var(--font-body); font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 10px;">PIEZA RESERVADA</span>
-            <h3 style="font-family: var(--font-display); font-size: 30px; font-weight: 300; letter-spacing: 1px; color: #fff; margin-bottom: 12px; text-transform: uppercase;">ÉTOILE PRIVÉ</h3>
-            <p style="font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.68); line-height: 1.75; max-width: 260px; margin-bottom: 28px;">
+            <span style="font-family: var(--font-body); font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 10px;">PIEZA RESERVADA</span>
+            <h3 style="font-family: var(--font-display); font-size: 34px; font-weight: 300; letter-spacing: 1px; color: #fff; margin-bottom: 12px; text-transform: uppercase;">ÉTOILE PRIVÉ</h3>
+            <p style="font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.78); line-height: 1.75; max-width: 280px; margin-bottom: 28px;">
               Diseñado exclusivamente para miembros de YOSSICO Privé. No disponible en venta abierta.
             </p>
-            <a href="prive.html" class="btn btn--white" style="padding: 14px 28px; font-size: 9px; letter-spacing: 3px;">
+            <a href="prive.html" class="btn btn--white" style="padding: 15px 30px; font-size: 10.5px; font-weight: 500; letter-spacing: 2.5px;">
               SOLICITAR ACCESO →
             </a>
           </div>
@@ -1172,40 +1194,40 @@
 
       <!-- Right: Content & Benefits -->
       <div class="reveal" data-delay="2">
-        <span style="font-family: var(--font-body); font-size: 9px; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block; margin-bottom: 20px;">
+        <span style="font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.6); display: block; margin-bottom: 20px;">
           YOSSICO PRIVÉ · $29.900 COP / MES
         </span>
         <h2 style="font-family: var(--font-display); font-size: clamp(36px, 4.2vw, 56px); font-weight: 300; line-height: 1.05; letter-spacing: -0.5px; color: #fff; margin-bottom: 24px;">
           Uniformes que pocos<br>pueden vestir.<br><em style="color: rgba(255,255,255,0.65);">Privilegios para ti.</em>
         </h2>
-        <p style="font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.65); line-height: 2; margin-bottom: 32px;">
+        <p style="font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.75); line-height: 1.95; margin-bottom: 32px;">
           Una suscripción mensual pensada para la mujer en salud que valora la discreción y la exclusividad. Acceso a piezas de archivo que no salen a la venta general, 15% OFF permanente en toda la colección y prelación de 48 horas en cada lanzamiento.
         </p>
 
         <div class="prive-spotlight__benefits">
           <div>
-            <div style="font-size: 9px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px;">01 · Piezas Privadas</div>
-            <div style="font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.55); line-height: 1.7;">Cortes y tonos de edición limitada reservados únicamente para suscriptoras.</div>
+            <div style="font-size: 10.5px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: #ffffff; margin-bottom: 8px;">01 · Piezas Privadas</div>
+            <div style="font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.68); line-height: 1.75;">Cortes y tonos de edición limitada reservados únicamente para suscriptoras.</div>
           </div>
           <div>
-            <div style="font-size: 9px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px;">02 · 15% OFF Permanente</div>
-            <div style="font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.55); line-height: 1.7;">Beneficio recurrente en cada orden sobre las líneas Signature, Essentials y Core.</div>
+            <div style="font-size: 10.5px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: #ffffff; margin-bottom: 8px;">02 · 15% OFF Permanente</div>
+            <div style="font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.68); line-height: 1.75;">Beneficio recurrente en cada orden sobre las líneas Signature, Essentials y Core.</div>
           </div>
           <div>
-            <div style="font-size: 9px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px;">03 · Prelación 48 Horas</div>
-            <div style="font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.55); line-height: 1.7;">Asegura tu talla dos días antes de cada apertura oficial al público.</div>
+            <div style="font-size: 10.5px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: #ffffff; margin-bottom: 8px;">03 · Prelación 48 Horas</div>
+            <div style="font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.68); line-height: 1.75;">Asegura tu talla dos días antes de cada apertura oficial al público.</div>
           </div>
           <div>
-            <div style="font-size: 9px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px;">04 · Despacho Prioritario</div>
-            <div style="font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.55); line-height: 1.7;">Envío prioritario sin monto mínimo a cualquier ciudad de Colombia.</div>
+            <div style="font-size: 10.5px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: #ffffff; margin-bottom: 8px;">04 · Despacho Prioritario</div>
+            <div style="font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.68); line-height: 1.75;">Envío prioritario sin monto mínimo a cualquier ciudad de Colombia.</div>
           </div>
         </div>
 
-        <div style="display: flex; gap: 28px; align-items: center; flex-wrap: wrap;">
-          <a href="prive.html" class="btn btn--white" style="padding: 18px 36px; font-size: 10px; letter-spacing: 3px;">
+        <div class="prive-spotlight__actions">
+          <a href="prive.html" class="btn btn--white" style="padding: 18px 36px; font-size: 11px; font-weight: 500; letter-spacing: 3px;">
             CONOCER YOSSICO PRIVÉ →
           </a>
-          <a href="estudiantes.html" style="font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.65); text-decoration: underline; text-underline-offset: 5px;">
+          <a href="estudiantes.html" style="font-size: 11px; font-weight: 400; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.75); text-decoration: underline; text-underline-offset: 5px;">
             Programa Estudiantil Campus →
           </a>
         </div>
