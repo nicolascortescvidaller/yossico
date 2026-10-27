@@ -69,14 +69,14 @@
         }
 
         .filter-btn--prive {
-            color: #b38a49;
-            border-color: #d4c5a9;
+            color: var(--black);
+            border-color: var(--black);
         }
 
         .filter-btn--prive:hover,
         .filter-btn--prive.active {
             background: var(--black);
-            color: #d4c5a9;
+            color: var(--white);
             border-color: var(--black);
         }
 
@@ -865,14 +865,14 @@
         .prive-locked-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(15, 15, 15, 0.65);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            background: rgba(12, 12, 12, 0.64);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 28px 20px 22px;
+            padding: 32px 24px 28px;
             text-align: center;
             z-index: 6;
             cursor: pointer;
@@ -880,20 +880,20 @@
         }
 
         .prive-locked-overlay:hover {
-            background: rgba(10, 10, 10, 0.75);
+            background: rgba(10, 10, 10, 0.74);
         }
 
         .prive-locked-badge {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 6px 14px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(212, 197, 169, 0.7);
-            color: #d4c5a9;
+            gap: 8px;
+            padding: 7px 14px;
+            background: rgba(17, 17, 17, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
             font-family: var(--font-body);
-            font-size: 9px;
-            letter-spacing: 2.5px;
+            font-size: 8px;
+            letter-spacing: 3px;
             text-transform: uppercase;
         }
 
@@ -904,48 +904,49 @@
         }
 
         .prive-locked-subtitle {
-            font-size: 9px;
-            letter-spacing: 3px;
+            font-size: 8px;
+            letter-spacing: 3.5px;
             text-transform: uppercase;
-            color: #d4c5a9;
-            margin-bottom: 6px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
         }
 
         .prive-locked-title {
             font-family: var(--font-display);
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 300;
             color: #ffffff;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin: 0 0 8px 0;
+            margin: 0 0 10px 0;
         }
 
         .prive-locked-desc {
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.75);
-            line-height: 1.5;
-            max-width: 250px;
-            margin: 0 0 16px 0;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.65;
+            max-width: 240px;
+            margin: 0 0 20px 0;
         }
 
         .prive-locked-btn {
-            background: #d4c5a9;
+            background: #ffffff;
             color: #111111;
-            border: none;
-            padding: 12px 22px;
+            border: 1px solid #ffffff;
+            padding: 12px 24px;
             font-family: var(--font-body);
             font-size: 9px;
-            font-weight: 600;
-            letter-spacing: 2px;
+            font-weight: 400;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
 
         .prive-locked-btn:hover {
-            background: #ffffff;
-            transform: scale(1.02);
+            background: transparent;
+            color: #ffffff;
         }
 
         /* Modal Privé */
@@ -972,23 +973,23 @@
         .modal-prive-card {
             background: #ffffff;
             width: 100%;
-            max-width: 560px;
+            max-width: 540px;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
-            padding: 42px 32px 32px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+            padding: 48px 40px 40px;
+            border: 1px solid var(--border);
         }
 
         .modal-prive-close {
             position: absolute;
-            top: 16px;
-            right: 18px;
+            top: 18px;
+            right: 20px;
             background: none;
             border: none;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            color: #888;
+            color: var(--gray);
             padding: 6px;
         }
     </style>
@@ -1026,13 +1027,13 @@
                     <a href="coleccion.html?linea=essentials">Essentials</a>
                     <a href="coleccion.html?linea=signature">Signature</a>
                     <a href="coleccion.html?linea=core">Core</a>
-                    <a href="coleccion.html?linea=prive" style="color:#b38a49;">Privé 🔒 (Solo Miembros)</a>
+                    <a href="coleccion.html?linea=prive">Privé — Solo Miembros</a>
                     <div class="nav__dropdown-divider"></div>
                     <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
                 </div>
             </li>
-            <li><a href="prive.html" style="color:#b38a49;">Privé 🔒</a></li>
-            <li><a href="estudiantes.html">Campus 🎓</a></li>
+            <li><a href="prive.html">Privé</a></li>
+            <li><a href="estudiantes.html">Campus</a></li>
             <li><a href="acronimo.html">El Acrónimo</a></li>
             <li><a href="historia.html">Historia</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
@@ -1076,7 +1077,7 @@
             <button class="filter-btn" data-filter="signature">Signature</button>
             <button class="filter-btn" data-filter="essentials">Essentials</button>
             <button class="filter-btn" data-filter="core">Core</button>
-            <button class="filter-btn filter-btn--prive" data-filter="prive">Privé 🔒</button>
+            <button class="filter-btn filter-btn--prive" data-filter="prive">Privé</button>
             <button class="filter-btn active" data-filter="all">Todo</button>
         </div>
 
@@ -1288,36 +1289,36 @@
                     <!-- Candado & Overlay Estético YOSSICO -->
                     <div class="prive-locked-overlay" onclick="event.stopPropagation(); abrirModalPrive('ÉTOILE PRIVÉ')">
                         <div class="prive-locked-badge">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="0" ry="0"></rect>
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                             </svg>
-                            <span>EXCLUSIVO PRIVÉ</span>
+                            <span>YOSSICO PRIVÉ</span>
                         </div>
                         <div class="prive-locked-content">
-                            <span class="prive-locked-subtitle">EDICIÓN RESTRINGIDA</span>
-                            <h4 class="prive-locked-title">Solo para Miembros</h4>
-                            <p class="prive-locked-desc">Disponible exclusivamente con la membresía mensual YOSSICO Privé ($29.900 COP/mes).</p>
+                            <span class="prive-locked-subtitle">ARCHIVO PRIVADO</span>
+                            <h4 class="prive-locked-title">Solo Miembros</h4>
+                            <p class="prive-locked-desc">Pieza reservada exclusivamente para suscriptoras de YOSSICO Privé ($29.900 COP/mes).</p>
                             <button type="button" class="prive-locked-btn" onclick="event.stopPropagation(); abrirModalPrive('ÉTOILE PRIVÉ');">
-                                DESBLOQUEAR PIEZA 🔒
+                                DESBLOQUEAR PIEZA →
                             </button>
                         </div>
                     </div>
 
-                    <span class="product-card__tag" style="background:#111;color:#d4c5a9;border:1px solid #d4c5a9;">🔒 Privé</span>
+                    <span class="product-card__tag" style="background:#111;color:#fff;border:1px solid rgba(255,255,255,0.2);">Privé</span>
                 </div>
                 <div class="product-card__info">
                     <span class="product-card__name" style="display:flex;align-items:center;justify-content:space-between;">
                         ÉTOILE PRIVÉ
-                        <span style="font-size:9px;font-family:var(--font-body);letter-spacing:1.5px;color:#b38a49;text-transform:uppercase;">Solo Miembros</span>
+                        <span style="font-size:8px;font-family:var(--font-body);letter-spacing:2.5px;color:var(--gray);text-transform:uppercase;">Solo Miembros</span>
                     </span>
-                    <span class="product-card__sub">Edición Limitada · Club Privé YOSSICO</span>
+                    <span class="product-card__sub">Edición Reservada · YOSSICO Privé</span>
                     <div style="margin-top:8px;">
-                        <span class="product-card__price" style="text-decoration:line-through;color:var(--gray);font-size:12px;margin-right:6px;">$359.900 COP</span>
-                        <span class="product-card__price" style="color:var(--black);font-weight:500;">$305.900 COP <span style="font-size:10px;font-family:var(--font-body);color:#b38a49;">(15% OFF)</span></span>
+                        <span class="product-card__price" style="text-decoration:line-through;color:var(--gray-light);font-size:13px;margin-right:8px;">$359.900 COP</span>
+                        <span class="product-card__price" style="color:var(--black);">$305.900 COP <span style="font-size:9px;font-family:var(--font-body);letter-spacing:1.5px;color:var(--gray);text-transform:uppercase;">· Miembros (−15%)</span></span>
                     </div>
-                    <button type="button" onclick="abrirModalPrive('ÉTOILE PRIVÉ')" class="btn btn--primary" style="width:100%;margin-top:14px;padding:12px;font-size:9px;letter-spacing:2px;background:#111;color:#fbf9f4;">
-                        CONOCER MEMBRESÍA ($29.900/MES) 🔒
+                    <button type="button" onclick="abrirModalPrive('ÉTOILE PRIVÉ')" class="btn btn--primary" style="width:100%;margin-top:16px;padding:13px;font-size:9px;letter-spacing:2.5px;background:#111;color:#fff;border:1px solid #111;">
+                        SOLICITAR ACCESO PRIVÉ →
                     </button>
                 </div>
             </div>
@@ -1671,8 +1672,8 @@
                     YOSSICO
                 </div>
                 <div class="footer__links">
-                    <a href="prive.html" style="color:#d4c5a9;">Club Privé 🔒</a>
-                    <a href="estudiantes.html">Programa Estudiantil 🎓</a>
+                    <a href="prive.html">YOSSICO Privé</a>
+                    <a href="estudiantes.html">YOSSICO Campus</a>
                     <a href="institucional.html">YOSSICO Institucional</a>
                     <a href="embajadoras.html">Embajadoras YOSSICO</a>
                 </div>
@@ -1815,56 +1816,56 @@
         <div class="modal-prive-card">
             <button class="modal-prive-close" onclick="cerrarModalPrive()">✕</button>
 
-            <div style="text-align: center; margin-bottom: 24px;">
-                <div style="display:inline-flex; align-items:center; gap:8px; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:#b38a49; padding:5px 14px; border:1px solid #d4c5a9; background:#fbf9f4; margin-bottom:14px;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <div style="text-align: center; margin-bottom: 28px;">
+                <div style="display:inline-flex; align-items:center; gap:8px; font-size:8px; letter-spacing:3.5px; text-transform:uppercase; color:var(--black); padding:6px 14px; border:1px solid var(--border); background:#f7f7f7; margin-bottom:16px;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="11" width="18" height="11" rx="0" ry="0"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
-                    CLUB YOSSICO PRIVÉ
+                    YOSSICO PRIVÉ
                 </div>
-                <h3 style="font-family:var(--font-display); font-size:30px; font-weight:300; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 8px 0;">
-                    Pieza Exclusiva Privé
+                <h3 style="font-family:var(--font-display); font-size:32px; font-weight:300; text-transform:uppercase; letter-spacing:-0.3px; margin:0 0 8px 0; color:var(--black);">
+                    Pieza de Archivo Privé
                 </h3>
-                <p id="prive-modal-prenda" style="font-size:12px; color:#555; margin:0 0 18px 0;">
+                <p id="prive-modal-prenda" style="font-size:12px; font-weight:300; color:var(--gray); margin:0 0 22px 0;">
                     Has seleccionado la prenda <strong>ÉTOILE PRIVÉ</strong>.
                 </p>
-                <div style="background:#faf9f6; border:1px solid #e8e6e1; padding:18px; text-align:left; margin-bottom:20px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <span style="font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:#111;">Suscripción Privé</span>
-                        <span style="font-family:var(--font-display); font-size:24px; color:#111; font-weight:400;">$29.900 <small style="font-size:10px; font-family:var(--font-body); color:#666;">COP/MES</small></span>
+                <div style="background:#f7f7f7; border:1px solid var(--border); padding:22px; text-align:left; margin-bottom:24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+                        <span style="font-size:9px; font-weight:400; letter-spacing:3px; text-transform:uppercase; color:var(--black);">Suscripción Mensual</span>
+                        <span style="font-family:var(--font-display); font-size:26px; color:var(--black); font-weight:400;">$29.900 <small style="font-size:9px; font-family:var(--font-body); letter-spacing:2px; color:var(--gray);">COP / MES</small></span>
                     </div>
-                    <ul style="list-style:none; padding:0; margin:0; font-size:11px; color:#555; line-height:1.8;">
-                        <li>✓ <strong>Desbloqueo inmediato</strong> de uniformes exclusivos Privé</li>
-                        <li>✓ <strong>15% OFF permanente</strong> en todos los uniformes regulares</li>
-                        <li>✓ <strong>Acceso anticipado de 48h</strong> a cada nuevo drop</li>
-                        <li>✓ <strong>Envíos prioritarios gratis</strong> a toda Colombia</li>
+                    <ul style="list-style:none; padding:0; margin:0; font-size:11px; font-weight:300; color:var(--gray-mid); line-height:2;">
+                        <li>— Desbloqueo inmediato de uniformes exclusivos Privé</li>
+                        <li>— 15% OFF permanente en toda la colección regular</li>
+                        <li>— Prelación de 48 horas en cada nuevo lanzamiento</li>
+                        <li>— Despacho prioritario sin costo en toda Colombia</li>
                     </ul>
                 </div>
             </div>
 
             <form id="prive-modal-form" onsubmit="enviarPriveModal(event)">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
                     <div>
-                        <label style="font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#333; display:block; margin-bottom:4px;">Nombre *</label>
-                        <input type="text" id="pm-nombre" placeholder="Tu nombre" required style="width:100%; padding:10px 12px; border:1px solid #d5d3ce; font-family:inherit; font-size:12px; box-sizing:border-box;">
+                        <label style="font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--black); display:block; margin-bottom:4px;">Nombre *</label>
+                        <input type="text" id="pm-nombre" placeholder="Tu nombre" required style="width:100%; padding:10px 0; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:inherit; font-size:12px; outline:none; box-sizing:border-box;">
                     </div>
                     <div>
-                        <label style="font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#333; display:block; margin-bottom:4px;">WhatsApp *</label>
-                        <input type="tel" id="pm-tel" placeholder="312 345 6789" required style="width:100%; padding:10px 12px; border:1px solid #d5d3ce; font-family:inherit; font-size:12px; box-sizing:border-box;">
+                        <label style="font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--black); display:block; margin-bottom:4px;">WhatsApp *</label>
+                        <input type="tel" id="pm-tel" placeholder="312 345 6789" required style="width:100%; padding:10px 0; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:inherit; font-size:12px; outline:none; box-sizing:border-box;">
                     </div>
                 </div>
-                <div style="margin-bottom:16px;">
-                    <label style="font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#333; display:block; margin-bottom:4px;">Correo electrónico *</label>
-                    <input type="email" id="pm-correo" placeholder="tu.correo@ejemplo.com" required style="width:100%; padding:10px 12px; border:1px solid #d5d3ce; font-family:inherit; font-size:12px; box-sizing:border-box;">
+                <div style="margin-bottom:24px;">
+                    <label style="font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--black); display:block; margin-bottom:4px;">Correo electrónico *</label>
+                    <input type="email" id="pm-correo" placeholder="tu.correo@ejemplo.com" required style="width:100%; padding:10px 0; border:none; border-bottom:1px solid var(--border); background:transparent; font-family:inherit; font-size:12px; outline:none; box-sizing:border-box;">
                 </div>
-                <button type="submit" id="pm-submit-btn" style="background:#111; color:#fff; border:none; padding:14px; width:100%; font-family:inherit; font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; cursor:pointer;">
-                    ACTIVAR MEMBRESÍA ($29.900 COP/MES) →
+                <button type="submit" id="pm-submit-btn" style="background:var(--black); color:var(--white); border:1px solid var(--black); padding:16px; width:100%; font-family:inherit; font-size:10px; font-weight:400; letter-spacing:3px; text-transform:uppercase; cursor:pointer;">
+                    SOLICITAR MEMBRESÍA ($29.900 COP/MES) →
                 </button>
             </form>
 
-            <div style="margin-top:16px; text-align:center;">
-                <a href="prive.html" style="font-size:11px; color:#888; text-decoration:underline;">Ver página completa y plan anual con 2 meses gratis →</a>
+            <div style="margin-top:18px; text-align:center;">
+                <a href="prive.html" style="font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gray); text-decoration:underline; text-underline-offset:4px;">Ver detalles y plan anual →</a>
             </div>
         </div>
     </div>

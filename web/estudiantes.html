@@ -42,7 +42,7 @@
         }
 
         .campus-hero {
-            padding: 140px 24px 60px;
+            padding: 150px 24px 80px;
             max-width: 840px;
             margin: 0 auto;
             text-align: center;
@@ -53,100 +53,94 @@
             align-items: center;
             gap: 8px;
             font-family: var(--font-body);
-            font-size: 10px;
-            letter-spacing: 3.5px;
+            font-size: 9px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            color: #555;
-            padding: 7px 18px;
-            border: 1px solid #e0dfdb;
-            background: #faf9f6;
-            margin-bottom: 24px;
+            color: var(--black);
+            padding: 7px 16px;
+            border: 1px solid var(--border);
+            background: #f7f7f7;
+            margin-bottom: 28px;
         }
 
         .campus-hero__title {
             font-family: var(--font-display, 'Cormorant Garamond', serif);
-            font-weight: 300;
-            font-size: clamp(34px, 5.2vw, 56px);
-            line-height: 1.1;
-            letter-spacing: -0.5px;
-            color: #111;
-            margin-bottom: 20px;
-            text-transform: uppercase;
+            font-weight: 400;
+            font-size: clamp(40px, 5.8vw, 68px);
+            line-height: 1.02;
+            letter-spacing: -0.8px;
+            color: var(--black);
+            margin-bottom: 24px;
         }
 
         .campus-hero__title em {
             font-style: italic;
             font-family: var(--font-display, 'Cormorant Garamond', serif);
-            text-transform: none;
-            color: #0C4E57;
+            color: var(--gray);
         }
 
         .campus-hero__subtitle {
-            font-size: clamp(14px, 1.8vw, 17px);
-            font-weight: 300;
-            color: #555;
-            line-height: 1.7;
-            max-width: 680px;
-            margin: 0 auto 36px;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--gray-mid);
+            line-height: 2;
+            max-width: 620px;
+            margin: 0 auto;
         }
 
         .campus-benefits {
-            max-width: 1040px;
-            margin: 0 auto 80px;
+            max-width: 1120px;
+            margin: 0 auto 72px;
             padding: 0 24px;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            gap: 2px;
         }
 
         .campus-benefit-card {
-            background: #faf9f6;
-            border: 1px solid #ebe9e4;
-            padding: 36px 28px;
+            background: #f7f7f7;
+            border: 1px solid var(--border);
+            padding: 48px 36px;
             position: relative;
-            transition: transform 0.25s ease, border-color 0.25s ease;
-        }
-
-        .campus-benefit-card:hover {
-            transform: translateY(-3px);
-            border-color: #111;
         }
 
         .campus-benefit-card__num {
-            font-family: var(--font-display);
-            font-size: 32px;
-            font-weight: 300;
-            color: #888;
-            margin-bottom: 12px;
+            font-family: var(--font-body);
+            font-size: 46px;
+            font-weight: 400;
+            letter-spacing: 6px;
+            color: rgba(0, 0, 0, 0.12);
+            line-height: 1;
+            margin-bottom: 22px;
             display: block;
+            user-select: none;
         }
 
         .campus-benefit-card__title {
-            font-family: var(--font-body);
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #111;
-            margin-bottom: 12px;
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: -0.3px;
+            color: var(--black);
+            margin-bottom: 14px;
         }
 
         .campus-benefit-card__desc {
             font-size: 12px;
-            font-weight: 300;
-            color: #666;
-            line-height: 1.6;
+            font-weight: 400;
+            color: var(--gray-mid);
+            line-height: 1.95;
         }
 
         .campus-notice-box {
-            max-width: 760px;
-            margin: 0 auto 50px;
-            padding: 16px 22px;
-            background: #f4f5f5;
-            border-left: 3px solid #0C4E57;
+            max-width: 720px;
+            margin: 0 auto 64px;
+            padding: 18px 24px;
+            background: #f7f7f7;
+            border-left: 2px solid var(--black);
             font-size: 12px;
-            color: #444;
-            line-height: 1.6;
+            color: var(--gray-mid);
+            line-height: 1.75;
             display: flex;
             align-items: center;
             gap: 14px;
@@ -155,62 +149,61 @@
         .campus-form-wrapper {
             max-width: 680px;
             margin: 0 auto 120px;
-            padding: 48px 36px;
-            border: 1px solid #e8e6e1;
+            padding: 56px 48px;
+            border: 1px solid var(--border);
             background: #ffffff;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
         }
 
         .campus-form__heading {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
         .campus-form__heading h3 {
             font-family: var(--font-display);
-            font-size: 28px;
+            font-size: 34px;
             font-weight: 400;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
+            letter-spacing: -0.3px;
+            margin-bottom: 10px;
         }
 
         .campus-form__heading p {
             font-size: 12px;
-            color: #777;
-            letter-spacing: 0.5px;
+            color: var(--gray);
+            letter-spacing: 0.4px;
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 18px;
+            gap: 24px;
+            margin-bottom: 8px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 6px;
-            margin-bottom: 18px;
+            margin-bottom: 24px;
         }
 
         .form-group label {
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 1.5px;
+            font-size: 8px;
+            font-weight: 400;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            color: #333;
+            color: var(--black);
         }
 
         .form-group input,
         .form-group select {
-            border: 1px solid #d5d3ce;
-            padding: 13px 14px;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            padding: 11px 0;
             font-family: var(--font-body);
             font-size: 13px;
-            color: #111;
-            background: #fff;
+            color: var(--black);
+            background: transparent;
             outline: none;
             transition: border-color 0.2s;
             box-sizing: border-box;
@@ -219,28 +212,28 @@
 
         .form-group input:focus,
         .form-group select:focus {
-            border-color: #111;
+            border-bottom-color: var(--black);
         }
 
         .form-group .helper-text {
-            font-size: 11px;
-            color: #888;
+            font-size: 10px;
+            color: var(--gray);
             margin-top: 4px;
         }
 
         .file-upload-box {
-            border: 2px dashed #d5d3ce;
-            padding: 24px;
+            border: 1px dashed var(--border);
+            padding: 28px 24px;
             text-align: center;
             cursor: pointer;
-            background: #faf9f6;
+            background: #f7f7f7;
             transition: all 0.2s;
             position: relative;
         }
 
         .file-upload-box:hover {
-            border-color: #111;
-            background: #f4f3ef;
+            border-color: var(--black);
+            background: #f2f2f2;
         }
 
         .file-upload-box input[type="file"] {
@@ -254,27 +247,28 @@
 
         .file-upload-box span {
             font-size: 12px;
-            color: #555;
+            color: var(--gray-mid);
             display: block;
         }
 
         .file-preview {
             margin-top: 10px;
             font-size: 11px;
-            color: #0C4E57;
-            font-weight: 500;
+            color: var(--black);
+            font-weight: 400;
+            letter-spacing: 0.5px;
             display: none;
         }
 
         .btn-submit-campus {
-            background: #111;
-            color: #fff;
-            border: 1px solid #111;
+            background: var(--black);
+            color: var(--white);
+            border: 1px solid var(--black);
             padding: 18px 32px;
             width: 100%;
             font-family: var(--font-body);
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 10px;
+            font-weight: 400;
             letter-spacing: 3px;
             text-transform: uppercase;
             cursor: pointer;
@@ -299,16 +293,15 @@
         }
 
         .success-box__icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #e8f5e9;
-            color: #2e7d32;
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--black);
+            color: var(--black);
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            font-size: 26px;
+            font-size: 18px;
         }
 
         .success-box h4 {
@@ -316,30 +309,29 @@
             font-size: 32px;
             font-weight: 400;
             margin-bottom: 12px;
-            text-transform: uppercase;
         }
 
         .success-box p {
             font-size: 13px;
-            color: #555;
-            line-height: 1.7;
+            color: var(--gray-mid);
+            line-height: 1.8;
             max-width: 460px;
             margin: 0 auto 28px;
         }
 
         @media (max-width: 768px) {
             .campus-hero {
-                padding: 120px 20px 40px;
+                padding: 120px 20px 48px;
             }
             .campus-benefits {
                 grid-template-columns: 1fr;
-                gap: 16px;
+                gap: 12px;
             }
             .form-row {
                 grid-template-columns: 1fr;
             }
             .campus-form-wrapper {
-                padding: 32px 20px;
+                padding: 36px 24px;
                 margin-bottom: 80px;
             }
         }
@@ -373,13 +365,13 @@
                     <a href="coleccion.html?linea=essentials">Essentials</a>
                     <a href="coleccion.html?linea=signature">Signature</a>
                     <a href="coleccion.html?linea=core">Core</a>
-                    <a href="coleccion.html?linea=prive" style="color:#b38a49;">Privé 🔒 (Solo Miembros)</a>
+                    <a href="coleccion.html?linea=prive">Privé — Solo Miembros</a>
                     <div class="nav__dropdown-divider"></div>
                     <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
                 </div>
             </li>
-            <li><a href="prive.html" style="color:#b38a49;">Privé 🔒</a></li>
-            <li><a href="estudiantes.html" class="active">Campus 🎓</a></li>
+            <li><a href="prive.html">Privé</a></li>
+            <li><a href="estudiantes.html" class="active">Campus</a></li>
             <li><a href="acronimo.html">El Acrónimo</a></li>
             <li><a href="historia.html">Historia</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
@@ -423,19 +415,15 @@
     <!-- Hero -->
     <section class="campus-hero">
         <div class="campus-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
-                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-            </svg>
-            YOSSICO CAMPUS · COMUNIDAD DE SALUD
+            YOSSICO CAMPUS · PROGRAMA ESTUDIANTIL
         </div>
         <h1 class="campus-hero__title">
             Tu vocación empieza aquí.<br>
             Tu uniforme, a la <em>altura.</em>
         </h1>
         <p class="campus-hero__subtitle">
-            Sabemos lo exigentes que son tus turnos de prácticas, rotaciones hospitalarias e internado.
-            Por eso te acompañamos con un <strong>15% de descuento permanente</strong> en todos tus uniformes médicos durante tu carrera.
+            Conocemos la exigencia de tus turnos de práctica, rotaciones hospitalarias e internado.
+            Por eso te acompañamos con un 15% de descuento permanente en todos tus uniformes médicos durante tu formación.
         </p>
     </section>
 
@@ -444,29 +432,29 @@
         <div class="campus-benefit-card">
             <span class="campus-benefit-card__num">01</span>
             <h3 class="campus-benefit-card__title">15% OFF Permanente</h3>
-            <p class="campus-benefit-card__desc">Aplica de manera ilimitada en nuestras líneas Essentials, Core y Capas durante todo tu periodo de formación académica.</p>
+            <p class="campus-benefit-card__desc">Aplica de manera recurrente en nuestras líneas Signature, Essentials, Core y Capas durante todo tu periodo de formación universitaria.</p>
         </div>
         <div class="campus-benefit-card">
             <span class="campus-benefit-card__num">02</span>
             <h3 class="campus-benefit-card__title">Vigencia hasta tu Grado</h3>
-            <p class="campus-benefit-card__desc">Solo debes registrar tu año estimado de graduación. Tu beneficio permanece activo sin trámites engorrosos en cada semestre.</p>
+            <p class="campus-benefit-card__desc">Registra tu año estimado de graduación una sola vez. Tu código personal permanece activo sin trámites adicionales en cada semestre.</p>
         </div>
         <div class="campus-benefit-card">
             <span class="campus-benefit-card__num">03</span>
-            <h3 class="campus-benefit-card__title">Rendimiento en Turnos</h3>
-            <p class="campus-benefit-card__desc">Telas técnicas antifluido de máxima durabilidad y libertad de movimiento, creadas para soportar rotaciones de 24 horas continuas.</p>
+            <h3 class="campus-benefit-card__title">Desempeño en Turnos</h3>
+            <p class="campus-benefit-card__desc">Telas técnicas antifluido de alta durabilidad y caída estructurada, diseñadas para acompañar rotaciones clínicas de 24 horas.</p>
         </div>
     </section>
 
     <!-- Nota transparente -->
     <div class="campus-notice-box">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0C4E57" stroke-width="1.8" style="flex-shrink:0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="1.5" style="flex-shrink:0;">
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="8" x2="12" y2="12"></line>
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
         </svg>
         <span>
-            <strong>Condición del programa:</strong> El beneficio estudiantil aplica sobre prendas y sets regulares de nuestro catálogo. No es acumulable con piezas exclusivas o reservas del <em>Club YOSSICO Privé</em>.
+            <strong>Alcance del programa:</strong> El beneficio estudiantil aplica sobre prendas y sets regulares del catálogo. No incluye piezas de archivo reservadas para miembros de <em>YOSSICO Privé</em>.
         </span>
     </div>
 
@@ -474,8 +462,9 @@
     <section class="campus-form-wrapper" id="formulario-estudiantes">
         <div id="form-container">
             <div class="campus-form__heading">
-                <h3>Valida tu Estado de Estudiante</h3>
-                <p>Completa tus datos y adjunta tu carnet para recibir tu código personal en WhatsApp.</p>
+                <span style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gray);display:block;margin-bottom:10px;">ACREDITACIÓN ACADÉMICA</span>
+                <h3>Valida tu condición de <em>estudiante.</em></h3>
+                <p>Completa tus datos y adjunta tu carnet vigente para recibir tu código personal en WhatsApp.</p>
             </div>
 
             <form id="campus-form" onsubmit="enviarSolicitudEstudiante(event)">
@@ -602,16 +591,16 @@
         <!-- Pantalla de Éxito -->
         <div class="success-box" id="success-container">
             <div class="success-box__icon">✓</div>
-            <h4>¡Solicitud Recibida!</h4>
+            <h4>Solicitud <em>recibida.</em></h4>
             <p id="success-msg">
-                Hemos registrado tus datos correctamente. Nuestro equipo verificará tu carnet en menos de 24 horas y te enviaremos tu código personal de 15% OFF directamente a tu WhatsApp.
+                Hemos registrado tus datos correctamente. Nuestro equipo verificará tu acreditación académica y te enviaremos tu código personal de 15% OFF directamente a tu WhatsApp.
             </p>
-            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-                <a href="coleccion.html" class="btn btn--primary" style="padding:16px 28px;font-size:10px;letter-spacing:2px;">
-                    EXPLORAR UNIFORMES
+            <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+                <a href="coleccion.html" class="btn btn--primary" style="padding:16px 28px;font-size:10px;letter-spacing:2.5px;">
+                    EXPLORAR COLECCIÓN
                 </a>
-                <a id="wa-expedite-btn" href="#" target="_blank" rel="noopener" class="btn" style="background:#25D366;color:#fff;border:none;padding:16px 28px;font-size:10px;letter-spacing:2px;display:inline-flex;align-items:center;gap:8px;">
-                    <span>Agilizar por WhatsApp</span>
+                <a id="wa-expedite-btn" href="#" target="_blank" rel="noopener" class="btn btn--outline-dark" style="padding:16px 28px;font-size:10px;letter-spacing:2.5px;">
+                    CONFIRMAR POR WHATSAPP →
                 </a>
             </div>
         </div>
@@ -630,8 +619,8 @@
                 </div>
                 <div class="footer__links">
                     <a href="coleccion.html">Colección Completa</a>
-                    <a href="prive.html" style="color:#d4c5a9;">Club Privé 🔒</a>
-                    <a href="estudiantes.html">Programa Estudiantil 🎓</a>
+                    <a href="prive.html">YOSSICO Privé</a>
+                    <a href="estudiantes.html">YOSSICO Campus</a>
                     <a href="institucional.html">YOSSICO Institucional</a>
                     <a href="embajadoras.html">Embajadoras YOSSICO</a>
                 </div>
