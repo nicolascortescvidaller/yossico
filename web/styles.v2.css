@@ -2195,3 +2195,6 @@ body.cursor-hover .cursor-ring {
   animation: none !important;
   transform: none !important;
 }
+
+/* OCULTO TEMPORALMENTE: Privé y Campus. Para reactivar, elimina esta regla. */
+[data-yos-oculto]{display:none !important;}

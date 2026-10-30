@@ -3,6 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <!-- PÁGINA OCULTA TEMPORALMENTE: para reactivar, elimina este bloque y la regla [data-yos-oculto] en styles.v2.css -->
+    <script>if(!/[?&]preview=1/.test(location.search))location.replace("index.html");</script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- SEO -->
     <meta name="description" content="Programa Estudiantil YOSSICO Campus — 15% de descuento permanente en uniformes médicos para estudiantes del área de salud en Colombia.">
@@ -25,7 +29,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=106">
+    <link rel="stylesheet" href="styles.v2.css?v=107">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="canonical" href="https://yossico.com/estudiantes.html">
@@ -403,12 +407,12 @@
                     <a href="coleccion.html?linea=signature">Signature</a>
                     <a href="coleccion.html?linea=core">Core</a>
                     <div class="nav__dropdown-divider"></div>
-                    <a href="coleccion.html#linea-prive">Privé — Solo Miembros</a>
+                    <a data-yos-oculto href="coleccion.html#linea-prive">Privé — Solo Miembros</a>
                     <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
                 </div>
             </li>
-            <li><a href="prive.html">Privé</a></li>
-            <li><a href="estudiantes.html" class="active">Campus</a></li>
+            <li data-yos-oculto><a data-yos-oculto href="prive.html">Privé</a></li>
+            <li data-yos-oculto><a href="estudiantes.html" class="active">Campus</a></li>
             <li><a href="acronimo.html">El Acrónimo</a></li>
             <li><a href="historia.html">Historia</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
@@ -656,8 +660,8 @@
                 </div>
                 <div class="footer__links">
                     <a href="coleccion.html">Colección Completa</a>
-                    <a href="prive.html">YOSSICO Privé</a>
-                    <a href="estudiantes.html">YOSSICO Campus</a>
+                    <a data-yos-oculto href="prive.html">YOSSICO Privé</a>
+                    <a data-yos-oculto href="estudiantes.html">YOSSICO Campus</a>
                     <a href="institucional.html">YOSSICO Institucional</a>
                     <a href="embajadoras.html">Embajadoras YOSSICO</a>
                 </div>
