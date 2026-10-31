@@ -71,6 +71,12 @@
 
     // Hero
     `Uniformes Médicos ·`, `Medical Uniforms ·`,
+    `Uniformes`, `Uniforms`,
+    `pensados`, `designed`,
+    `para ti.`, `for you.`,
+    `Para la mujer que lo da todo en cada turno. Telas que resisten, cortes que se mueven contigo y un diseño que te hace sentir tan segura como eres. Porque quien cuida a los demás también merece verse increíble.`,
+      `For the woman who gives her all every shift. Fabrics that last, cuts that move with you and a design that makes you feel as confident as you are. Because those who care for others deserve to look incredible too.`,
+    `Encuentra tu uniforme`, `Find your uniform`,
     `Vestidos`, `Dressed`,
     `para`, `to`,
     `sanar.`, `heal.`,

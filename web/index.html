@@ -44,7 +44,7 @@
 
     .hero__left {
       background: var(--gray-bg);
-      padding: 100px 80px 100px 60px;
+      padding: 80px 56px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -53,17 +53,17 @@
     }
 
     .hero__label {
-      margin-bottom: 32px;
+      margin-bottom: 36px;
     }
 
     .hero__title {
       font-family: var(--font-display);
       font-weight: 400;
-      font-size: clamp(72px, 8vw, 110px);
-      line-height: 0.92;
-      letter-spacing: -1px;
+      font-size: clamp(68px, 9.4vw, 152px);
+      line-height: 0.9;
+      letter-spacing: -1.5px;
       color: var(--black);
-      margin-bottom: 36px;
+      margin-bottom: 40px;
     }
 
     .hero__title em {
@@ -74,19 +74,29 @@
     .hero__sub {
       font-family: var(--font-body);
       font-weight: 400;
-      font-size: 15px;
+      font-size: clamp(16px, 1.3vw, 20px);
       color: var(--black);
-      line-height: 1.8;
-      letter-spacing: 0.5px;
-      margin-bottom: 48px;
-      max-width: 480px;
+      line-height: 1.75;
+      letter-spacing: 0.2px;
+      margin-bottom: 52px;
+      max-width: 640px;
     }
 
     .hero__ctas {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 32px;
+      gap: 36px;
+    }
+
+    .hero__ctas .btn {
+      padding: 22px 52px;
+      font-size: 12px;
+      letter-spacing: 3px;
+    }
+
+    .hero__ctas .btn-link {
+      font-size: 12px;
     }
 
     .hero__right {
@@ -821,7 +831,35 @@
 
     @media (max-width: 600px) {
       .hero__left {
-        padding: 60px 20px;
+        padding: 56px 22px 64px;
+      }
+
+      .hero__label {
+        margin-bottom: 28px;
+      }
+
+      .hero__title {
+        font-size: clamp(68px, 21vw, 96px);
+        margin-bottom: 28px;
+      }
+
+      .hero__sub {
+        font-size: 16px;
+        margin-bottom: 36px;
+      }
+
+      .hero__ctas {
+        flex-direction: column;
+        gap: 22px;
+        width: 100%;
+      }
+
+      .hero__ctas .btn {
+        width: 100%;
+        max-width: 360px;
+        box-sizing: border-box;
+        padding: 20px 24px;
+        justify-content: center;
       }
 
       .catalog {
@@ -996,16 +1034,17 @@
       </div>
 
       <h1 class="hero__title reveal" data-delay="2">
-        Vestidos<br>
-        para <em>sanar.</em>
+        Uniformes<br>
+        pensados<br>
+        <em>para ti.</em>
       </h1>
 
       <p class="hero__sub reveal" data-delay="3" style="margin-left: auto; margin-right: auto;">
-        Uniformes para mujer diseñados para quienes dan todo en su día a día, hechos con muchísima precisión, identidad y orgullo para ellas.
+        Para la mujer que lo da todo en cada turno. Telas que resisten, cortes que se mueven contigo y un diseño que te hace sentir tan segura como eres. Porque quien cuida a los demás también merece verse increíble.
       </p>
 
       <div class="hero__ctas reveal" data-delay="4">
-        <a href="coleccion.html" class="btn btn--primary">Ver Colección</a>
+        <a href="coleccion.html" class="btn btn--primary">Encuentra tu uniforme</a>
         <a href="historia.html" class="btn-link">Nuestra historia</a>
       </div>
     </div>
@@ -1887,14 +1926,18 @@
 
         const titleEl = sec.querySelector('.hero__title');
         if (titleEl && (h.titleLine1 !== undefined || h.titleLine2 !== undefined || h.titleItalic !== undefined)) {
-          const l1 = escHtml(h.titleLine1 !== undefined ? h.titleLine1 : 'Vestidos');
-          const l2 = escHtml(h.titleLine2 !== undefined ? h.titleLine2 : 'para');
-          const it = escHtml(h.titleItalic !== undefined ? h.titleItalic : 'sanar.');
-          titleEl.innerHTML = `${l1}<br>${l2 ? l2 + ' ' : ''}<em>${it}</em>`;
+          /* Si el editor tiene guardado el titular anterior ("Vestidos para sanar."), se ignora para mostrar el nuevo */
+          const oldTitle = (h.titleLine1 === 'Vestidos' && h.titleItalic === 'sanar.');
+          if (!oldTitle) {
+            const l1 = escHtml(h.titleLine1 !== undefined ? h.titleLine1 : 'Uniformes');
+            const l2 = escHtml(h.titleLine2 !== undefined ? h.titleLine2 : 'pensados');
+            const it = escHtml(h.titleItalic !== undefined ? h.titleItalic : 'para ti.');
+            titleEl.innerHTML = `${l1}<br>${l2 ? l2 + '<br>' : ''}<em>${it}</em>`;
+          }
         }
 
         const subEl = sec.querySelector('.hero__sub');
-        if (subEl && h.subtitle !== undefined) subEl.textContent = h.subtitle;
+        if (subEl && h.subtitle !== undefined && !/diseñados para quienes dan todo/.test(h.subtitle)) subEl.textContent = h.subtitle;
 
         const ctas = sec.querySelectorAll('.hero__ctas a');
         if (ctas[0]) {
