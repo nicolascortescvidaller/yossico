@@ -1136,7 +1136,7 @@
 
     /* ── CONFIGURACIÓN POR DEFECTO: LANDING ── */
     const DEFAULT_LANDING = {
-      sectionOrder: ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta'],
+      sectionOrder: ['countdown', 'hero', 'destacados', 'drops', 'nosotros', 'contactoCta'],
       announcement: {
         visible: true,
         text: 'Envío gratis en compras superiores a $450.000',
@@ -1506,6 +1506,10 @@
         try { lData = JSON.parse(localStorage.getItem('yossico_landing_config') || 'null'); } catch (_) {}
       }
       landingCfg = deepMerge(DEFAULT_LANDING, lData);
+      if (Array.isArray(landingCfg.sectionOrder) && !landingCfg.sectionOrder.includes('destacados')) {
+        const hi = landingCfg.sectionOrder.indexOf('hero');
+        landingCfg.sectionOrder.splice(hi >= 0 ? hi + 1 : 0, 0, 'destacados');
+      }
 
       /* 2. Colección */
       let cData = null;
@@ -1664,11 +1668,12 @@
       const labels = {
         countdown: '⏳ Cuenta Regresiva (Pre-Hero)',
         hero: '🖼️ Portada Principal (Hero)',
+        destacados: '🛍️ Los más pedidos (Productos)',
         drops: '🔥 Sección Drops (Editorial)',
         nosotros: '✨ Por qué YOSSICO (4 Pilares)',
         contactoCta: '💬 Cierre / Contacto'
       };
-      const order = landingCfg.sectionOrder || ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta'];
+      const order = landingCfg.sectionOrder || ['countdown', 'hero', 'destacados', 'drops', 'nosotros', 'contactoCta'];
       el.innerHTML = order.map((k, idx) => {
         const vis = landingCfg[k]?.visible !== false;
         return `
@@ -1696,6 +1701,13 @@
     };
 
     window.toggleLandingSecVis = function(key) {
+      if (key === 'destacados') {
+        landingCfg.destacados = { visible: landingCfg.destacados?.visible === false };
+        renderLandingOrderList();
+        pushLivePreview();
+        setStatusBadge('dirty');
+        return;
+      }
       const map = { countdown: 'le-cd-visible', hero: 'le-hero-visible', drops: 'le-drops-visible', nosotros: 'le-nos-visible', contactoCta: 'le-cc-visible' };
       const chk = document.getElementById(map[key]);
       if (chk) { chk.checked = !chk.checked; onLandingChange(); }
@@ -1793,7 +1805,8 @@
       const getC = id => !!document.getElementById(id)?.checked;
 
       landingCfg = {
-        sectionOrder: landingCfg.sectionOrder || ['countdown', 'hero', 'drops', 'nosotros', 'contactoCta'],
+        sectionOrder: landingCfg.sectionOrder || ['countdown', 'hero', 'destacados', 'drops', 'nosotros', 'contactoCta'],
+        destacados: landingCfg.destacados || { visible: true },
         announcement: {
           visible: getC('le-ann-visible'),
           text: getV('le-ann-text'),

@@ -1066,6 +1066,120 @@
     </div>
   </section>
 
+  <!-- ── Destacados (productos con precio) ──────────────────── -->
+  <style>
+    .destacados { padding: 110px 60px 120px; background: var(--white); }
+    .destacados__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; max-width: 1320px; margin: 0 auto 56px; }
+    .destacados__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; max-width: 1320px; margin: 0 auto; }
+    .destacados__card { display: flex; flex-direction: column; }
+    .destacados__img { position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden; background: var(--off-white); }
+    .destacados__img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 0.8s var(--ease-expo); }
+    .destacados__card:hover .destacados__img img { transform: scale(1.04); }
+    .destacados__tag { position: absolute; top: 12px; left: 12px; z-index: 2; background: var(--black); color: var(--white); font-family: var(--font-body); font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; padding: 5px 10px; }
+    .destacados__info { display: flex; flex-direction: column; flex: 1; padding-top: 20px; }
+    .destacados__name { font-family: var(--font-display); font-weight: 400; font-size: 26px; letter-spacing: 2px; color: var(--black); }
+    .destacados__meta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+    .destacados__price { font-family: var(--font-body); font-size: 15px; font-weight: 500; color: var(--black); }
+    .destacados__dots { display: flex; gap: 6px; }
+    .destacados__dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 0 1px var(--border); }
+    .destacados__sub { font-family: var(--font-body); font-size: 12px; color: var(--gray); margin: 8px 0 18px; }
+    .destacados__btn { margin-top: auto; justify-content: center; font-size: 11px; padding: 16px 20px; }
+    .destacados__all { font-size: 11px; }
+    @media (max-width: 1100px) {
+      .destacados__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .destacados { padding: 72px 0 80px; }
+      .destacados__head { padding: 0 20px; margin-bottom: 32px; flex-direction: column; align-items: flex-start; }
+      .destacados__grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 20px; gap: 16px; padding: 0 20px 8px; scrollbar-width: none; }
+      .destacados__grid::-webkit-scrollbar { display: none; }
+      .destacados__card { flex: 0 0 76%; scroll-snap-align: start; }
+      .destacados__btn { font-size: 12px; padding: 17px 16px; }
+    }
+  </style>
+  <section class="destacados" id="destacados">
+    <div class="destacados__head">
+      <div>
+        <div class="label reveal" style="margin-bottom: 16px; display: block;">Los más pedidos</div>
+        <h2 class="section__title reveal" data-delay="2">Elige tu <em>set.</em></h2>
+      </div>
+      <a href="coleccion.html" class="btn-link destacados__all reveal" data-delay="3">Ver toda la colección →</a>
+    </div>
+    <div class="destacados__grid">
+      <article class="destacados__card reveal" data-delay="1" data-prod="oslo">
+        <a href="oslo.html" class="destacados__img" aria-label="Ver set OSLO">
+          <span class="destacados__tag">Essentials</span>
+          <img src="img/oslo_black_front.webp" alt="Set OSLO YOSSICO — scrub médico femenino" loading="lazy">
+        </a>
+        <div class="destacados__info">
+          <h3 class="destacados__name">OSLO</h3>
+          <div class="destacados__meta">
+            <span class="destacados__price" data-price>$275.900</span>
+            <span class="destacados__dots"><span class="destacados__dot" style="background:#111111;" title="Negro"></span><span class="destacados__dot" style="background:#1a2744;" title="Azul Marino"></span><span class="destacados__dot" style="background:#5c2836;" title="Vinotinto"></span></span>
+          </div>
+          <p class="destacados__sub">Set top + pantalón · Tallas S · M · L</p>
+          <a href="oslo.html" class="btn btn--primary destacados__btn">Ver y comprar</a>
+        </div>
+      </article>
+      <article class="destacados__card reveal" data-delay="2" data-prod="milan">
+        <a href="milan.html" class="destacados__img" aria-label="Ver set MILAN">
+          <span class="destacados__tag">Signature</span>
+          <img src="img/milan_front.webp" alt="Set MILAN YOSSICO — scrub médico femenino" loading="lazy">
+        </a>
+        <div class="destacados__info">
+          <h3 class="destacados__name">MILAN</h3>
+          <div class="destacados__meta">
+            <span class="destacados__price" data-price>$339.900</span>
+            <span class="destacados__dots"><span class="destacados__dot" style="background:#111111;" title="Negro"></span></span>
+          </div>
+          <p class="destacados__sub">Set top + pantalón · Tallas S · M · L</p>
+          <a href="milan.html" class="btn btn--primary destacados__btn">Ver y comprar</a>
+        </div>
+      </article>
+      <article class="destacados__card reveal" data-delay="3" data-prod="kyoto">
+        <a href="kyoto.html" class="destacados__img" aria-label="Ver set KYOTO">
+          <span class="destacados__tag">Signature</span>
+          <img src="img/kyoto_front.webp" alt="Set KYOTO YOSSICO — scrub médico femenino" loading="lazy">
+        </a>
+        <div class="destacados__info">
+          <h3 class="destacados__name">KYOTO</h3>
+          <div class="destacados__meta">
+            <span class="destacados__price" data-price>$339.900</span>
+            <span class="destacados__dots"><span class="destacados__dot" style="background:#1a2744;" title="Azul Marino"></span></span>
+          </div>
+          <p class="destacados__sub">Set top + pantalón · Tallas S · M · L</p>
+          <a href="kyoto.html" class="btn btn--primary destacados__btn">Ver y comprar</a>
+        </div>
+      </article>
+      <article class="destacados__card reveal" data-delay="4" data-prod="lima">
+        <a href="lima.html" class="destacados__img" aria-label="Ver set LIMA">
+          <span class="destacados__tag">Essentials</span>
+          <img src="img/lima_black_front.webp" alt="Set LIMA YOSSICO — scrub médico femenino" loading="lazy">
+        </a>
+        <div class="destacados__info">
+          <h3 class="destacados__name">LIMA</h3>
+          <div class="destacados__meta">
+            <span class="destacados__price" data-price>$275.900</span>
+            <span class="destacados__dots"><span class="destacados__dot" style="background:#111111;" title="Negro"></span><span class="destacados__dot" style="background:#1B6B6B;" title="Azul Pacífico"></span><span class="destacados__dot" style="background:#7A8C5E;" title="Verde Oliva"></span></span>
+          </div>
+          <p class="destacados__sub">Set top + pantalón · Tallas S · M · L</p>
+          <a href="lima.html" class="btn btn--primary destacados__btn">Ver y comprar</a>
+        </div>
+      </article>
+    </div>
+  </section>
+  <script>
+    /* Mantiene los precios sincronizados con el catálogo (productos.js) */
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof YOSSICO_PRODUCTS === 'undefined') return;
+      document.querySelectorAll('.destacados__card[data-prod]').forEach(card => {
+        const prod = YOSSICO_PRODUCTS[card.dataset.prod];
+        const el = card.querySelector('[data-price]');
+        if (prod && el && prod.price) el.textContent = '$' + prod.price.toLocaleString('es-CO');
+      });
+    });
+  </script>
+
   <!-- ── Drops ──────────────────────────────────────────────── -->
   <section class="drops">
 
@@ -1502,6 +1616,7 @@
       setInterval(update, 1000);
     })();
   </script>
+  <script src="productos.js"></script>
   <script src="script.js"></script>
   <script src="cart.js?v=2"></script>
   <script src="cookie-banner.js" defer></script>
@@ -2097,6 +2212,10 @@
       }
     }
 
+    /* 7b. Los más pedidos (productos) */
+    const destSec = document.getElementById('destacados');
+    if (destSec) destSec.style.display = (cfg.destacados && cfg.destacados.visible === false) ? 'none' : '';
+
     /* 8. Orden de Secciones */
     if (Array.isArray(cfg.sectionOrder) && cfg.sectionOrder.length > 0) {
       const footer = document.querySelector('footer.footer');
@@ -2104,11 +2223,17 @@
         const mapSec = {
           countdown: document.getElementById('countdown-section'),
           hero: document.querySelector('section.hero'),
+          destacados: document.getElementById('destacados'),
           drops: document.querySelector('section.drops'),
           nosotros: document.querySelector('section.nosotros'),
           contactoCta: document.querySelector('section.contacto-cta')
         };
-        cfg.sectionOrder.forEach(key => {
+        const order = cfg.sectionOrder.slice();
+        if (!order.includes('destacados')) {
+          const hi = order.indexOf('hero');
+          order.splice(hi >= 0 ? hi + 1 : 0, 0, 'destacados');
+        }
+        order.forEach(key => {
           const el = mapSec[key];
           if (el && el.parentNode === footer.parentNode) {
             footer.parentNode.insertBefore(el, footer);
