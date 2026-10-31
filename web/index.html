@@ -1820,6 +1820,10 @@
     });
 
     // Nota: El popup solo se abre cuando el usuario hace clic voluntariamente en un botón con data-open-sub
+    // (o llega desde un botón "Avísame cuando abra" de otra página: /?avisar=1)
+    if (new URLSearchParams(location.search).has('avisar')) {
+      setTimeout(openSubPopup, 400);
+    }
 
     // Form submit
     subForm.addEventListener('submit', async e => {

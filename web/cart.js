@@ -214,6 +214,7 @@ function closeDrawer() {
 
 /* ── Add to cart (shared helper) ─────────────── */
 function addToCart({ name, size, price, img, line }) {
+    if (!YOSSICO_TIENDA.abierta()) { YOSSICO_TIENDA.avisar(); return false; }
     if (!size) { shakeNoSize(); return false; }
     Cart.add({ name, size, price, img, line });
     updateBadge();
@@ -325,6 +326,151 @@ function cardCartImage(card, gallery, colorBtn) {
     if (/^data:/i.test(imgs)) return imgs.replace(/,(?=data:)/g, '\n').split('\n')[0].trim();
     return imgs.split(',')[0].trim();
 }
+
+/* ── Estado de la tienda (pre-lanzamiento) ─────────────────
+   Antes de la fecha de apertura (la fecha de la Cuenta Regresiva en el
+   Editor Web) no se puede comprar: los botones de compra pasan a
+   "Avísame cuando abra" y el checkout queda cerrado. La tienda se abre
+   sola al llegar esa fecha, sin tocar nada.
+   Para probar compras antes de abrir: ?tienda=abierta (se recuerda en
+   ese navegador; ?tienda=auto lo devuelve al modo normal). */
+const YOSSICO_TIENDA = (() => {
+    const APERTURA_POR_DEFECTO = '2026-12-01T00:00';
+    const SUPA = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
+    const SUPA_PUB = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
+    const CFG_KEY = 'yossico_landing_config';
+    const PREVIEW_KEY = 'yossico_tienda_preview';
+
+    try {
+        const q = new URLSearchParams(location.search).get('tienda');
+        if (q === 'abierta') localStorage.setItem(PREVIEW_KEY, 'abierta');
+        if (q === 'auto') localStorage.removeItem(PREVIEW_KEY);
+    } catch (_) {}
+
+    const en = () => { try { return localStorage.getItem('yos_lang') === 'en'; } catch (_) { return false; } };
+
+    function fechaApertura() {
+        let raw = APERTURA_POR_DEFECTO;
+        try {
+            const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || 'null');
+            if (cfg && cfg.countdown && cfg.countdown.targetDate) raw = cfg.countdown.targetDate;
+        } catch (_) {}
+        const ts = new Date(raw).getTime();
+        return isNaN(ts) ? new Date(APERTURA_POR_DEFECTO).getTime() : ts;
+    }
+
+    function abierta() {
+        try { if (localStorage.getItem(PREVIEW_KEY) === 'abierta') return true; } catch (_) {}
+        return Date.now() >= fechaApertura();
+    }
+
+    function fechaTexto() {
+        return new Date(fechaApertura()).toLocaleDateString(en() ? 'en-US' : 'es-CO', { day: 'numeric', month: 'long' });
+    }
+
+    function avisar() {
+        if (typeof openSubPopup === 'function') { openSubPopup(); return; }
+        window.location.href = '/?avisar=1';
+    }
+
+    function setTexto(el, html) {
+        if (el && el.innerHTML !== html) el.innerHTML = html;
+    }
+
+    function aplicar() {
+        const cerrada = !abierta();
+        document.body.classList.toggle('tienda-cerrada', cerrada);
+        if (!cerrada) return;
+        const t = en()
+            ? { avisa: 'Notify me at launch', consulta: 'Ask on WhatsApp', ver: 'View details', col: 'View the collection' }
+            : { avisa: 'Avísame cuando abra', consulta: 'Consultar por WhatsApp', ver: 'Ver detalles', col: 'Ver la colección' };
+
+        document.querySelectorAll('.add-to-cart-btn').forEach(b => setTexto(b, t.avisa));
+        const pd = document.getElementById('pd-add-cart');
+        if (pd && !pd.querySelector('.tienda-label')) {
+            const lbl = document.createElement('span');
+            lbl.className = 'tienda-label';
+            lbl.textContent = t.avisa;
+            pd.appendChild(lbl);
+        }
+        setTexto(document.getElementById('pd-wa'), t.consulta);
+        document.querySelectorAll('.product-card__cta').forEach(a => setTexto(a, `${t.consulta} <span class="arrow">→</span>`));
+        document.querySelectorAll('.destacados__btn').forEach(a => setTexto(a, t.ver));
+        document.querySelectorAll('.drops__main-cta').forEach(a => setTexto(a, `${t.col} <span class="arrow-icon">→</span>`));
+
+        const co = document.getElementById('cart-checkout');
+        if (co && !document.getElementById('cart-cerrada-nota')) {
+            const nota = document.createElement('p');
+            nota.id = 'cart-cerrada-nota';
+            nota.className = 'tienda-nota';
+            nota.textContent = en()
+                ? `The store opens on ${fechaTexto()}. Your cart will be waiting for you.`
+                : `La tienda abre el ${fechaTexto()}. Tu carrito te espera.`;
+            co.parentNode.insertBefore(nota, co);
+        }
+    }
+
+    /* Los botones de compra llevan a la lista de espera mientras esté cerrada */
+    document.addEventListener('click', e => {
+        if (abierta()) return;
+        const btn = e.target.closest('.add-to-cart-btn, #pd-add-cart');
+        if (!btn) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        avisar();
+    }, true);
+
+    const estilos = document.createElement('style');
+    estilos.textContent = `
+        body.tienda-cerrada #pd-add-cart { opacity: 1 !important; }
+        body.tienda-cerrada #pd-add-cart > svg, body.tienda-cerrada #pd-add-text { display: none !important; }
+        body.tienda-cerrada #cart-checkout { display: none !important; }
+        .tienda-nota { font-size: 12px; line-height: 1.5; color: #4a4a4a; text-align: center; margin: 0 0 8px; }
+        body:not(.tienda-cerrada) .tienda-nota, body:not(.tienda-cerrada) .tienda-label { display: none; }
+    `;
+    document.head.appendChild(estilos);
+
+    /* Fecha publicada desde el Editor Web (la misma de la cuenta regresiva) */
+    async function refrescar() {
+        try {
+            const res = await fetch(`${SUPA}/rest/v1/rpc/get_config`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', apikey: SUPA_PUB, Authorization: 'Bearer ' + SUPA_PUB },
+                body: JSON.stringify({ p_clave: 'landing_config' })
+            });
+            if (!res.ok) return;
+            const cfg = await res.json();
+            if (cfg && typeof cfg === 'object' && Object.keys(cfg).length) {
+                localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+            }
+        } catch (_) {}
+        programarApertura();
+        aplicar();
+    }
+
+    /* Abre la tienda en vivo si la página está abierta cuando llega la hora */
+    let timer = null;
+    function programarApertura() {
+        clearTimeout(timer);
+        const falta = fechaApertura() - Date.now();
+        if (falta > 0 && falta < 2147483647) timer = setTimeout(() => location.reload(), falta + 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        aplicar();
+        programarApertura();
+        refrescar();
+        /* Re-aplica si otra parte de la página re-dibuja botones (Editor, stock, idioma) */
+        let pendiente = false;
+        new MutationObserver(() => {
+            if (pendiente || abierta()) return;
+            pendiente = true;
+            requestAnimationFrame(() => { pendiente = false; aplicar(); });
+        }).observe(document.body, { childList: true, subtree: true });
+    });
+
+    return { abierta, avisar, aplicar, fechaApertura, fechaTexto };
+})();
 
 /* ── Keyboard close ───────────────────────────── */
 document.addEventListener('keydown', e => {
