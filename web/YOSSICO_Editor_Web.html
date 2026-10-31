@@ -1130,7 +1130,7 @@
     const SUPA_URL = 'https://mgzevtcipwfpqgolmpwm.supabase.co';
     const SUPA_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
     let sb = null;
-    let adminPin = sessionStorage.getItem('admin_pin') || 'yossico2025';
+    let adminPin = null;
     let activeStudioPage = 'landing'; // 'landing' | 'coleccion'
     let activeProductKey = 'oslo';
 
@@ -1431,10 +1431,19 @@
       }
     }
 
-    function verificarPinStudio() {
+    // El PIN se valida únicamente en Supabase (nunca en este archivo)
+    async function pinValido(pin) {
+      if (!pin || !sb) return false;
+      try {
+        const { data, error } = await sb.rpc('admin_verificar_pin', { pin });
+        return !error && data === true;
+      } catch (_) { return false; }
+    }
+
+    async function verificarPinStudio() {
       const raw = document.getElementById('studio-pin-input')?.value?.trim() || '';
-      if (raw.toLowerCase() === 'yossico2025') {
-        adminPin = 'yossico2025';
+      if (await pinValido(raw)) {
+        adminPin = raw;
         try {
           sessionStorage.setItem('admin_pin', adminPin);
           localStorage.setItem('yossico_admin_pin', adminPin);
@@ -1447,18 +1456,20 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        const savedPin = sessionStorage.getItem('admin_pin') || localStorage.getItem('yossico_admin_pin');
-        if (savedPin && savedPin.toLowerCase() === 'yossico2025') {
-          adminPin = 'yossico2025';
-          const loginEl = document.getElementById('studio-login');
-          if (loginEl) loginEl.style.display = 'none';
-        }
-      } catch (_) {}
-
-      try {
         sb = (window.YOSSICO_AUTH && typeof window.YOSSICO_AUTH.getSb === 'function')
           ? window.YOSSICO_AUTH.getSb()
           : (window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null);
+      } catch (_) {}
+
+      try {
+        const savedPin = sessionStorage.getItem('admin_pin') || localStorage.getItem('yossico_admin_pin');
+        const loginEl = document.getElementById('studio-login');
+        if (await pinValido(savedPin)) {
+          adminPin = savedPin;
+          if (loginEl) loginEl.style.display = 'none';
+        } else if (loginEl) {
+          loginEl.style.display = 'flex';
+        }
       } catch (_) {}
 
       const urlParams = new URLSearchParams(window.location.search);
@@ -2134,8 +2145,8 @@
 
       try {
         await Promise.all([
-          sb.rpc('set_config', { p_clave: 'landing_config', p_valor: landingCfg, pin: adminPin || 'yossico2025' }),
-          sb.rpc('set_config', { p_clave: 'coleccion_config', p_valor: coleccionCfg, pin: adminPin || 'yossico2025' })
+          sb.rpc('set_config', { p_clave: 'landing_config', p_valor: landingCfg, pin: adminPin }),
+          sb.rpc('set_config', { p_clave: 'coleccion_config', p_valor: coleccionCfg, pin: adminPin })
         ]);
         showToast('¡Cambios publicados en vivo en Landing y Colección! ✓');
       } catch (e) {
@@ -2152,12 +2163,12 @@
       if (activeStudioPage === 'landing') {
         landingCfg = JSON.parse(JSON.stringify(DEFAULT_LANDING));
         localStorage.removeItem('yossico_landing_config');
-        try { await sb.rpc('set_config', { p_clave: 'landing_config', p_valor: {}, pin: adminPin || 'yossico2025' }); } catch (_) {}
+        try { await sb.rpc('set_config', { p_clave: 'landing_config', p_valor: {}, pin: adminPin }); } catch (_) {}
         renderLandingInspector();
       } else {
         coleccionCfg = JSON.parse(JSON.stringify(DEFAULT_COLECCION));
         localStorage.removeItem('yossico_coleccion_config');
-        try { await sb.rpc('set_config', { p_clave: 'coleccion_config', p_valor: {}, pin: adminPin || 'yossico2025' }); } catch (_) {}
+        try { await sb.rpc('set_config', { p_clave: 'coleccion_config', p_valor: {}, pin: adminPin }); } catch (_) {}
         renderColeccionInspector();
       }
       reloadStudioIframe();

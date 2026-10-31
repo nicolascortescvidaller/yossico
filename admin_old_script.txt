@@ -5,7 +5,7 @@
 const API_URL = "TU_URL_DE_APPS_SCRIPT_AQUÍ";
 // Ejemplo: "https://script.google.com/macros/s/XXXXXXXXXX/exec"
 
-const PASS = "yossico2025"; // Misma contraseña que en el script
+const PASS = "<PIN-REDACTADO>"; // Misma contraseña que en el script
 
 // ══════════════════════════════════════════════════════════
 // SKUs por línea

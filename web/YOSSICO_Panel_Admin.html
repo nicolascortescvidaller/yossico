@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
   <!-- SEO -->
   <meta name="description" content="Uniformes médicos premium para la mujer en salud.">
   <meta name="keywords" content="uniformes médicos, enfermería, Colombia, ropa médica premium, YOSSICO">
@@ -3589,15 +3590,22 @@ function cambiarTab(tab, btn) {
     window.open('YOSSICO_Editor_Web.html', '_blank');
     return;
   }
-  if (tab === 'finanzas') {
-    if (sessionStorage.getItem('rent_auth') !== 'true') {
-      const pass = prompt("Acceso Restringido. Ingresa la contraseña maestra para ver Finanzas:");
-      if (pass !== "Nc1018499182*") {
+  if (tab === 'finanzas' && sessionStorage.getItem('rent_auth') !== 'true') {
+    const pass = prompt("Acceso Restringido. Ingresa la contraseña maestra para ver Finanzas:");
+    if (!pass) return;
+    // La clave de Finanzas se valida en Supabase, no en este archivo
+    ensureSb();
+    if (!sb) { mostrarToast("Sin conexión con la base de datos", "err"); return; }
+    sb.rpc('admin_verificar_finanzas', { pin: adminPin, clave: pass }).then(({ data, error }) => {
+      if (error || data !== true) {
         mostrarToast("Contraseña incorrecta", "err");
-        return; // Detiene el cambio de pestaña
+        if (error) console.error(error);
+        return;
       }
       sessionStorage.setItem('rent_auth', 'true');
-    }
+      cambiarTab(tab, btn);
+    });
+    return; // Espera la validación antes de cambiar de pestaña
   }
 
   document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
@@ -4086,52 +4094,12 @@ async function login() {
 document.getElementById("input-pass")?.addEventListener("keydown", e => { if (e.key === "Enter") login(); });
 
 async function verificarPin(rawPin) {
-  let pin = String(rawPin || "").trim();
-  if (pin.toLowerCase() === "yossico2025") {
-    pin = "yossico2025";
-  }
+  const pin = String(rawPin || "").trim();
+  if (!pin) { mostrarToast("Ingresa la contraseña", "err"); return; }
 
   ensureSb();
 
-  // Si la contraseña es la maestra oficial, desbloqueamos el panel de inmediato
-  if (pin === "yossico2025") {
-    adminPin = pin;
-    try {
-      sessionStorage.setItem("admin_pin", adminPin);
-      localStorage.setItem("yossico_admin_pin", adminPin);
-    } catch (_) {}
-    document.getElementById("login-screen")?.classList.add("hidden");
-    document.getElementById("panel")?.classList.remove("hidden");
-    const uInfo = document.getElementById("usuario-info");
-    if (uInfo) uInfo.textContent = "Admin";
-    const btnOut = document.getElementById("btn-logout");
-    if (btnOut) btnOut.style.display = "block";
-
-    try {
-      if (sb) {
-        const { data, error } = await sb.rpc("admin_get_pedidos", { pin });
-        if (error) console.warn("[Admin] admin_get_pedidos:", error.message);
-        todosPedidos = _mergePedidosMeta(data || []);
-      } else {
-        todosPedidos = _mergePedidosMeta([]);
-      }
-    } catch (err) {
-      console.warn("[Admin] Error cargando pedidos iniciales:", err);
-      todosPedidos = _mergePedidosMeta([]);
-    }
-
-    try { actualizarResumen(); } catch (e) { console.error(e); }
-    try { aplicarFiltros(); } catch (e) { console.error(e); }
-    try { cargarStock(); } catch (e) { console.error(e); }
-    try { cargarProduccion(); } catch (e) { console.error(e); }
-    try { cargarCotizaciones(); } catch (e) { console.error(e); }
-    try { cargarPauta(); } catch (e) { console.error(e); }
-    try { cargarGastos(); } catch (e) { console.error(e); }
-    try { iniciarCampana(); } catch (e) { console.error(e); }
-    return;
-  }
-
-  // Si es otro PIN, intentamos validarlo contra Supabase RPC
+  // La contraseña se valida únicamente en Supabase (nunca en este archivo)
   try {
     if (!sb) throw new Error("Contraseña incorrecta");
     const { data, error } = await sb.rpc("admin_get_pedidos", { pin });
@@ -8398,7 +8366,7 @@ window.guardarLandingEnVivo = async function() {
     const { error } = await sb.rpc('set_config', {
       p_clave: 'landing_config',
       p_valor: cfg,
-      pin: adminPin || 'yossico2025'
+      pin: adminPin
     });
     if (error) {
       mostrarToast('Guardado en el Panel Admin (Aviso nube: ' + error.message + ')', 'warn');
@@ -8420,7 +8388,7 @@ window.restaurarLandingOriginal = async function() {
     await sb.rpc('set_config', {
       p_clave: 'landing_config',
       p_valor: {},
-      pin: adminPin || 'yossico2025'
+      pin: adminPin
     });
   } catch (_) {}
   populateLandingForm(currentLandingConfig);

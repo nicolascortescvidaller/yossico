@@ -170,7 +170,7 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  IF pin != 'yossico2025' THEN RAISE EXCEPTION 'Acceso denegado'; END IF;
+  IF pin != '<PIN-REDACTADO>' THEN RAISE EXCEPTION 'Acceso denegado'; END IF;
   INSERT INTO config_yossico (clave, valor, updated_at)
   VALUES (p_clave, p_valor, now())
   ON CONFLICT (clave) DO UPDATE SET valor = p_valor, updated_at = now();
