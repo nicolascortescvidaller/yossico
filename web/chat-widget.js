@@ -519,12 +519,12 @@
         var ansEnvio = isEn
           ? `<strong>Nationwide Shipping & Logistics:</strong><br>
              • <strong>Coverage:</strong> We ship to all municipalities across Colombia via Coordinadora & Servientrega.<br>
-             • <strong>Free Shipping:</strong> On orders equal to or exceeding $450,000 COP.<br>
+             • <strong>Free Shipping:</strong> On orders equal to or exceeding $300,000 COP.<br>
              • <strong>Delivery Time:</strong> 4 to 10 business days depending on destination city.<br>
              • <strong>Order Tracking:</strong> You can trace your tracking number live on our tracking portal.`
           : `<strong>Envíos y logística nacional:</strong><br>
              • <strong>Cobertura:</strong> Despachos a todas las ciudades y municipios de Colombia por Coordinadora y Servientrega.<br>
-             • <strong>Envío Gratis:</strong> En compras iguales o superiores a $450.000 COP.<br>
+             • <strong>Envío Gratis:</strong> En compras iguales o superiores a $300.000 COP.<br>
              • <strong>Tiempos:</strong> De 4 a 10 días hábiles según la ubicación geográfica.<br>
              • <strong>Rastreo en línea:</strong> Podrás consultar el estado de tu guía en cualquier momento desde nuestra web.`;
 

@@ -26,7 +26,7 @@
 
 ### 2.1. Catálogo y Navegación
 * **Inicio ([`index.html`](file:///Users/nicolascortesvidaller/yossico/web/index.html)):**
-  * Barra fija superior con anuncio de **Envío Gratis en Colombia** (pedidos > $250.000 COP).
+  * Barra fija superior con anuncio de **Envío Gratis en Colombia** (pedidos > $300.000 COP).
   * Video / Slider de presentación con estética editorial de lujo silencioso.
   * Selector de colecciones y prendas destacadas.
   * Modal VIP de bienvenida (10% OFF en primera compra) con validación explícita mediante Cloudflare Turnstile.

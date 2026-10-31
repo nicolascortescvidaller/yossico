@@ -51,9 +51,9 @@
   add([
     // Global / nav / footer
     `YOSSICO — Uniformes Médicos Premium`, `YOSSICO — Premium Medical Uniforms`,
-    `Envío gratis en compras superiores a $450.000`, `Free shipping on orders over $450,000`,
+    `Envío gratis en compras superiores a $300.000`, `Free shipping on orders over $300,000`,
     `· Exclusivo para Colombia`, `· Colombia only`,
-    `Envío gratis en compras superiores a $450.000 · Exclusivo para Colombia`, `Free shipping on orders over $450,000 · Colombia only`,
+    `Envío gratis en compras superiores a $300.000 · Exclusivo para Colombia`, `Free shipping on orders over $300,000 · Colombia only`,
     `ENVÍO GRATIS A TODA COLOMBIA EN COMPRAS SUPERIORES A $300.000 COP`, `FREE SHIPPING ACROSS COLOMBIA ON ORDERS OVER $300,000 COP`,
     `YOSSICO símbolo`, `YOSSICO symbol`,
     `Colección`, `Collection`,
