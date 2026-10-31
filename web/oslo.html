@@ -703,6 +703,74 @@
             margin-bottom: 8px;
         }
 
+        /* ── Recorrido de compra por pasos ─────────────── */
+        .pd__crumbs {
+            display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+            font-family: var(--font-body); font-size: 10px; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--gray-light); margin-bottom: 28px;
+        }
+        .pd__crumbs-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--black); text-decoration: none; font-weight: 500;
+        }
+        .pd__crumbs-back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; transition: transform 0.2s; }
+        .pd__crumbs-back:hover svg { transform: translateX(-3px); }
+        .pd__crumbs-back:hover { text-decoration: underline; text-underline-offset: 4px; }
+        .pd__price-row { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
+        .pd__price-row .pd__price { margin: 0; font-size: 32px; }
+        .pd__price-row .pd__tax-note { margin: 0; }
+        .pd__step { padding: 22px 0; border-top: 1px solid var(--border); }
+        .pd__step-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .pd__step-title {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-family: var(--font-body); font-size: 11px; letter-spacing: 2.5px;
+            text-transform: uppercase; color: var(--black); font-weight: 500;
+        }
+        .pd__step-num {
+            width: 22px; height: 22px; border-radius: 50%; background: var(--black); color: var(--white);
+            display: inline-flex; align-items: center; justify-content: center; font-size: 10px; letter-spacing: 0;
+        }
+        .pd__step .pd__colors, .pd__step .pd__sizes { margin-bottom: 0; }
+        .pd__step .pd__color-name { font-family: var(--font-body); font-size: 12px; color: var(--gray); }
+        .pd__guide-toggle {
+            background: none; border: none; padding: 0; cursor: pointer;
+            font-family: var(--font-body); font-size: 12px; color: var(--black);
+            text-decoration: underline; text-underline-offset: 4px;
+        }
+        .pd__size-hint { font-family: var(--font-body); font-size: 12px; color: var(--gray); margin: 10px 0 0; }
+        .pd__size-hint strong { color: var(--black); font-weight: 600; }
+        .pd__guide { margin-top: 18px; }
+        .pd__guide-title { font-family: var(--font-body); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin: 6px 0 0; }
+        .pd__guide-link { font-family: var(--font-body); font-size: 12px; color: var(--black); }
+        .pd__summary { background: var(--white); border: 1px solid var(--border); padding: 18px 20px; margin: 8px 0 16px; }
+        .pd__summary-main { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+        .pd__summary-label { font-family: var(--font-body); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); }
+        .pd__summary-choice { font-family: var(--font-body); font-size: 13px; color: var(--black); text-align: right; }
+        .pd__summary-choice.is-pending { color: var(--gray-light); }
+        .pd__summary-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .pd__summary .pd__quantity { margin: 0; }
+        .pd__summary-total { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+        .pd__summary-price { font-family: var(--font-display); font-size: 28px; color: var(--black); line-height: 1; }
+        .pd__summary-ship { font-family: var(--font-body); font-size: 11px; color: var(--gray); margin: 12px 0 0; }
+        .pd__summary-ship.is-free { color: #2f7d52; }
+        .pd__about { margin: 8px 0 24px; }
+        .pd__about-title { font-family: var(--font-body); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin-bottom: 10px; }
+        .pd__about .pd__desc { margin-bottom: 0; }
+        .pd__back-float { display: none; }
+        @media (max-width: 900px) {
+            .pd__back-float {
+                display: flex; align-items: center; justify-content: center;
+                position: absolute; top: 14px; left: 14px; z-index: 20;
+                width: 40px; height: 40px; border-radius: 50%;
+                background: rgba(255,255,255,0.92); box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+            }
+            .pd__back-float svg { width: 18px; height: 18px; fill: none; stroke: var(--black); stroke-width: 1.8; }
+            .pd__crumbs-back { display: none; }
+            .pd__crumbs .pd__breadcrumb-sep:first-of-type { display: none; }
+            .pd__crumbs { margin-bottom: 16px; }
+            .pd__size-btn { width: 60px; height: 52px; }
+        }
+
         /* ── Tablet ─────────────────────────────────── */
         @media (max-width: 1200px) {
             .pd {
@@ -836,6 +904,9 @@
             </div>
             <!-- Main image area -->
             <div class="pd__gallery-main" id="pd-gallery-main">
+                <a href="coleccion.html" class="pd__back-float" aria-label="Volver a la colección">
+                    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                </a>
                 <!-- slides injected by JS -->
                 <button class="pd__gall-btn pd__gall-btn--prev" id="pd-prev" aria-label="Anterior">
                     <svg viewBox="0 0 24 24">
@@ -853,51 +924,45 @@
         <!-- Right: Info -->
         <div class="pd__info" id="pd-info">
 
-            <a href="coleccion.html" class="pd__back" style="margin-bottom: 28px;">
-                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                Volver a la colección
-            </a>
-            <div class="pd__breadcrumb">
-                <a href="coleccion.html">Colección</a>
-                <span class="pd__breadcrumb-sep">›</span>
+            <!-- Navegación: volver + ruta -->
+            <nav class="pd__crumbs" aria-label="Ruta">
+                <a href="coleccion.html" class="pd__crumbs-back">
+                    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                    Colección
+                </a>
+                <span class="pd__breadcrumb-sep">/</span>
                 <span id="pd-breadcrumb-line"></span>
-                <span class="pd__breadcrumb-sep">›</span>
+                <span class="pd__breadcrumb-sep">/</span>
                 <span id="pd-breadcrumb-name"></span>
-            </div>
+            </nav>
 
             <h1 class="pd__name" id="pd-name"></h1>
             <p class="pd__sub" id="pd-sub"></p>
-
-            <div class="pd__divider"></div>
-            <p class="pd__price" id="pd-price"></p>
-            <p class="pd__tax-note">Impuestos incluidos.</p>
-            <p class="pd__desc" id="pd-desc"></p>
-
-            <!-- Size selector (Moved above color) -->
-            <div class="pd__selector-label">Talla</div>
-            <div class="pd__sizes" id="pd-sizes">
-                <button class="pd__size-btn" data-size="S" style="position:relative;">S</button>
-                <button class="pd__size-btn" data-size="M" style="position:relative;">M</button>
-                <button class="pd__size-btn" data-size="L" style="position:relative;">L</button>
-            </div>
-            <!-- Stock status indicator (updated in real-time) -->
-            <div class="pd__stock-status is-loading" id="pd-stock-status">
-                <span class="pd__stock-dot"></span>
-                <span>Consultando disponibilidad…</span>
+            <div class="pd__price-row">
+                <p class="pd__price" id="pd-price"></p>
+                <p class="pd__tax-note">Set completo · Impuestos incluidos</p>
             </div>
 
-            <!-- Color selector -->
-            <div class="pd__selector-label" style="margin-top: 16px;">
-                Color <span id="pd-color-name" class="pd__color-name"></span>
-            </div>
-            <div class="pd__colors" id="pd-colors"></div>
-            <div class="pd__accordion" style="margin-top: 12px; border-bottom: none;">
-                <button class="pd__accordion-trigger" style="padding: 12px 0; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; border-bottom: none; justify-content: flex-start; gap: 8px;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 8v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M7 6v12"></path><path d="M11 6v12"></path><path d="M15 6v12"></path></svg>
-                    <span>¿Cuál es mi talla?</span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" style="margin-left: auto;"><path d="M2 4L6 8L10 4"/></svg>
-                </button>
-                <div class="pd__accordion-content">
+            <!-- Paso 1: Talla -->
+            <div class="pd__step">
+                <div class="pd__step-head">
+                    <span class="pd__step-title"><span class="pd__step-num">1</span> Elige tu talla</span>
+                    <button type="button" class="pd__guide-toggle" id="pd-guide-toggle" aria-expanded="false" aria-controls="pd-guide">¿Cuál es mi talla?</button>
+                </div>
+                <div class="pd__sizes" id="pd-sizes">
+                    <button class="pd__size-btn" data-size="S" style="position:relative;">S</button>
+                    <button class="pd__size-btn" data-size="M" style="position:relative;">M</button>
+                    <button class="pd__size-btn" data-size="L" style="position:relative;">L</button>
+                </div>
+                <p class="pd__size-hint" id="pd-size-hint" hidden></p>
+                <!-- Stock status indicator (updated in real-time) -->
+                <div class="pd__stock-status is-loading" id="pd-stock-status">
+                    <span class="pd__stock-dot"></span>
+                    <span>Consultando disponibilidad…</span>
+                </div>
+                <div class="pd__guide" id="pd-guide" hidden>
+                    <div id="pd-talla-reco"></div>
+                    <p class="pd__guide-title">Tabla de medidas de la prenda</p>
                     <div class="table-wrap" style="overflow-x: auto; margin-bottom: 16px; margin-top: 8px;">
                         <table class="size-table" style="width: 100%; border-collapse: collapse; font-family: var(--font-body); font-size: 12px; color: var(--black); min-width: 500px;">
                             <thead>
@@ -946,15 +1011,37 @@
                             </tbody>
                         </table>
                     </div>
+                    <a href="guia-de-tallas.html" class="pd__guide-link">Ver guía completa y cómo medirte →</a>
                 </div>
             </div>
 
-            <!-- Quantity selector -->
-            <div class="pd__selector-label" style="margin-top: 16px;">Cantidad</div>
-            <div class="pd__quantity">
-                <button class="pd__qty-btn" id="qty-minus">-</button>
-                <input type="text" class="pd__qty-input" id="qty-input" value="1" readonly>
-                <button class="pd__qty-btn" id="qty-plus">+</button>
+            <!-- Paso 2: Color -->
+            <div class="pd__step">
+                <div class="pd__step-head">
+                    <span class="pd__step-title"><span class="pd__step-num">2</span> Elige tu color</span>
+                    <span id="pd-color-name" class="pd__color-name"></span>
+                </div>
+                <div class="pd__colors" id="pd-colors"></div>
+            </div>
+
+            <!-- Paso 3: Resumen y compra -->
+            <div class="pd__summary" id="pd-summary">
+                <div class="pd__summary-main">
+                    <span class="pd__summary-label">Tu set</span>
+                    <span class="pd__summary-choice" id="pd-summary-choice"></span>
+                </div>
+                <div class="pd__summary-row">
+                    <div class="pd__quantity" aria-label="Cantidad">
+                        <button class="pd__qty-btn" id="qty-minus" aria-label="Menos">-</button>
+                        <input type="text" class="pd__qty-input" id="qty-input" value="1" readonly aria-label="Cantidad">
+                        <button class="pd__qty-btn" id="qty-plus" aria-label="Más">+</button>
+                    </div>
+                    <div class="pd__summary-total">
+                        <span class="pd__summary-label">Total</span>
+                        <span class="pd__summary-price" id="pd-summary-total"></span>
+                    </div>
+                </div>
+                <p class="pd__summary-ship" id="pd-summary-ship"></p>
             </div>
 
             <!-- CTAs -->
@@ -966,7 +1053,7 @@
                         <circle cx="20" cy="21" r="1" />
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                     </svg>
-                    <span id="pd-add-text">Selecciona tu talla</span>
+                    <span id="pd-add-text">Elige tu talla</span>
                 </button>
                 <a href="#" class="pd__cta-secondary pd__cta-secondary--full" id="pd-wa" target="_blank" rel="noopener">
                     Confirmar por WhatsApp
@@ -987,6 +1074,12 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     <span>Métodos de pago: Transferencia, Daviplata, Nequi y Efectivo</span>
                 </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="pd__about">
+                <p class="pd__about-title">Sobre el set</p>
+                <p class="pd__desc" id="pd-desc"></p>
             </div>
 
             <!-- Accordions -->
@@ -1051,6 +1144,7 @@
     </aside>
 
     <script src="productos.js"></script>
+    <script src="js/talla.js"></script>
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="js/auth.js"></script>
@@ -1196,10 +1290,7 @@
                     if (btn.classList.contains('selected')) {
                         btn.classList.remove('selected');
                         selectedSize = '';
-                        if (addBtn) {
-                            addBtn.style.opacity = '0.6';
-                            document.getElementById('pd-add-text').textContent = 'Selecciona tu talla';
-                        }
+                        actualizarResumen();
                     }
 
                 } else if (stock <= LOW_STOCK_THRESHOLD) {
@@ -1297,11 +1388,9 @@
                     u.searchParams.set('color', c.key);
                     window.history.replaceState({}, '', u.toString());
                 } catch (_) {}
-                sizesContainer.querySelectorAll('.pd__size-btn').forEach(b => b.classList.remove('selected'));
-                selectedSize = '';
-                const addBtn = document.getElementById('pd-add-cart');
-                if (addBtn) { addBtn.style.opacity = '0.6'; document.getElementById('pd-add-text').textContent = 'Selecciona tu talla'; }
+                // Conserva la talla elegida si existe en el nuevo color
                 if (stockLoaded) updateSizeButtons();
+                actualizarResumen();
             });
             colorsContainer.appendChild(btn);
         });
@@ -1313,9 +1402,8 @@
                 sizesContainer.querySelectorAll('.pd__size-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 selectedSize = btn.textContent.trim();
-                const addBtn = document.getElementById('pd-add-cart');
-                if (addBtn) { addBtn.style.opacity = '1'; document.getElementById('pd-add-text').textContent = 'Agregar al carrito'; }
                 updateStockStatusRow();
+                actualizarResumen();
             });
         });
 
@@ -1324,8 +1412,58 @@
         const qtyMinus = document.getElementById('qty-minus');
         const qtyPlus  = document.getElementById('qty-plus');
         const qtyInput = document.getElementById('qty-input');
-        qtyMinus.addEventListener('click', () => { let v = parseInt(qtyInput.value); if (v > 1) qtyInput.value = v - 1; });
-        qtyPlus.addEventListener('click',  () => { let v = parseInt(qtyInput.value); if (v < 10) qtyInput.value = v + 1; });
+        qtyMinus.addEventListener('click', () => { let v = parseInt(qtyInput.value); if (v > 1) qtyInput.value = v - 1; actualizarResumen(); });
+        qtyPlus.addEventListener('click',  () => { let v = parseInt(qtyInput.value); if (v < 10) qtyInput.value = v + 1; actualizarResumen(); });
+
+        /* ── Resumen: lo que la clienta eligió + total ── */
+        const ENVIO_GRATIS_DESDE = 300000;
+        const fmtCOP = n => '$' + Math.round(n).toLocaleString('es-CO');
+        function actualizarResumen() {
+            const qty   = parseInt(qtyInput.value) || 1;
+            const total = prod.price * qty;
+            const color = (prod.colors.find(c => c.key === activeColorKey) || {}).label || '';
+            const choice = document.getElementById('pd-summary-choice');
+            choice.textContent = selectedSize
+                ? `${prod.name} · ${color} · Talla ${selectedSize}`
+                : `${prod.name} · ${color} · Falta elegir talla`;
+            choice.classList.toggle('is-pending', !selectedSize);
+            document.getElementById('pd-summary-total').textContent = fmtCOP(total);
+            const ship = document.getElementById('pd-summary-ship');
+            const falta = ENVIO_GRATIS_DESDE - total;
+            ship.textContent = falta <= 0 ? '✓ Este pedido tiene envío gratis' : `Te faltan ${fmtCOP(falta)} para el envío gratis`;
+            ship.classList.toggle('is-free', falta <= 0);
+            const addBtn = document.getElementById('pd-add-cart');
+            if (addBtn) addBtn.style.opacity = selectedSize ? '1' : '0.6';
+            document.getElementById('pd-add-text').textContent = selectedSize
+                ? `Agregar al carrito · ${fmtCOP(total)}`
+                : 'Elige tu talla';
+        }
+        actualizarResumen();
+
+        /* ── ¿Cuál es mi talla? → recomendador + tabla ── */
+        const guideToggle = document.getElementById('pd-guide-toggle');
+        const guide       = document.getElementById('pd-guide');
+        function elegirTalla(t) {
+            const b = sizesContainer.querySelector(`.pd__size-btn[data-size="${t}"]`);
+            if (b && !b.disabled) b.click();
+            sizesContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        function mostrarSugerencia(t) {
+            const hint = document.getElementById('pd-size-hint');
+            if (!t) { hint.hidden = true; return; }
+            hint.innerHTML = `Según tus datos, te recomendamos la talla <strong>${t}</strong>.`;
+            hint.hidden = false;
+        }
+        guideToggle.addEventListener('click', () => {
+            const abrir = guide.hidden;
+            guide.hidden = !abrir;
+            guideToggle.setAttribute('aria-expanded', String(abrir));
+            guideToggle.textContent = abrir ? 'Ocultar guía de tallas' : '¿Cuál es mi talla?';
+        });
+        if (typeof YOSSICO_TALLA !== 'undefined') {
+            YOSSICO_TALLA.montar(document.getElementById('pd-talla-reco'), { onElegir: elegirTalla, onRecomendar: mostrarSugerencia });
+            mostrarSugerencia(YOSSICO_TALLA.guardada());
+        }
         document.querySelectorAll('.pd__accordion-trigger').forEach(trigger => {
             trigger.addEventListener('click', () => {
                 const expanded = trigger.classList.contains('expanded');

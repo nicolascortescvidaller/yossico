@@ -726,6 +726,30 @@
       text-align: center;
     }
 
+    /* Hover: la tarjeta crece y se eleva. Usa `scale` (no `transform`) para no
+       chocar con la animación de entrada .reveal, y conserva su retraso escalonado. */
+    @media (hover: hover) {
+      .nosotros__grid .nosotros__card.reveal {
+        position: relative;
+        padding: 32px 22px;
+        border-radius: 4px;
+        transition-property: opacity, transform, scale, background-color, box-shadow;
+        transition-duration: 0.8s, 0.8s, 0.45s, 0.45s, 0.45s;
+        transition-timing-function: var(--ease-expo);
+        transition-delay: var(--rv-delay, 0s), var(--rv-delay, 0s), 0s, 0s, 0s;
+      }
+      .nosotros__grid .nosotros__card[data-delay="1"] { --rv-delay: 0.1s; }
+      .nosotros__grid .nosotros__card[data-delay="2"] { --rv-delay: 0.2s; }
+      .nosotros__grid .nosotros__card[data-delay="3"] { --rv-delay: 0.35s; }
+      .nosotros__grid .nosotros__card[data-delay="4"] { --rv-delay: 0.5s; }
+      .nosotros__grid .nosotros__card.reveal:hover {
+        scale: 1.05;
+        background-color: var(--white);
+        box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08);
+        z-index: 1;
+      }
+    }
+
     .nosotros__num {
       font-family: var(--font-body);
       font-weight: 400;
@@ -1081,7 +1105,14 @@
     .destacados__meta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
     .destacados__price { font-family: var(--font-body); font-size: 15px; font-weight: 500; color: var(--black); }
     .destacados__dots { display: flex; gap: 6px; }
-    .destacados__dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 0 1px var(--border); }
+    .destacados__dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--white); box-shadow: 0 0 0 1px var(--border); padding: 0; cursor: pointer; transition: box-shadow 0.2s, transform 0.2s; }
+    .destacados__dot:hover { transform: scale(1.15); }
+    .destacados__dot.is-on { box-shadow: 0 0 0 1.5px var(--black); }
+    .destacados__dots--solo .destacados__dot { cursor: default; }
+    .destacados__dots--solo .destacados__dot:hover { transform: none; }
+    .destacados__img img { transition: transform 0.8s var(--ease-expo), opacity 0.25s ease; }
+    .destacados__img img.is-swapping { opacity: 0; }
+    .destacados__color { font-family: var(--font-body); font-size: 11px; color: var(--gray); margin-top: 4px; min-height: 14px; }
     .destacados__sub { font-family: var(--font-body); font-size: 12px; color: var(--gray); margin: 8px 0 18px; }
     .destacados__btn { margin-top: auto; justify-content: center; font-size: 11px; padding: 16px 20px; }
     .destacados__all { font-size: 11px; }
@@ -1115,8 +1146,9 @@
           <h3 class="destacados__name">OSLO</h3>
           <div class="destacados__meta">
             <span class="destacados__price" data-price>$275.900</span>
-            <span class="destacados__dots"><span class="destacados__dot" style="background:#111111;" title="Negro"></span><span class="destacados__dot" style="background:#1a2744;" title="Azul Marino"></span><span class="destacados__dot" style="background:#5c2836;" title="Vinotinto"></span></span>
+            <span class="destacados__dots"><button type="button" class="destacados__dot" style="background:#111111;" title="Negro" aria-label="Color Negro"></button><button type="button" class="destacados__dot" style="background:#1a2744;" title="Azul Marino" aria-label="Color Azul Marino"></button><button type="button" class="destacados__dot" style="background:#5c2836;" title="Vinotinto" aria-label="Color Vinotinto"></button></span>
           </div>
+          <p class="destacados__color" data-color-name></p>
           <p class="destacados__sub">Set top + pantalón · Tallas S · M · L</p>
           <a href="oslo.html" class="btn btn--primary destacados__btn">Ver y comprar</a>
         </div>
@@ -1130,8 +1162,9 @@
           <h3 class="destacados__name">MILAN</h3>
           <div class="destacados__meta">
             <span class="destacados__price" data-price>$339.900</span>
-            <span class="destacados__dots"><span class="destacados__dot" style="background:#111111;" title="Negro"></span></span>
+            <span class="destacados__dots"><button type="button" class="destacados__dot" style="background:#111111;" title="Negro" aria-label="Color Negro"></button></span>
           </div>
+          <p class="destacados__color" data-color-name></p>
           <p class="destacados__sub">Set top + pantalón · Tallas S · M · L</p>
           <a href="milan.html" class="btn btn--primary destacados__btn">Ver y comprar</a>
         </div>
@@ -1145,8 +1178,9 @@
           <h3 class="destacados__name">KYOTO</h3>
           <div class="destacados__meta">
             <span class="destacados__price" data-price>$339.900</span>
-            <span class="destacados__dots"><span class="destacados__dot" style="background:#1a2744;" title="Azul Marino"></span></span>
+            <span class="destacados__dots"><button type="button" class="destacados__dot" style="background:#1a2744;" title="Azul Marino" aria-label="Color Azul Marino"></button></span>
           </div>
+          <p class="destacados__color" data-color-name></p>
           <p class="destacados__sub">Set top + pantalón · Tallas S · M · L</p>
           <a href="kyoto.html" class="btn btn--primary destacados__btn">Ver y comprar</a>
         </div>
@@ -1160,8 +1194,9 @@
           <h3 class="destacados__name">LIMA</h3>
           <div class="destacados__meta">
             <span class="destacados__price" data-price>$275.900</span>
-            <span class="destacados__dots"><span class="destacados__dot" style="background:#111111;" title="Negro"></span><span class="destacados__dot" style="background:#1B6B6B;" title="Azul Pacífico"></span><span class="destacados__dot" style="background:#7A8C5E;" title="Verde Oliva"></span></span>
+            <span class="destacados__dots"><button type="button" class="destacados__dot" style="background:#111111;" title="Negro" aria-label="Color Negro"></button><button type="button" class="destacados__dot" style="background:#1B6B6B;" title="Azul Pacífico" aria-label="Color Azul Pacífico"></button><button type="button" class="destacados__dot" style="background:#7A8C5E;" title="Verde Oliva" aria-label="Color Verde Oliva"></button></span>
           </div>
+          <p class="destacados__color" data-color-name></p>
           <p class="destacados__sub">Set top + pantalón · Tallas S · M · L</p>
           <a href="lima.html" class="btn btn--primary destacados__btn">Ver y comprar</a>
         </div>
@@ -1169,13 +1204,41 @@
     </div>
   </section>
   <script>
-    /* Mantiene los precios sincronizados con el catálogo (productos.js) */
+    /* Precios sincronizados con el catálogo (productos.js) + cambio de color en vivo */
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof YOSSICO_PRODUCTS === 'undefined') return;
       document.querySelectorAll('.destacados__card[data-prod]').forEach(card => {
         const prod = YOSSICO_PRODUCTS[card.dataset.prod];
+        if (!prod) return;
         const el = card.querySelector('[data-price]');
-        if (prod && el && prod.price) el.textContent = '$' + prod.price.toLocaleString('es-CO');
+        if (el && prod.price) el.textContent = '$' + prod.price.toLocaleString('es-CO');
+
+        const img = card.querySelector('.destacados__img img');
+        const nameEl = card.querySelector('[data-color-name]');
+        const links = card.querySelectorAll('a[href$=".html"], a[href*=".html?color="]');
+        const dots = [...card.querySelectorAll('.destacados__dot')];
+        const dotsWrap = card.querySelector('.destacados__dots');
+        if (dots.length < 2 && dotsWrap) dotsWrap.classList.add('destacados__dots--solo');
+
+        function elegir(i) {
+          const color = prod.colors[i];
+          if (!color) return;
+          dots.forEach((d, j) => d.classList.toggle('is-on', j === i));
+          if (nameEl) nameEl.textContent = color.label;
+          const src = (color.imgs && color.imgs[0]) || prod.defaultImgs[0];
+          if (img && img.getAttribute('src') !== src) {
+            img.classList.add('is-swapping');
+            const pre = new Image();
+            pre.onload = pre.onerror = () => { img.src = src; img.alt = `Set ${prod.name} color ${color.label} YOSSICO`; img.classList.remove('is-swapping'); };
+            pre.src = src;
+          }
+          links.forEach(a => { a.href = `${prod.id}.html` + (prod.colors.length > 1 ? `?color=${color.key}` : ''); });
+        }
+        dots.forEach((d, i) => {
+          d.addEventListener('click', () => elegir(i));
+          d.addEventListener('mouseenter', () => { if (window.matchMedia('(hover: hover)').matches) elegir(i); });
+        });
+        elegir(0);
       });
     });
   </script>
