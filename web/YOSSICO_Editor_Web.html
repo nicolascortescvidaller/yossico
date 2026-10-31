@@ -1436,7 +1436,13 @@
       if (!pin || !sb) return false;
       try {
         const { data, error } = await sb.rpc('admin_verificar_pin', { pin });
-        return !error && data === true;
+        if (!error) return data === true;
+        // Si aún no se aplicó la migración 20261031_admin_secretos, valida con una RPC existente
+        if (error.code === 'PGRST202' || /admin_verificar_pin/.test(error.message || '')) {
+          const r = await sb.rpc('admin_get_pedidos', { pin });
+          return !r.error;
+        }
+        return false;
       } catch (_) { return false; }
     }
 

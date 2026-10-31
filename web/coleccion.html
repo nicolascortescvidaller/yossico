@@ -2533,7 +2533,7 @@
         if (a.bgColor) bar.style.backgroundColor = a.bgColor;
         if (a.textColor) bar.style.color = a.textColor;
         if (a.text !== undefined || a.subtext !== undefined || a.showFlag !== undefined) {
-          const mainTxt = escHtml(a.text !== undefined ? a.text : 'Envío gratis en compras superiores a $300.000');
+          const mainTxt = escHtml((a.text !== undefined ? a.text : 'Envío gratis en compras superiores a $300.000').replace('$450.000', '$300.000'));
           const subTxt = a.subtext ? ` &nbsp;·&nbsp; ${escHtml(a.subtext)}` : '';
           const flagHtml = (a.showFlag !== false)
             ? ` <span style="display:inline-block; width:14px; height:10px; vertical-align:middle; margin-left:6px; box-shadow:0 0 1px rgba(255,255,255,0.4);"><div style="height:50%;background:#FCD116;"></div><div style="height:25%;background:#003893;"></div><div style="height:25%;background:#CE1126;"></div></span>`
