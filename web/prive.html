@@ -813,6 +813,200 @@
                 btn.textContent = 'ACTIVAR MEMBRESÍA →';
             }
         }
+
+        /* ── YOSSICO Privé CMS Engine (Studio Live Customizer) ── */
+        (function () {
+            function escHtml(s) {
+                return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+            window.applyYossicoPriveConfig = function (cfg) {
+                if (!cfg || typeof cfg !== 'object') return;
+                if (cfg.hero) {
+                    const h = cfg.hero;
+                    const sec = document.querySelector('.prive-hero');
+                    if (sec) {
+                        sec.style.display = (h.visible !== false) ? '' : 'none';
+                        const badge = sec.querySelector('.prive-badge');
+                        if (badge && h.badge !== undefined) {
+                            const svg = badge.querySelector('svg');
+                            badge.innerHTML = '';
+                            if (svg) badge.appendChild(svg);
+                            badge.appendChild(document.createTextNode(' ' + h.badge));
+                        }
+                        const title = sec.querySelector('.prive-hero__title');
+                        if (title && (h.titleTop !== undefined || h.titleItalic !== undefined || h.titleSuffix !== undefined)) {
+                            const t1 = escHtml(h.titleTop !== undefined ? h.titleTop : 'Uniformes que pocos pueden vestir.');
+                            const it = escHtml(h.titleItalic !== undefined ? h.titleItalic : 'Privilegios');
+                            const sf = escHtml(h.titleSuffix !== undefined ? h.titleSuffix : 'para ti.');
+                            title.innerHTML = `${t1}<br><em>${it}</em> ${sf}`;
+                        }
+                        const sub = sec.querySelector('.prive-hero__subtitle');
+                        if (sub && h.subtitle !== undefined) sub.textContent = h.subtitle;
+                    }
+                }
+                if (cfg.showcase) {
+                    const s = cfg.showcase;
+                    const sec = document.querySelector('.prive-showcase');
+                    if (sec) {
+                        sec.style.display = (s.visible !== false) ? '' : 'none';
+                        const img = sec.querySelector('.prive-locked-preview img');
+                        if (img && s.image) img.src = s.image;
+                        const tag = sec.querySelector('.prive-curtain-tag');
+                        if (tag && s.cardTag !== undefined) tag.textContent = s.cardTag;
+                        const ct = sec.querySelector('.prive-curtain-title');
+                        if (ct && s.cardTitle !== undefined) ct.textContent = s.cardTitle;
+                        const cd = sec.querySelector('.prive-curtain-desc');
+                        if (cd && s.cardDesc !== undefined) cd.textContent = s.cardDesc;
+                        const cb = sec.querySelector('.prive-overlay-curtain a.btn');
+                        if (cb && s.cardBtnText !== undefined) cb.textContent = s.cardBtnText;
+
+                        const mCard = document.getElementById('card-mensual');
+                        if (mCard) {
+                            const mt = mCard.querySelector('.plan-card__title');
+                            if (mt && s.monthlyTitle !== undefined) mt.textContent = s.monthlyTitle;
+                            const mb = mCard.querySelector('.plan-card__badge');
+                            if (mb && s.monthlyBadge !== undefined) mb.textContent = s.monthlyBadge;
+                            const mp = mCard.querySelector('.plan-card__price');
+                            if (mp && s.monthlyPrice !== undefined) mp.innerHTML = `${escHtml(s.monthlyPrice)} <small>COP / MES</small>`;
+                            const md = mCard.querySelector('.plan-card__desc');
+                            if (md && s.monthlyDesc !== undefined) md.textContent = s.monthlyDesc;
+                        }
+                        const aCard = document.getElementById('card-anual');
+                        if (aCard) {
+                            const at = aCard.querySelector('.plan-card__title');
+                            if (at && s.annualTitle !== undefined) at.textContent = s.annualTitle;
+                            const ab = aCard.querySelector('.plan-card__badge');
+                            if (ab && s.annualBadge !== undefined) ab.textContent = s.annualBadge;
+                            const ap = aCard.querySelector('.plan-card__price');
+                            if (ap && s.annualPrice !== undefined) ap.innerHTML = `${escHtml(s.annualPrice)} <small>COP / AÑO</small>`;
+                            const ad = aCard.querySelector('.plan-card__desc');
+                            if (ad && s.annualDesc !== undefined) ad.textContent = s.annualDesc;
+                        }
+                    }
+                }
+                if (cfg.pillars && Array.isArray(cfg.pillars.items)) {
+                    const sec = document.querySelector('.prive-pillars');
+                    if (sec) {
+                        sec.style.display = (cfg.pillars.visible !== false) ? '' : 'none';
+                        const cards = sec.querySelectorAll('.pillar-card');
+                        cfg.pillars.items.forEach((pItem, idx) => {
+                            if (!cards[idx] || !pItem) return;
+                            const t = cards[idx].querySelector('.pillar-card__title');
+                            const d = cards[idx].querySelector('.pillar-card__desc');
+                            if (t && pItem.title !== undefined) t.textContent = pItem.title;
+                            if (d && pItem.desc !== undefined) d.textContent = pItem.desc;
+                        });
+                    }
+                }
+                if (cfg.form) {
+                    const f = cfg.form;
+                    const sec = document.getElementById('unirme-prive');
+                    if (sec) {
+                        sec.style.display = (f.visible !== false) ? '' : 'none';
+                        const headDiv = sec.querySelector('#prive-form-container > div');
+                        if (headDiv) {
+                            const sp = headDiv.querySelector('span');
+                            if (sp && f.eyebrow !== undefined) sp.textContent = f.eyebrow;
+                            const h3 = headDiv.querySelector('h3');
+                            if (h3 && (f.titlePrefix !== undefined || f.titleItalic !== undefined)) {
+                                h3.innerHTML = `${escHtml(f.titlePrefix !== undefined ? f.titlePrefix : 'Únete a YOSSICO')} <em>${escHtml(f.titleItalic !== undefined ? f.titleItalic : 'Privé.')}</em>`;
+                            }
+                            const p = headDiv.querySelector('p');
+                            if (p && f.subtitle !== undefined) p.textContent = f.subtitle;
+                        }
+                        const btn = document.getElementById('btn-submit-pv');
+                        if (btn && f.btnText !== undefined) btn.textContent = f.btnText;
+                    }
+                }
+            };
+
+            try {
+                const cached = JSON.parse(localStorage.getItem('yossico_prive_config') || 'null');
+                if (cached) window.applyYossicoPriveConfig(cached);
+            } catch (_) {}
+
+            (async function () {
+                try {
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_config`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+                        body: JSON.stringify({ p_clave: 'prive_config' })
+                    });
+                    if (!res.ok) return;
+                    const remote = await res.json();
+                    if (remote && typeof remote === 'object' && Object.keys(remote).length > 0) {
+                        localStorage.setItem('yossico_prive_config', JSON.stringify(remote));
+                        window.applyYossicoPriveConfig(remote);
+                    }
+                } catch (_) {}
+            })();
+
+            let studioInteractive = location.search.includes('preview=1');
+            window.addEventListener('message', function (e) {
+                if (!e.data || typeof e.data !== 'object') return;
+                if (e.data.type === 'YOSSICO_PRIVE_PREVIEW') {
+                    window.applyYossicoPriveConfig(e.data.config);
+                } else if (e.data.type === 'YOSSICO_STUDIO_MODE') {
+                    studioInteractive = !!e.data.interactive;
+                } else if (e.data.type === 'YOSSICO_PRIVE_SCROLL') {
+                    const map = {
+                        hero: document.querySelector('.prive-hero'),
+                        showcase: document.querySelector('.prive-showcase'),
+                        pillars: document.querySelector('.prive-pillars'),
+                        form: document.getElementById('unirme-prive')
+                    };
+                    const t = map[e.data.section];
+                    if (t) {
+                        t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        t.style.outline = '2px solid #0C4E57';
+                        setTimeout(() => { t.style.outline = ''; }, 1400);
+                    }
+                }
+            });
+
+            if (location.search.includes('preview=1')) {
+                document.addEventListener('DOMContentLoaded', () => {
+                    const badge = document.createElement('div');
+                    badge.style.cssText = 'position:fixed;z-index:99999;background:#111111;color:#ffffff;font-family:Montserrat,sans-serif;font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;padding:6px 12px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity 0.15s ease;box-shadow:0 4px 14px rgba(0,0,0,0.28);display:flex;align-items:center;gap:6px;';
+                    document.body.appendChild(badge);
+                    const defs = [
+                        { key: 'hero', label: 'Portada Club Privé', sel: '.prive-hero' },
+                        { key: 'showcase', label: 'Pieza Reservada y Planes ($29.900 / $290.000)', sel: '.prive-showcase' },
+                        { key: 'pillars', label: '6 Pilares y Beneficios Privé', sel: '.prive-pillars' },
+                        { key: 'form', label: 'Formulario de Suscripción Privé', sel: '#unirme-prive' }
+                    ];
+                    defs.forEach(d => {
+                        const el = document.querySelector(d.sel);
+                        if (!el) return;
+                        el.addEventListener('mouseenter', () => {
+                            if (!studioInteractive) return;
+                            el.style.outline = '2px dashed #111111';
+                            el.style.cursor = 'pointer';
+                            badge.innerHTML = '<span>✎</span><span>Clic para editar: ' + d.label + '</span>';
+                            badge.style.opacity = '1';
+                        });
+                        el.addEventListener('mousemove', (ev) => {
+                            if (!studioInteractive) { badge.style.opacity = '0'; return; }
+                            badge.style.left = Math.min(window.innerWidth - 280, ev.clientX + 14) + 'px';
+                            badge.style.top = Math.max(12, ev.clientY - 36) + 'px';
+                        });
+                        el.addEventListener('mouseleave', () => {
+                            el.style.outline = '';
+                            el.style.cursor = '';
+                            badge.style.opacity = '0';
+                        });
+                        el.addEventListener('click', (ev) => {
+                            if (!studioInteractive) return;
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                            if (window.parent && window.parent !== window) {
+                                window.parent.postMessage({ type: 'YOSSICO_STUDIO_SELECT', page: 'prive', section: d.key }, '*');
+                            }
+                        }, true);
+                    });
+                });
+            }
+        })();
     </script>
 </body>
 </html>

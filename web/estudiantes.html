@@ -857,6 +857,166 @@
                 btn.textContent = 'SOLICITAR 15% OFF ESTUDIANTIL →';
             }
         }
+
+        /* ── YOSSICO Campus CMS Engine (Studio Live Customizer) ── */
+        (function () {
+            function escHtml(s) {
+                return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+            window.applyYossicoCampusConfig = function (cfg) {
+                if (!cfg || typeof cfg !== 'object') return;
+                if (cfg.hero) {
+                    const h = cfg.hero;
+                    const sec = document.querySelector('.campus-hero');
+                    if (sec) {
+                        sec.style.display = (h.visible !== false) ? '' : 'none';
+                        const badge = sec.querySelector('.campus-badge');
+                        if (badge && h.badge !== undefined) badge.textContent = h.badge;
+                        const title = sec.querySelector('.campus-hero__title');
+                        if (title && (h.titleTop !== undefined || h.titlePrefix !== undefined || h.titleItalic !== undefined)) {
+                            const t1 = escHtml(h.titleTop !== undefined ? h.titleTop : 'Tu vocación empieza aquí.');
+                            const pf = escHtml(h.titlePrefix !== undefined ? h.titlePrefix : 'Tu uniforme, a la');
+                            const it = escHtml(h.titleItalic !== undefined ? h.titleItalic : 'altura.');
+                            title.innerHTML = `${t1}<br>${pf} <em>${it}</em>`;
+                        }
+                        const sub = sec.querySelector('.campus-hero__subtitle');
+                        if (sub && h.subtitle !== undefined) sub.textContent = h.subtitle;
+                    }
+                }
+                if (cfg.benefits && Array.isArray(cfg.benefits.items)) {
+                    const sec = document.querySelector('.campus-benefits');
+                    if (sec) {
+                        sec.style.display = (cfg.benefits.visible !== false) ? '' : 'none';
+                        const cards = sec.querySelectorAll('.campus-benefit-card');
+                        cfg.benefits.items.forEach((bItem, idx) => {
+                            if (!cards[idx] || !bItem) return;
+                            const t = cards[idx].querySelector('.campus-benefit-card__title');
+                            const d = cards[idx].querySelector('.campus-benefit-card__desc');
+                            if (t && bItem.title !== undefined) t.textContent = bItem.title;
+                            if (d && bItem.desc !== undefined) d.textContent = bItem.desc;
+                        });
+                    }
+                }
+                if (cfg.notice) {
+                    const n = cfg.notice;
+                    const box = document.querySelector('.campus-notice-box');
+                    if (box) {
+                        box.style.display = (n.visible !== false) ? '' : 'none';
+                        const sp = box.querySelector('span');
+                        if (sp && n.text !== undefined) {
+                            sp.innerHTML = `<strong>${escHtml(n.title || 'Alcance del programa:')}</strong> ${escHtml(n.text)}`;
+                        }
+                    }
+                }
+                if (cfg.form) {
+                    const f = cfg.form;
+                    const sec = document.getElementById('formulario-estudiantes');
+                    if (sec) {
+                        sec.style.display = (f.visible !== false) ? '' : 'none';
+                        const head = sec.querySelector('.campus-form__heading');
+                        if (head) {
+                            const sp = head.querySelector('span');
+                            if (sp && f.eyebrow !== undefined) sp.textContent = f.eyebrow;
+                            const h3 = head.querySelector('h3');
+                            if (h3 && (f.titlePrefix !== undefined || f.titleItalic !== undefined)) {
+                                h3.innerHTML = `${escHtml(f.titlePrefix !== undefined ? f.titlePrefix : 'Valida tu condición de')} <em>${escHtml(f.titleItalic !== undefined ? f.titleItalic : 'estudiante.')}</em>`;
+                            }
+                            const p = head.querySelector('p');
+                            if (p && f.subtitle !== undefined) p.textContent = f.subtitle;
+                        }
+                        const btn = document.getElementById('btn-submit');
+                        if (btn && f.btnText !== undefined) btn.textContent = f.btnText;
+                    }
+                }
+            };
+
+            try {
+                const cached = JSON.parse(localStorage.getItem('yossico_campus_config') || 'null');
+                if (cached) window.applyYossicoCampusConfig(cached);
+            } catch (_) {}
+
+            (async function () {
+                try {
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_config`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+                        body: JSON.stringify({ p_clave: 'campus_config' })
+                    });
+                    if (!res.ok) return;
+                    const remote = await res.json();
+                    if (remote && typeof remote === 'object' && Object.keys(remote).length > 0) {
+                        localStorage.setItem('yossico_campus_config', JSON.stringify(remote));
+                        window.applyYossicoCampusConfig(remote);
+                    }
+                } catch (_) {}
+            })();
+
+            let studioInteractive = location.search.includes('preview=1');
+            window.addEventListener('message', function (e) {
+                if (!e.data || typeof e.data !== 'object') return;
+                if (e.data.type === 'YOSSICO_CAMPUS_PREVIEW') {
+                    window.applyYossicoCampusConfig(e.data.config);
+                } else if (e.data.type === 'YOSSICO_STUDIO_MODE') {
+                    studioInteractive = !!e.data.interactive;
+                } else if (e.data.type === 'YOSSICO_CAMPUS_SCROLL') {
+                    const map = {
+                        hero: document.querySelector('.campus-hero'),
+                        benefits: document.querySelector('.campus-benefits'),
+                        notice: document.querySelector('.campus-notice-box'),
+                        form: document.getElementById('formulario-estudiantes')
+                    };
+                    const t = map[e.data.section];
+                    if (t) {
+                        t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        t.style.outline = '2px solid #0C4E57';
+                        setTimeout(() => { t.style.outline = ''; }, 1400);
+                    }
+                }
+            });
+
+            if (location.search.includes('preview=1')) {
+                document.addEventListener('DOMContentLoaded', () => {
+                    const badge = document.createElement('div');
+                    badge.style.cssText = 'position:fixed;z-index:99999;background:#111111;color:#ffffff;font-family:Montserrat,sans-serif;font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;padding:6px 12px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity 0.15s ease;box-shadow:0 4px 14px rgba(0,0,0,0.28);display:flex;align-items:center;gap:6px;';
+                    document.body.appendChild(badge);
+                    const defs = [
+                        { key: 'hero', label: 'Portada Programa Campus', sel: '.campus-hero' },
+                        { key: 'benefits', label: '3 Beneficios Estudiantiles', sel: '.campus-benefits' },
+                        { key: 'notice', label: 'Nota de Alcance del Programa', sel: '.campus-notice-box' },
+                        { key: 'form', label: 'Formulario de Verificación Académica', sel: '#formulario-estudiantes' }
+                    ];
+                    defs.forEach(d => {
+                        const el = document.querySelector(d.sel);
+                        if (!el) return;
+                        el.addEventListener('mouseenter', () => {
+                            if (!studioInteractive) return;
+                            el.style.outline = '2px dashed #111111';
+                            el.style.cursor = 'pointer';
+                            badge.innerHTML = '<span>✎</span><span>Clic para editar: ' + d.label + '</span>';
+                            badge.style.opacity = '1';
+                        });
+                        el.addEventListener('mousemove', (ev) => {
+                            if (!studioInteractive) { badge.style.opacity = '0'; return; }
+                            badge.style.left = Math.min(window.innerWidth - 280, ev.clientX + 14) + 'px';
+                            badge.style.top = Math.max(12, ev.clientY - 36) + 'px';
+                        });
+                        el.addEventListener('mouseleave', () => {
+                            el.style.outline = '';
+                            el.style.cursor = '';
+                            badge.style.opacity = '0';
+                        });
+                        el.addEventListener('click', (ev) => {
+                            if (!studioInteractive) return;
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                            if (window.parent && window.parent !== window) {
+                                window.parent.postMessage({ type: 'YOSSICO_STUDIO_SELECT', page: 'campus', section: d.key }, '*');
+                            }
+                        }, true);
+                    });
+                });
+            }
+        })();
     </script>
 </body>
 </html>

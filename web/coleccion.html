@@ -2533,7 +2533,7 @@
         if (a.bgColor) bar.style.backgroundColor = a.bgColor;
         if (a.textColor) bar.style.color = a.textColor;
         if (a.text !== undefined || a.subtext !== undefined || a.showFlag !== undefined) {
-          const mainTxt = escHtml((a.text !== undefined ? a.text : 'Envío gratis en compras superiores a $300.000').replace('$450.000', '$300.000'));
+          const mainTxt = escHtml(a.text !== undefined ? a.text : 'Envío gratis en compras superiores a $300.000');
           const subTxt = a.subtext ? ` &nbsp;·&nbsp; ${escHtml(a.subtext)}` : '';
           const flagHtml = (a.showFlag !== false)
             ? ` <span style="display:inline-block; width:14px; height:10px; vertical-align:middle; margin-left:6px; box-shadow:0 0 1px rgba(255,255,255,0.4);"><div style="height:50%;background:#FCD116;"></div><div style="height:25%;background:#003893;"></div><div style="height:25%;background:#CE1126;"></div></span>`
@@ -2583,7 +2583,7 @@
       }
     }
 
-    /* 4. Tarjetas de Productos */
+    /* 4. Tarjetas de Productos (incluyendo Étoile Privé y Hoodie) */
     if (cfg.products && typeof cfg.products === 'object') {
       Object.keys(cfg.products).forEach(pid => {
         const pCfg = cfg.products[pid];
@@ -2619,7 +2619,26 @@
           const subEl = card.querySelector('.product-card__sub');
           if (subEl) subEl.textContent = pCfg.sub;
         }
-        if (pCfg.price !== undefined) {
+        if (pid === 'etoile') {
+          /* Campos especiales de ÉTOILE PRIVÉ */
+          const prices = card.querySelectorAll('.product-card__price');
+          if (prices[0] && pCfg.regularPrice !== undefined) prices[0].textContent = pCfg.regularPrice;
+          if (prices[1] && (pCfg.price !== undefined || pCfg.memberNote !== undefined)) {
+            const mp = escHtml(pCfg.price !== undefined ? pCfg.price : '$305.900 COP');
+            const mn = escHtml(pCfg.memberNote !== undefined ? pCfg.memberNote : '· Miembros (−15%)');
+            prices[1].innerHTML = `${mp} <span style="font-size:10px;font-family:var(--font-body);letter-spacing:1.5px;color:var(--gray);text-transform:uppercase;">${mn}</span>`;
+          }
+          const ovSub = card.querySelector('.prive-locked-subtitle');
+          if (ovSub && pCfg.overlaySubtitle !== undefined) ovSub.textContent = pCfg.overlaySubtitle;
+          const ovTitle = card.querySelector('.prive-locked-title');
+          if (ovTitle && pCfg.overlayTitle !== undefined) ovTitle.textContent = pCfg.overlayTitle;
+          const ovDesc = card.querySelector('.prive-locked-desc');
+          if (ovDesc && pCfg.overlayDesc !== undefined) ovDesc.textContent = pCfg.overlayDesc;
+          const ovBtn = card.querySelector('.prive-locked-btn');
+          if (ovBtn && pCfg.overlayBtnText !== undefined) ovBtn.textContent = pCfg.overlayBtnText;
+          const mainBtn = card.querySelector('.product-card__info button.btn');
+          if (mainBtn && pCfg.addBtnText !== undefined) mainBtn.textContent = pCfg.addBtnText;
+        } else if (pCfg.price !== undefined) {
           gallery.dataset.price = pCfg.price;
           const priceEl = card.querySelector('.product-card__price');
           if (priceEl) priceEl.textContent = pCfg.price;
@@ -2634,28 +2653,59 @@
           const ctaEl = card.querySelector('.product-card__cta');
           if (ctaEl) ctaEl.innerHTML = `${escHtml(pCfg.ctaText)} <span class="arrow">→</span>`;
         }
-        if (pCfg.addBtnText !== undefined) {
+        if (pid !== 'etoile' && pCfg.addBtnText !== undefined) {
           const addEl = card.querySelector('.add-to-cart-btn');
           if (addEl) addEl.textContent = pCfg.addBtnText;
         }
 
-        /* Actualizar fotos por color si se definieron en pCfg.colors */
-        if (Array.isArray(pCfg.colors)) {
-          const swatches = card.querySelectorAll('.color-swatch');
-          pCfg.colors.forEach((cObj, cIdx) => {
-            const sw = swatches[cIdx];
-            if (!sw || !cObj) return;
-            if (cObj.label !== undefined) sw.dataset.label = cObj.label;
-            if (cObj.hex) sw.style.background = cObj.hex;
-            if (Array.isArray(cObj.imgs)) {
-              cObj.imgs.forEach((imgSrc, imgIdx) => {
-                if (imgSrc) {
-                  sw.setAttribute('data-img-' + imgIdx, imgSrc);
-                  sw.setAttribute('data-img' + imgIdx, imgSrc);
+        /* Actualizar fotos por color si se definieron en pCfg.colors (soporta agregar/quitar colores y fotos) */
+        if (Array.isArray(pCfg.colors) && pCfg.colors.length > 0) {
+          const colorSelector = card.querySelector('.color-selector');
+          if (colorSelector) {
+            let swatches = Array.from(colorSelector.querySelectorAll('.color-swatch'));
+            /* Ajustar número de botones swatch dinámicamente */
+            while (swatches.length < pCfg.colors.length) {
+              const newSw = document.createElement('button');
+              newSw.type = 'button';
+              newSw.className = 'color-swatch';
+              colorSelector.appendChild(newSw);
+              swatches.push(newSw);
+            }
+            while (swatches.length > pCfg.colors.length && swatches.length > 1) {
+              const rem = swatches.pop();
+              rem.remove();
+            }
+            pCfg.colors.forEach((cObj, cIdx) => {
+              const sw = swatches[cIdx];
+              if (!sw || !cObj) return;
+              if (cObj.id) sw.dataset.color = cObj.id;
+              if (cObj.label !== undefined) sw.dataset.label = cObj.label;
+              if (cObj.hex) sw.style.background = cObj.hex;
+              /* Limpiar atributos previos data-img */
+              Array.from(sw.attributes).forEach(attr => {
+                if (attr.name.startsWith('data-img')) sw.removeAttribute(attr.name);
+              });
+              if (Array.isArray(cObj.imgs)) {
+                cObj.imgs.forEach((imgSrc, imgIdx) => {
+                  if (imgSrc) {
+                    sw.setAttribute('data-img-' + imgIdx, imgSrc);
+                    sw.setAttribute('data-img' + imgIdx, imgSrc);
+                  }
+                });
+              }
+            });
+          } else if (pid === 'etoile' && pCfg.colors[0] && Array.isArray(pCfg.colors[0].imgs)) {
+            const track = gallery.querySelector('.gallery__track');
+            if (track) {
+              const slides = track.querySelectorAll('.gallery__slide img');
+              pCfg.colors[0].imgs.forEach((src, idx) => {
+                if (slides[idx] && src) {
+                  slides[idx].src = src;
+                  slides[idx].removeAttribute('data-src');
                 }
               });
             }
-          });
+          }
         }
 
         /* Si se cambió la imagen principal de portada o los swatches, refrescar el slide activo */
@@ -2671,7 +2721,7 @@
             firstSlideImg.removeAttribute('data-src');
           }
         } else {
-          const selSwatch = card.querySelector('.color-swatch.selected');
+          const selSwatch = card.querySelector('.color-swatch.selected') || card.querySelector('.color-swatch');
           if (selSwatch) {
             const slides = gallery.querySelectorAll('.gallery__slide img');
             slides.forEach((imgEl, sIdx) => {
@@ -2697,6 +2747,25 @@
             mainGrid.appendChild(card);
           }
         });
+      }
+    }
+
+    /* 5b. Sección Privé (#linea-prive) */
+    if (cfg.priveSection) {
+      const ps = cfg.priveSection;
+      const sec = document.getElementById('linea-prive');
+      if (sec) {
+        sec.style.display = (ps.visible !== false) ? '' : 'none';
+        const lbl = sec.querySelector('.filter-bar .label');
+        if (lbl && ps.label !== undefined) lbl.textContent = ps.label;
+        const h2 = sec.querySelector('.filter-bar h2');
+        if (h2 && ps.title !== undefined) h2.innerHTML = `${escHtml(ps.title)}<em style="font-style:italic;">.</em>`;
+        const badge = sec.querySelector('.filter-bar h2 + span');
+        if (badge && ps.badge !== undefined) badge.textContent = ps.badge;
+        const subP = sec.querySelector('.filter-bar p');
+        if (subP && ps.subtitle !== undefined) {
+          subP.innerHTML = `${escHtml(ps.subtitle)} <a href="prive.html" style="color:var(--black); text-decoration:underline; text-underline-offset:3px;">YOSSICO Privé</a>.`;
+        }
       }
     }
 
@@ -2776,17 +2845,22 @@
 
   fetchRemoteColeccionConfig();
 
+  let studioInteractive = location.search.includes('preview=1');
+
   /* Escuchar cambios en vivo desde YOSSICO_Editor_Web.html */
   window.addEventListener('message', function (e) {
     if (!e.data || typeof e.data !== 'object') return;
     if (e.data.type === 'YOSSICO_COLECCION_PREVIEW') {
       window.applyYossicoColeccionConfig(e.data.config);
+    } else if (e.data.type === 'YOSSICO_STUDIO_MODE') {
+      studioInteractive = !!e.data.interactive;
     } else if (e.data.type === 'YOSSICO_COLECCION_SCROLL') {
       const sKey = e.data.section || '';
       let target = null;
       if (sKey === 'announcement') target = document.getElementById('barra-envio-gratis');
       else if (sKey === 'header') target = document.querySelector('.page-header');
       else if (sKey === 'filters') target = document.querySelector('#linea-uniformes .filter-bar');
+      else if (sKey === 'priveSection') target = document.getElementById('linea-prive');
       else if (sKey === 'capasSection') target = document.getElementById('linea-capas');
       else if (sKey === 'ctaSection') target = document.querySelector('section.contacto-cta');
       else if (sKey.startsWith('prod-')) {
@@ -2803,6 +2877,67 @@
       }
     }
   });
+
+  /* Modo Inspector Visual (Click-to-Edit) cuando se abre dentro del Editor Web */
+  if (location.search.includes('preview=1')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'position:fixed;z-index:99999;background:#111111;color:#ffffff;font-family:Montserrat,sans-serif;font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;padding:6px 12px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity 0.15s ease;box-shadow:0 4px 14px rgba(0,0,0,0.28);display:flex;align-items:center;gap:6px;';
+      document.body.appendChild(badge);
+
+      function bindSelectable(el, sectionKey, labelText) {
+        if (!el) return;
+        el.addEventListener('mouseenter', () => {
+          if (!studioInteractive) return;
+          el.style.outline = '2px dashed #111111';
+          el.style.outlineOffset = '2px';
+          el.style.cursor = 'pointer';
+          badge.innerHTML = '<span>✎</span><span>Clic para editar: ' + labelText + '</span>';
+          badge.style.opacity = '1';
+        });
+        el.addEventListener('mousemove', (ev) => {
+          if (!studioInteractive) {
+            badge.style.opacity = '0';
+            return;
+          }
+          badge.style.left = Math.min(window.innerWidth - 280, ev.clientX + 14) + 'px';
+          badge.style.top = Math.max(12, ev.clientY - 36) + 'px';
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.outline = '';
+          el.style.cursor = '';
+          badge.style.opacity = '0';
+        });
+        el.addEventListener('click', (ev) => {
+          if (!studioInteractive) return;
+          ev.preventDefault();
+          ev.stopPropagation();
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({
+              type: 'YOSSICO_STUDIO_SELECT',
+              page: 'coleccion',
+              section: sectionKey
+            }, '*');
+          }
+        }, true);
+      }
+
+      bindSelectable(document.getElementById('barra-envio-gratis'), 'announcement', 'Barra de Envío Gratis');
+      bindSelectable(document.querySelector('.page-header'), 'header', 'Encabezado y Filtros');
+      bindSelectable(document.querySelector('#linea-uniformes .filter-bar'), 'header', 'Barra de Filtros');
+      bindSelectable(document.querySelector('#linea-prive .filter-bar'), 'priveSection', 'Apartado Privé');
+      bindSelectable(document.querySelector('#linea-capas .filter-bar'), 'capasSection', 'Apartado Capas');
+      bindSelectable(document.querySelector('section.contacto-cta'), 'ctaSection', 'Cierre WhatsApp');
+
+      document.querySelectorAll('.product-card').forEach(card => {
+        const gal = card.querySelector('.gallery');
+        if (!gal || !gal.id) return;
+        const pid = gal.id.replace('gallery-', '');
+        const pName = (card.querySelector('.product-card__name')?.textContent || pid).trim();
+        bindSelectable(card, 'prod-' + pid, 'Prenda ' + pName);
+      });
+    });
+  }
 
   /* ── Privé Modal Logic ── */
   window.abrirModalPrive = function(prendaNombre) {

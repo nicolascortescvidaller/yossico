@@ -2063,7 +2063,7 @@
         if (a.bgColor) bar.style.background = a.bgColor;
         if (a.textColor) bar.style.color = a.textColor;
         if (a.text !== undefined || a.subtext !== undefined || a.showFlag !== undefined) {
-          const mainTxt = escHtml((a.text !== undefined ? a.text : 'Envío gratis en compras superiores a $300.000').replace('$450.000', '$300.000'));
+          const mainTxt = escHtml(a.text !== undefined ? a.text : 'Envío gratis en compras superiores a $300.000');
           const subTxt = a.subtext ? ` <span class="hide-mobile">&nbsp;·&nbsp; ${escHtml(a.subtext)}</span>` : '';
           const flagHtml = (a.showFlag !== false)
             ? ` <span style="display:inline-block; width:14px; height:10px; vertical-align:middle; margin-left:6px; box-shadow:0 0 1px rgba(255,255,255,0.4);"><div style="height:50%;background:#FCD116;"></div><div style="height:25%;background:#003893;"></div><div style="height:25%;background:#CE1126;"></div></span>`
@@ -2108,18 +2108,17 @@
 
         const titleEl = sec.querySelector('.hero__title');
         if (titleEl && (h.titleLine1 !== undefined || h.titleLine2 !== undefined || h.titleItalic !== undefined)) {
-          /* Si el editor tiene guardado el titular anterior ("Vestidos para sanar."), se ignora para mostrar el nuevo */
           const oldTitle = (h.titleLine1 === 'Vestidos' && h.titleItalic === 'sanar.');
-          if (!oldTitle) {
-            const l1 = escHtml(h.titleLine1 !== undefined ? h.titleLine1 : 'Uniformes');
-            const l2 = escHtml(h.titleLine2 !== undefined ? h.titleLine2 : 'pensados');
-            const it = escHtml(h.titleItalic !== undefined ? h.titleItalic : 'para ti.');
-            titleEl.innerHTML = `${l1}<br>${l2 ? l2 + '<br>' : ''}<em>${it}</em>`;
-          }
+          const l1 = escHtml(oldTitle ? 'Uniformes' : (h.titleLine1 !== undefined ? h.titleLine1 : 'Uniformes'));
+          const l2 = escHtml(oldTitle ? 'pensados' : (h.titleLine2 !== undefined ? h.titleLine2 : 'pensados'));
+          const it = escHtml(oldTitle ? 'para ti.' : (h.titleItalic !== undefined ? h.titleItalic : 'para ti.'));
+          titleEl.innerHTML = `${l1}<br>${l2 ? l2 + '<br>' : ''}<em>${it}</em>`;
         }
 
         const subEl = sec.querySelector('.hero__sub');
-        if (subEl && h.subtitle !== undefined && !/diseñados para quienes dan todo/.test(h.subtitle)) subEl.textContent = h.subtitle;
+        if (subEl && h.subtitle !== undefined && !/diseñados para quienes dan todo/.test(h.subtitle)) {
+          subEl.textContent = h.subtitle;
+        }
 
         const ctas = sec.querySelectorAll('.hero__ctas a');
         if (ctas[0]) {
@@ -2140,6 +2139,26 @@
         if (rightInner && h.rightBgColor) {
           rightInner.style.background = h.rightBgColor;
         }
+      }
+    }
+
+    /* 3b. Los Más Pedidos (Destacados) */
+    const destSec = document.getElementById('destacados');
+    if (destSec && cfg.destacados) {
+      const ds = cfg.destacados;
+      destSec.style.display = (ds.visible !== false) ? '' : 'none';
+      const eye = destSec.querySelector('.destacados__head .label');
+      if (eye && ds.eyebrow !== undefined) eye.textContent = ds.eyebrow;
+      const title = destSec.querySelector('.destacados__head .section__title');
+      if (title && (ds.titlePrefix !== undefined || ds.titleItalic !== undefined)) {
+        const p = escHtml(ds.titlePrefix !== undefined ? ds.titlePrefix : 'Elige tu');
+        const it = escHtml(ds.titleItalic !== undefined ? ds.titleItalic : 'set.');
+        title.innerHTML = `${p} <em>${it}</em>`;
+      }
+      const allLink = destSec.querySelector('.destacados__all');
+      if (allLink && ds.ctaText !== undefined) allLink.textContent = ds.ctaText;
+      if (ds.btnText !== undefined) {
+        destSec.querySelectorAll('.destacados__btn').forEach(btn => { btn.textContent = ds.btnText; });
       }
     }
 
@@ -2181,6 +2200,68 @@
 
         const subLink = sec.querySelector('.drops__subscribe-link');
         if (subLink && d.subLinkText !== undefined) subLink.textContent = d.subLinkText;
+      }
+    }
+
+    /* 4b. Sección YOSSICO Privé Spotlight */
+    if (cfg.priveSpotlight) {
+      const pv = cfg.priveSpotlight;
+      const sec = document.querySelector('section.prive-spotlight');
+      if (sec) {
+        sec.style.display = (pv.visible !== false) ? '' : 'none';
+        const cols = sec.querySelectorAll('.prive-spotlight__grid > div');
+        const leftCol = cols[0];
+        const rightCol = cols[1];
+
+        if (leftCol) {
+          const img = leftCol.querySelector('img');
+          if (img && pv.cardImage) img.src = pv.cardImage;
+          const spans = leftCol.querySelectorAll('span');
+          if (spans[0] && pv.cardTag !== undefined) spans[0].textContent = pv.cardTag;
+          const h3 = leftCol.querySelector('h3');
+          if (h3 && pv.cardTitle !== undefined) h3.textContent = pv.cardTitle;
+          const p = leftCol.querySelector('p');
+          if (p && pv.cardDesc !== undefined) p.textContent = pv.cardDesc;
+          const btn = leftCol.querySelector('a.btn');
+          if (btn) {
+            if (pv.cardBtnText !== undefined) btn.textContent = pv.cardBtnText;
+            if (pv.cardBtnUrl !== undefined) btn.setAttribute('href', pv.cardBtnUrl);
+          }
+        }
+
+        if (rightCol) {
+          const eye = rightCol.querySelector('span');
+          if (eye && pv.eyebrow !== undefined) eye.textContent = pv.eyebrow;
+          const h2 = rightCol.querySelector('h2');
+          if (h2 && (pv.titleTop !== undefined || pv.titleItalic !== undefined)) {
+            const top = nlToBr(pv.titleTop !== undefined ? pv.titleTop : 'Uniformes que pocos\npueden vestir.');
+            const it = escHtml(pv.titleItalic !== undefined ? pv.titleItalic : 'Privilegios para ti.');
+            h2.innerHTML = `${top}<br><em style="color: rgba(255,255,255,0.65);">${it}</em>`;
+          }
+          const desc = rightCol.querySelector('p');
+          if (desc && pv.description !== undefined) desc.textContent = pv.description;
+
+          if (Array.isArray(pv.benefits)) {
+            const bItems = rightCol.querySelectorAll('.prive-spotlight__benefits > div');
+            pv.benefits.forEach((bData, idx) => {
+              const item = bItems[idx];
+              if (!item || !bData) return;
+              const divs = item.querySelectorAll('div');
+              if (divs[0] && bData.title !== undefined) divs[0].textContent = bData.title;
+              if (divs[1] && bData.text !== undefined) divs[1].textContent = bData.text;
+            });
+          }
+
+          const actions = rightCol.querySelectorAll('.prive-spotlight__actions a');
+          if (actions[0]) {
+            if (pv.ctaPrimaryText !== undefined) actions[0].textContent = pv.ctaPrimaryText;
+            if (pv.ctaPrimaryUrl !== undefined) actions[0].setAttribute('href', pv.ctaPrimaryUrl);
+          }
+          if (actions[1]) {
+            if (pv.ctaSecondaryText !== undefined) actions[1].textContent = pv.ctaSecondaryText;
+            if (pv.ctaSecondaryUrl !== undefined) actions[1].setAttribute('href', pv.ctaSecondaryUrl);
+          }
+        }
       }
     }
 
@@ -2279,9 +2360,21 @@
       }
     }
 
-    /* 7b. Los más pedidos (productos) */
-    const destSec = document.getElementById('destacados');
-    if (destSec) destSec.style.display = (cfg.destacados && cfg.destacados.visible === false) ? 'none' : '';
+    /* 7c. Footer / Datos de Contacto */
+    if (cfg.footer) {
+      const f = cfg.footer;
+      const footerEl = document.querySelector('footer.footer');
+      if (footerEl) {
+        const cols = footerEl.querySelectorAll('.footer__col');
+        if (cols[2]) {
+          const spans = cols[2].querySelectorAll('.footer__links span');
+          if (spans[0] && f.whatsapp !== undefined) spans[0].textContent = f.whatsapp;
+          if (spans[1] && f.email !== undefined) spans[1].textContent = f.email;
+          if (spans[2] && f.city !== undefined) spans[2].textContent = f.city;
+          if (spans[3] && f.schedule !== undefined) spans[3].textContent = f.schedule;
+        }
+      }
+    }
 
     /* 8. Orden de Secciones */
     if (Array.isArray(cfg.sectionOrder) && cfg.sectionOrder.length > 0) {
@@ -2292,6 +2385,7 @@
           hero: document.querySelector('section.hero'),
           destacados: document.getElementById('destacados'),
           drops: document.querySelector('section.drops'),
+          priveSpotlight: document.querySelector('section.prive-spotlight'),
           nosotros: document.querySelector('section.nosotros'),
           contactoCta: document.querySelector('section.contacto-cta')
         };
@@ -2299,6 +2393,10 @@
         if (!order.includes('destacados')) {
           const hi = order.indexOf('hero');
           order.splice(hi >= 0 ? hi + 1 : 0, 0, 'destacados');
+        }
+        if (!order.includes('priveSpotlight')) {
+          const di = order.indexOf('drops');
+          order.splice(di >= 0 ? di + 1 : order.length, 0, 'priveSpotlight');
         }
         order.forEach(key => {
           const el = mapSec[key];
@@ -2337,22 +2435,28 @@
     } catch (_) {}
   }
 
-  /* Si NO estamos en modo preview dentro del iframe o al iniciar, sincronizar config global */
   fetchRemoteLandingConfig();
 
   /* Escuchar cambios en vivo desde el Editor Estilo Shopify del Panel Admin */
+  let studioInteractive = location.search.includes('preview=1');
+
   window.addEventListener('message', function (e) {
     if (!e.data || typeof e.data !== 'object') return;
     if (e.data.type === 'YOSSICO_LANDING_PREVIEW') {
       window.applyYossicoLandingConfig(e.data.config);
+    } else if (e.data.type === 'YOSSICO_STUDIO_MODE') {
+      studioInteractive = !!e.data.interactive;
     } else if (e.data.type === 'YOSSICO_LANDING_SCROLL') {
       const mapEl = {
         announcement: document.getElementById('barra-envio-gratis'),
         countdown: document.getElementById('countdown-section'),
         hero: document.querySelector('section.hero'),
+        destacados: document.getElementById('destacados'),
         drops: document.querySelector('section.drops'),
+        priveSpotlight: document.querySelector('section.prive-spotlight'),
         nosotros: document.querySelector('section.nosotros'),
-        contactoCta: document.querySelector('section.contacto-cta')
+        contactoCta: document.querySelector('section.contacto-cta'),
+        footer: document.querySelector('footer.footer')
       };
       if (e.data.section === 'popup') {
         if (typeof openSubPopup === 'function') openSubPopup();
@@ -2369,6 +2473,71 @@
       }
     }
   });
+
+  /* Modo Inspector Visual (Click-to-Edit) cuando se abre dentro del Editor Web */
+  if (location.search.includes('preview=1')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'position:fixed;z-index:99999;background:#111111;color:#ffffff;font-family:Montserrat,sans-serif;font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;padding:6px 12px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity 0.15s ease;box-shadow:0 4px 14px rgba(0,0,0,0.28);display:flex;align-items:center;gap:6px;';
+      document.body.appendChild(badge);
+
+      const secDefs = [
+        { key: 'announcement', label: 'Barra de Envío Gratis', sel: '#barra-envio-gratis' },
+        { key: 'countdown', label: 'Cuenta Regresiva Drop', sel: '#countdown-section' },
+        { key: 'hero', label: 'Portada Principal (Hero)', sel: 'section.hero' },
+        { key: 'destacados', label: 'Los Más Pedidos', sel: '#destacados' },
+        { key: 'drops', label: 'Sección Drops Editorial', sel: 'section.drops' },
+        { key: 'priveSpotlight', label: 'YOSSICO Privé Spotlight', sel: 'section.prive-spotlight' },
+        { key: 'nosotros', label: 'Por qué YOSSICO (4 Pilares)', sel: 'section.nosotros' },
+        { key: 'contactoCta', label: 'Cierre / Contacto WhatsApp', sel: 'section.contacto-cta' },
+        { key: 'footer', label: 'Pie de Página (Footer)', sel: 'footer.footer' }
+      ];
+
+      let hoveredEl = null;
+
+      secDefs.forEach(def => {
+        const el = document.querySelector(def.sel);
+        if (!el) return;
+        el.addEventListener('mouseenter', (ev) => {
+          if (!studioInteractive) return;
+          hoveredEl = el;
+          el.style.outline = '2px dashed #111111';
+          el.style.outlineOffset = '-2px';
+          el.style.cursor = 'pointer';
+          badge.innerHTML = '<span>✎</span><span>Clic para editar: ' + def.label + '</span>';
+          badge.style.opacity = '1';
+        });
+        el.addEventListener('mousemove', (ev) => {
+          if (!studioInteractive) {
+            badge.style.opacity = '0';
+            return;
+          }
+          badge.style.left = Math.min(window.innerWidth - 280, ev.clientX + 14) + 'px';
+          badge.style.top = Math.max(12, ev.clientY - 36) + 'px';
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.outline = '';
+          el.style.cursor = '';
+          if (hoveredEl === el) {
+            badge.style.opacity = '0';
+            hoveredEl = null;
+          }
+        });
+        el.addEventListener('click', (ev) => {
+          if (!studioInteractive) return;
+          ev.preventDefault();
+          ev.stopPropagation();
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({
+              type: 'YOSSICO_STUDIO_SELECT',
+              page: 'landing',
+              section: def.key
+            }, '*');
+          }
+        }, true);
+      });
+    });
+  }
 })();
 </script>
 </body>

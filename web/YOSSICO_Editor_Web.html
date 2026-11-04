@@ -474,29 +474,37 @@
   <header class="studio-topbar">
     <div class="studio-topbar__left">
       <a href="YOSSICO_Panel_Admin.html" class="studio-back-btn" title="Volver al Panel Administrativo">← Panel Admin</a>
-      <button type="button" class="studio-btn" id="btn-toggle-sidebar" onclick="toggleStudioSidebar()" title="Ocultar o mostrar el panel izquierdo para ver pantalla completa">◀ Ocultar Controles</button>
+      <button type="button" class="studio-btn" id="btn-toggle-sidebar" onclick="toggleStudioSidebar()" title="Ocultar o mostrar el panel izquierdo">◀ Controles</button>
       <span class="studio-brand">YOSSICO STUDIO</span>
       <span class="studio-status" id="studio-status-badge">● Sincronizado</span>
     </div>
 
-    <!-- Selector Central de Página: Inicio vs Colección -->
+    <!-- Selector Central de Página: Inicio, Colección, Privé, Campus -->
     <div class="studio-topbar__center">
       <div class="studio-page-tabs">
         <button type="button" class="studio-page-tab active" id="tab-page-landing" onclick="switchStudioPage('landing')">
-          🏠 Página de Inicio (Landing)
+          🏠 Inicio
         </button>
         <button type="button" class="studio-page-tab" id="tab-page-coleccion" onclick="switchStudioPage('coleccion')">
-          👗 Página de Colección (Catálogo)
+          👗 Colección
+        </button>
+        <button type="button" class="studio-page-tab" id="tab-page-prive" onclick="switchStudioPage('prive')">
+          🔒 Club Privé
+        </button>
+        <button type="button" class="studio-page-tab" id="tab-page-campus" onclick="switchStudioPage('campus')">
+          🎓 Campus
         </button>
       </div>
     </div>
 
     <div class="studio-topbar__right">
-      <button type="button" class="studio-btn active" id="btn-dev-desktop" onclick="setStudioDevice('desktop')">🖥️ Computador</button>
-      <button type="button" class="studio-btn" id="btn-dev-mobile" onclick="setStudioDevice('mobile')">📱 Celular</button>
-      <a href="index.html" target="_blank" class="studio-btn" id="btn-open-live">↗ Ver Página Real</a>
-      <button type="button" class="studio-btn studio-btn--danger" onclick="restaurarPaginaActual()">↺ Restaurar</button>
-      <button type="button" class="studio-btn studio-btn--publish" onclick="guardarYPublicarTodo()">💾 Guardar y Publicar en Vivo</button>
+      <button type="button" class="studio-btn" id="btn-undo" onclick="studioUndo()" title="Deshacer último cambio (Ctrl+Z)" disabled>↶</button>
+      <button type="button" class="studio-btn" id="btn-redo" onclick="studioRedo()" title="Rehacer cambio (Ctrl+Y)" disabled>↷</button>
+      <button type="button" class="studio-btn active" id="btn-dev-desktop" onclick="setStudioDevice('desktop')" title="Vista Computador">🖥️</button>
+      <button type="button" class="studio-btn" id="btn-dev-mobile" onclick="setStudioDevice('mobile')" title="Vista Celular">📱</button>
+      <a href="index.html" target="_blank" class="studio-btn" id="btn-open-live" title="Abrir página real en nueva pestaña">↗ Ver Web</a>
+      <button type="button" class="studio-btn studio-btn--danger" onclick="restaurarPaginaActual()" title="Restaurar página actual de fábrica">↺ Restaurar</button>
+      <button type="button" class="studio-btn studio-btn--publish" onclick="guardarYPublicarTodo()">💾 Publicar Cambios</button>
     </div>
   </header>
 
@@ -505,9 +513,18 @@
 
     <!-- Inspector Lateral -->
     <aside class="studio-sidebar" id="studio-sidebar">
-      <div class="studio-sidebar__header">
-        <span id="sidebar-title-text">Editando: Página de Inicio</span>
-        <span style="font-size:0.65rem; color:var(--accent); font-weight:600;">En vivo</span>
+      <div class="studio-sidebar__header" style="flex-direction:column; align-items:stretch; gap:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span id="sidebar-title-text">Editando: Página de Inicio</span>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <button type="button" class="st-mini-btn" onclick="expandCollapseAllAcc()" id="btn-exp-all" title="Expandir o contraer todas las secciones">↕ Expandir todo</button>
+            <span style="font-size:0.65rem; color:var(--accent); font-weight:600;">● En vivo</span>
+          </div>
+        </div>
+        <!-- Buscador rápido de secciones o prendas -->
+        <div style="position:relative;">
+          <input type="search" id="studio-search-input" placeholder="🔍 Buscar sección, prenda, texto o precio..." oninput="filterStudioSidebar(this.value)" style="width:100%; padding:0.42rem 0.65rem; border:1px solid #cbd5e1; border-radius:5px; font-family:inherit; font-size:0.73rem; background:#f8fafc; color:#0f172a;">
+        </div>
       </div>
 
       <!-- =================================================================
@@ -518,11 +535,11 @@
         <!-- 0. Orden y Visibilidad -->
         <div class="st-acc" id="acc-l-order">
           <div class="st-acc-head" onclick="toggleAcc('l', 'order')">
-            <span>🔀 Orden y Visibilidad de Bloques</span>
+            <span>🔀 Orden y Visibilidad de Secciones</span>
             <span>▾</span>
           </div>
           <div class="st-acc-body">
-            <p style="font-size:0.68rem; color:#64748b; margin-bottom:0.6rem;">Reordena las secciones con ↑ ↓ o apágalas/préndelas según la campaña:</p>
+            <p style="font-size:0.68rem; color:#64748b; margin-bottom:0.6rem;">Reordena las secciones con ↑ ↓ o préndelas/apágalas con 1 clic:</p>
             <div id="l-order-list"></div>
           </div>
         </div>
@@ -530,7 +547,7 @@
         <!-- 1. Barra de Anuncio -->
         <div class="st-acc open" id="acc-l-announcement">
           <div class="st-acc-head" onclick="toggleAcc('l', 'announcement')">
-            <span>📢 1. Barra Superior de Anuncio</span>
+            <span>📢 1. Barra Superior de Envío Gratis</span>
             <span>▾</span>
           </div>
           <div class="st-acc-body">
@@ -629,26 +646,26 @@
               </div>
             </div>
             <div class="st-field">
-              <label>Subtítulo / Descripción</label>
+              <label>Subtítulo / Descripción Comercial</label>
               <textarea id="le-hero-sub" oninput="onLandingChange()"></textarea>
             </div>
             <div class="st-grid-2">
               <div class="st-field">
-                <label>Botón 1 (Texto)</label>
+                <label>Botón Principal (Texto)</label>
                 <input type="text" id="le-hero-cta1-txt" oninput="onLandingChange()">
               </div>
               <div class="st-field">
-                <label>Botón 1 (Link)</label>
+                <label>Botón Principal (Link)</label>
                 <input type="text" id="le-hero-cta1-url" oninput="onLandingChange()">
               </div>
             </div>
             <div class="st-grid-2">
               <div class="st-field">
-                <label>Botón 2 (Texto)</label>
+                <label>Botón Secundario (Texto)</label>
                 <input type="text" id="le-hero-cta2-txt" oninput="onLandingChange()">
               </div>
               <div class="st-field">
-                <label>Botón 2 (Link)</label>
+                <label>Botón Secundario (Link)</label>
                 <input type="text" id="le-hero-cta2-url" oninput="onLandingChange()">
               </div>
             </div>
@@ -683,10 +700,48 @@
           </div>
         </div>
 
-        <!-- 4. Sección Drops -->
+        <!-- 4. Los Más Pedidos (Destacados) -->
+        <div class="st-acc" id="acc-l-destacados">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'destacados')">
+            <span>🛍️ 4. Los Más Pedidos (Vitrina Rápida)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar sección Los Más Pedidos</span>
+              <input type="checkbox" id="le-dest-visible" checked onchange="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Etiqueta Superior</label>
+              <input type="text" id="le-dest-eye" oninput="onLandingChange()">
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Título Inicio</label>
+                <input type="text" id="le-dest-tp" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>En Cursiva</label>
+                <input type="text" id="le-dest-ti" oninput="onLandingChange()">
+              </div>
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Link Superior Derecho</label>
+                <input type="text" id="le-dest-cta" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Texto Botón de Tarjetas</label>
+                <input type="text" id="le-dest-btn" oninput="onLandingChange()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Sección Drops -->
         <div class="st-acc" id="acc-l-drops">
           <div class="st-acc-head" onclick="toggleAcc('l', 'drops')">
-            <span>🔥 4. Sección Drops (Editorial)</span>
+            <span>🔥 5. Sección Drops (Editorial)</span>
             <span>▾</span>
           </div>
           <div class="st-acc-body">
@@ -747,10 +802,107 @@
           </div>
         </div>
 
-        <!-- 5. Por qué YOSSICO es diferente -->
+        <!-- 6. Sección YOSSICO Privé Spotlight -->
+        <div class="st-acc" id="acc-l-priveSpotlight">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'priveSpotlight')">
+            <span>🔒 6. Sección YOSSICO Privé (Spotlight)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar sección Privé en Inicio</span>
+              <input type="checkbox" id="le-pv-visible" checked onchange="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Etiqueta Superior (Precio / Membresía)</label>
+              <input type="text" id="le-pv-eye" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Titular Principal</label>
+              <textarea id="le-pv-ttop" style="min-height:42px;" oninput="onLandingChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Titular en Cursiva</label>
+              <input type="text" id="le-pv-tit" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Descripción General Privé</label>
+              <textarea id="le-pv-desc" oninput="onLandingChange()"></textarea>
+            </div>
+
+            <div style="border-top:1px solid #e2e8f0; padding-top:0.6rem; margin-top:0.4rem;">
+              <label style="display:block; font-size:0.68rem; font-weight:700; text-transform:uppercase; color:#0C4E57; margin-bottom:0.45rem;">🃏 Tarjeta Bloqueada Izquierda (Étoile Privé)</label>
+              <div class="st-grid-2">
+                <div class="st-field">
+                  <label>Etiqueta Candado</label>
+                  <input type="text" id="le-pv-ctag" oninput="onLandingChange()">
+                </div>
+                <div class="st-field">
+                  <label>Nombre de la Pieza</label>
+                  <input type="text" id="le-pv-ctitle" oninput="onLandingChange()">
+                </div>
+              </div>
+              <div class="st-field">
+                <label>Texto de la Tarjeta Bloqueada</label>
+                <textarea id="le-pv-cdesc" style="min-height:42px;" oninput="onLandingChange()"></textarea>
+              </div>
+              <div class="st-grid-2">
+                <div class="st-field">
+                  <label>Texto Botón Tarjeta</label>
+                  <input type="text" id="le-pv-cbtn" oninput="onLandingChange()">
+                </div>
+                <div class="st-field">
+                  <label>Foto de Fondo (URL)</label>
+                  <input type="text" id="le-pv-cimg" oninput="onLandingChange()">
+                </div>
+              </div>
+              <div style="margin-bottom:0.6rem;">
+                <label for="le-pv-upload" class="studio-btn" style="width:100%; justify-content:center; background:#111827; color:#fff; cursor:pointer; padding:0.42rem;">📁 Subir Foto para Tarjeta Privé</label>
+                <input type="file" id="le-pv-upload" accept="image/*" style="display:none" onchange="uploadImageToInput(this, 'le-pv-cimg', 'landing')">
+              </div>
+            </div>
+
+            <div style="border-top:1px solid #e2e8f0; padding-top:0.6rem; margin-top:0.4rem;">
+              <label style="display:block; font-size:0.68rem; font-weight:700; text-transform:uppercase; color:#0C4E57; margin-bottom:0.45rem;">✨ 4 Beneficios Destacados Privé</label>
+              <div class="st-field">
+                <label>Beneficio 01 — Título y Texto</label>
+                <input type="text" id="le-pv-b1-t" style="margin-bottom:4px" oninput="onLandingChange()">
+                <input type="text" id="le-pv-b1-p" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Beneficio 02 — Título y Texto</label>
+                <input type="text" id="le-pv-b2-t" style="margin-bottom:4px" oninput="onLandingChange()">
+                <input type="text" id="le-pv-b2-p" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Beneficio 03 — Título y Texto</label>
+                <input type="text" id="le-pv-b3-t" style="margin-bottom:4px" oninput="onLandingChange()">
+                <input type="text" id="le-pv-b3-p" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Beneficio 04 — Título y Texto</label>
+                <input type="text" id="le-pv-b4-t" style="margin-bottom:4px" oninput="onLandingChange()">
+                <input type="text" id="le-pv-b4-p" oninput="onLandingChange()">
+              </div>
+            </div>
+
+            <div class="st-grid-2" style="border-top:1px solid #e2e8f0; padding-top:0.6rem;">
+              <div class="st-field">
+                <label>Botón Principal Privé</label>
+                <input type="text" id="le-pv-cta1" oninput="onLandingChange()">
+              </div>
+              <div class="st-field">
+                <label>Link Secundario (Campus)</label>
+                <input type="text" id="le-pv-cta2" oninput="onLandingChange()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Por qué YOSSICO es diferente -->
         <div class="st-acc" id="acc-l-nosotros">
           <div class="st-acc-head" onclick="toggleAcc('l', 'nosotros')">
-            <span>✨ 5. Por qué YOSSICO (4 Pilares)</span>
+            <span>✨ 7. Por qué YOSSICO (4 Pilares)</span>
             <span>▾</span>
           </div>
           <div class="st-acc-body">
@@ -801,10 +953,10 @@
           </div>
         </div>
 
-        <!-- 6. Contacto CTA -->
+        <!-- 8. Contacto CTA -->
         <div class="st-acc" id="acc-l-contactoCta">
           <div class="st-acc-head" onclick="toggleAcc('l', 'contactoCta')">
-            <span>💬 6. Sección Cierre / Contacto</span>
+            <span>💬 8. Sección Cierre / Contacto</span>
             <span>▾</span>
           </div>
           <div class="st-acc-body">
@@ -849,10 +1001,10 @@
           </div>
         </div>
 
-        <!-- 7. Popup Suscripción -->
+        <!-- 9. Popup Suscripción -->
         <div class="st-acc" id="acc-l-popup">
           <div class="st-acc-head" onclick="toggleAcc('l', 'popup')">
-            <span>🎁 7. Popup de Bienvenida (10% OFF)</span>
+            <span>🎁 9. Popup de Bienvenida (10% OFF)</span>
             <span>▾</span>
           </div>
           <div class="st-acc-body">
@@ -888,6 +1040,32 @@
             <div class="st-field">
               <label>Texto Botón</label>
               <input type="text" id="le-pop-fbtn" oninput="onLandingChange()">
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. Pie de Página (Footer) -->
+        <div class="st-acc" id="acc-l-footer">
+          <div class="st-acc-head" onclick="toggleAcc('l', 'footer')">
+            <span>🏛️ 10. Pie de Página (Contacto y Horario)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-field">
+              <label>Línea WhatsApp</label>
+              <input type="text" id="le-ft-wa" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Línea Email</label>
+              <input type="text" id="le-ft-email" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Ciudad / País</label>
+              <input type="text" id="le-ft-city" oninput="onLandingChange()">
+            </div>
+            <div class="st-field">
+              <label>Horario de Atención</label>
+              <input type="text" id="le-ft-sched" oninput="onLandingChange()">
             </div>
           </div>
         </div>
@@ -957,7 +1135,7 @@
             <span>▾</span>
           </div>
           <div class="st-acc-body">
-            <label style="display:block; font-size:0.66rem; font-weight:700; text-transform:uppercase; color:#475569; margin-bottom:0.4rem;">Selecciona la prenda a editar:</label>
+            <label style="display:block; font-size:0.66rem; font-weight:700; text-transform:uppercase; color:#475569; margin-bottom:0.4rem;">Selecciona la prenda a editar (o haz clic sobre ella en la vista previa):</label>
             <div class="st-prod-pills" id="ce-prod-pills"></div>
 
             <!-- Formulario dinámico de la prenda activa -->
@@ -973,8 +1151,41 @@
                   <input type="text" id="ce-prod-name" oninput="onActiveProductFieldChange()">
                 </div>
                 <div class="st-field">
-                  <label>Precio Visible</label>
+                  <label id="ce-prod-price-lbl">Precio Visible</label>
                   <input type="text" id="ce-prod-price" placeholder="$275.900 COP" oninput="onActiveProductFieldChange()">
+                </div>
+              </div>
+
+              <!-- Campos exclusivos para ÉTOILE PRIVÉ -->
+              <div id="ce-prive-extra-fields" style="display:none; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:0.65rem; margin-bottom:0.75rem;">
+                <label style="display:block; font-size:0.66rem; font-weight:700; text-transform:uppercase; color:#111827; margin-bottom:0.45rem;">🔒 Configuración Exclusiva Pieza Privé</label>
+                <div class="st-grid-2">
+                  <div class="st-field">
+                    <label>Precio Regular (Tachado)</label>
+                    <input type="text" id="ce-prod-regprice" placeholder="$359.900 COP" oninput="onActiveProductFieldChange()">
+                  </div>
+                  <div class="st-field">
+                    <label>Nota Descuento Miembro</label>
+                    <input type="text" id="ce-prod-memnote" placeholder="· Miembros (−15%)" oninput="onActiveProductFieldChange()">
+                  </div>
+                </div>
+                <div class="st-grid-2">
+                  <div class="st-field">
+                    <label>Subtítulo Candado</label>
+                    <input type="text" id="ce-prod-ovsub" placeholder="ARCHIVO PRIVADO" oninput="onActiveProductFieldChange()">
+                  </div>
+                  <div class="st-field">
+                    <label>Título Candado</label>
+                    <input type="text" id="ce-prod-ovtitle" placeholder="Solo Miembros" oninput="onActiveProductFieldChange()">
+                  </div>
+                </div>
+                <div class="st-field">
+                  <label>Descripción sobre el Candado</label>
+                  <textarea id="ce-prod-ovdesc" style="min-height:42px;" oninput="onActiveProductFieldChange()"></textarea>
+                </div>
+                <div class="st-field" style="margin-bottom:0;">
+                  <label>Texto Botón Desbloquear (Sobre Foto)</label>
+                  <input type="text" id="ce-prod-ovbtn" placeholder="DESBLOQUEAR PIEZA →" oninput="onActiveProductFieldChange()">
                 </div>
               </div>
 
@@ -985,6 +1196,7 @@
                     <option value="essentials">Essentials</option>
                     <option value="signature">Signature</option>
                     <option value="core">Core</option>
+                    <option value="prive">Privé (Solo Miembros)</option>
                   </select>
                 </div>
                 <div class="st-field">
@@ -1014,24 +1226,60 @@
                   <input type="text" id="ce-prod-cta" oninput="onActiveProductFieldChange()">
                 </div>
                 <div class="st-field">
-                  <label>Texto Botón Carrito</label>
+                  <label>Texto Botón Principal / Carrito</label>
                   <input type="text" id="ce-prod-addbtn" oninput="onActiveProductFieldChange()">
                 </div>
               </div>
 
               <!-- Editor de Fotos por Color de esta prenda -->
               <div style="border-top:1px solid #e2e8f0; padding-top:0.75rem; margin-top:0.4rem;">
-                <label style="display:block; font-size:0.68rem; font-weight:700; text-transform:uppercase; color:#0C4E57; margin-bottom:0.5rem;">🎨 Colores y Fotos de esta Prenda</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                  <label style="font-size:0.68rem; font-weight:700; text-transform:uppercase; color:#0C4E57;">🎨 Colores y Fotos de esta Prenda</label>
+                  <button type="button" class="st-mini-btn" style="background:#111827; color:#fff; border-color:#111827;" onclick="addNewColorToActiveProduct()">+ Agregar Color</button>
+                </div>
                 <div id="ce-prod-colors-editor"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 3. Sección Capas / Complementos -->
+        <!-- 3. Apartado Privé (Archivo Privado) -->
+        <div class="st-acc" id="acc-c-priveSection">
+          <div class="st-acc-head" onclick="toggleAcc('c', 'priveSection')">
+            <span>🔒 3. Apartado Privé (Solo Miembros)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar apartado Privé en Colección</span>
+              <input type="checkbox" id="ce-prive-visible" checked onchange="onColeccionChange()">
+            </div>
+            <div class="st-grid-3">
+              <div class="st-field">
+                <label>Etiqueta</label>
+                <input type="text" id="ce-prive-label" oninput="onColeccionChange()">
+              </div>
+              <div class="st-field">
+                <label>Título</label>
+                <input type="text" id="ce-prive-title" oninput="onColeccionChange()">
+              </div>
+              <div class="st-field">
+                <label>Badge</label>
+                <input type="text" id="ce-prive-badge" oninput="onColeccionChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Subtítulo Descriptivo</label>
+              <textarea id="ce-prive-sub" style="min-height:44px;" oninput="onColeccionChange()"></textarea>
+            </div>
+            <button type="button" class="studio-btn" style="width:100%; justify-content:center; background:#111827; color:#fff;" onclick="toggleAcc('c','products'); selectProductToEdit('etoile');">✎ Editar Prenda ÉTOILE PRIVÉ →</button>
+          </div>
+        </div>
+
+        <!-- 4. Sección Capas / Complementos -->
         <div class="st-acc" id="acc-c-capasSection">
           <div class="st-acc-head" onclick="toggleAcc('c', 'capasSection')">
-            <span>🧥 3. Sección Capas & Lista de Espera</span>
+            <span>🧥 4. Apartado Capas & Lista de Espera</span>
             <span>▾</span>
           </div>
           <div class="st-acc-body">
@@ -1061,13 +1309,14 @@
               <label>Texto Botón Lista de Espera</label>
               <input type="text" id="ce-capas-wlbtn" oninput="onColeccionChange()">
             </div>
+            <button type="button" class="studio-btn" style="width:100%; justify-content:center; background:#111827; color:#fff; margin-top:4px;" onclick="toggleAcc('c','products'); selectProductToEdit('hoodie');">✎ Editar Prenda HOODIE →</button>
           </div>
         </div>
 
-        <!-- 4. Sección Cierre ¿No encuentras tu talla? -->
+        <!-- 5. Sección Cierre ¿No encuentras tu talla? -->
         <div class="st-acc" id="acc-c-ctaSection">
           <div class="st-acc-head" onclick="toggleAcc('c', 'ctaSection')">
-            <span>💬 4. Sección Cierre (¿No encuentras tu talla?)</span>
+            <span>💬 5. Sección Cierre (¿No encuentras tu talla?)</span>
             <span>▾</span>
           </div>
           <div class="st-acc-body">
@@ -1099,6 +1348,312 @@
         </div>
 
       </div>
+
+      <!-- =================================================================
+           CONTROLES PÁGINA 3: CLUB PRIVÉ (PRIVE.HTML)
+           ================================================================= -->
+      <div class="studio-sidebar__scroll" id="inspector-prive" style="display:none;">
+
+        <!-- 1. Portada Club Privé -->
+        <div class="st-acc open" id="acc-p-hero">
+          <div class="st-acc-head" onclick="toggleAcc('p', 'hero')">
+            <span>🔒 1. Portada Club Privé (Hero)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar portada Privé</span>
+              <input type="checkbox" id="pe-hero-visible" checked onchange="onPriveChange()">
+            </div>
+            <div class="st-field">
+              <label>Insignia Superior</label>
+              <input type="text" id="pe-hero-badge" oninput="onPriveChange()">
+            </div>
+            <div class="st-field">
+              <label>Título Línea 1</label>
+              <input type="text" id="pe-hero-ttop" oninput="onPriveChange()">
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Palabra en Cursiva</label>
+                <input type="text" id="pe-hero-tit" oninput="onPriveChange()">
+              </div>
+              <div class="st-field">
+                <label>Final del Título</label>
+                <input type="text" id="pe-hero-tsuf" oninput="onPriveChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Subtítulo Descriptivo</label>
+              <textarea id="pe-hero-sub" oninput="onPriveChange()"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Pieza Reservada y Planes de Suscripción -->
+        <div class="st-acc" id="acc-p-showcase">
+          <div class="st-acc-head" onclick="toggleAcc('p', 'showcase')">
+            <span>💳 2. Pieza Reservada y Planes ($29.900 / $290.000)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar vitrina y planes</span>
+              <input type="checkbox" id="pe-sc-visible" checked onchange="onPriveChange()">
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Etiqueta Tarjeta</label>
+                <input type="text" id="pe-sc-ctag" oninput="onPriveChange()">
+              </div>
+              <div class="st-field">
+                <label>Nombre Pieza</label>
+                <input type="text" id="pe-sc-ctitle" oninput="onPriveChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Descripción Pieza Reservada</label>
+              <textarea id="pe-sc-cdesc" style="min-height:42px;" oninput="onPriveChange()"></textarea>
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Botón Pieza</label>
+                <input type="text" id="pe-sc-cbtn" oninput="onPriveChange()">
+              </div>
+              <div class="st-field">
+                <label>Foto (URL)</label>
+                <input type="text" id="pe-sc-img" oninput="onPriveChange()">
+              </div>
+            </div>
+
+            <div style="border-top:1px solid #e2e8f0; padding-top:0.6rem; margin-top:0.4rem;">
+              <label style="display:block; font-size:0.68rem; font-weight:700; text-transform:uppercase; color:#0C4E57; margin-bottom:0.4rem;">Plan Mensual</label>
+              <div class="st-grid-3">
+                <div class="st-field">
+                  <label>Título</label>
+                  <input type="text" id="pe-sc-mt" oninput="onPriveChange()">
+                </div>
+                <div class="st-field">
+                  <label>Precio</label>
+                  <input type="text" id="pe-sc-mp" oninput="onPriveChange()">
+                </div>
+                <div class="st-field">
+                  <label>Badge</label>
+                  <input type="text" id="pe-sc-mb" oninput="onPriveChange()">
+                </div>
+              </div>
+              <div class="st-field">
+                <label>Descripción Plan Mensual</label>
+                <textarea id="pe-sc-md" style="min-height:42px;" oninput="onPriveChange()"></textarea>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid #e2e8f0; padding-top:0.6rem; margin-top:0.4rem;">
+              <label style="display:block; font-size:0.68rem; font-weight:700; text-transform:uppercase; color:#0C4E57; margin-bottom:0.4rem;">Plan Anual</label>
+              <div class="st-grid-3">
+                <div class="st-field">
+                  <label>Título</label>
+                  <input type="text" id="pe-sc-at" oninput="onPriveChange()">
+                </div>
+                <div class="st-field">
+                  <label>Precio</label>
+                  <input type="text" id="pe-sc-ap" oninput="onPriveChange()">
+                </div>
+                <div class="st-field">
+                  <label>Badge</label>
+                  <input type="text" id="pe-sc-ab" oninput="onPriveChange()">
+                </div>
+              </div>
+              <div class="st-field">
+                <label>Descripción Plan Anual</label>
+                <textarea id="pe-sc-ad" style="min-height:42px;" oninput="onPriveChange()"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Los 6 Pilares Privé -->
+        <div class="st-acc" id="acc-p-pillars">
+          <div class="st-acc-head" onclick="toggleAcc('p', 'pillars')">
+            <span>✨ 3. Los 6 Pilares y Beneficios Privé</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar cuadrícula de 6 pilares</span>
+              <input type="checkbox" id="pe-pil-visible" checked onchange="onPriveChange()">
+            </div>
+            <div id="pe-pillars-fields"></div>
+          </div>
+        </div>
+
+        <!-- 4. Formulario de Suscripción Privé -->
+        <div class="st-acc" id="acc-p-form">
+          <div class="st-acc-head" onclick="toggleAcc('p', 'form')">
+            <span>📝 4. Formulario de Registro Privé</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar formulario de inscripción</span>
+              <input type="checkbox" id="pe-frm-visible" checked onchange="onPriveChange()">
+            </div>
+            <div class="st-field">
+              <label>Etiqueta Superior</label>
+              <input type="text" id="pe-frm-eye" oninput="onPriveChange()">
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Título Inicio</label>
+                <input type="text" id="pe-frm-tp" oninput="onPriveChange()">
+              </div>
+              <div class="st-field">
+                <label>En Cursiva</label>
+                <input type="text" id="pe-frm-ti" oninput="onPriveChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Subtítulo</label>
+              <input type="text" id="pe-frm-sub" oninput="onPriveChange()">
+            </div>
+            <div class="st-field">
+              <label>Texto Botón de Activación</label>
+              <input type="text" id="pe-frm-btn" oninput="onPriveChange()">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- =================================================================
+           CONTROLES PÁGINA 4: CAMPUS ESTUDIANTIL (ESTUDIANTES.HTML)
+           ================================================================= -->
+      <div class="studio-sidebar__scroll" id="inspector-campus" style="display:none;">
+
+        <!-- 1. Portada Campus -->
+        <div class="st-acc open" id="acc-m-hero">
+          <div class="st-acc-head" onclick="toggleAcc('m', 'hero')">
+            <span>🎓 1. Portada Programa Estudiantil (Hero)</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar portada Campus</span>
+              <input type="checkbox" id="me-hero-visible" checked onchange="onCampusChange()">
+            </div>
+            <div class="st-field">
+              <label>Insignia Superior</label>
+              <input type="text" id="me-hero-badge" oninput="onCampusChange()">
+            </div>
+            <div class="st-field">
+              <label>Título Línea 1</label>
+              <input type="text" id="me-hero-ttop" oninput="onCampusChange()">
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Título Línea 2 (Prefijo)</label>
+                <input type="text" id="me-hero-tpref" oninput="onCampusChange()">
+              </div>
+              <div class="st-field">
+                <label>En Cursiva</label>
+                <input type="text" id="me-hero-tit" oninput="onCampusChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Subtítulo Descriptivo</label>
+              <textarea id="me-hero-sub" oninput="onCampusChange()"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Beneficios Estudiantiles -->
+        <div class="st-acc" id="acc-m-benefits">
+          <div class="st-acc-head" onclick="toggleAcc('m', 'benefits')">
+            <span>✨ 2. Los 3 Beneficios Estudiantiles</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar los 3 beneficios</span>
+              <input type="checkbox" id="me-ben-visible" checked onchange="onCampusChange()">
+            </div>
+            <div class="st-field">
+              <label>Beneficio 01 — Título y Descripción</label>
+              <input type="text" id="me-ben-1-t" style="margin-bottom:4px;" oninput="onCampusChange()">
+              <textarea id="me-ben-1-d" style="min-height:44px;" oninput="onCampusChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Beneficio 02 — Título y Descripción</label>
+              <input type="text" id="me-ben-2-t" style="margin-bottom:4px;" oninput="onCampusChange()">
+              <textarea id="me-ben-2-d" style="min-height:44px;" oninput="onCampusChange()"></textarea>
+            </div>
+            <div class="st-field">
+              <label>Beneficio 03 — Título y Descripción</label>
+              <input type="text" id="me-ben-3-t" style="margin-bottom:4px;" oninput="onCampusChange()">
+              <textarea id="me-ben-3-d" style="min-height:44px;" oninput="onCampusChange()"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Nota de Alcance -->
+        <div class="st-acc" id="acc-m-notice">
+          <div class="st-acc-head" onclick="toggleAcc('m', 'notice')">
+            <span>ℹ️ 3. Nota de Alcance del Programa</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar recuadro de nota aclaratoria</span>
+              <input type="checkbox" id="me-not-visible" checked onchange="onCampusChange()">
+            </div>
+            <div class="st-field">
+              <label>Título en Negrita</label>
+              <input type="text" id="me-not-title" oninput="onCampusChange()">
+            </div>
+            <div class="st-field">
+              <label>Texto Aclaratorio</label>
+              <textarea id="me-not-text" oninput="onCampusChange()"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Formulario de Acreditación -->
+        <div class="st-acc" id="acc-m-form">
+          <div class="st-acc-head" onclick="toggleAcc('m', 'form')">
+            <span>📝 4. Formulario de Verificación Estudiantil</span>
+            <span>▾</span>
+          </div>
+          <div class="st-acc-body">
+            <div class="st-toggle">
+              <span>Mostrar formulario estudiantil</span>
+              <input type="checkbox" id="me-frm-visible" checked onchange="onCampusChange()">
+            </div>
+            <div class="st-field">
+              <label>Etiqueta Superior</label>
+              <input type="text" id="me-frm-eye" oninput="onCampusChange()">
+            </div>
+            <div class="st-grid-2">
+              <div class="st-field">
+                <label>Título Inicio</label>
+                <input type="text" id="me-frm-tp" oninput="onCampusChange()">
+              </div>
+              <div class="st-field">
+                <label>En Cursiva</label>
+                <input type="text" id="me-frm-ti" oninput="onCampusChange()">
+              </div>
+            </div>
+            <div class="st-field">
+              <label>Subtítulo</label>
+              <input type="text" id="me-frm-sub" oninput="onCampusChange()">
+            </div>
+            <div class="st-field">
+              <label>Texto Botón de Solicitud</label>
+              <input type="text" id="me-frm-btn" oninput="onCampusChange()">
+            </div>
+          </div>
+        </div>
+
+      </div>
     </aside>
 
     <!-- Lienzo Derecho (Vista Previa Interactiva a Pantalla Completa) -->
@@ -1109,11 +1664,13 @@
             <span style="width:10px; height:10px; border-radius:50%; background:#ef4444; display:inline-block;"></span>
             <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b; display:inline-block;"></span>
             <span style="width:10px; height:10px; border-radius:50%; background:#10b981; display:inline-block;"></span>
-            <span id="studio-url-indicator" style="margin-left:8px; font-family:monospace; color:#334155;">https://yossico.com/index.html (Vista Previa Interactiva)</span>
+            <span id="studio-url-indicator" style="margin-left:8px; font-family:monospace; color:#334155;">https://yossico.com/index.html</span>
           </div>
-          <div style="display:flex; gap:10px; align-items:center;">
-            <span style="font-size:0.65rem; color:#64748b;">💡 Puedes navegar e interactuar dentro de la vista previa</span>
-            <button type="button" onclick="reloadStudioIframe()" style="background:none; border:none; cursor:pointer; color:#0f172a; font-weight:600; font-size:0.7rem;">↻ Recargar</button>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button type="button" id="btn-interactive-mode" onclick="toggleInteractiveClickMode()" style="background:#111827; color:#fff; border:1px solid #111827; border-radius:4px; padding:3px 9px; cursor:pointer; font-size:0.66rem; font-weight:600;">
+              🖱️ Modo: Clic para Editar (Activo)
+            </button>
+            <button type="button" onclick="reloadStudioIframe()" style="background:none; border:1px solid #cbd5e1; border-radius:4px; padding:3px 8px; cursor:pointer; color:#0f172a; font-weight:600; font-size:0.68rem;">↻ Recargar</button>
           </div>
         </div>
         <iframe id="studio-iframe" class="studio-iframe" src="index.html?preview=1"></iframe>
@@ -1131,12 +1688,19 @@
     const SUPA_KEY = 'sb_publishable_1bxubqO9tCMdrCTuWj9CKA_irvrSa19';
     let sb = null;
     let adminPin = null;
-    let activeStudioPage = 'landing'; // 'landing' | 'coleccion'
+    let activeStudioPage = 'landing'; // 'landing' | 'coleccion' | 'prive' | 'campus'
     let activeProductKey = 'oslo';
+    let studioInteractiveMode = true;
+    let allAccExpanded = false;
 
-    /* ── CONFIGURACIÓN POR DEFECTO: LANDING ── */
+    /* ── HISTORIAL UNDO / REDO ── */
+    let historyStack = [];
+    let historyIndex = -1;
+    let isRestoringHistory = false;
+
+    /* ── CONFIGURACIÓN POR DEFECTO: LANDING (INDEX.HTML) ── */
     const DEFAULT_LANDING = {
-      sectionOrder: ['countdown', 'hero', 'destacados', 'drops', 'nosotros', 'contactoCta'],
+      sectionOrder: ['countdown', 'hero', 'destacados', 'drops', 'priveSpotlight', 'nosotros', 'contactoCta'],
       announcement: {
         visible: true,
         text: 'Envío gratis en compras superiores a $300.000',
@@ -1156,17 +1720,25 @@
         labelPrefix: 'Uniformes Médicos · ',
         wordSwap1: 'Colombia',
         wordSwap2: 'YOSSICO',
-        titleLine1: 'Vestidos',
-        titleLine2: 'para',
-        titleItalic: 'sanar.',
-        subtitle: 'Uniformes para mujer diseñados para quienes dan todo en su día a día, hechos con muchísima precisión, identidad y orgullo para ellas.',
-        ctaPrimaryText: 'Ver Colección',
+        titleLine1: 'Uniformes',
+        titleLine2: 'pensados',
+        titleItalic: 'para ti.',
+        subtitle: 'Sabemos lo que entregas en cada turno. Por eso creamos uniformes médicos que abrazan tu silueta, acompañan tu ritmo y te hacen sentir impecable, segura y orgullosa de la mujer que eres.',
+        ctaPrimaryText: 'Encuentra tu uniforme',
         ctaPrimaryUrl: 'coleccion.html',
         ctaSecondaryText: 'Nuestra historia',
         ctaSecondaryUrl: 'historia.html',
         image: 'img/hero_model_cutout.webp',
         imagePosition: 'center top',
         rightBgColor: '#f5f4f0'
+      },
+      destacados: {
+        visible: true,
+        eyebrow: 'Los más pedidos',
+        titlePrefix: 'Elige tu',
+        titleItalic: 'set.',
+        ctaText: 'Ver toda la colección →',
+        btnText: 'Ver y comprar'
       },
       drops: {
         visible: true,
@@ -1182,6 +1754,29 @@
         ctaText: 'VER COLECCIÓN DISPONIBLE',
         ctaUrl: 'coleccion.html',
         subLinkText: 'Suscríbete para el próximo drop'
+      },
+      priveSpotlight: {
+        visible: true,
+        eyebrow: 'YOSSICO PRIVÉ · $29.900 COP / MES',
+        titleTop: 'Uniformes que pocos\npueden vestir.',
+        titleItalic: 'Privilegios para ti.',
+        description: 'Una suscripción mensual pensada para la mujer en salud que valora la discreción y la exclusividad. Acceso a piezas de archivo que no salen a la venta general, 15% OFF permanente en toda la colección y prelación de 48 horas en cada lanzamiento.',
+        cardTag: 'PIEZA RESERVADA',
+        cardTitle: 'ÉTOILE PRIVÉ',
+        cardDesc: 'Diseñado exclusivamente para miembros de YOSSICO Privé. No disponible en venta abierta.',
+        cardBtnText: 'SOLICITAR ACCESO →',
+        cardBtnUrl: 'prive.html',
+        cardImage: 'img/kyoto_original.webp',
+        benefits: [
+          { title: '01 · Piezas Privadas', text: 'Cortes y tonos de edición limitada reservados únicamente para suscriptoras.' },
+          { title: '02 · 15% OFF Permanente', text: 'Beneficio recurrente en cada orden sobre las líneas Signature, Essentials y Core.' },
+          { title: '03 · Prelación 48 Horas', text: 'Asegura tu talla dos días antes de cada apertura oficial al público.' },
+          { title: '04 · Despacho Prioritario', text: 'Envío prioritario sin monto mínimo a cualquier ciudad de Colombia.' }
+        ],
+        ctaPrimaryText: 'CONOCER YOSSICO PRIVÉ →',
+        ctaPrimaryUrl: 'prive.html',
+        ctaSecondaryText: 'Programa Estudiantil Campus →',
+        ctaSecondaryUrl: 'estudiantes.html'
       },
       nosotros: {
         visible: true,
@@ -1216,10 +1811,16 @@
         formTitle: 'Únete al drop',
         formSub: 'Cuéntanos quién eres y te avisamos antes de que abra el próximo drop — más tu descuento de bienvenida.',
         btnText: 'Quiero mi descuento →'
+      },
+      footer: {
+        whatsapp: 'WhatsApp: +57 312 730 0661',
+        email: 'Email: customerserviceyossico@gmail.com',
+        city: 'Bogotá D.C., Colombia',
+        schedule: 'Horario: Lunes a viernes, 9:00 a.m. – 5:00 p.m.'
       }
     };
 
-    /* ── CONFIGURACIÓN POR DEFECTO: COLECCIÓN ── */
+    /* ── CONFIGURACIÓN POR DEFECTO: COLECCIÓN (COLECCION.HTML) ── */
     const DEFAULT_COLECCION = {
       productOrder: ['oslo', 'milan', 'kyoto', 'lima', 'bogota', 'manta'],
       announcement: {
@@ -1254,9 +1855,9 @@
           ctaText: 'Pedir',
           addBtnText: '+ Agregar al carrito',
           colors: [
-            { label: 'Negro', imgs: ['img/oslo_black_front.webp', 'img/oslo_black_half.webp', 'img/oslo_black_back.webp', 'img/oslo_black_labels.webp'] },
-            { label: 'Azul Marino', imgs: ['img/oslo_navy_front.webp', 'img/oslo_navy_half.webp', 'img/oslo_navy_back.webp', 'img/oslo_navy_labels.webp'] },
-            { label: 'Vinotinto', imgs: ['img/oslo_burgundy_front.webp', 'img/oslo_burgundy_half.webp', 'img/oslo_burgundy_back.webp', 'img/oslo_burgundy_labels.webp'] }
+            { id: 'negro', hex: '#111111', label: 'Negro', imgs: ['img/oslo_black_front.webp', 'img/oslo_black_half.webp', 'img/oslo_black_back.webp', 'img/oslo_black_labels.webp'] },
+            { id: 'azul-oscuro', hex: '#1a2744', label: 'Azul Marino', imgs: ['img/oslo_navy_front.webp', 'img/oslo_navy_half.webp', 'img/oslo_navy_back.webp', 'img/oslo_navy_labels.webp'] },
+            { id: 'vinotinto', hex: '#5c2836', label: 'Vinotinto', imgs: ['img/oslo_burgundy_front.webp', 'img/oslo_burgundy_half.webp', 'img/oslo_burgundy_back.webp', 'img/oslo_burgundy_labels.webp'] }
           ]
         },
         milan: {
@@ -1271,7 +1872,7 @@
           ctaText: 'Pedir',
           addBtnText: '+ Agregar al carrito',
           colors: [
-            { label: 'Negro', imgs: ['img/milan_front.webp', 'img/milan_detail.webp', 'img/milan_back.webp', 'img/milan_black_labels.webp'] }
+            { id: 'negro', hex: '#111111', label: 'Negro', imgs: ['img/milan_front.webp', 'img/milan_detail.webp', 'img/milan_back.webp', 'img/milan_black_labels.webp'] }
           ]
         },
         kyoto: {
@@ -1286,7 +1887,7 @@
           ctaText: 'Pedir',
           addBtnText: '+ Agregar al carrito',
           colors: [
-            { label: 'Azul Marino', imgs: ['img/kyoto_front.webp', 'img/kyoto_detail.webp', 'img/kyoto_back.webp', 'img/kyoto_navy_labels.webp'] }
+            { id: 'azul-oscuro', hex: '#1a2744', label: 'Azul Marino', imgs: ['img/kyoto_front.webp', 'img/kyoto_detail.webp', 'img/kyoto_back.webp', 'img/kyoto_navy_labels.webp'] }
           ]
         },
         lima: {
@@ -1301,9 +1902,9 @@
           ctaText: 'Pedir',
           addBtnText: '+ Agregar al carrito',
           colors: [
-            { label: 'Negro', imgs: ['img/lima_black_front.webp', 'img/lima_black_half.webp', 'img/lima_black_back.webp', 'img/lima_black_labels.webp'] },
-            { label: 'Azul Pacífico', imgs: ['img/lima_teal_front.webp', 'img/lima_teal_half.webp', 'img/lima_teal_back.webp', 'img/lima_teal_labels.webp'] },
-            { label: 'Verde Oliva', imgs: ['img/lima_olive_front.webp', 'img/lima_olive_half.webp', 'img/lima_olive_back.webp', 'img/lima_olive_labels.webp'] }
+            { id: 'negro', hex: '#111111', label: 'Negro', imgs: ['img/lima_black_front.webp', 'img/lima_black_half.webp', 'img/lima_black_back.webp', 'img/lima_black_labels.webp'] },
+            { id: 'azul-teal', hex: '#1B6B6B', label: 'Azul Pacífico', imgs: ['img/lima_teal_front.webp', 'img/lima_teal_half.webp', 'img/lima_teal_back.webp', 'img/lima_teal_labels.webp'] },
+            { id: 'verde-oliva', hex: '#7A8C5E', label: 'Verde Oliva', imgs: ['img/lima_olive_front.webp', 'img/lima_olive_half.webp', 'img/lima_olive_back.webp', 'img/lima_olive_labels.webp'] }
           ]
         },
         bogota: {
@@ -1318,7 +1919,7 @@
           ctaText: 'Pedir',
           addBtnText: '+ Agregar al carrito',
           colors: [
-            { label: 'Azul Marino', imgs: ['img/bogota_navy_front.webp', 'img/bogota_navy_half.webp', 'img/bogota_navy_back.webp', 'img/bogota_navy_side.webp', 'img/bogota_navy_closeup.webp'] }
+            { id: 'azul-oscuro', hex: '#1a2744', label: 'Azul Marino', imgs: ['img/bogota_navy_front.webp', 'img/bogota_navy_half.webp', 'img/bogota_navy_back.webp', 'img/bogota_navy_side.webp', 'img/bogota_navy_closeup.webp'] }
           ]
         },
         manta: {
@@ -1333,9 +1934,30 @@
           ctaText: 'Pedir',
           addBtnText: '+ Agregar al carrito',
           colors: [
-            { label: 'Azul Marino', imgs: ['img/manta_navy_1.webp', 'img/manta_navy_2.webp', 'img/manta_navy_3.webp', 'img/manta_navy_4.webp', 'img/manta_navy_5.webp', 'img/manta_navy_labels.webp'] },
-            { label: 'Vinotinto', imgs: ['img/manta_vino_1.webp', 'img/manta_vino_2.webp', 'img/manta_vino_3.webp', 'img/manta_vino_4.webp', 'img/manta_vino_5.webp', 'img/manta_vino_labels.webp'] },
-            { label: 'Negro', imgs: ['img/manta_black_1.webp', 'img/manta_black_2.webp', 'img/manta_black_3.webp', 'img/manta_black_4.webp', 'img/manta_black_5.webp', 'img/manta_black_labels.webp'] }
+            { id: 'azul-oscuro', hex: '#1a2744', label: 'Azul Marino', imgs: ['img/manta_navy_1.webp', 'img/manta_navy_2.webp', 'img/manta_navy_3.webp', 'img/manta_navy_4.webp', 'img/manta_navy_5.webp', 'img/manta_navy_labels.webp'] },
+            { id: 'vinotinto', hex: '#5c2836', label: 'Vinotinto', imgs: ['img/manta_vino_1.webp', 'img/manta_vino_2.webp', 'img/manta_vino_3.webp', 'img/manta_vino_4.webp', 'img/manta_vino_5.webp', 'img/manta_vino_labels.webp'] },
+            { id: 'negro', hex: '#111111', label: 'Negro', imgs: ['img/manta_black_1.webp', 'img/manta_black_2.webp', 'img/manta_black_3.webp', 'img/manta_black_4.webp', 'img/manta_black_5.webp', 'img/manta_black_labels.webp'] }
+          ]
+        },
+        etoile: {
+          visible: true,
+          name: 'ÉTOILE PRIVÉ',
+          line: 'prive',
+          tag: 'Privé',
+          sub: 'Edición Reservada · YOSSICO Privé',
+          regularPrice: '$359.900 COP',
+          price: '$305.900 COP',
+          memberNote: '· Miembros (−15%)',
+          overlaySubtitle: 'ARCHIVO PRIVADO',
+          overlayTitle: 'Solo Miembros',
+          overlayDesc: 'Pieza reservada exclusivamente para suscriptoras de YOSSICO Privé ($29.900 COP/mes).',
+          overlayBtnText: 'DESBLOQUEAR PIEZA →',
+          fabric: '94% microfibra técnica + 6% spandex — 180g/m²',
+          desc: 'Diseño de alta costura médica reservado exclusivamente para miembros de la membresía YOSSICO Privé. Confeccionado en tela técnica de tacto seda con propiedades antibacterianas y herrajes oscuros de autor.',
+          ctaText: 'Solicitar',
+          addBtnText: 'SOLICITAR ACCESO PRIVÉ →',
+          colors: [
+            { id: 'azul-prive', hex: '#1a2744', label: 'Azul Archivo', imgs: ['img/kyoto_original.webp', 'img/kyoto_detail.webp'] }
           ]
         },
         hoodie: {
@@ -1350,10 +1972,17 @@
           ctaText: 'Pedir',
           addBtnText: '+ Agregar al carrito',
           colors: [
-            { label: 'Negro', imgs: ['img/capa-hoodie.webp', 'img/capa-hoodie-azul.webp'] },
-            { label: 'Azul Marino', imgs: ['img/capa-hoodie-azul.webp', 'img/capa-hoodie.webp'] }
+            { id: 'negro', hex: '#111111', label: 'Negro', imgs: ['img/capa-hoodie.webp', 'img/capa-hoodie-azul.webp'] },
+            { id: 'azul-oscuro', hex: '#1a2744', label: 'Azul Marino', imgs: ['img/capa-hoodie-azul.webp', 'img/capa-hoodie.webp'] }
           ]
         }
+      },
+      priveSection: {
+        visible: true,
+        label: 'Archivo Privado',
+        title: 'Privé',
+        badge: 'Solo Miembros',
+        subtitle: 'Piezas de alta costura médica reservadas exclusivamente para suscriptoras de'
       },
       capasSection: {
         visible: true,
@@ -1361,7 +1990,7 @@
         title: 'Capas',
         badge: 'Próximamente',
         waitlistText: 'Próximamente — déjanos tus datos\ny te avisamos cuando lleguen',
-        waitlistBtn: 'Avisarme'
+        waitlistBtn: 'Avisarme cuando esté disponible →'
       },
       ctaSection: {
         visible: true,
@@ -1370,6 +1999,86 @@
         btnText: 'Contactar por WhatsApp',
         whatsappNumber: '573127300661',
         whatsappMsg: 'Hola, quiero información sobre los uniformes YOSSICO'
+      }
+    };
+
+    /* ── CONFIGURACIÓN POR DEFECTO: CLUB PRIVÉ (PRIVE.HTML) ── */
+    const DEFAULT_PRIVE = {
+      hero: {
+        visible: true,
+        badge: 'YOSSICO PRIVÉ · MEMBRESÍA MENSUAL',
+        titleTop: 'Uniformes que pocos pueden vestir.',
+        titleItalic: 'Privilegios',
+        titleSuffix: 'para ti.',
+        subtitle: 'Un archivo privado para profesionales de la salud que buscan distinción y discreción. Piezas exclusivas que jamás salen a la venta abierta, 15% de descuento permanente y prelación de 48 horas en cada lanzamiento.'
+      },
+      showcase: {
+        visible: true,
+        image: 'img/kyoto_original.webp',
+        cardTag: 'PIEZA RESERVADA',
+        cardTitle: 'Étoile Privé',
+        cardDesc: 'Confeccionado en microfibra técnica de tacto seda con herrajes negro mate. Reservado para suscriptoras.',
+        cardBtnText: 'SOLICITAR MEMBRESÍA →',
+        monthlyTitle: 'Suscripción Mensual',
+        monthlyBadge: 'RECOMENDADO',
+        monthlyPrice: '$29.900',
+        monthlyDesc: 'Sin cláusulas de permanencia. Con una compra cada dos meses aplicando tu 15% OFF de miembro, la suscripción se cubre por completo.',
+        annualTitle: 'Suscripción Anual',
+        annualBadge: '2 MESES DE CORTESÍA',
+        annualPrice: '$290.000',
+        annualDesc: 'Doce meses de acceso privado por el valor de diez. Incluye kit de bienvenida de autor en tu primera entrega.'
+      },
+      pillars: {
+        visible: true,
+        items: [
+          { title: 'Piezas Exclusivas', desc: 'Uniformes con cortes de autor y tonos de edición reservada que no se comercializan en el catálogo abierto.' },
+          { title: 'Prelación de 48 Horas', desc: 'Acceso anticipado dos días antes de cada lanzamiento oficial para asegurar tu talla y color antes de abrir al público.' },
+          { title: '15% OFF Permanente', desc: 'Beneficio recurrente en cada orden sobre todas las líneas regulares Signature, Essentials y Core durante tu suscripción.' },
+          { title: 'Despacho Prioritario', desc: 'Envío prioritario sin monto mínimo de compra a cualquier ciudad de Colombia en todas tus órdenes.' },
+          { title: 'Ediciones de Archivo', desc: 'Acceso a re-ediciones privadas y detalles de marca diseñados exclusivamente para nuestra comunidad de suscriptoras.' },
+          { title: 'Atención Concierge', desc: 'Línea directa por WhatsApp con nuestro equipo para asesoría personalizada de medidas, ajustes y reservas.' }
+        ]
+      },
+      form: {
+        visible: true,
+        eyebrow: 'REGISTRO DE MIEMBRO',
+        titlePrefix: 'Únete a YOSSICO',
+        titleItalic: 'Privé.',
+        subtitle: 'Activa tu suscripción y recibe tu código personal de miembro al instante.',
+        btnText: 'ACTIVAR MEMBRESÍA ($29.900 COP / MES) →'
+      }
+    };
+
+    /* ── CONFIGURACIÓN POR DEFECTO: CAMPUS (ESTUDIANTES.HTML) ── */
+    const DEFAULT_CAMPUS = {
+      hero: {
+        visible: true,
+        badge: 'YOSSICO CAMPUS · PROGRAMA ESTUDIANTIL',
+        titleTop: 'Tu vocación empieza aquí.',
+        titlePrefix: 'Tu uniforme, a la',
+        titleItalic: 'altura.',
+        subtitle: 'Conocemos la exigencia de tus turnos de práctica, rotaciones hospitalarias e internado. Por eso te acompañamos con un 15% de descuento permanente en todos tus uniformes médicos durante tu formación.'
+      },
+      benefits: {
+        visible: true,
+        items: [
+          { title: '15% OFF Permanente', desc: 'Aplica de manera recurrente en nuestras líneas Signature, Essentials, Core y Capas durante todo tu periodo de formación universitaria.' },
+          { title: 'Vigencia hasta tu Grado', desc: 'Registra tu año estimado de graduación una sola vez. Tu código personal permanece activo sin trámites adicionales en cada semestre.' },
+          { title: 'Desempeño en Turnos', desc: 'Telas técnicas antifluido de alta durabilidad y caída estructurada, diseñadas para acompañar rotaciones clínicas de 24 horas.' }
+        ]
+      },
+      notice: {
+        visible: true,
+        title: 'Alcance del programa:',
+        text: 'El beneficio estudiantil aplica sobre prendas y sets regulares del catálogo. No incluye piezas de archivo reservadas para miembros de YOSSICO Privé.'
+      },
+      form: {
+        visible: true,
+        eyebrow: 'ACREDITACIÓN ACADÉMICA',
+        titlePrefix: 'Valida tu condición de',
+        titleItalic: 'estudiante.',
+        subtitle: 'Completa tus datos y adjunta tu carnet vigente para recibir tu código personal en WhatsApp.',
+        btnText: 'SOLICITAR 15% OFF ESTUDIANTIL →'
       }
     };
 
@@ -1385,11 +2094,13 @@
       { src: 'img/manta_vino_1.webp', label: 'Manta Vino' },
       { src: 'img/manta_black_1.webp', label: 'Manta Negro' },
       { src: 'img/bogota_navy_front.webp', label: 'Bogotá' },
-      { src: 'img/embajadora-hero.webp', label: 'Embajadora' }
+      { src: 'img/kyoto_original.webp', label: 'Étoile Privé' }
     ];
 
     let landingCfg = JSON.parse(JSON.stringify(DEFAULT_LANDING));
     let coleccionCfg = JSON.parse(JSON.stringify(DEFAULT_COLECCION));
+    let priveCfg = JSON.parse(JSON.stringify(DEFAULT_PRIVE));
+    let campusCfg = JSON.parse(JSON.stringify(DEFAULT_CAMPUS));
 
     function deepMerge(base, custom) {
       const out = JSON.parse(JSON.stringify(base));
@@ -1405,6 +2116,78 @@
       });
       return out;
     }
+
+    function recordHistorySnapshot() {
+      if (isRestoringHistory) return;
+      const snap = JSON.stringify({
+        landingCfg,
+        coleccionCfg,
+        priveCfg,
+        campusCfg
+      });
+      if (historyIndex >= 0 && historyStack[historyIndex] === snap) return;
+      historyStack = historyStack.slice(0, historyIndex + 1);
+      historyStack.push(snap);
+      if (historyStack.length > 35) historyStack.shift();
+      historyIndex = historyStack.length - 1;
+      updateUndoRedoButtons();
+    }
+
+    function updateUndoRedoButtons() {
+      const uBtn = document.getElementById('btn-undo');
+      const rBtn = document.getElementById('btn-redo');
+      if (uBtn) uBtn.disabled = historyIndex <= 0;
+      if (rBtn) rBtn.disabled = historyIndex >= historyStack.length - 1;
+    }
+
+    window.studioUndo = function() {
+      if (historyIndex <= 0) return;
+      isRestoringHistory = true;
+      historyIndex--;
+      const snap = JSON.parse(historyStack[historyIndex]);
+      landingCfg = snap.landingCfg;
+      coleccionCfg = snap.coleccionCfg;
+      priveCfg = snap.priveCfg;
+      campusCfg = snap.campusCfg;
+      renderAllInspectors();
+      pushLivePreview();
+      updateUndoRedoButtons();
+      setStatusBadge('dirty');
+      showToast('↶ Cambio deshecho');
+      isRestoringHistory = false;
+    };
+
+    window.studioRedo = function() {
+      if (historyIndex >= historyStack.length - 1) return;
+      isRestoringHistory = true;
+      historyIndex++;
+      const snap = JSON.parse(historyStack[historyIndex]);
+      landingCfg = snap.landingCfg;
+      coleccionCfg = snap.coleccionCfg;
+      priveCfg = snap.priveCfg;
+      campusCfg = snap.campusCfg;
+      renderAllInspectors();
+      pushLivePreview();
+      updateUndoRedoButtons();
+      setStatusBadge('dirty');
+      showToast('↷ Cambio rehecho');
+      isRestoringHistory = false;
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z') {
+        if (e.shiftKey) {
+          e.preventDefault();
+          studioRedo();
+        } else if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          studioUndo();
+        }
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        studioRedo();
+      }
+    });
 
     function showToast(msg) {
       const t = document.getElementById('studio-toast');
@@ -1431,13 +2214,11 @@
       }
     }
 
-    // El PIN se valida únicamente en Supabase (nunca en este archivo)
     async function pinValido(pin) {
       if (!pin || !sb) return false;
       try {
         const { data, error } = await sb.rpc('admin_verificar_pin', { pin });
         if (!error) return data === true;
-        // Si aún no se aplicó la migración 20261031_admin_secretos, valida con una RPC existente
         if (error.code === 'PGRST202' || /admin_verificar_pin/.test(error.message || '')) {
           const r = await sb.rpc('admin_get_pedidos', { pin });
           return !r.error;
@@ -1485,18 +2266,84 @@
       if (iframe) {
         iframe.addEventListener('load', () => {
           pushLivePreview();
+          if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'YOSSICO_STUDIO_MODE', interactive: studioInteractiveMode }, '*');
+          }
         });
       }
 
+      /* Escuchar Clics Directos desde la Vista Previa (Click-to-Edit) */
+      window.addEventListener('message', (e) => {
+        if (!e.data || e.data.type !== 'YOSSICO_STUDIO_SELECT') return;
+        const page = e.data.page;
+        const sec = e.data.section || '';
+        if (page && page !== activeStudioPage) {
+          switchStudioPage(page);
+        }
+        /* Limpiar filtro de búsqueda si estaba activo */
+        const sInp = document.getElementById('studio-search-input');
+        if (sInp && sInp.value) {
+          sInp.value = '';
+          filterStudioSidebar('');
+        }
+        /* Si el panel lateral estaba colapsado, abrirlo */
+        const sbEl = document.getElementById('studio-sidebar');
+        if (sbEl && sbEl.classList.contains('collapsed')) {
+          toggleStudioSidebar();
+        }
+
+        if (page === 'landing') {
+          openAndScrollToAcc('l', sec);
+          showToast('✎ Editando sección: ' + sec);
+        } else if (page === 'coleccion') {
+          if (sec.startsWith('prod-')) {
+            const pid = sec.replace('prod-', '');
+            openAndScrollToAcc('c', 'products');
+            selectProductToEdit(pid, false);
+            showToast('✎ Editando prenda: ' + pid.toUpperCase());
+          } else {
+            openAndScrollToAcc('c', sec);
+            showToast('✎ Editando sección de Colección');
+          }
+        } else if (page === 'prive') {
+          openAndScrollToAcc('p', sec);
+          showToast('✎ Editando sección de Club Privé');
+        } else if (page === 'campus') {
+          openAndScrollToAcc('m', sec);
+          showToast('✎ Editando sección de Campus');
+        }
+      });
+
       await loadAllConfigs();
 
-      if (initPage === 'coleccion') {
-        switchStudioPage('coleccion');
+      if (initPage && ['landing', 'coleccion', 'prive', 'campus'].includes(initPage)) {
+        switchStudioPage(initPage);
       } else {
-        renderLandingInspector();
+        renderAllInspectors();
         pushLivePreview();
       }
     });
+
+    function openAndScrollToAcc(prefix, key) {
+      const mapContainer = {
+        l: 'inspector-landing',
+        c: 'inspector-coleccion',
+        p: 'inspector-prive',
+        m: 'inspector-campus'
+      };
+      const container = document.getElementById(mapContainer[prefix]);
+      const acc = document.getElementById(`acc-${prefix}-${key}`);
+      if (!container || !acc) return;
+      container.querySelectorAll('.st-acc').forEach(el => el.classList.remove('open'));
+      acc.classList.add('open');
+      setTimeout(() => {
+        acc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        acc.style.boxShadow = '0 0 0 2px #0C4E57';
+        setTimeout(() => { acc.style.boxShadow = ''; }, 1400);
+        const firstInput = acc.querySelector('input[type="text"], textarea');
+        if (firstInput) firstInput.focus({ preventScroll: true });
+      }, 60);
+    }
 
     async function loadAllConfigs() {
       /* 1. Landing */
@@ -1512,9 +2359,23 @@
         try { lData = JSON.parse(localStorage.getItem('yossico_landing_config') || 'null'); } catch (_) {}
       }
       landingCfg = deepMerge(DEFAULT_LANDING, lData);
-      if (Array.isArray(landingCfg.sectionOrder) && !landingCfg.sectionOrder.includes('destacados')) {
-        const hi = landingCfg.sectionOrder.indexOf('hero');
-        landingCfg.sectionOrder.splice(hi >= 0 ? hi + 1 : 0, 0, 'destacados');
+      /* Migrar titular antiguo si estaba en caché */
+      if (landingCfg.hero && landingCfg.hero.titleLine1 === 'Vestidos' && landingCfg.hero.titleItalic === 'sanar.') {
+        landingCfg.hero.titleLine1 = 'Uniformes';
+        landingCfg.hero.titleLine2 = 'pensados';
+        landingCfg.hero.titleItalic = 'para ti.';
+        landingCfg.hero.subtitle = DEFAULT_LANDING.hero.subtitle;
+        landingCfg.hero.ctaPrimaryText = 'Encuentra tu uniforme';
+      }
+      if (Array.isArray(landingCfg.sectionOrder)) {
+        if (!landingCfg.sectionOrder.includes('destacados')) {
+          const hi = landingCfg.sectionOrder.indexOf('hero');
+          landingCfg.sectionOrder.splice(hi >= 0 ? hi + 1 : 0, 0, 'destacados');
+        }
+        if (!landingCfg.sectionOrder.includes('priveSpotlight')) {
+          const di = landingCfg.sectionOrder.indexOf('drops');
+          landingCfg.sectionOrder.splice(di >= 0 ? di + 1 : landingCfg.sectionOrder.length, 0, 'priveSpotlight');
+        }
       }
 
       /* 2. Colección */
@@ -1530,40 +2391,151 @@
         try { cData = JSON.parse(localStorage.getItem('yossico_coleccion_config') || 'null'); } catch (_) {}
       }
       coleccionCfg = deepMerge(DEFAULT_COLECCION, cData);
+      if (!coleccionCfg.products.etoile) {
+        coleccionCfg.products.etoile = JSON.parse(JSON.stringify(DEFAULT_COLECCION.products.etoile));
+      }
 
-      renderLandingInspector();
-      renderColeccionInspector();
+      /* 3. Privé */
+      let pData = null;
+      try {
+        const { data } = await sb.rpc('get_config', { p_clave: 'prive_config' });
+        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+          pData = data;
+          localStorage.setItem('yossico_prive_config', JSON.stringify(data));
+        }
+      } catch (_) {}
+      if (!pData) {
+        try { pData = JSON.parse(localStorage.getItem('yossico_prive_config') || 'null'); } catch (_) {}
+      }
+      priveCfg = deepMerge(DEFAULT_PRIVE, pData);
+
+      /* 4. Campus */
+      let mData = null;
+      try {
+        const { data } = await sb.rpc('get_config', { p_clave: 'campus_config' });
+        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+          mData = data;
+          localStorage.setItem('yossico_campus_config', JSON.stringify(data));
+        }
+      } catch (_) {}
+      if (!mData) {
+        try { mData = JSON.parse(localStorage.getItem('yossico_campus_config') || 'null'); } catch (_) {}
+      }
+      campusCfg = deepMerge(DEFAULT_CAMPUS, mData);
+
+      renderAllInspectors();
+      recordHistorySnapshot();
       setStatusBadge('synced');
     }
 
-    /* ── CAMBIO DE PÁGINA EN EL STUDIO (LANDING <-> COLECCION) ── */
+    function renderAllInspectors() {
+      renderLandingInspector();
+      renderColeccionInspector();
+      renderPriveInspector();
+      renderCampusInspector();
+    }
+
+    /* ── CAMBIO DE PÁGINA EN EL STUDIO (4 PÁGINAS) ── */
     window.switchStudioPage = function(page) {
       activeStudioPage = page;
-      document.getElementById('tab-page-landing').classList.toggle('active', page === 'landing');
-      document.getElementById('tab-page-coleccion').classList.toggle('active', page === 'coleccion');
+      ['landing', 'coleccion', 'prive', 'campus'].forEach(p => {
+        document.getElementById('tab-page-' + p)?.classList.toggle('active', p === page);
+        const insp = document.getElementById('inspector-' + p);
+        if (insp) insp.style.display = (p === page) ? 'flex' : 'none';
+      });
 
-      document.getElementById('inspector-landing').style.display = (page === 'landing') ? 'flex' : 'none';
-      document.getElementById('inspector-coleccion').style.display = (page === 'coleccion') ? 'flex' : 'none';
+      const titles = {
+        landing: 'Editando: Página de Inicio (Landing)',
+        coleccion: 'Editando: Página de Colección (Catálogo)',
+        prive: 'Editando: Club YOSSICO Privé',
+        campus: 'Editando: YOSSICO Campus Estudiantil'
+      };
+      const files = {
+        landing: 'index.html',
+        coleccion: 'coleccion.html',
+        prive: 'prive.html',
+        campus: 'estudiantes.html'
+      };
 
-      document.getElementById('sidebar-title-text').textContent = (page === 'landing')
-        ? 'Editando: Página de Inicio (Landing)'
-        : 'Editando: Página de Colección (Catálogo)';
-
-      const targetFile = (page === 'landing') ? 'index.html' : 'coleccion.html';
-      document.getElementById('studio-url-indicator').textContent = `https://yossico.com/${targetFile} (Vista Previa Interactiva)`;
+      document.getElementById('sidebar-title-text').textContent = titles[page] || titles.landing;
+      const targetFile = files[page] || 'index.html';
+      document.getElementById('studio-url-indicator').textContent = `https://yossico.com/${targetFile}`;
       document.getElementById('btn-open-live').setAttribute('href', targetFile);
 
       const iframe = document.getElementById('studio-iframe');
-      if (iframe) {
+      if (iframe && !iframe.src.includes(targetFile)) {
         iframe.src = `${targetFile}?preview=1`;
       }
+    };
+
+    window.toggleInteractiveClickMode = function() {
+      studioInteractiveMode = !studioInteractiveMode;
+      const btn = document.getElementById('btn-interactive-mode');
+      if (btn) {
+        if (studioInteractiveMode) {
+          btn.textContent = '🖱️ Modo: Clic para Editar (Activo)';
+          btn.style.background = '#111827';
+          btn.style.color = '#ffffff';
+        } else {
+          btn.textContent = '🧭 Modo: Navegar Libremente';
+          btn.style.background = '#ffffff';
+          btn.style.color = '#111827';
+        }
+      }
+      const iframe = document.getElementById('studio-iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'YOSSICO_STUDIO_MODE', interactive: studioInteractiveMode }, '*');
+      }
+      showToast(studioInteractiveMode ? '🖱️ Haz clic en cualquier bloque de la derecha para editarlo' : '🧭 Modo navegación libre activado');
+    };
+
+    window.filterStudioSidebar = function(query) {
+      const q = (query || '').trim().toLowerCase();
+      const mapContainer = {
+        landing: 'inspector-landing',
+        coleccion: 'inspector-coleccion',
+        prive: 'inspector-prive',
+        campus: 'inspector-campus'
+      };
+      const container = document.getElementById(mapContainer[activeStudioPage]);
+      if (!container) return;
+
+      container.querySelectorAll('.st-acc').forEach(acc => {
+        if (!q) {
+          acc.style.display = '';
+          return;
+        }
+        const text = (acc.textContent || '').toLowerCase();
+        const inputsVal = Array.from(acc.querySelectorAll('input, textarea')).map(i => (i.value || '').toLowerCase()).join(' ');
+        const match = text.includes(q) || inputsVal.includes(q);
+        acc.style.display = match ? '' : 'none';
+        if (match) acc.classList.add('open');
+      });
+    };
+
+    window.expandCollapseAllAcc = function() {
+      allAccExpanded = !allAccExpanded;
+      const mapContainer = {
+        landing: 'inspector-landing',
+        coleccion: 'inspector-coleccion',
+        prive: 'inspector-prive',
+        campus: 'inspector-campus'
+      };
+      const container = document.getElementById(mapContainer[activeStudioPage]);
+      if (container) {
+        container.querySelectorAll('.st-acc').forEach(acc => {
+          acc.classList.toggle('open', allAccExpanded);
+        });
+      }
+      const btn = document.getElementById('btn-exp-all');
+      if (btn) btn.textContent = allAccExpanded ? '↕ Contraer todo' : '↕ Expandir todo';
     };
 
     window.toggleStudioSidebar = function() {
       const sbEl = document.getElementById('studio-sidebar');
       const btn = document.getElementById('btn-toggle-sidebar');
       const collapsed = sbEl.classList.toggle('collapsed');
-      btn.textContent = collapsed ? '▶ Mostrar Controles' : '◀ Ocultar Controles';
+      btn.textContent = collapsed ? '▶ Controles' : '◀ Controles';
     };
 
     window.setStudioDevice = function(mode) {
@@ -1574,12 +2546,20 @@
     };
 
     window.reloadStudioIframe = function() {
-      const targetFile = (activeStudioPage === 'landing') ? 'index.html' : 'coleccion.html';
+      const files = { landing: 'index.html', coleccion: 'coleccion.html', prive: 'prive.html', campus: 'estudiantes.html' };
+      const targetFile = files[activeStudioPage] || 'index.html';
       document.getElementById('studio-iframe').src = `${targetFile}?preview=1&t=${Date.now()}`;
     };
 
     window.toggleAcc = function(prefix, key) {
-      const container = document.getElementById(prefix === 'l' ? 'inspector-landing' : 'inspector-coleccion');
+      const mapContainer = {
+        l: 'inspector-landing',
+        c: 'inspector-coleccion',
+        p: 'inspector-prive',
+        m: 'inspector-campus'
+      };
+      const mapPage = { l: 'landing', c: 'coleccion', p: 'prive', m: 'campus' };
+      const container = document.getElementById(mapContainer[prefix]);
       const acc = document.getElementById(`acc-${prefix}-${key}`);
       if (!acc || !container) return;
       const wasOpen = acc.classList.contains('open');
@@ -1587,7 +2567,7 @@
       if (!wasOpen) {
         acc.classList.add('open');
         if (key !== 'order' && key !== 'products') {
-          scrollPreview(prefix === 'l' ? 'landing' : 'coleccion', key);
+          scrollPreview(mapPage[prefix], key);
         }
       }
     };
@@ -1595,8 +2575,14 @@
     window.scrollPreview = function(page, section) {
       const iframe = document.getElementById('studio-iframe');
       if (!iframe || !iframe.contentWindow) return;
+      const typeMap = {
+        landing: 'YOSSICO_LANDING_SCROLL',
+        coleccion: 'YOSSICO_COLECCION_SCROLL',
+        prive: 'YOSSICO_PRIVE_SCROLL',
+        campus: 'YOSSICO_CAMPUS_SCROLL'
+      };
       iframe.contentWindow.postMessage({
-        type: page === 'landing' ? 'YOSSICO_LANDING_SCROLL' : 'YOSSICO_COLECCION_SCROLL',
+        type: typeMap[page] || 'YOSSICO_LANDING_SCROLL',
         section
       }, '*');
     };
@@ -1606,8 +2592,12 @@
       if (!iframe || !iframe.contentWindow) return;
       if (activeStudioPage === 'landing') {
         iframe.contentWindow.postMessage({ type: 'YOSSICO_LANDING_PREVIEW', config: landingCfg }, '*');
-      } else {
+      } else if (activeStudioPage === 'coleccion') {
         iframe.contentWindow.postMessage({ type: 'YOSSICO_COLECCION_PREVIEW', config: coleccionCfg }, '*');
+      } else if (activeStudioPage === 'prive') {
+        iframe.contentWindow.postMessage({ type: 'YOSSICO_PRIVE_PREVIEW', config: priveCfg }, '*');
+      } else if (activeStudioPage === 'campus') {
+        iframe.contentWindow.postMessage({ type: 'YOSSICO_CAMPUS_PREVIEW', config: campusCfg }, '*');
       }
     }
 
@@ -1648,7 +2638,7 @@
     };
 
     /* =========================================================================
-       LÓGICA INSPECTOR 1: LANDING
+       LÓGICA INSPECTOR 1: LANDING (INDEX.HTML)
        ========================================================================= */
     function renderHeroPresets() {
       const grid = document.getElementById('le-hero-img-presets');
@@ -1674,12 +2664,13 @@
       const labels = {
         countdown: '⏳ Cuenta Regresiva (Pre-Hero)',
         hero: '🖼️ Portada Principal (Hero)',
-        destacados: '🛍️ Los más pedidos (Productos)',
+        destacados: '🛍️ Los Más Pedidos (Vitrina)',
         drops: '🔥 Sección Drops (Editorial)',
+        priveSpotlight: '🔒 YOSSICO Privé (Spotlight)',
         nosotros: '✨ Por qué YOSSICO (4 Pilares)',
         contactoCta: '💬 Cierre / Contacto'
       };
-      const order = landingCfg.sectionOrder || ['countdown', 'hero', 'destacados', 'drops', 'nosotros', 'contactoCta'];
+      const order = landingCfg.sectionOrder || ['countdown', 'hero', 'destacados', 'drops', 'priveSpotlight', 'nosotros', 'contactoCta'];
       el.innerHTML = order.map((k, idx) => {
         const vis = landingCfg[k]?.visible !== false;
         return `
@@ -1703,18 +2694,20 @@
       landingCfg.sectionOrder = order;
       renderLandingOrderList();
       pushLivePreview();
+      recordHistorySnapshot();
       setStatusBadge('dirty');
     };
 
     window.toggleLandingSecVis = function(key) {
-      if (key === 'destacados') {
-        landingCfg.destacados = { visible: landingCfg.destacados?.visible === false };
-        renderLandingOrderList();
-        pushLivePreview();
-        setStatusBadge('dirty');
-        return;
-      }
-      const map = { countdown: 'le-cd-visible', hero: 'le-hero-visible', drops: 'le-drops-visible', nosotros: 'le-nos-visible', contactoCta: 'le-cc-visible' };
+      const map = {
+        countdown: 'le-cd-visible',
+        hero: 'le-hero-visible',
+        destacados: 'le-dest-visible',
+        drops: 'le-drops-visible',
+        priveSpotlight: 'le-pv-visible',
+        nosotros: 'le-nos-visible',
+        contactoCta: 'le-cc-visible'
+      };
       const chk = document.getElementById(map[key]);
       if (chk) { chk.checked = !chk.checked; onLandingChange(); }
     };
@@ -1754,6 +2747,14 @@
       setV('le-hero-pos', h.imagePosition || 'center top');
       setV('le-hero-bg', h.rightBgColor || '#f5f4f0');
 
+      const ds = landingCfg.destacados || {};
+      setC('le-dest-visible', ds.visible);
+      setV('le-dest-eye', ds.eyebrow);
+      setV('le-dest-tp', ds.titlePrefix);
+      setV('le-dest-ti', ds.titleItalic);
+      setV('le-dest-cta', ds.ctaText);
+      setV('le-dest-btn', ds.btnText);
+
       const d = landingCfg.drops || {};
       setC('le-drops-visible', d.visible);
       setV('le-drops-eye', d.eyebrow);
@@ -1768,6 +2769,25 @@
       setV('le-drops-cta-txt', d.ctaText);
       setV('le-drops-cta-url', d.ctaUrl);
       setV('le-drops-sublink', d.subLinkText);
+
+      const pv = landingCfg.priveSpotlight || {};
+      setC('le-pv-visible', pv.visible);
+      setV('le-pv-eye', pv.eyebrow);
+      setV('le-pv-ttop', pv.titleTop);
+      setV('le-pv-tit', pv.titleItalic);
+      setV('le-pv-desc', pv.description);
+      setV('le-pv-ctag', pv.cardTag);
+      setV('le-pv-ctitle', pv.cardTitle);
+      setV('le-pv-cdesc', pv.cardDesc);
+      setV('le-pv-cbtn', pv.cardBtnText);
+      setV('le-pv-cimg', pv.cardImage);
+      const pvBens = pv.benefits || [];
+      for (let i = 0; i < 4; i++) {
+        setV(`le-pv-b${i+1}-t`, pvBens[i]?.title || '');
+        setV(`le-pv-b${i+1}-p`, pvBens[i]?.text || '');
+      }
+      setV('le-pv-cta1', pv.ctaPrimaryText);
+      setV('le-pv-cta2', pv.ctaSecondaryText);
 
       const n = landingCfg.nosotros || {};
       setC('le-nos-visible', n.visible);
@@ -1802,6 +2822,12 @@
       setV('le-pop-fsub', p.formSub);
       setV('le-pop-fbtn', p.btnText);
 
+      const ft = landingCfg.footer || {};
+      setV('le-ft-wa', ft.whatsapp);
+      setV('le-ft-email', ft.email);
+      setV('le-ft-city', ft.city);
+      setV('le-ft-sched', ft.schedule);
+
       renderHeroPresets();
       renderLandingOrderList();
     }
@@ -1811,8 +2837,7 @@
       const getC = id => !!document.getElementById(id)?.checked;
 
       landingCfg = {
-        sectionOrder: landingCfg.sectionOrder || ['countdown', 'hero', 'destacados', 'drops', 'nosotros', 'contactoCta'],
-        destacados: landingCfg.destacados || { visible: true },
+        sectionOrder: landingCfg.sectionOrder || ['countdown', 'hero', 'destacados', 'drops', 'priveSpotlight', 'nosotros', 'contactoCta'],
         announcement: {
           visible: getC('le-ann-visible'),
           text: getV('le-ann-text'),
@@ -1844,6 +2869,14 @@
           imagePosition: getV('le-hero-pos'),
           rightBgColor: getV('le-hero-bg')
         },
+        destacados: {
+          visible: getC('le-dest-visible'),
+          eyebrow: getV('le-dest-eye'),
+          titlePrefix: getV('le-dest-tp'),
+          titleItalic: getV('le-dest-ti'),
+          ctaText: getV('le-dest-cta'),
+          btnText: getV('le-dest-btn')
+        },
         drops: {
           visible: getC('le-drops-visible'),
           eyebrow: getV('le-drops-eye'),
@@ -1858,6 +2891,29 @@
           ctaText: getV('le-drops-cta-txt'),
           ctaUrl: getV('le-drops-cta-url'),
           subLinkText: getV('le-drops-sublink')
+        },
+        priveSpotlight: {
+          visible: getC('le-pv-visible'),
+          eyebrow: getV('le-pv-eye'),
+          titleTop: getV('le-pv-ttop'),
+          titleItalic: getV('le-pv-tit'),
+          description: getV('le-pv-desc'),
+          cardTag: getV('le-pv-ctag'),
+          cardTitle: getV('le-pv-ctitle'),
+          cardDesc: getV('le-pv-cdesc'),
+          cardBtnText: getV('le-pv-cbtn'),
+          cardBtnUrl: 'prive.html',
+          cardImage: getV('le-pv-cimg'),
+          benefits: [
+            { title: getV('le-pv-b1-t'), text: getV('le-pv-b1-p') },
+            { title: getV('le-pv-b2-t'), text: getV('le-pv-b2-p') },
+            { title: getV('le-pv-b3-t'), text: getV('le-pv-b3-p') },
+            { title: getV('le-pv-b4-t'), text: getV('le-pv-b4-p') }
+          ],
+          ctaPrimaryText: getV('le-pv-cta1'),
+          ctaPrimaryUrl: 'prive.html',
+          ctaSecondaryText: getV('le-pv-cta2'),
+          ctaSecondaryUrl: 'estudiantes.html'
         },
         nosotros: {
           visible: getC('le-nos-visible'),
@@ -1892,11 +2948,18 @@
           formTitle: getV('le-pop-ftitle'),
           formSub: getV('le-pop-fsub'),
           btnText: getV('le-pop-fbtn')
+        },
+        footer: {
+          whatsapp: getV('le-ft-wa'),
+          email: getV('le-ft-email'),
+          city: getV('le-ft-city'),
+          schedule: getV('le-ft-sched')
         }
       };
 
       renderLandingOrderList();
       pushLivePreview();
+      recordHistorySnapshot();
       setStatusBadge('dirty');
     };
 
@@ -1931,6 +2994,7 @@
       coleccionCfg.productOrder = order;
       renderColeccionOrderList();
       pushLivePreview();
+      recordHistorySnapshot();
       setStatusBadge('dirty');
     };
 
@@ -1940,24 +3004,27 @@
       renderColeccionOrderList();
       if (activeProductKey === pid) populateActiveProductForm(pid);
       pushLivePreview();
+      recordHistorySnapshot();
       setStatusBadge('dirty');
     };
 
     function renderProductPills() {
       const container = document.getElementById('ce-prod-pills');
       if (!container) return;
-      const keys = ['oslo', 'milan', 'kyoto', 'lima', 'bogota', 'manta', 'hoodie'];
+      const keys = ['oslo', 'milan', 'kyoto', 'lima', 'bogota', 'manta', 'etoile', 'hoodie'];
       container.innerHTML = keys.map(k => {
         const p = coleccionCfg.products?.[k] || {};
-        return `<button type="button" class="st-prod-pill ${activeProductKey === k ? 'active' : ''}" onclick="selectProductToEdit('${k}')">${p.name || k.toUpperCase()}</button>`;
+        const isVis = p.visible !== false;
+        const label = k === 'etoile' ? '🔒 ÉTOILE' : (p.name || k.toUpperCase());
+        return `<button type="button" class="st-prod-pill ${activeProductKey === k ? 'active' : ''}" style="${!isVis ? 'opacity:0.5;text-decoration:line-through;' : ''}" onclick="selectProductToEdit('${k}', true)">${label}</button>`;
       }).join('');
     }
 
-    window.selectProductToEdit = function(pid) {
+    window.selectProductToEdit = function(pid, shouldScroll = true) {
       activeProductKey = pid;
       renderProductPills();
       populateActiveProductForm(pid);
-      scrollPreview('coleccion', 'prod-' + pid);
+      if (shouldScroll) scrollPreview('coleccion', 'prod-' + pid);
     };
 
     function populateActiveProductForm(pid) {
@@ -1975,25 +3042,49 @@
       document.getElementById('ce-prod-cta').value = p.ctaText || 'Pedir';
       document.getElementById('ce-prod-addbtn').value = p.addBtnText || '+ Agregar al carrito';
 
-      /* Renderizar editor de colores y sus fotos */
+      /* Mostrar campos especiales si es ÉTOILE PRIVÉ */
+      const priveBox = document.getElementById('ce-prive-extra-fields');
+      const priceLbl = document.getElementById('ce-prod-price-lbl');
+      if (priveBox) {
+        priveBox.style.display = (pid === 'etoile') ? 'block' : 'none';
+        if (priceLbl) priceLbl.textContent = (pid === 'etoile') ? 'Precio Miembro (−15%)' : 'Precio Visible';
+        if (pid === 'etoile') {
+          document.getElementById('ce-prod-regprice').value = p.regularPrice || '$359.900 COP';
+          document.getElementById('ce-prod-memnote').value = p.memberNote || '· Miembros (−15%)';
+          document.getElementById('ce-prod-ovsub').value = p.overlaySubtitle || 'ARCHIVO PRIVADO';
+          document.getElementById('ce-prod-ovtitle').value = p.overlayTitle || 'Solo Miembros';
+          document.getElementById('ce-prod-ovdesc').value = p.overlayDesc || '';
+          document.getElementById('ce-prod-ovbtn').value = p.overlayBtnText || 'DESBLOQUEAR PIEZA →';
+        }
+      }
+
+      /* Renderizar editor de colores y sus fotos (con + Agregar Foto / Eliminar Foto / Color HEX) */
       const colorsWrap = document.getElementById('ce-prod-colors-editor');
       const colors = p.colors || [];
       colorsWrap.innerHTML = colors.map((cObj, cIdx) => {
         const imgs = cObj.imgs || [];
+        const hexVal = cObj.hex || '#111111';
         return `
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:0.65rem; margin-bottom:0.6rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem;">
-              <strong style="font-size:0.72rem; color:#111827;">Color ${cIdx + 1}: ${cObj.label || ''}</strong>
-              <input type="text" value="${cObj.label || ''}" placeholder="Nombre del color" style="width:130px; padding:3px 6px; font-size:0.7rem; border:1px solid #cbd5e1; border-radius:4px;" oninput="updateProdColorLabel(${cIdx}, this.value)">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:0.5rem;">
+              <div style="display:flex; align-items:center; gap:6px; flex:1;">
+                <input type="color" value="${hexVal}" title="Elegir tono del círculo de color" style="width:24px; height:24px; border:1px solid #cbd5e1; border-radius:50%; cursor:pointer; padding:0;" oninput="updateProdColorHex(${cIdx}, this.value)">
+                <input type="text" value="${cObj.label || ''}" placeholder="Nombre del color" style="flex:1; padding:4px 7px; font-size:0.72rem; font-weight:600; border:1px solid #cbd5e1; border-radius:4px;" oninput="updateProdColorLabel(${cIdx}, this.value)">
+              </div>
+              <div style="display:flex; gap:4px;">
+                <button type="button" class="st-mini-btn" style="background:#e8f5e9; color:#1b5e20;" onclick="addPhotoToProdColor(${cIdx})" title="Agregar otra foto a este color">+ Foto</button>
+                ${colors.length > 1 ? `<button type="button" class="st-mini-btn" style="background:#fee2e2; color:#991b1b;" onclick="removeColorFromActiveProduct(${cIdx})" title="Eliminar este color">🗑️</button>` : ''}
+              </div>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(${Math.min(imgs.length, 4)}, 1fr); gap:6px; margin-bottom:0.45rem;">
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:0.45rem;">
               ${imgs.map((imgSrc, imgIdx) => `
-                <div style="text-align:center;">
-                  <div style="aspect-ratio:3/4; border-radius:4px; overflow:hidden; border:1px solid #cbd5e1; background:#fff; margin-bottom:3px;">
+                <div style="text-align:center; position:relative;">
+                  <div style="aspect-ratio:3/4; border-radius:4px; overflow:hidden; border:1px solid #cbd5e1; background:#fff; margin-bottom:3px; position:relative;">
                     <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; object-position:top center;">
+                    ${imgs.length > 1 ? `<button type="button" onclick="removePhotoFromProdColor(${cIdx}, ${imgIdx})" title="Quitar esta foto" style="position:absolute; top:2px; right:2px; width:18px; height:18px; border-radius:50%; background:rgba(0,0,0,0.75); color:#fff; border:none; font-size:10px; cursor:pointer; line-height:1;">✕</button>` : ''}
                   </div>
                   <label style="display:block; background:#111827; color:#fff; font-size:0.58rem; padding:3px 2px; border-radius:3px; cursor:pointer; text-transform:none;">
-                    📁 Foto ${imgIdx + 1}
+                    📁 Subir ${imgIdx + 1}
                     <input type="file" accept="image/*" style="display:none" onchange="uploadProdColorPhoto(this, ${cIdx}, ${imgIdx})">
                   </label>
                 </div>
@@ -2010,11 +3101,71 @@
       }).join('');
     }
 
+    window.addNewColorToActiveProduct = function() {
+      const p = coleccionCfg.products?.[activeProductKey];
+      if (!p) return;
+      if (!Array.isArray(p.colors)) p.colors = [];
+      const defaultImgs = p.colors[0]?.imgs ? p.colors[0].imgs.slice() : ['img/oslo_black_front.webp'];
+      p.colors.push({
+        id: 'color-' + (p.colors.length + 1),
+        hex: '#1a2744',
+        label: 'Nuevo Color',
+        imgs: defaultImgs
+      });
+      populateActiveProductForm(activeProductKey);
+      pushLivePreview();
+      recordHistorySnapshot();
+      setStatusBadge('dirty');
+      showToast('🎨 Nuevo color agregado a ' + (p.name || activeProductKey));
+    };
+
+    window.removeColorFromActiveProduct = function(cIdx) {
+      const p = coleccionCfg.products?.[activeProductKey];
+      if (!p || !Array.isArray(p.colors) || p.colors.length <= 1) return;
+      p.colors.splice(cIdx, 1);
+      populateActiveProductForm(activeProductKey);
+      pushLivePreview();
+      recordHistorySnapshot();
+      setStatusBadge('dirty');
+    };
+
+    window.addPhotoToProdColor = function(cIdx) {
+      const p = coleccionCfg.products?.[activeProductKey];
+      if (!p || !p.colors || !p.colors[cIdx]) return;
+      if (!Array.isArray(p.colors[cIdx].imgs)) p.colors[cIdx].imgs = [];
+      const fallbackImg = p.colors[cIdx].imgs[0] || 'img/oslo_black_front.webp';
+      p.colors[cIdx].imgs.push(fallbackImg);
+      populateActiveProductForm(activeProductKey);
+      pushLivePreview();
+      recordHistorySnapshot();
+      setStatusBadge('dirty');
+    };
+
+    window.removePhotoFromProdColor = function(cIdx, imgIdx) {
+      const p = coleccionCfg.products?.[activeProductKey];
+      if (!p || !p.colors || !p.colors[cIdx] || !Array.isArray(p.colors[cIdx].imgs) || p.colors[cIdx].imgs.length <= 1) return;
+      p.colors[cIdx].imgs.splice(imgIdx, 1);
+      populateActiveProductForm(activeProductKey);
+      pushLivePreview();
+      recordHistorySnapshot();
+      setStatusBadge('dirty');
+    };
+
+    window.updateProdColorHex = function(cIdx, hex) {
+      const p = coleccionCfg.products?.[activeProductKey];
+      if (!p || !p.colors || !p.colors[cIdx]) return;
+      p.colors[cIdx].hex = hex;
+      pushLivePreview();
+      recordHistorySnapshot();
+      setStatusBadge('dirty');
+    };
+
     window.updateProdColorLabel = function(cIdx, val) {
       const p = coleccionCfg.products?.[activeProductKey];
       if (!p || !p.colors || !p.colors[cIdx]) return;
       p.colors[cIdx].label = val;
       pushLivePreview();
+      recordHistorySnapshot();
       setStatusBadge('dirty');
     };
 
@@ -2023,6 +3174,7 @@
       if (!p || !p.colors || !p.colors[cIdx]) return;
       p.colors[cIdx].imgs[imgIdx] = val;
       pushLivePreview();
+      recordHistorySnapshot();
       setStatusBadge('dirty');
     };
 
@@ -2067,9 +3219,19 @@
       p.ctaText = document.getElementById('ce-prod-cta')?.value ?? 'Pedir';
       p.addBtnText = document.getElementById('ce-prod-addbtn')?.value ?? '+ Agregar al carrito';
 
+      if (activeProductKey === 'etoile') {
+        p.regularPrice = document.getElementById('ce-prod-regprice')?.value ?? '$359.900 COP';
+        p.memberNote = document.getElementById('ce-prod-memnote')?.value ?? '· Miembros (−15%)';
+        p.overlaySubtitle = document.getElementById('ce-prod-ovsub')?.value ?? 'ARCHIVO PRIVADO';
+        p.overlayTitle = document.getElementById('ce-prod-ovtitle')?.value ?? 'Solo Miembros';
+        p.overlayDesc = document.getElementById('ce-prod-ovdesc')?.value ?? '';
+        p.overlayBtnText = document.getElementById('ce-prod-ovbtn')?.value ?? 'DESBLOQUEAR PIEZA →';
+      }
+
       renderProductPills();
       renderColeccionOrderList();
       pushLivePreview();
+      recordHistorySnapshot();
       setStatusBadge('dirty');
     };
 
@@ -2091,6 +3253,13 @@
       setV('ce-flt-ess', f.labelEssentials);
       setV('ce-flt-core', f.labelCore);
       setV('ce-flt-all', f.labelAll);
+
+      const ps = coleccionCfg.priveSection || {};
+      setC('ce-prive-visible', ps.visible);
+      setV('ce-prive-label', ps.label);
+      setV('ce-prive-title', ps.title);
+      setV('ce-prive-badge', ps.badge);
+      setV('ce-prive-sub', ps.subtitle);
 
       const cs = coleccionCfg.capasSection || {};
       setC('ce-capas-visible', cs.visible);
@@ -2136,6 +3305,13 @@
         labelCore: getV('ce-flt-core'),
         labelAll: getV('ce-flt-all')
       };
+      coleccionCfg.priveSection = {
+        visible: getC('ce-prive-visible'),
+        label: getV('ce-prive-label'),
+        title: getV('ce-prive-title'),
+        badge: getV('ce-prive-badge'),
+        subtitle: getV('ce-prive-sub')
+      };
       coleccionCfg.capasSection = {
         visible: getC('ce-capas-visible'),
         label: getV('ce-capas-label'),
@@ -2154,29 +3330,228 @@
       };
 
       pushLivePreview();
+      recordHistorySnapshot();
       setStatusBadge('dirty');
     };
 
-    /* ── GUARDAR Y PUBLICAR EN VIVO (LANDING + COLECCIÓN) ── */
+    /* =========================================================================
+       LÓGICA INSPECTOR 3: CLUB PRIVÉ (PRIVE.HTML)
+       ========================================================================= */
+    function renderPriveInspector() {
+      const setV = (id, v) => { const e = document.getElementById(id); if (e) e.value = v ?? ''; };
+      const setC = (id, v) => { const e = document.getElementById(id); if (e) e.checked = v !== false; };
+
+      const h = priveCfg.hero || {};
+      setC('pe-hero-visible', h.visible);
+      setV('pe-hero-badge', h.badge);
+      setV('pe-hero-ttop', h.titleTop);
+      setV('pe-hero-tit', h.titleItalic);
+      setV('pe-hero-tsuf', h.titleSuffix);
+      setV('pe-hero-sub', h.subtitle);
+
+      const s = priveCfg.showcase || {};
+      setC('pe-sc-visible', s.visible);
+      setV('pe-sc-ctag', s.cardTag);
+      setV('pe-sc-ctitle', s.cardTitle);
+      setV('pe-sc-cdesc', s.cardDesc);
+      setV('pe-sc-cbtn', s.cardBtnText);
+      setV('pe-sc-img', s.image);
+      setV('pe-sc-mt', s.monthlyTitle);
+      setV('pe-sc-mp', s.monthlyPrice);
+      setV('pe-sc-mb', s.monthlyBadge);
+      setV('pe-sc-md', s.monthlyDesc);
+      setV('pe-sc-at', s.annualTitle);
+      setV('pe-sc-ap', s.annualPrice);
+      setV('pe-sc-ab', s.annualBadge);
+      setV('pe-sc-ad', s.annualDesc);
+
+      const pil = priveCfg.pillars || {};
+      setC('pe-pil-visible', pil.visible);
+      const pilWrap = document.getElementById('pe-pillars-fields');
+      if (pilWrap) {
+        const items = pil.items || [];
+        pilWrap.innerHTML = items.map((it, idx) => `
+          <div class="st-field">
+            <label>Pilar 0${idx + 1} — Título y Descripción</label>
+            <input type="text" id="pe-pil-${idx}-t" value="${(it.title || '').replace(/"/g, '&quot;')}" style="margin-bottom:4px;" oninput="onPriveChange()">
+            <textarea id="pe-pil-${idx}-d" style="min-height:42px;" oninput="onPriveChange()">${it.desc || ''}</textarea>
+          </div>
+        `).join('');
+      }
+
+      const f = priveCfg.form || {};
+      setC('pe-frm-visible', f.visible);
+      setV('pe-frm-eye', f.eyebrow);
+      setV('pe-frm-tp', f.titlePrefix);
+      setV('pe-frm-ti', f.titleItalic);
+      setV('pe-frm-sub', f.subtitle);
+      setV('pe-frm-btn', f.btnText);
+    }
+
+    window.onPriveChange = function() {
+      const getV = id => document.getElementById(id)?.value ?? '';
+      const getC = id => !!document.getElementById(id)?.checked;
+
+      const items = [];
+      for (let i = 0; i < 6; i++) {
+        items.push({
+          title: getV(`pe-pil-${i}-t`),
+          desc: getV(`pe-pil-${i}-d`)
+        });
+      }
+
+      priveCfg = {
+        hero: {
+          visible: getC('pe-hero-visible'),
+          badge: getV('pe-hero-badge'),
+          titleTop: getV('pe-hero-ttop'),
+          titleItalic: getV('pe-hero-tit'),
+          titleSuffix: getV('pe-hero-tsuf'),
+          subtitle: getV('pe-hero-sub')
+        },
+        showcase: {
+          visible: getC('pe-sc-visible'),
+          cardTag: getV('pe-sc-ctag'),
+          cardTitle: getV('pe-sc-ctitle'),
+          cardDesc: getV('pe-sc-cdesc'),
+          cardBtnText: getV('pe-sc-cbtn'),
+          image: getV('pe-sc-img'),
+          monthlyTitle: getV('pe-sc-mt'),
+          monthlyPrice: getV('pe-sc-mp'),
+          monthlyBadge: getV('pe-sc-mb'),
+          monthlyDesc: getV('pe-sc-md'),
+          annualTitle: getV('pe-sc-at'),
+          annualPrice: getV('pe-sc-ap'),
+          annualBadge: getV('pe-sc-ab'),
+          annualDesc: getV('pe-sc-ad')
+        },
+        pillars: {
+          visible: getC('pe-pil-visible'),
+          items
+        },
+        form: {
+          visible: getC('pe-frm-visible'),
+          eyebrow: getV('pe-frm-eye'),
+          titlePrefix: getV('pe-frm-tp'),
+          titleItalic: getV('pe-frm-ti'),
+          subtitle: getV('pe-frm-sub'),
+          btnText: getV('pe-frm-btn')
+        }
+      };
+
+      pushLivePreview();
+      recordHistorySnapshot();
+      setStatusBadge('dirty');
+    };
+
+    /* =========================================================================
+       LÓGICA INSPECTOR 4: CAMPUS ESTUDIANTIL (ESTUDIANTES.HTML)
+       ========================================================================= */
+    function renderCampusInspector() {
+      const setV = (id, v) => { const e = document.getElementById(id); if (e) e.value = v ?? ''; };
+      const setC = (id, v) => { const e = document.getElementById(id); if (e) e.checked = v !== false; };
+
+      const h = campusCfg.hero || {};
+      setC('me-hero-visible', h.visible);
+      setV('me-hero-badge', h.badge);
+      setV('me-hero-ttop', h.titleTop);
+      setV('me-hero-tpref', h.titlePrefix);
+      setV('me-hero-tit', h.titleItalic);
+      setV('me-hero-sub', h.subtitle);
+
+      const b = campusCfg.benefits || {};
+      setC('me-ben-visible', b.visible);
+      const bItems = b.items || [];
+      for (let i = 0; i < 3; i++) {
+        setV(`me-ben-${i+1}-t`, bItems[i]?.title || '');
+        setV(`me-ben-${i+1}-d`, bItems[i]?.desc || '');
+      }
+
+      const n = campusCfg.notice || {};
+      setC('me-not-visible', n.visible);
+      setV('me-not-title', n.title);
+      setV('me-not-text', n.text);
+
+      const f = campusCfg.form || {};
+      setC('me-frm-visible', f.visible);
+      setV('me-frm-eye', f.eyebrow);
+      setV('me-frm-tp', f.titlePrefix);
+      setV('me-frm-ti', f.titleItalic);
+      setV('me-frm-sub', f.subtitle);
+      setV('me-frm-btn', f.btnText);
+    }
+
+    window.onCampusChange = function() {
+      const getV = id => document.getElementById(id)?.value ?? '';
+      const getC = id => !!document.getElementById(id)?.checked;
+
+      campusCfg = {
+        hero: {
+          visible: getC('me-hero-visible'),
+          badge: getV('me-hero-badge'),
+          titleTop: getV('me-hero-ttop'),
+          titlePrefix: getV('me-hero-tpref'),
+          titleItalic: getV('me-hero-tit'),
+          subtitle: getV('me-hero-sub')
+        },
+        benefits: {
+          visible: getC('me-ben-visible'),
+          items: [
+            { title: getV('me-ben-1-t'), desc: getV('me-ben-1-d') },
+            { title: getV('me-ben-2-t'), desc: getV('me-ben-2-d') },
+            { title: getV('me-ben-3-t'), desc: getV('me-ben-3-d') }
+          ]
+        },
+        notice: {
+          visible: getC('me-not-visible'),
+          title: getV('me-not-title'),
+          text: getV('me-not-text')
+        },
+        form: {
+          visible: getC('me-frm-visible'),
+          eyebrow: getV('me-frm-eye'),
+          titlePrefix: getV('me-frm-tp'),
+          titleItalic: getV('me-frm-ti'),
+          subtitle: getV('me-frm-sub'),
+          btnText: getV('me-frm-btn')
+        }
+      };
+
+      pushLivePreview();
+      recordHistorySnapshot();
+      setStatusBadge('dirty');
+    };
+
+    /* ── GUARDAR Y PUBLICAR EN VIVO (LAS 4 PÁGINAS) ── */
     window.guardarYPublicarTodo = async function() {
       localStorage.setItem('yossico_landing_config', JSON.stringify(landingCfg));
       localStorage.setItem('yossico_coleccion_config', JSON.stringify(coleccionCfg));
+      localStorage.setItem('yossico_prive_config', JSON.stringify(priveCfg));
+      localStorage.setItem('yossico_campus_config', JSON.stringify(campusCfg));
 
       try {
         await Promise.all([
           sb.rpc('set_config', { p_clave: 'landing_config', p_valor: landingCfg, pin: adminPin }),
-          sb.rpc('set_config', { p_clave: 'coleccion_config', p_valor: coleccionCfg, pin: adminPin })
+          sb.rpc('set_config', { p_clave: 'coleccion_config', p_valor: coleccionCfg, pin: adminPin }),
+          sb.rpc('set_config', { p_clave: 'prive_config', p_valor: priveCfg, pin: adminPin }),
+          sb.rpc('set_config', { p_clave: 'campus_config', p_valor: campusCfg, pin: adminPin })
         ]);
-        showToast('¡Cambios publicados en vivo en Landing y Colección! ✓');
+        showToast('¡Cambios publicados en vivo en todo el sitio web! ✓');
       } catch (e) {
-        showToast('Cambios guardados en el Panel Admin ✓');
+        showToast('Cambios guardados y aplicados en el sitio ✓');
       }
       setStatusBadge('synced');
       pushLivePreview();
     };
 
     window.restaurarPaginaActual = async function() {
-      const nombrePag = activeStudioPage === 'landing' ? 'la Página de Inicio (Landing)' : 'la Página de Colección';
+      const mapNames = {
+        landing: 'la Página de Inicio (Landing)',
+        coleccion: 'la Página de Colección',
+        prive: 'la Página de Club Privé',
+        campus: 'la Página de YOSSICO Campus'
+      };
+      const nombrePag = mapNames[activeStudioPage] || 'esta página';
       if (!confirm(`¿Restaurar todos los textos, fotos y orden de ${nombrePag} a su estado original de fábrica?`)) return;
 
       if (activeStudioPage === 'landing') {
@@ -2184,12 +3559,23 @@
         localStorage.removeItem('yossico_landing_config');
         try { await sb.rpc('set_config', { p_clave: 'landing_config', p_valor: {}, pin: adminPin }); } catch (_) {}
         renderLandingInspector();
-      } else {
+      } else if (activeStudioPage === 'coleccion') {
         coleccionCfg = JSON.parse(JSON.stringify(DEFAULT_COLECCION));
         localStorage.removeItem('yossico_coleccion_config');
         try { await sb.rpc('set_config', { p_clave: 'coleccion_config', p_valor: {}, pin: adminPin }); } catch (_) {}
         renderColeccionInspector();
+      } else if (activeStudioPage === 'prive') {
+        priveCfg = JSON.parse(JSON.stringify(DEFAULT_PRIVE));
+        localStorage.removeItem('yossico_prive_config');
+        try { await sb.rpc('set_config', { p_clave: 'prive_config', p_valor: {}, pin: adminPin }); } catch (_) {}
+        renderPriveInspector();
+      } else if (activeStudioPage === 'campus') {
+        campusCfg = JSON.parse(JSON.stringify(DEFAULT_CAMPUS));
+        localStorage.removeItem('yossico_campus_config');
+        try { await sb.rpc('set_config', { p_clave: 'campus_config', p_valor: {}, pin: adminPin }); } catch (_) {}
+        renderCampusInspector();
       }
+      recordHistorySnapshot();
       reloadStudioIframe();
       setStatusBadge('synced');
       showToast('Página restaurada al diseño original ✓');
