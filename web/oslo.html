@@ -708,6 +708,7 @@
         /* ── Pedido paso a paso (color → talla → tu set) ── */
         .pd__crumbs { display: flex; flex-wrap: wrap; gap: 10px; font-family: var(--font-body); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-light); margin-bottom: 22px; }
         .pd__crumbs a { color: var(--gray); text-decoration: none; }
+        .pd__price--top { font-size: 30px; margin: -14px 0 28px; }
         .pd__crumbs a:hover { color: var(--black); text-decoration: underline; text-underline-offset: 4px; }
         .pd__price-row { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
         .pd__price-row .pd__price { margin: 0; font-size: 32px; }
@@ -996,6 +997,7 @@
 
             <h1 class="pd__name" id="pd-name"></h1>
             <p class="pd__sub" id="pd-sub"></p>
+            <p class="pd__price pd__price--top" id="pd-price"></p>
 
             <!-- Pedido paso a paso: se abre un paso a la vez -->
             <div class="pd-wiz" id="pd-wiz">
@@ -1245,6 +1247,7 @@
         document.getElementById('pd-breadcrumb-name').textContent = prod.name;
         document.getElementById('pd-name').textContent  = prod.name;
         document.getElementById('pd-sub').textContent   = prod.sub;
+        document.getElementById('pd-price').textContent = prod.priceDisplay;
         document.getElementById('pd-desc').textContent  = prod.desc;
 
         /* ─────────────────────────────────────────────
@@ -1419,8 +1422,8 @@
         /* ── Gallery ───────────────────────────── */
         /* Fotos ampliadas a 2048 px (img/hd/) para pantallas de alta resolución;
            las tarjetas y miniaturas siguen usando las de 1024 px. */
-        const HD_FOTOS = /^img\/(oslo_(?:black|navy|burgundy)_(?:front|half|back|labels))\.webp$/;
-        const hdSrc = src => { const m = HD_FOTOS.exec(src || ''); return m ? `img/hd/${m[1]}.webp` : null; };
+        const HD_FOTOS = new Set(/*HD*/["oslo_black_front", "oslo_black_half", "oslo_black_back", "oslo_black_labels", "oslo_navy_front", "oslo_navy_half", "oslo_navy_back", "oslo_navy_labels", "oslo_burgundy_front", "oslo_burgundy_half", "oslo_burgundy_back", "oslo_burgundy_labels"]);
+        const hdSrc = src => { const m = /^img\/([\w-]+)\.webp$/.exec(src || ''); return m && HD_FOTOS.has(m[1]) ? `img/hd/${m[1]}.webp` : null; };
         function buildGallery(imgs) {
             const main   = document.getElementById('pd-gallery-main');
             const thumbs = document.getElementById('pd-thumbs');
@@ -1455,8 +1458,9 @@
 
         /* ═══ Pedido paso a paso: 1 color → 2 talla → 3 tu set ═══ */
         const wiz = {
-            color: prod.colors.some(c => c.key.toLowerCase() === urlColorParam || c.label.toLowerCase() === urlColorParam)
-                ? initialColorObj.key : null,   // si viene del home con ?color=, el paso 1 ya está hecho
+            // Con un solo color, o si viene del home con ?color=, el paso 1 ya está hecho
+            color: (prod.colors.length === 1 || prod.colors.some(c => c.key.toLowerCase() === urlColorParam || c.label.toLowerCase() === urlColorParam))
+                ? initialColorObj.key : null,
             talla: null
         };
         const pasos = [...document.querySelectorAll('.pd-wiz__step')];
@@ -1481,6 +1485,7 @@
         }
         document.querySelectorAll('.pd-wiz__head[data-goto]').forEach(h => {
             h.addEventListener('click', () => {
+                if (!h.dataset.goto) return;
                 const n = +h.dataset.goto;
                 if (h.closest('.pd-wiz__step').classList.contains('is-locked')) return;
                 abrirPaso(n);
@@ -1519,6 +1524,11 @@
             colorsContainer.appendChild(btn);
         });
         colorsContainer.addEventListener('mouseleave', () => mostrarColor(colorObj()));
+        if (prod.colors.length === 1) {   // un solo color: no hay nada que cambiar
+            const h1 = document.querySelector('.pd-wiz__head[data-goto="1"]');
+            h1.removeAttribute('data-goto');
+            h1.querySelector('.pd-wiz__edit').remove();
+        }
         colorNameEl.textContent = initialColorObj.label;
         if (wiz.color) document.getElementById('wiz-val-color').textContent = initialColorObj.label;
 
