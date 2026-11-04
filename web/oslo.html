@@ -703,72 +703,110 @@
             margin-bottom: 8px;
         }
 
-        /* ── Recorrido de compra por pasos ─────────────── */
-        .pd__crumbs {
-            display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
-            font-family: var(--font-body); font-size: 10px; letter-spacing: 2px;
-            text-transform: uppercase; color: var(--gray-light); margin-bottom: 28px;
-        }
-        .pd__crumbs-back {
-            display: inline-flex; align-items: center; gap: 6px;
-            color: var(--black); text-decoration: none; font-weight: 500;
-        }
-        .pd__crumbs-back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; transition: transform 0.2s; }
-        .pd__crumbs-back:hover svg { transform: translateX(-3px); }
-        .pd__crumbs-back:hover { text-decoration: underline; text-underline-offset: 4px; }
-        .pd__price-row { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
+        /* ── Pedido paso a paso (color → talla → tu set) ── */
+        .pd__crumbs { display: flex; flex-wrap: wrap; gap: 10px; font-family: var(--font-body); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-light); margin-bottom: 22px; }
+        .pd__crumbs a { color: var(--gray); text-decoration: none; }
+        .pd__crumbs a:hover { color: var(--black); text-decoration: underline; text-underline-offset: 4px; }
+        .pd__price-row { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
         .pd__price-row .pd__price { margin: 0; font-size: 32px; }
         .pd__price-row .pd__tax-note { margin: 0; }
-        .pd__step { padding: 22px 0; border-top: 1px solid var(--border); }
-        .pd__step-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
-        .pd__step-title {
-            display: inline-flex; align-items: center; gap: 10px;
-            font-family: var(--font-body); font-size: 11px; letter-spacing: 2.5px;
-            text-transform: uppercase; color: var(--black); font-weight: 500;
+
+        .pd__back-pill {
+            position: absolute; top: 18px; left: 18px; z-index: 20;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 11px 18px 11px 14px; border-radius: 999px;
+            background: var(--white); color: var(--black); text-decoration: none;
+            font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+            box-shadow: 0 4px 18px rgba(17,17,17,0.14);
+            transition: background 0.25s, color 0.25s, transform 0.25s;
         }
-        .pd__step-num {
-            width: 22px; height: 22px; border-radius: 50%; background: var(--black); color: var(--white);
-            display: inline-flex; align-items: center; justify-content: center; font-size: 10px; letter-spacing: 0;
+        .pd__back-pill svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; transition: transform 0.25s; }
+        .pd__back-pill:hover { background: var(--black); color: var(--white); }
+        .pd__back-pill:hover svg { transform: translateX(-3px); }
+        .pd__back-pill-short { display: none; }
+
+        .pd-wiz { border-top: 1px solid var(--border); margin-bottom: 28px; }
+        .pd-wiz__step { border-bottom: 1px solid var(--border); }
+        .pd-wiz__head {
+            width: 100%; display: flex; align-items: center; gap: 12px; padding: 20px 0;
+            background: none; border: none; text-align: left; font: inherit; color: var(--black); cursor: pointer;
         }
-        .pd__step .pd__colors, .pd__step .pd__sizes { margin-bottom: 0; }
-        .pd__step .pd__color-name { font-family: var(--font-body); font-size: 12px; color: var(--gray); }
-        .pd__guide-toggle {
-            background: none; border: none; padding: 0; cursor: pointer;
-            font-family: var(--font-body); font-size: 12px; color: var(--black);
-            text-decoration: underline; text-underline-offset: 4px;
+        .pd-wiz__num {
+            flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            border: 1px solid var(--black); font-family: var(--font-body); font-size: 11px;
+            transition: background 0.25s, color 0.25s;
         }
-        .pd__size-hint { font-family: var(--font-body); font-size: 12px; color: var(--gray); margin: 10px 0 0; }
+        .pd-wiz__title { font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; }
+        .pd-wiz__value { margin-left: auto; font-family: var(--font-body); font-size: 13px; color: var(--black); }
+        .pd-wiz__edit { display: none; font-family: var(--font-body); font-size: 11px; color: var(--gray); text-decoration: underline; text-underline-offset: 3px; }
+        .pd-wiz__body { display: none; padding: 0 0 24px; }
+        .pd-wiz__step.is-open .pd-wiz__body { display: block; animation: wizIn 0.35s var(--ease-expo); }
+        .pd-wiz__step.is-open .pd-wiz__num { background: var(--black); color: var(--white); }
+        .pd-wiz__step.is-done:not(.is-open) .pd-wiz__num { background: var(--black); color: var(--white); font-size: 0; }
+        .pd-wiz__step.is-done:not(.is-open) .pd-wiz__num::before { content: '✓'; font-size: 12px; }
+        .pd-wiz__step.is-done:not(.is-open) .pd-wiz__edit { display: inline; }
+        .pd-wiz__step.is-open .pd-wiz__value { display: none; }
+        .pd-wiz__step.is-locked .pd-wiz__head { cursor: default; color: var(--gray-light); }
+        .pd-wiz__step.is-locked .pd-wiz__num { border-color: var(--border); color: var(--gray-light); }
+        @keyframes wizIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+        .pd-wiz__colors { display: flex; gap: 10px; flex-wrap: wrap; }
+        .pd-wiz__colors .pd-wiz__color {
+            width: auto; height: auto; border-radius: 0; transform: none;
+            display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 10px;
+            background: none; border: 1px solid var(--border); cursor: pointer; font: inherit;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .pd-wiz__colors .pd-wiz__color:hover { border-color: var(--black); transform: none; }
+        .pd-wiz__colors .pd-wiz__color.selected { border-color: var(--black); background: var(--white); transform: none; box-shadow: inset 0 0 0 1px var(--black); }
+        .pd-wiz__dot { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); }
+        .pd-wiz__cname { font-family: var(--font-body); font-size: 12px; color: var(--black); }
+        .pd-wiz__color.color-out-of-stock { opacity: 0.4; }
+        .pd-wiz__color.color-out-of-stock::after { display: none; }
+        .pd-wiz__color.color-out-of-stock .pd-wiz__cname::after { content: ' · Agotado'; color: var(--gray); }
+
+        .pd-wiz__sizes { display: flex; gap: 10px; margin-bottom: 0; }
+        .pd-wiz__size { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .pd-wiz__sizes .pd__size-btn { width: 64px; height: 52px; cursor: pointer; }
+        .pd-wiz__avail { font-family: var(--font-body); font-size: 10px; color: var(--gray); min-height: 13px; }
+        .pd-wiz__avail.is-ok { color: #2f7d52; }
+        .pd-wiz__avail.is-low { color: #b03a2e; }
+        .pd-wiz__avail.is-out { color: var(--gray-light); }
+        .pd-wiz .pd__stock-status[hidden] { display: none; }
+        .pd__size-hint { font-family: var(--font-body); font-size: 12px; color: var(--gray); margin: 14px 0 0; }
         .pd__size-hint strong { color: var(--black); font-weight: 600; }
+        .pd__guide-toggle { display: inline-block; margin-top: 16px; background: none; border: none; padding: 0; cursor: pointer; font-family: var(--font-body); font-size: 12px; color: var(--black); text-decoration: underline; text-underline-offset: 4px; }
         .pd__guide { margin-top: 18px; }
         .pd__guide-title { font-family: var(--font-body); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin: 6px 0 0; }
         .pd__guide-link { font-family: var(--font-body); font-size: 12px; color: var(--black); }
-        .pd__summary { background: var(--white); border: 1px solid var(--border); padding: 18px 20px; margin: 8px 0 16px; }
-        .pd__summary-main { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 14px; }
-        .pd__summary-label { font-family: var(--font-body); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); }
-        .pd__summary-choice { font-family: var(--font-body); font-size: 13px; color: var(--black); text-align: right; }
-        .pd__summary-choice.is-pending { color: var(--gray-light); }
-        .pd__summary-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-        .pd__summary .pd__quantity { margin: 0; }
-        .pd__summary-total { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-        .pd__summary-price { font-family: var(--font-display); font-size: 28px; color: var(--black); line-height: 1; }
-        .pd__summary-ship { font-family: var(--font-body); font-size: 11px; color: var(--gray); margin: 12px 0 0; }
+
+        .pd-wiz__set { display: flex; gap: 14px; align-items: center; background: var(--white); border: 1px solid var(--border); padding: 12px; margin-bottom: 20px; }
+        .pd-wiz__set img { width: 64px; height: 80px; object-fit: cover; object-position: top; background: var(--off-white); }
+        .pd-wiz__set-name { font-family: var(--font-body); font-size: 14px; font-weight: 500; color: var(--black); margin: 0 0 4px; }
+        .pd-wiz__set-stock { font-family: var(--font-body); font-size: 11px; color: #2f7d52; margin: 0; }
+        .pd-wiz__label { font-family: var(--font-body); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin: 0 0 10px; }
+        .pd-wiz__qty { display: flex; gap: 8px; }
+        .pd-wiz__qty button { width: 52px; height: 44px; border: 1px solid var(--border); background: none; font-family: var(--font-body); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+        .pd-wiz__qty button:hover { border-color: var(--black); }
+        .pd-wiz__qty button.is-on { background: var(--black); color: var(--white); border-color: var(--black); }
+        .pd-wiz__more { font-family: var(--font-body); font-size: 11px; color: var(--gray); margin: 10px 0 20px; }
+        .pd-wiz__more a { color: var(--black); }
+        .pd-wiz__total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 16px; border-top: 1px solid var(--border); }
+        .pd-wiz__total span { font-family: var(--font-body); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); }
+        .pd-wiz__total strong { font-family: var(--font-display); font-size: 30px; font-weight: 400; color: var(--black); }
+        .pd__summary-ship { font-family: var(--font-body); font-size: 11px; color: var(--gray); margin: 6px 0 18px; text-align: right; }
         .pd__summary-ship.is-free { color: #2f7d52; }
+        .pd-wiz .pd__ctas { margin-bottom: 0; }
+
         .pd__about { margin: 8px 0 24px; }
         .pd__about-title { font-family: var(--font-body); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin-bottom: 10px; }
         .pd__about .pd__desc { margin-bottom: 0; }
-        .pd__back-float { display: none; }
         @media (max-width: 900px) {
-            .pd__back-float {
-                display: flex; align-items: center; justify-content: center;
-                position: absolute; top: 14px; left: 14px; z-index: 20;
-                width: 40px; height: 40px; border-radius: 50%;
-                background: rgba(255,255,255,0.92); box-shadow: 0 2px 10px rgba(0,0,0,0.12);
-            }
-            .pd__back-float svg { width: 18px; height: 18px; fill: none; stroke: var(--black); stroke-width: 1.8; }
-            .pd__crumbs-back { display: none; }
-            .pd__crumbs .pd__breadcrumb-sep:first-of-type { display: none; }
-            .pd__crumbs { margin-bottom: 16px; }
-            .pd__size-btn { width: 60px; height: 52px; }
+            .pd__back-pill { top: 12px; left: 12px; padding: 9px 14px 9px 10px; }
+            .pd__back-pill-long { display: none; }
+            .pd__back-pill-short { display: inline; }
+            .pd-wiz__sizes .pd__size-btn { width: 72px; }
         }
 
         /* ── Tablet ─────────────────────────────────── */
@@ -904,8 +942,9 @@
             </div>
             <!-- Main image area -->
             <div class="pd__gallery-main" id="pd-gallery-main">
-                <a href="coleccion.html" class="pd__back-float" aria-label="Volver a la colección">
+                <a href="coleccion.html" class="pd__back-pill" aria-label="Volver a la colección">
                     <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                    <span class="pd__back-pill-long">Volver a la colección</span><span class="pd__back-pill-short">Colección</span>
                 </a>
                 <!-- slides injected by JS -->
                 <button class="pd__gall-btn pd__gall-btn--prev" id="pd-prev" aria-label="Anterior">
@@ -924,12 +963,9 @@
         <!-- Right: Info -->
         <div class="pd__info" id="pd-info">
 
-            <!-- Navegación: volver + ruta -->
+            <!-- Ruta -->
             <nav class="pd__crumbs" aria-label="Ruta">
-                <a href="coleccion.html" class="pd__crumbs-back">
-                    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                    Colección
-                </a>
+                <a href="coleccion.html">Colección</a>
                 <span class="pd__breadcrumb-sep">/</span>
                 <span id="pd-breadcrumb-line"></span>
                 <span class="pd__breadcrumb-sep">/</span>
@@ -943,27 +979,50 @@
                 <p class="pd__tax-note">Set completo · Impuestos incluidos</p>
             </div>
 
-            <!-- Paso 1: Talla -->
-            <div class="pd__step">
-                <div class="pd__step-head">
-                    <span class="pd__step-title"><span class="pd__step-num">1</span> Elige tu talla</span>
-                    <button type="button" class="pd__guide-toggle" id="pd-guide-toggle" aria-expanded="false" aria-controls="pd-guide">¿Cuál es mi talla?</button>
-                </div>
-                <div class="pd__sizes" id="pd-sizes">
-                    <button class="pd__size-btn" data-size="S" style="position:relative;">S</button>
-                    <button class="pd__size-btn" data-size="M" style="position:relative;">M</button>
-                    <button class="pd__size-btn" data-size="L" style="position:relative;">L</button>
-                </div>
-                <p class="pd__size-hint" id="pd-size-hint" hidden></p>
-                <!-- Stock status indicator (updated in real-time) -->
-                <div class="pd__stock-status is-loading" id="pd-stock-status">
-                    <span class="pd__stock-dot"></span>
-                    <span>Consultando disponibilidad…</span>
-                </div>
-                <div class="pd__guide" id="pd-guide" hidden>
-                    <div id="pd-talla-reco"></div>
-                    <p class="pd__guide-title">Tabla de medidas de la prenda</p>
-                    <div class="table-wrap" style="overflow-x: auto; margin-bottom: 16px; margin-top: 8px;">
+            <!-- Pedido paso a paso: se abre un paso a la vez -->
+            <div class="pd-wiz" id="pd-wiz">
+                <section class="pd-wiz__step" data-step="1">
+                    <button type="button" class="pd-wiz__head" data-goto="1">
+                        <span class="pd-wiz__num">1</span>
+                        <span class="pd-wiz__title">Elige tu color</span>
+                        <span class="pd-wiz__value" id="wiz-val-color"></span>
+                        <span class="pd-wiz__edit">Cambiar</span>
+                    </button>
+                    <div class="pd-wiz__body">
+                        <div class="pd-wiz__colors" id="pd-colors"></div>
+                        <span id="pd-color-name" hidden></span>
+                    </div>
+                </section>
+
+                <section class="pd-wiz__step" data-step="2">
+                    <button type="button" class="pd-wiz__head" data-goto="2">
+                        <span class="pd-wiz__num">2</span>
+                        <span class="pd-wiz__title">Elige tu talla</span>
+                        <span class="pd-wiz__value" id="wiz-val-talla"></span>
+                        <span class="pd-wiz__edit">Cambiar</span>
+                    </button>
+                    <div class="pd-wiz__body">
+                        <div class="pd__sizes pd-wiz__sizes" id="pd-sizes">
+                            <div class="pd-wiz__size">
+                                <button class="pd__size-btn" data-size="S">S</button>
+                                <span class="pd-wiz__avail" data-avail="S"></span>
+                            </div>
+                            <div class="pd-wiz__size">
+                                <button class="pd__size-btn" data-size="M">M</button>
+                                <span class="pd-wiz__avail" data-avail="M"></span>
+                            </div>
+                            <div class="pd-wiz__size">
+                                <button class="pd__size-btn" data-size="L">L</button>
+                                <span class="pd-wiz__avail" data-avail="L"></span>
+                            </div>
+                        </div>
+                        <p class="pd__size-hint" id="pd-size-hint" hidden></p>
+                        <div class="pd__stock-status" id="pd-stock-status" hidden></div>
+                        <button type="button" class="pd__guide-toggle" id="pd-guide-toggle" aria-expanded="false" aria-controls="pd-guide">¿Cuál es mi talla?</button>
+                        <div class="pd__guide" id="pd-guide" hidden>
+                            <div id="pd-talla-reco"></div>
+                            <p class="pd__guide-title">Tabla de medidas de la prenda</p>
+                            <div class="table-wrap" style="overflow-x: auto; margin-bottom: 16px; margin-top: 8px;">
                         <table class="size-table" style="width: 100%; border-collapse: collapse; font-family: var(--font-body); font-size: 12px; color: var(--black); min-width: 500px;">
                             <thead>
                                 <tr>
@@ -1011,53 +1070,48 @@
                             </tbody>
                         </table>
                     </div>
-                    <a href="guia-de-tallas.html" class="pd__guide-link">Ver guía completa y cómo medirte →</a>
-                </div>
-            </div>
-
-            <!-- Paso 2: Color -->
-            <div class="pd__step">
-                <div class="pd__step-head">
-                    <span class="pd__step-title"><span class="pd__step-num">2</span> Elige tu color</span>
-                    <span id="pd-color-name" class="pd__color-name"></span>
-                </div>
-                <div class="pd__colors" id="pd-colors"></div>
-            </div>
-
-            <!-- Paso 3: Resumen y compra -->
-            <div class="pd__summary" id="pd-summary">
-                <div class="pd__summary-main">
-                    <span class="pd__summary-label">Tu set</span>
-                    <span class="pd__summary-choice" id="pd-summary-choice"></span>
-                </div>
-                <div class="pd__summary-row">
-                    <div class="pd__quantity" aria-label="Cantidad">
-                        <button class="pd__qty-btn" id="qty-minus" aria-label="Menos">-</button>
-                        <input type="text" class="pd__qty-input" id="qty-input" value="1" readonly aria-label="Cantidad">
-                        <button class="pd__qty-btn" id="qty-plus" aria-label="Más">+</button>
+                            <a href="guia-de-tallas.html" class="pd__guide-link">Ver guía completa y cómo medirte →</a>
+                        </div>
                     </div>
-                    <div class="pd__summary-total">
-                        <span class="pd__summary-label">Total</span>
-                        <span class="pd__summary-price" id="pd-summary-total"></span>
-                    </div>
-                </div>
-                <p class="pd__summary-ship" id="pd-summary-ship"></p>
-            </div>
+                </section>
 
-            <!-- CTAs -->
-            <div class="pd__ctas pd__ctas--full">
-                <button class="pd__cta-primary pd__cta-primary--full" id="pd-add-cart" style="opacity: 0.6;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                        stroke-linecap="round">
-                        <circle cx="9" cy="21" r="1" />
-                        <circle cx="20" cy="21" r="1" />
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                    </svg>
-                    <span id="pd-add-text">Elige tu talla</span>
-                </button>
-                <a href="#" class="pd__cta-secondary pd__cta-secondary--full" id="pd-wa" target="_blank" rel="noopener">
-                    Confirmar por WhatsApp
-                </a>
+                <section class="pd-wiz__step" data-step="3">
+                    <div class="pd-wiz__head">
+                        <span class="pd-wiz__num">3</span>
+                        <span class="pd-wiz__title">Tu set</span>
+                    </div>
+                    <div class="pd-wiz__body">
+                        <div class="pd-wiz__set">
+                            <img id="wiz-thumb" src="" alt="">
+                            <div>
+                                <p class="pd-wiz__set-name" id="wiz-set-name"></p>
+                                <p class="pd-wiz__set-stock" id="wiz-set-stock"></p>
+                            </div>
+                        </div>
+                        <p class="pd-wiz__label">¿Cuántos sets quieres?</p>
+                        <div class="pd-wiz__qty" id="wiz-qty"><button type="button" data-qty="1" class="is-on">1</button><button type="button" data-qty="2">2</button><button type="button" data-qty="3">3</button><button type="button" data-qty="4">4</button></div>
+                        <input type="hidden" id="qty-input" value="1">
+                        <p class="pd-wiz__more">¿Más de 4? <a href="institucional.html">Cotiza la dotación de tu equipo →</a></p>
+                        <div class="pd-wiz__total">
+                            <span>Total</span>
+                            <strong id="pd-summary-total"></strong>
+                        </div>
+                        <p class="pd__summary-ship" id="pd-summary-ship"></p>
+                        <div class="pd__ctas pd__ctas--full">
+                            <button class="pd__cta-primary pd__cta-primary--full" id="pd-add-cart">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                                    <circle cx="9" cy="21" r="1" />
+                                    <circle cx="20" cy="21" r="1" />
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                                </svg>
+                                <span id="pd-add-text">Agregar al carrito</span>
+                            </button>
+                            <a href="#" class="pd__cta-secondary pd__cta-secondary--full" id="pd-wa" target="_blank" rel="noopener">
+                                Pedir por WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </section>
             </div>
 
             <!-- Info icons -->
@@ -1299,6 +1353,8 @@
                 }
             });
             updateStockStatusRow();
+            pintarDisponibilidad();
+            if (typeof actualizarResumen === 'function' && pasos.length) actualizarResumen();
         }
 
         function updateStockStatusRow() {
@@ -1367,86 +1423,105 @@
         document.getElementById('pd-next').addEventListener('click', () => { const t = document.querySelectorAll('.pd__slide').length; goToSlide((currentSlide + 1) % t); });
         buildGallery(currentImgs);
 
-        /* ── Color swatches ───────────────────────── */
-        colorNameEl.textContent = initialColorObj.label;
-        prod.colors.forEach((c) => {
-            const btn = document.createElement('button');
-            btn.className        = `pd__color-swatch${c.key === activeColorKey ? ' selected' : ''}`;
-            btn.style.background = c.hex;
-            btn.title            = c.label;
-            btn.dataset.color    = c.key;
-            btn.setAttribute('aria-label', c.label);
-            btn.addEventListener('click', () => {
-                colorsContainer.querySelectorAll('.pd__color-swatch').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                activeColorKey = c.key;
-                colorNameEl.textContent = c.label;
-                currentImgs = c.imgs;
-                buildGallery(c.imgs);
-                try {
-                    const u = new URL(window.location.href);
-                    u.searchParams.set('color', c.key);
-                    window.history.replaceState({}, '', u.toString());
-                } catch (_) {}
-                // Conserva la talla elegida si existe en el nuevo color
-                if (stockLoaded) updateSizeButtons();
-                actualizarResumen();
+        /* ═══ Pedido paso a paso: 1 color → 2 talla → 3 tu set ═══ */
+        const wiz = {
+            color: prod.colors.some(c => c.key.toLowerCase() === urlColorParam || c.label.toLowerCase() === urlColorParam)
+                ? initialColorObj.key : null,   // si viene del home con ?color=, el paso 1 ya está hecho
+            talla: null
+        };
+        const pasos = [...document.querySelectorAll('.pd-wiz__step')];
+        const qtyInput = document.getElementById('qty-input');
+        const ENVIO_GRATIS_DESDE = 300000;
+        const fmtCOP = n => '$' + Math.round(n).toLocaleString('es-CO');
+        const colorObj = () => prod.colors.find(c => c.key === activeColorKey) || prod.colors[0];
+
+        function abrirPaso(n, desplazar) {
+            const hecho = { 1: !!wiz.color, 2: !!wiz.talla };
+            pasos.forEach(st => {
+                const k = +st.dataset.step;
+                const bloqueado = (k === 2 && !hecho[1]) || (k === 3 && !(hecho[1] && hecho[2]));
+                st.classList.toggle('is-open', k === n);
+                st.classList.toggle('is-done', !!hecho[k]);
+                st.classList.toggle('is-locked', bloqueado);
             });
-            colorsContainer.appendChild(btn);
+            if (desplazar) {
+                const st = pasos.find(x => +x.dataset.step === n);
+                if (st) setTimeout(() => st.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+            }
+        }
+        document.querySelectorAll('.pd-wiz__head[data-goto]').forEach(h => {
+            h.addEventListener('click', () => {
+                const n = +h.dataset.goto;
+                if (h.closest('.pd-wiz__step').classList.contains('is-locked')) return;
+                abrirPaso(n);
+            });
         });
 
-        /* ── Size buttons ────────────────────────── */
+        /* Paso 1 · Color: al pasar el mouse se ve el set en ese color; al hacer clic se elige */
+        function mostrarColor(c) {
+            if (currentImgs !== c.imgs) { currentImgs = c.imgs; buildGallery(c.imgs); }
+        }
+        function elegirColor(c) {
+            colorsContainer.querySelectorAll('.pd__color-swatch').forEach(b => b.classList.toggle('selected', b.dataset.color === c.key));
+            activeColorKey = c.key;
+            wiz.color = c.key;
+            colorNameEl.textContent = c.label;
+            document.getElementById('wiz-val-color').textContent = c.label;
+            mostrarColor(c);
+            try {
+                const u = new URL(window.location.href);
+                u.searchParams.set('color', c.key);
+                window.history.replaceState({}, '', u.toString());
+            } catch (_) {}
+            if (stockLoaded) updateSizeButtons();   // conserva la talla si existe en este color
+            actualizarResumen();
+            abrirPaso(wiz.talla ? 3 : 2, true);
+        }
+        prod.colors.forEach(c => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'pd__color-swatch pd-wiz__color' + (c.key === wiz.color ? ' selected' : '');
+            btn.dataset.color = c.key;
+            btn.setAttribute('aria-label', c.label);
+            btn.innerHTML = `<span class="pd-wiz__dot" style="background:${c.hex}"></span><span class="pd-wiz__cname">${c.label}</span>`;
+            btn.addEventListener('mouseenter', () => { if (window.matchMedia('(hover: hover)').matches) mostrarColor(c); });
+            btn.addEventListener('click', () => elegirColor(c));
+            colorsContainer.appendChild(btn);
+        });
+        colorsContainer.addEventListener('mouseleave', () => mostrarColor(colorObj()));
+        colorNameEl.textContent = initialColorObj.label;
+        if (wiz.color) document.getElementById('wiz-val-color').textContent = initialColorObj.label;
+
+        /* Paso 2 · Talla: muestra la disponibilidad de cada talla en el color elegido */
+        function pintarDisponibilidad() {
+            sizesContainer.querySelectorAll('.pd-wiz__avail').forEach(el => {
+                const st = getStock(activeColorKey, el.dataset.avail);
+                el.className = 'pd-wiz__avail';
+                if (st === null) { el.textContent = ''; return; }
+                if (st <= 0) { el.textContent = 'Agotado'; el.classList.add('is-out'); }
+                else if (st <= LOW_STOCK_THRESHOLD) { el.textContent = `Últimas ${st}`; el.classList.add('is-low'); }
+                else { el.textContent = 'Disponible'; el.classList.add('is-ok'); }
+            });
+        }
         sizesContainer.querySelectorAll('.pd__size-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 if (btn.disabled) return;
                 sizesContainer.querySelectorAll('.pd__size-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
-                selectedSize = btn.textContent.trim();
-                updateStockStatusRow();
+                selectedSize = btn.dataset.size;
+                wiz.talla = selectedSize;
+                document.getElementById('wiz-val-talla').textContent = `Talla ${selectedSize}`;
                 actualizarResumen();
+                setTimeout(() => abrirPaso(3, true), 250);
             });
         });
 
-        /* ── WhatsApp / Quantity / Accordions ────── */
-        document.getElementById('pd-wa').href = `https://wa.me/573127300661?text=${prod.wa}`;
-        const qtyMinus = document.getElementById('qty-minus');
-        const qtyPlus  = document.getElementById('qty-plus');
-        const qtyInput = document.getElementById('qty-input');
-        qtyMinus.addEventListener('click', () => { let v = parseInt(qtyInput.value); if (v > 1) qtyInput.value = v - 1; actualizarResumen(); });
-        qtyPlus.addEventListener('click',  () => { let v = parseInt(qtyInput.value); if (v < 10) qtyInput.value = v + 1; actualizarResumen(); });
-
-        /* ── Resumen: lo que la clienta eligió + total ── */
-        const ENVIO_GRATIS_DESDE = 300000;
-        const fmtCOP = n => '$' + Math.round(n).toLocaleString('es-CO');
-        function actualizarResumen() {
-            const qty   = parseInt(qtyInput.value) || 1;
-            const total = prod.price * qty;
-            const color = (prod.colors.find(c => c.key === activeColorKey) || {}).label || '';
-            const choice = document.getElementById('pd-summary-choice');
-            choice.textContent = selectedSize
-                ? `${prod.name} · ${color} · Talla ${selectedSize}`
-                : `${prod.name} · ${color} · Falta elegir talla`;
-            choice.classList.toggle('is-pending', !selectedSize);
-            document.getElementById('pd-summary-total').textContent = fmtCOP(total);
-            const ship = document.getElementById('pd-summary-ship');
-            const falta = ENVIO_GRATIS_DESDE - total;
-            ship.textContent = falta <= 0 ? '✓ Este pedido tiene envío gratis' : `Te faltan ${fmtCOP(falta)} para el envío gratis`;
-            ship.classList.toggle('is-free', falta <= 0);
-            const addBtn = document.getElementById('pd-add-cart');
-            if (addBtn) addBtn.style.opacity = selectedSize ? '1' : '0.6';
-            document.getElementById('pd-add-text').textContent = selectedSize
-                ? `Agregar al carrito · ${fmtCOP(total)}`
-                : 'Elige tu talla';
-        }
-        actualizarResumen();
-
-        /* ── ¿Cuál es mi talla? → recomendador + tabla ── */
+        /* Talla recomendada + tabla */
         const guideToggle = document.getElementById('pd-guide-toggle');
         const guide       = document.getElementById('pd-guide');
         function elegirTalla(t) {
             const b = sizesContainer.querySelector(`.pd__size-btn[data-size="${t}"]`);
             if (b && !b.disabled) b.click();
-            sizesContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         function mostrarSugerencia(t) {
             const hint = document.getElementById('pd-size-hint');
@@ -1464,6 +1539,40 @@
             YOSSICO_TALLA.montar(document.getElementById('pd-talla-reco'), { onElegir: elegirTalla, onRecomendar: mostrarSugerencia });
             mostrarSugerencia(YOSSICO_TALLA.guardada());
         }
+
+        /* Paso 3 · Tu set: cantidad, total y compra */
+        document.querySelectorAll('#wiz-qty button').forEach(b => {
+            b.addEventListener('click', () => {
+                document.querySelectorAll('#wiz-qty button').forEach(x => x.classList.toggle('is-on', x === b));
+                qtyInput.value = b.dataset.qty;
+                actualizarResumen();
+            });
+        });
+        function actualizarResumen() {
+            if (!selectedSize && wiz.talla) {        // la talla se agotó al cambiar de color
+                wiz.talla = null;
+                document.getElementById('wiz-val-talla').textContent = '';
+                abrirPaso(2);
+            }
+            const qty   = parseInt(qtyInput.value) || 1;
+            const total = prod.price * qty;
+            const c     = colorObj();
+            document.getElementById('wiz-set-name').textContent = `${prod.name} · ${c.label} · Talla ${selectedSize || '–'}`;
+            const thumb = document.getElementById('wiz-thumb');
+            thumb.src = (c.imgs && c.imgs[0]) || prod.defaultImgs[0];
+            thumb.alt = `Set ${prod.name} ${c.label}`;
+            const st = selectedSize ? getStock(activeColorKey, selectedSize) : null;
+            document.getElementById('wiz-set-stock').textContent =
+                st === null ? '' : st <= LOW_STOCK_THRESHOLD ? `Últimas ${st} unidades en esta talla` : 'Disponible';
+            document.getElementById('pd-summary-total').textContent = fmtCOP(total);
+            const ship  = document.getElementById('pd-summary-ship');
+            const falta = ENVIO_GRATIS_DESDE - total;
+            ship.textContent = falta <= 0 ? '✓ Envío gratis' : `Te faltan ${fmtCOP(falta)} para el envío gratis`;
+            ship.classList.toggle('is-free', falta <= 0);
+            const msg = `Hola, quiero pedir ${qty} ${qty > 1 ? 'sets' : 'set'} ${prod.name} en color ${c.label}, talla ${selectedSize || '(por definir)'}. Total ${fmtCOP(total)}.`;
+            document.getElementById('pd-wa').href = `https://wa.me/573127300661?text=${encodeURIComponent(msg)}`;
+        }
+
         document.querySelectorAll('.pd__accordion-trigger').forEach(trigger => {
             trigger.addEventListener('click', () => {
                 const expanded = trigger.classList.contains('expanded');
@@ -1473,14 +1582,16 @@
             });
         });
 
-        /* ── Add to cart ──────────────────────── */
         document.getElementById('pd-add-cart').addEventListener('click', () => {
-            if (!selectedSize) { sizesContainer.classList.add('shake'); setTimeout(() => sizesContainer.classList.remove('shake'), 500); return; }
-            const qty = parseInt(qtyInput.value);
+            if (!selectedSize) { abrirPaso(2, true); return; }
+            const qty = parseInt(qtyInput.value) || 1;
             for (let i = 0; i < qty; i++) {
                 addToCart({ name: `${prod.name} (${colorNameEl.textContent})`, size: selectedSize, price: prod.price, img: currentImgs[0], line: prod.line });
             }
         });
+
+        actualizarResumen();
+        abrirPaso(wiz.color ? 2 : 1);
 
         /* ── Bootstrap stock fetch (Supabase already loaded sync above) ── */
         fetchOsloStock();

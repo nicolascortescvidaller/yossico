@@ -2128,6 +2128,21 @@
             });
         });
 
+        /* Al pasar el mouse por un color, la tarjeta muestra el set en ese color (como en el home).
+           Delegado en el documento para cubrir también los colores agregados desde el Editor Web. */
+        const puedeHover = window.matchMedia('(hover: hover)').matches;
+        document.addEventListener('mouseover', e => {
+            if (!puedeHover) return;
+            const sw = e.target.closest('.product-card .color-selector .color-swatch');
+            if (sw && !sw.classList.contains('selected')) applyCardSwatch(sw);
+        });
+        document.addEventListener('click', e => {
+            const sw = e.target.closest('.product-card .color-selector .color-swatch');
+            if (!sw) return;
+            e.preventDefault();
+            applyCardSwatch(sw);
+        });
+
         /* ── Product Detail Modal ── */
         const overlay = document.getElementById('modal-overlay');
         const modalTrack = document.getElementById('modal-track');
