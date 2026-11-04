@@ -1417,6 +1417,10 @@
         }
 
         /* ── Gallery ───────────────────────────── */
+        /* Fotos ampliadas a 2048 px (img/hd/) para pantallas de alta resolución;
+           las tarjetas y miniaturas siguen usando las de 1024 px. */
+        const HD_FOTOS = /^img\/(oslo_(?:black|navy|burgundy)_(?:front|half|back|labels))\.webp$/;
+        const hdSrc = src => { const m = HD_FOTOS.exec(src || ''); return m ? `img/hd/${m[1]}.webp` : null; };
         function buildGallery(imgs) {
             const main   = document.getElementById('pd-gallery-main');
             const thumbs = document.getElementById('pd-thumbs');
@@ -1427,7 +1431,9 @@
             imgs.forEach((src, i) => {
                 const slide = document.createElement('div');
                 slide.className = `pd__slide${i === 0 ? ' active' : ''}`;
-                slide.innerHTML = `<img loading="${i === 0 ? 'eager' : 'lazy'}" src="${src}" alt="${prod.name} vista ${i+1}">`;
+                const hd = hdSrc(src);
+                const srcset = hd ? ` srcset="${src} 1024w, ${hd} 2048w" sizes="(max-width: 900px) 100vw, 52vw"` : '';
+                slide.innerHTML = `<img loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" src="${src}"${srcset} alt="${prod.name} vista ${i+1}">`;
                 main.insertBefore(slide, prevBtn);
                 const thumb = document.createElement('div');
                 thumb.className = `pd__thumb${i === 0 ? ' active' : ''}`;
