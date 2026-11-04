@@ -57,8 +57,8 @@
       '  </div>',
       '</div>',
       '<div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px;">',
-      '  <button id="yos-cookie-essential" style="background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff;padding:6px 14px;font-family:inherit;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:2px;">Solo esenciales</button>',
-      '  <button id="yos-cookie-all" style="background:#fff;border:1px solid #fff;color:#000;padding:6px 16px;font-family:inherit;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:2px;">Aceptar todas</button>',
+      '  <button id="yos-cookie-essential" style="background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff;padding:6px 14px;font-family:inherit;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:999px;">Solo esenciales</button>',
+      '  <button id="yos-cookie-all" style="background:#fff;border:1px solid #fff;color:#000;padding:6px 16px;font-family:inherit;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:999px;font-weight:600;">Aceptar todas</button>',
       '</div>'
     ].join('');
 

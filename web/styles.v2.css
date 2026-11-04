@@ -2195,3 +2195,65 @@ body.cursor-hover .cursor-ring {
   animation: none !important;
   transform: none !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Botones píldora — mismo estilo del botón "Volver a la colección"
+   Esquinas totalmente redondeadas, peso medio y sombra suave.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --pill-shadow: 0 4px 18px rgba(17, 17, 17, 0.14);
+  --pill-shadow-hover: 0 8px 26px rgba(17, 17, 17, 0.2);
+}
+
+/* Forma: todos los botones de acción */
+:is(.btn, .add-to-cart-btn, .sub-form__btn, .cart-checkout, .ck-submit, .ck-apply-btn,
+    .grc-btn, .dash-btn, .inst-btn, .rastreo-btn, .prive-locked-btn, .btn-submit-prive,
+    .btn-submit-campus, .success-modal__btn, .modal__cta, .countdown__cta-btn,
+    .channel__cta, .copy-btn, .btn-wa, .btn-scroll, .filter-btn, .yos-chat-submit,
+    .size-btn, .modal__size-btn, .cart-qty-btn, .pd__cta-primary, .pd__cta-secondary,
+    #yos-cookie-essential, #yos-cookie-all) {
+  border-radius: 999px !important;
+}
+:is(.btn, .add-to-cart-btn, .sub-form__btn, .cart-checkout, .ck-submit, .grc-btn, .dash-btn,
+    .inst-btn, .rastreo-btn, .btn-submit-prive, .btn-submit-campus, .success-modal__btn,
+    .modal__cta, .countdown__cta-btn, .channel__cta, .filter-btn) {
+  font-weight: 500;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+
+/* Botones llenos (negros o blancos): sombra suave y leve elevación al pasar el mouse */
+:is(.btn--primary, .btn--white, .sub-form__btn, .cart-checkout, .ck-submit, .grc-btn--primary,
+    .dash-btn--dark, .rastreo-btn, .btn-submit-prive, .btn-submit-campus, .success-modal__btn,
+    .modal__cta) {
+  box-shadow: var(--pill-shadow);
+}
+:is(.btn--primary, .btn--white, .sub-form__btn, .cart-checkout, .ck-submit, .grc-btn--primary,
+    .dash-btn--dark, .rastreo-btn, .btn-submit-prive, .btn-submit-campus, .success-modal__btn,
+    .modal__cta):hover {
+  box-shadow: var(--pill-shadow-hover);
+  transform: translateY(-1px);
+}
+
+/* Botón blanco (va sobre fondos oscuros): al pasar el mouse se invierte con borde blanco */
+.btn--white:hover {
+  background: transparent;
+  color: var(--white);
+  box-shadow: inset 0 0 0 1px var(--white), var(--pill-shadow-hover);
+}
+
+/* Botón con borde (Agregar / Avísame en la colección): borde más definido e inversión a negro */
+.add-to-cart-btn {
+  border-color: rgba(17, 17, 17, 0.35) !important;
+  background: rgba(255, 255, 255, 0.35);
+}
+.add-to-cart-btn:hover {
+  background: var(--black) !important;
+  color: var(--white) !important;
+  border-color: var(--black) !important;
+  box-shadow: var(--pill-shadow);
+}
+
+/* Flechas de galerías: circulares como en la ficha de producto */
+:is(.gallery__btn, .modal__gallery-btn, .pd__gall-btn) {
+  border-radius: 50% !important;
+}
