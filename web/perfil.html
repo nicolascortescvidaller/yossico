@@ -748,6 +748,16 @@
             async function loadProfile() {
                 const { data } = await YOSSICO_AUTH.getProfile(user.id);
                 profile = data || {};
+                const meta = user.user_metadata || {};
+                if ((!profile.nombre_completo && meta.nombre) || (!profile.apellido && meta.apellido)) {
+                    profile.nombre_completo = profile.nombre_completo || meta.nombre;
+                    profile.apellido = profile.apellido || meta.apellido || null;
+                    await YOSSICO_AUTH.upsertProfile(user.id, {
+                        nombre_completo: profile.nombre_completo,
+                        apellido: profile.apellido,
+                        correo_electronico: profile.correo_electronico || user.email
+                    });
+                }
 
                 document.getElementById('profile-greeting').textContent =
                     profile.nombre_completo ? `Hola, ${profile.nombre_completo}.` : 'Mi Perfil';

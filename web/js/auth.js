@@ -30,12 +30,14 @@
         return getSb().auth.signInWithPassword({ email, password });
     }
 
-    async function signUp(email, password, captchaToken) {
+    // perfil: { nombre, apellido, full_name } se guarda en los datos de la cuenta (user_metadata)
+    async function signUp(email, password, captchaToken, perfil = {}) {
         return getSb().auth.signUp({ 
             email, 
             password,
             options: {
-                captchaToken: captchaToken
+                captchaToken: captchaToken,
+                data: perfil
             }
         });
     }

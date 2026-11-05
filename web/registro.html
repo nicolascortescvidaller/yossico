@@ -30,240 +30,89 @@
     <link rel="stylesheet" href="styles.v2.css?v=111">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
-        .auth-page {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: #ffffff;
-            padding-top: 72px;
-        }
+        /* ── Registro: foto a la izquierda, formulario centrado a la derecha ── */
+        .auth-page { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; background: #ffffff; padding-top: 72px; }
+        .auth-panel { position: sticky; top: 72px; align-self: start; overflow: hidden; background: #e9e9e7; height: calc(100vh - 72px); }
+        .auth-panel__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 18%; }
+        .auth-panel::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(17,17,17,0) 45%, rgba(17,17,17,0.55) 100%); }
+        .auth-panel__body { position: absolute; left: 56px; right: 56px; bottom: 56px; z-index: 1; color: #fff; }
+        .auth-panel__tag { font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; opacity: 0.85; margin-bottom: 14px; }
+        .auth-panel__headline { font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -0.5px; margin-bottom: 14px; }
+        .auth-panel__headline em { font-style: italic; }
+        .auth-panel__sub { font-family: var(--font-body); font-size: 13px; line-height: 1.8; max-width: 380px; opacity: 0.92; }
 
-        .auth-panel {
-            background: #f7f7f7;
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 180px 64px 60px 64px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-panel__body, .auth-panel__footer {
-            position: relative;
-            z-index: 1;
-        }
-
-        .auth-panel__bg-img {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            transform: translateX(35%);
-            width: auto;
-            max-width: 150%;
-            height: 85%;
-            object-fit: contain;
-            object-position: bottom right;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .auth-panel__tag {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 9px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--gray);
-            margin-bottom: 24px;
-        }
-
-        .auth-panel__headline {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: clamp(36px, 4vw, 56px);
-            line-height: 1.1;
-            letter-spacing: -0.5px;
-            color: var(--black);
-            margin-bottom: 28px;
-        }
-
-        .auth-panel__headline em {
-            font-style: italic;
-            color: var(--gray);
-        }
-
-        .auth-panel__sub {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 13px;
-            line-height: 1.9;
-            letter-spacing: 0.5px;
-            color: var(--gray-mid);
-            max-width: 320px;
-        }
-
-        .auth-panel__footer {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: var(--gray);
-        }
-
-        .auth-form-panel {
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 60px 72px;
-        }
-
-        .auth-form-panel__title {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: clamp(24px, 2.5vw, 36px);
-            letter-spacing: -0.3px;
-            color: var(--black);
-            margin-bottom: 8px;
-        }
-
-        .auth-form-panel__sub {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-            color: var(--gray);
-            margin-bottom: 40px;
-        }
-
-        .auth-field { margin-bottom: 24px; }
-
-        .auth-field__label {
-            display: block;
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 9px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--gray-mid);
-            margin-bottom: 8px;
-        }
-
+        .auth-form-panel { display: flex; align-items: center; justify-content: center; padding: 64px 48px; }
+        .auth-form { width: 100%; max-width: 480px; }
+        .auth-form__title { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 2.8vw, 40px); letter-spacing: -0.3px; color: var(--black); text-align: center; margin-bottom: 8px; }
+        .auth-form__sub { font-family: var(--font-body); font-size: 13px; color: var(--gray); text-align: center; margin-bottom: 36px; }
+        .auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .auth-field { margin-bottom: 18px; }
+        .auth-field__label { display: block; font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 1.8px; text-transform: uppercase; color: var(--black); margin-bottom: 8px; }
+        .auth-field__label small { font-size: 9px; font-weight: 400; letter-spacing: 1px; color: var(--gray-light); text-transform: none; }
+        .auth-field__wrap { position: relative; }
         .auth-field__input {
-            width: 100%;
-            background: #ffffff;
-            border: 1px solid var(--border);
-            padding: 12px 14px;
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 14px;
-            color: var(--black);
-            outline: none;
-            transition: border-color 0.2s;
-            box-sizing: border-box;
+            width: 100%; box-sizing: border-box; padding: 14px 16px; background: #fff;
+            border: 1px solid #d6d4d1; border-radius: 12px; outline: none;
+            font-family: var(--font-body); font-size: 14px; color: var(--black);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
+        .auth-field__input:focus { border-color: var(--black); box-shadow: 0 0 0 3px rgba(17,17,17,0.08); }
+        .auth-field__input::placeholder { color: #a9a7a4; }
+        .auth-field__input.is-error { border-color: #c0392b; }
+        .auth-field__wrap .auth-field__input { padding-right: 48px; }
+        .auth-eye { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border: none; background: none; cursor: pointer; color: var(--gray); display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .auth-eye:hover { color: var(--black); background: #f3f3f1; }
+        .auth-eye svg { width: 18px; height: 18px; }
+        .auth-field__error { display: block; margin-top: 6px; font-family: var(--font-body); font-size: 11px; color: #c0392b; min-height: 0; }
+        .pw-strength { margin-top: 10px; height: 3px; background: #ecebe8; border-radius: 3px; overflow: hidden; }
+        .pw-strength__bar { height: 100%; width: 0%; border-radius: 3px; transition: width 0.3s, background 0.3s; }
+        .pw-label { font-family: var(--font-body); font-size: 10px; color: var(--gray); margin-top: 5px; min-height: 13px; }
 
-        .auth-field__input:focus { border-color: var(--black); }
-        .auth-field__input::placeholder { color: var(--gray-light); }
-
-        .auth-field__error {
-            display: block;
-            margin-top: 6px;
-            font-family: var(--font-body);
-            font-size: 10px;
-            color: #c0392b;
-            letter-spacing: 0.3px;
-            min-height: 14px;
-        }
-
-        /* Password strength bar */
-        .pw-strength {
-            margin-top: 8px;
-            height: 2px;
-            background: var(--border);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .pw-strength__bar {
-            height: 100%;
-            width: 0%;
-            border-radius: 2px;
-            transition: width 0.3s, background 0.3s;
-        }
-
-        .pw-label {
-            font-family: var(--font-body);
-            font-size: 9px;
-            letter-spacing: 1px;
-            color: var(--gray);
-            margin-top: 4px;
-        }
+        .auth-checks { display: flex; flex-direction: column; gap: 12px; margin: 8px 0 22px; }
+        .auth-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-family: var(--font-body); font-size: 12px; line-height: 1.55; color: var(--gray-mid); }
+        .auth-check input { appearance: none; -webkit-appearance: none; flex-shrink: 0; width: 18px; height: 18px; margin: 1px 0 0; border: 1px solid #bdbbb8; border-radius: 5px; background: #fff; cursor: pointer; display: grid; place-content: center; transition: background 0.2s, border-color 0.2s; }
+        .auth-check input::after { content: ''; width: 9px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px, -1px); opacity: 0; }
+        .auth-check input:checked { background: var(--black); border-color: var(--black); }
+        .auth-check input:checked::after { opacity: 1; }
+        .auth-check a { color: var(--black); text-decoration: underline; text-underline-offset: 3px; }
+        .cf-turnstile { margin-bottom: 22px; }
 
         .auth-submit {
-            width: 100%;
-            padding: 18px 24px;
-            background: var(--black);
-            color: var(--white);
-            border: none;
-            font-family: var(--font-body);
-            font-weight: 500;
-            font-size: 11px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background 0.2s, opacity 0.2s;
-            margin-top: 8px;
-            margin-bottom: 24px;
+            width: 100%; padding: 17px 24px; border: none; border-radius: 999px; background: var(--black); color: var(--white);
+            font-family: var(--font-body); font-weight: 500; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+            cursor: pointer; box-shadow: 0 4px 18px rgba(17,17,17,0.14); transition: transform 0.25s, box-shadow 0.25s, opacity 0.2s;
         }
+        .auth-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 26px rgba(17,17,17,0.2); }
+        .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .auth-legal { font-family: var(--font-body); font-size: 11px; color: var(--gray); text-align: center; margin: 14px 0 0; line-height: 1.6; }
 
-        .auth-submit:hover { background: #333; }
-        .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .auth-switch {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 11px;
-            color: var(--gray);
-            text-align: center;
+        .auth-switch-box { margin-top: 28px; padding: 22px; background: #f6f6f4; border-radius: 16px; text-align: center; }
+        .auth-switch-box p { font-family: var(--font-display); font-size: 22px; color: var(--black); margin-bottom: 14px; }
+        .auth-switch-btn {
+            display: inline-flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; padding: 14px 22px;
+            border: 1px solid var(--black); border-radius: 999px; background: #fff; color: var(--black); text-decoration: none;
+            font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; transition: background 0.25s, color 0.25s;
         }
+        .auth-switch-btn:hover { background: var(--black); color: var(--white); }
 
-        .auth-switch a {
-            color: var(--black);
-            text-decoration: underline;
-            text-underline-offset: 3px;
-        }
-
-        .auth-legal {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 9px;
-            letter-spacing: 0.5px;
-            color: var(--gray);
-            text-align: center;
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-
-        .auth-alert {
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            font-family: var(--font-body);
-            font-size: 11px;
-            font-weight: 400;
-            border-left: 3px solid;
-            display: none;
-        }
-
-        .auth-alert.error  { border-color: #c0392b; background: #fdf2f2; color: #c0392b; }
-        .auth-alert.success { border-color: #27ae60; background: #f0faf4; color: #1a7a40; }
+        .auth-alert { padding: 12px 16px; margin-bottom: 20px; font-family: var(--font-body); font-size: 12px; border-radius: 12px; display: none; }
+        .auth-alert.error  { background: #fdf2f2; color: #a93226; }
+        .auth-alert.success { background: #f0faf4; color: #1a7a40; }
         .auth-alert.show   { display: block; }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .auth-page { grid-template-columns: 1fr; }
-            .auth-panel { display: none; }
-            .auth-form-panel { padding: 48px 32px; }
+            .auth-panel { position: relative; top: 0; min-height: 0; height: 260px; }
+            .auth-panel__img { object-position: center 22%; }
+            .auth-panel__body { left: 24px; right: 24px; bottom: 22px; }
+            .auth-panel__tag { margin-bottom: 8px; }
+            .auth-panel__headline { font-size: 30px; margin-bottom: 0; }
+            .auth-panel__sub { display: none; }
+            .auth-form-panel { padding: 36px 20px 56px; }
+            .auth-form__sub { margin-bottom: 28px; }
+        }
+        @media (max-width: 420px) {
+            .auth-row { grid-template-columns: 1fr; gap: 0; }
         }
     </style>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -302,76 +151,87 @@
 
     <div class="auth-page">
 
-        <!-- Left: brand panel -->
+        <!-- Izquierda: foto de marca -->
         <div class="auth-panel">
+            <img src="img/hd/kyoto_front.webp" class="auth-panel__img" alt="Modelo con el set KYOTO de YOSSICO">
             <div class="auth-panel__body">
                 <p class="auth-panel__tag">Únete a la comunidad</p>
-                <h2 class="auth-panel__headline">
-                    Empieza con<br>el <em>uniforme</em><br>adecuado.
-                </h2>
-                <p class="auth-panel__sub">
-                    Crea tu cuenta, accede a descuentos exclusivos y sé la primera en conocer cada nuevo drop de YOSSICO.
-                </p>
+                <h2 class="auth-panel__headline">Empieza con el <em>uniforme</em> adecuado.</h2>
+                <p class="auth-panel__sub">Crea tu cuenta, accede a descuentos exclusivos y sé la primera en conocer cada nuevo drop de YOSSICO.</p>
             </div>
-            <img src="img/kyoto_back_transparent.webp" class="auth-panel__bg-img" alt="Modelo KYOTO de espaldas">
-            <p class="auth-panel__footer">© 2026 YOSSICO · Colombia</p>
         </div>
 
-        <!-- Right: form -->
+        <!-- Derecha: formulario -->
         <div class="auth-form-panel">
-            <h1 class="auth-form-panel__title">Crear cuenta</h1>
-            <p class="auth-form-panel__sub">Completa los campos para registrarte.</p>
+            <div class="auth-form">
+                <h1 class="auth-form__title">Crea tu cuenta YOSSICO</h1>
+                <p class="auth-form__sub">Hazlo oficial con tu propia cuenta: tus pedidos, tus datos y tus descuentos en un solo lugar.</p>
 
-            <div class="auth-alert" id="auth-alert"></div>
+                <div class="auth-alert" id="auth-alert"></div>
 
-            <form id="register-form" novalidate>
-                <div class="auth-field">
-                    <label class="auth-field__label" for="reg-email">Correo electrónico</label>
-                    <input class="auth-field__input" id="reg-email" type="email" placeholder="tu@correo.com"
-                        autocomplete="email" required>
-                    <span class="auth-field__error" id="err-email"></span>
-                </div>
-
-                <div class="auth-field">
-                    <label class="auth-field__label" for="reg-password">Contraseña <span
-                            style="color:var(--gray-light); font-size:8px;">(mín. 8 caracteres)</span></label>
-                    <input class="auth-field__input" id="reg-password" type="password" placeholder="••••••••"
-                        autocomplete="new-password" required>
-                    <div class="pw-strength">
-                        <div class="pw-strength__bar" id="pw-bar"></div>
+                <form id="register-form" novalidate>
+                    <div class="auth-row">
+                        <div class="auth-field">
+                            <label class="auth-field__label" for="reg-nombre">Nombre</label>
+                            <input class="auth-field__input" id="reg-nombre" type="text" placeholder="Tu nombre" autocomplete="given-name" required>
+                            <span class="auth-field__error" id="err-nombre"></span>
+                        </div>
+                        <div class="auth-field">
+                            <label class="auth-field__label" for="reg-apellido">Apellido</label>
+                            <input class="auth-field__input" id="reg-apellido" type="text" placeholder="Tu apellido" autocomplete="family-name" required>
+                            <span class="auth-field__error" id="err-apellido"></span>
+                        </div>
                     </div>
-                    <p class="pw-label" id="pw-label"></p>
-                    <span class="auth-field__error" id="err-password"></span>
+
+                    <div class="auth-field">
+                        <label class="auth-field__label" for="reg-email">Correo electrónico</label>
+                        <input class="auth-field__input" id="reg-email" type="email" placeholder="tu@correo.com" autocomplete="email" required>
+                        <span class="auth-field__error" id="err-email"></span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label class="auth-field__label" for="reg-password">Contraseña <small>(mínimo 8 caracteres)</small></label>
+                        <div class="auth-field__wrap">
+                            <input class="auth-field__input" id="reg-password" type="password" placeholder="Crea una contraseña" autocomplete="new-password" required>
+                            <button type="button" class="auth-eye" data-eye="reg-password" aria-label="Mostrar contraseña"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                        </div>
+                        <div class="pw-strength"><div class="pw-strength__bar" id="pw-bar"></div></div>
+                        <p class="pw-label" id="pw-label"></p>
+                        <span class="auth-field__error" id="err-password"></span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label class="auth-field__label" for="reg-confirm">Confirmar contraseña</label>
+                        <div class="auth-field__wrap">
+                            <input class="auth-field__input" id="reg-confirm" type="password" placeholder="Repite la contraseña" autocomplete="new-password" required>
+                            <button type="button" class="auth-eye" data-eye="reg-confirm" aria-label="Mostrar contraseña"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                        </div>
+                        <span class="auth-field__error" id="err-confirm"></span>
+                    </div>
+
+                    <!-- Casillas de consentimiento legal obligatorio (Ley 1480 y Ley 1581 de Colombia) -->
+                    <div class="auth-checks">
+                        <label class="auth-check">
+                            <input type="checkbox" id="reg-check-terminos" required>
+                            <span>He leído y acepto los <a href="terminos.html" target="_blank">Términos y Condiciones</a> de YOSSICO.</span>
+                        </label>
+                        <label class="auth-check">
+                            <input type="checkbox" id="reg-check-privacidad" required>
+                            <span>Autorizo el tratamiento de mis datos personales conforme a la <a href="privacidad.html" target="_blank">Política de Privacidad</a> (Ley 1581 de 2012).</span>
+                        </label>
+                    </div>
+
+                    <!-- Turnstile Widget -->
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN"></div>
+
+                    <button type="submit" class="auth-submit" id="reg-btn">Crear mi cuenta</button>
+                </form>
+
+                <div class="auth-switch-box">
+                    <p>¿Ya tienes cuenta?</p>
+                    <a href="login.html" class="auth-switch-btn">Inicia sesión aquí</a>
                 </div>
-
-                <div class="auth-field">
-                    <label class="auth-field__label" for="reg-confirm">Confirmar contraseña</label>
-                    <input class="auth-field__input" id="reg-confirm" type="password" placeholder="••••••••"
-                        autocomplete="new-password" required>
-                    <span class="auth-field__error" id="err-confirm"></span>
-                </div>
-
-                <!-- Casillas de consentimiento legal obligatorio (Ley 1480 y Ley 1581 de Colombia) -->
-                <div style="margin: 16px 0 20px; display: flex; flex-direction: column; gap: 10px; font-size: 11px; text-align: left; color: var(--gray-mid); line-height: 1.5;">
-                  <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
-                    <input type="checkbox" id="reg-check-terminos" style="margin-top: 2px; accent-color: var(--black); cursor: pointer;" required>
-                    <span>He leído y acepto los <a href="terminos.html" target="_blank" style="color: var(--black); text-decoration: underline;">Términos y Condiciones</a> de YOSSICO.</span>
-                  </label>
-                  <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
-                    <input type="checkbox" id="reg-check-privacidad" style="margin-top: 2px; accent-color: var(--black); cursor: pointer;" required>
-                    <span>Autorizo el tratamiento de mis datos personales conforme a la <a href="privacidad.html" target="_blank" style="color: var(--black); text-decoration: underline;">Política de Privacidad</a> (Ley 1581 de 2012).</span>
-                  </label>
-                </div>
-
-                <!-- Turnstile Widget -->
-                <div class="cf-turnstile" data-sitekey="0x4AAAAAADXYxiuczFQT4hwN" style="margin-bottom: 24px;"></div>
-
-                <button type="submit" class="auth-submit" id="reg-btn">Crear mi cuenta</button>
-            </form>
-
-            <p class="auth-switch">
-                ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
-            </p>
+            </div>
         </div>
     </div>
 
@@ -396,14 +256,30 @@
             }
 
             function clearErrors() {
-                ['err-email', 'err-password', 'err-confirm'].forEach(id => {
+                ['err-nombre', 'err-apellido', 'err-email', 'err-password', 'err-confirm'].forEach(id => {
                     document.getElementById(id).textContent = '';
                 });
-                ['reg-email', 'reg-password', 'reg-confirm'].forEach(id => {
-                    document.getElementById(id).style.borderBottomColor = '';
+                ['reg-nombre', 'reg-apellido', 'reg-email', 'reg-password', 'reg-confirm'].forEach(id => {
+                    document.getElementById(id).classList.remove('is-error');
                 });
                 alert.className = 'auth-alert';
             }
+
+            // Al escribir, se quita el aviso de error de ese campo
+            ['nombre', 'apellido', 'email', 'password', 'confirm'].forEach(k => {
+                document.getElementById('reg-' + k).addEventListener('input', () => {
+                    document.getElementById('reg-' + k).classList.remove('is-error');
+                    document.getElementById('err-' + k).textContent = '';
+                });
+            });
+
+            // Mostrar / ocultar contraseña
+            document.querySelectorAll('.auth-eye').forEach(b => b.addEventListener('click', () => {
+                const inp = document.getElementById(b.dataset.eye);
+                const ver = inp.type === 'password';
+                inp.type = ver ? 'text' : 'password';
+                b.setAttribute('aria-label', ver ? 'Ocultar contraseña' : 'Mostrar contraseña');
+            }));
 
             // Password strength
             pwInput.addEventListener('input', () => {
@@ -431,24 +307,33 @@
                 e.preventDefault();
                 clearErrors();
 
+                const nombre = document.getElementById('reg-nombre').value.trim();
+                const apellido = document.getElementById('reg-apellido').value.trim();
                 const email = document.getElementById('reg-email').value.trim();
                 const password = document.getElementById('reg-password').value;
                 const confirm = document.getElementById('reg-confirm').value;
 
                 let hasError = false;
+                const marcar = (campo, msg) => {
+                    document.getElementById('err-' + campo).textContent = msg;
+                    document.getElementById('reg-' + campo).classList.add('is-error');
+                    hasError = true;
+                };
+                if (nombre.length < 2) marcar('nombre', 'Escribe tu nombre.');
+                if (apellido.length < 2) marcar('apellido', 'Escribe tu apellido.');
                 if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                     document.getElementById('err-email').textContent = 'Ingresa un correo válido.';
-                    document.getElementById('reg-email').style.borderBottomColor = '#c0392b';
+                    document.getElementById('reg-email').classList.add('is-error');
                     hasError = true;
                 }
                 if (!password || password.length < 8) {
                     document.getElementById('err-password').textContent = 'La contraseña debe tener al menos 8 caracteres.';
-                    document.getElementById('reg-password').style.borderBottomColor = '#c0392b';
+                    document.getElementById('reg-password').classList.add('is-error');
                     hasError = true;
                 }
                 if (password !== confirm) {
                     document.getElementById('err-confirm').textContent = 'Las contraseñas no coinciden.';
-                    document.getElementById('reg-confirm').style.borderBottomColor = '#c0392b';
+                    document.getElementById('reg-confirm').classList.add('is-error');
                     hasError = true;
                 }
 
@@ -477,7 +362,9 @@
                 btn.disabled = true;
                 btn.textContent = 'Creando cuenta...';
 
-                const { data, error } = await YOSSICO_AUTH.signUp(email, password, turnstileToken);
+                const { data, error } = await YOSSICO_AUTH.signUp(email, password, turnstileToken, {
+                    nombre, apellido, full_name: `${nombre} ${apellido}`
+                });
 
                 if (error) {
                     btn.disabled = false;
@@ -493,7 +380,9 @@
                 // Create profile record
                 if (data?.user) {
                     await YOSSICO_AUTH.upsertProfile(data.user.id, {
-                        correo_electronico: email
+                        correo_electronico: email,
+                        nombre_completo: nombre,
+                        apellido
                     });
                 }
 
