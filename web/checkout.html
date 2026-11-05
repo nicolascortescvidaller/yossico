@@ -236,7 +236,7 @@
                 <img loading="lazy" class="ck-item__img" src="${esc(normalizeCartImg(i.img) || CART_IMG_PLACEHOLDER)}" alt="${esc(i.name)}" data-name="${esc(i.name)}" data-key="${esc(i.key || '')}" onerror="cartImgFallback(this)">
                 <div>
                   <p class="ck-item__name">${esc(i.name)}</p>
-                  <p class="ck-item__meta">${i.line ? esc(i.line) + ' · ' : ''}Talla ${esc(i.size)} · ×${i.qty}</p>
+                  <p class="ck-item__meta">${i.line ? esc(i.line) + ' · ' : ''}${enIngles() ? 'Size' : 'Talla'} ${esc(i.size)} · ×${i.qty}</p>
                 </div>
                 <div>
                   <p class="ck-item__price">${fmtItem(i.price, i.qty)}</p>
@@ -249,7 +249,7 @@
             <span class="ck-total-label">Total</span>
             <span class="ck-total-value" id="ck-total-display">${fmtPrice(t)}</span>
           </div>
-          <p class="ck-cop-note" id="ck-cop-note" hidden></p>
+          <p class="ck-cop-note" id="ck-cop-note" data-moneda="cop" hidden></p>
         </div>
 
         <!-- RIGHT: form -->
@@ -709,7 +709,7 @@
     function renderCerrada() {
       document.getElementById('ck-body').innerHTML = `
         <div class="ck-empty" style="grid-column:1/-1;">
-          <p>La tienda abre el ${esc(YOSSICO_TIENDA.fechaTexto())}.</p>
+          <p>${enIngles() ? 'The store opens on' : 'La tienda abre el'} ${esc(YOSSICO_TIENDA.fechaTexto())}.</p>
           <span style="display:block; margin:8px 0 20px; font-size:13px; color:#4a4a4a;">Tu carrito queda guardado. Déjanos tus datos y te avisamos apenas abra el Drop 01.</span>
           <a href="/?avisar=1">Avísame cuando abra →</a>
         </div>`;

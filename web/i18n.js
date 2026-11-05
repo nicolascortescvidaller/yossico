@@ -668,6 +668,294 @@
     `Crea tu cuenta`, `Create your account`,
   ]);
 
+  add([
+    // Auditoría de inglés: textos que seguían en español
+    `Autorizo el tratamiento de mis datos personales para atención y asesoría comercial (`, `I authorize the processing of my personal data for customer service and sales advice (`,
+    `Autorizo el tratamiento de mis datos personales conforme a la`, `I authorize the processing of my personal data under the`,
+    `Autorizo el tratamiento de mis datos conforme a la`, `I authorize the processing of my data under the`,
+    `Autorizo el tratamiento de mis datos personales para recibir novedades del drop y promociones según la`, `I authorize the processing of my personal data to receive drop news and promotions under the`,
+    `He leído y acepto los`, `I have read and accept the`,
+    `(Ley 1581 de 2012).`, `(Law 1581 of 2012).`,
+    `(Ley 1581) de YOSSICO.`, `(Law 1581) of YOSSICO.`,
+    `Acepto la`, `I accept the`,
+    `Política de Tratamiento de Datos`, `Data Processing Policy`,
+    `y la`, `and the`,
+    `Política de Privacidad`, `Privacy Policy`,
+    `Política de Privacidad (Habeas Data)`, `Privacy Policy (Habeas Data)`,
+    `Política de Cookies`, `Cookie Policy`,
+    `Política de Reembolso y Retracto`, `Refund and Withdrawal Policy`,
+    `Términos`, `Terms`,
+    `CONTACTO Y PQRs`, `CONTACT & CLAIMS`,
+    `LEGAL Y GARANTÍAS`, `LEGAL & WARRANTIES`,
+    `Colección Completa`, `Full Collection`,
+    `Superintendencia de Industria y Comercio — Colombia`, `Superintendence of Industry and Commerce — Colombia`,
+    `Menú`, `Menu`,
+    `Español`, `Spanish`,
+    `Mostrar contraseña`, `Show password`,
+    `Ocultar contraseña`, `Hide password`,
+    `YOSSICO símbolo`, `YOSSICO symbol`,
+    `Privé — Solo Miembros`, `Privé — Members Only`,
+    `Suscripción Mensual`, `Monthly Membership`,
+    `Suscripción Anual`, `Annual Membership`,
+    `Avisarme cuando esté disponible →`, `Notify me when available →`,
+    `Conocer beneficios de la membresía →`, `See membership benefits →`,
+    `Edición Reservada · YOSSICO Privé`, `Reserved Edition · YOSSICO Privé`,
+    `Has seleccionado la prenda`, `You have selected the piece`,
+    `Pieza de Archivo Privé`, `Privé Archive Piece`,
+    `Pieza reservada exclusivamente para suscriptoras de YOSSICO Privé ($29.900 COP/mes).`, `Piece reserved exclusively for YOSSICO Privé members ($29.900 COP/month).`,
+    `Piezas de alta costura médica reservadas exclusivamente para suscriptoras de`, `Medical couture pieces reserved exclusively for members of`,
+    `SOLICITAR ACCESO PRIVÉ →`, `REQUEST PRIVÉ ACCESS →`,
+    `SOLICITAR MEMBRESÍA ($29.900 COP/MES) →`, `REQUEST MEMBERSHIP ($29.900 COP/MONTH) →`,
+    `ACTIVAR MEMBRESÍA ($29.900 COP/MES) →`, `ACTIVATE MEMBERSHIP ($29.900 COP/MONTH) →`,
+    `Ver detalles y plan anual →`, `See details and annual plan →`,
+    `— 15% OFF permanente en toda la colección regular`, `— Permanent 15% OFF on the entire regular collection`,
+    `— Desbloqueo inmediato de uniformes exclusivos Privé`, `— Instant access to exclusive Privé uniforms`,
+    `— Despacho prioritario sin costo en toda Colombia`, `— Free priority shipping across Colombia`,
+    `— Prelación de 48 horas en cada nuevo lanzamiento`, `— 48-hour early access to every new launch`,
+    `Tu nombre completo`, `Your full name`,
+    `Teléfono (WhatsApp)`, `Phone (WhatsApp)`,
+    `tu.correo@ejemplo.com`, `your.email@example.com`,
+    `COP/mes`, `COP/month`,
+    `COP / MES`, `COP / MONTH`,
+    `COP / AÑO`, `COP / YEAR`,
+    `COP/MES`, `COP/MONTH`,
+    `03 · Prelación 48 Horas`, `03 · 48-Hour Early Access`,
+    `Asegura tu talla dos días antes de cada apertura oficial al público.`, `Secure your size two days before every official public launch.`,
+    `Beneficio recurrente en cada orden sobre las líneas Signature, Essentials y Core.`, `Recurring benefit on every order across the Signature, Essentials and Core lines.`,
+    `CONOCER YOSSICO PRIVÉ →`, `DISCOVER YOSSICO PRIVÉ →`,
+    `Cortes y tonos de edición limitada reservados únicamente para suscriptoras.`, `Limited-edition cuts and shades reserved for members only.`,
+    `Diseñado exclusivamente para miembros de YOSSICO Privé. No disponible en venta abierta.`, `Designed exclusively for YOSSICO Privé members. Not available for general sale.`,
+    `Envío prioritario sin monto mínimo a cualquier ciudad de Colombia.`, `Priority shipping with no minimum to any city in Colombia.`,
+    `Privilegios para ti.`, `Privileges for you.`,
+    `Uniformes que pocos`, `Uniforms that few`,
+    `pueden vestir.`, `get to wear.`,
+    `Una suscripción mensual pensada para la mujer en salud que valora la discreción y la exclusividad. Acceso a piezas de archivo que no salen a la venta general, 15% OFF permanente en toda la colección y prelación de 48 horas en cada lanzamiento.`, `A monthly membership for women in healthcare who value discretion and exclusivity. Access to archive pieces never released for general sale, a permanent 15% OFF on the entire collection and 48-hour early access to every launch.`,
+    `YOSSICO PRIVÉ · $29.900 COP / MES`, `YOSSICO PRIVÉ · $29.900 COP / MONTH`,
+    `Uniforme Exclusivo YOSSICO Privé`, `Exclusive YOSSICO Privé Uniform`,
+    `Set OSLO YOSSICO — scrub médico femenino`, `OSLO set YOSSICO — women's medical scrub`,
+    `Set MILAN YOSSICO — scrub médico femenino`, `MILAN set YOSSICO — women's medical scrub`,
+    `Set KYOTO YOSSICO — scrub médico femenino`, `KYOTO set YOSSICO — women's medical scrub`,
+    `Set LIMA YOSSICO — scrub médico femenino`, `LIMA set YOSSICO — women's medical scrub`,
+    `Ver set OSLO`, `View OSLO set`,
+    `Ver set MILAN`, `View MILAN set`,
+    `Ver set KYOTO`, `View KYOTO set`,
+    `Ver set LIMA`, `View LIMA set`,
+    `Azul Pacífico`, `Pacific Blue`,
+    `Color Azul Pacífico`, `Color Pacific Blue`,
+    `Verde Oliva`, `Olive Green`,
+    `Color Verde Oliva`, `Color Olive Green`,
+    `Color Negro`, `Color Black`,
+    `Color Azul Marino`, `Color Navy`,
+    `Color Vinotinto`, `Color Burgundy`,
+    `Negro`, `Black`,
+    `Vinotinto`, `Burgundy`,
+    `2 MESES DE CORTESÍA`, `2 MONTHS FREE`,
+    `ACTIVAR MEMBRESÍA (`, `ACTIVATE MEMBERSHIP (`,
+    `Acceso a re-ediciones privadas y detalles de marca diseñados exclusivamente para nuestra comunidad de suscriptoras.`, `Access to private re-editions and brand details designed exclusively for our member community.`,
+    `Acceso anticipado dos días antes de cada lanzamiento oficial para asegurar tu talla y color antes de abrir al público.`, `Early access two days before every official launch to secure your size and color before it opens to the public.`,
+    `Activa tu suscripción y recibe tu código personal de miembro al instante.`, `Activate your membership and get your personal member code instantly.`,
+    `Atención Concierge`, `Concierge Service`,
+    `Beneficio recurrente en cada orden sobre todas las líneas regulares Signature, Essentials y Core durante tu suscripción.`, `Recurring benefit on every order across all regular Signature, Essentials and Core lines during your membership.`,
+    `Ciudad de Entrega *`, `Delivery City *`,
+    `Confeccionado en microfibra técnica de tacto seda con herrajes negro mate. Reservado para suscriptoras.`, `Made in silk-touch technical microfiber with matte black hardware. Reserved for members.`,
+    `Doce meses de acceso privado por el valor de diez. Incluye kit de bienvenida de autor en tu primera entrega.`, `Twelve months of private access for the price of ten. Includes a signature welcome kit with your first delivery.`,
+    `Ediciones de Archivo`, `Archive Editions`,
+    `Envío prioritario sin monto mínimo de compra a cualquier ciudad de Colombia en todas tus órdenes.`, `Priority shipping with no minimum purchase to any city in Colombia on all your orders.`,
+    `FINALIZAR EN WHATSAPP →`, `FINISH ON WHATSAPP →`,
+    `Línea directa por WhatsApp con nuestro equipo para asesoría personalizada de medidas, ajustes y reservas.`, `Direct WhatsApp line with our team for personalized advice on measurements, fit and reservations.`,
+    `Prelación de 48 Horas`, `48-Hour Early Access`,
+    `REGISTRO DE MIEMBRO`, `MEMBER SIGN-UP`,
+    `SOLICITAR MEMBRESÍA →`, `REQUEST MEMBERSHIP →`,
+    `Sin cláusulas de permanencia. Con una compra cada dos meses aplicando tu 15% OFF de miembro, la suscripción se cubre por completo.`, `No lock-in. With one purchase every two months using your 15% member discount, the membership pays for itself.`,
+    `Tu solicitud ha sido registrada y tu código de 15% OFF ha sido generado. Continúa en WhatsApp para finalizar la activación con nuestro equipo.`, `Your request has been registered and your 15% OFF code has been generated. Continue on WhatsApp to finish activation with our team.`,
+    `Un archivo privado para profesionales de la salud que buscan distinción y discreción. Piezas exclusivas que jamás salen a la venta abierta, 15% de descuento permanente y prelación de 48 horas en cada lanzamiento.`, `A private archive for healthcare professionals who seek distinction and discretion. Exclusive pieces never released for general sale, a permanent 15% discount and 48-hour early access to every launch.`,
+    `Uniformes con cortes de autor y tonos de edición reservada que no se comercializan en el catálogo abierto.`, `Uniforms with signature cuts and reserved-edition shades not sold in the open catalog.`,
+    `Uniformes que pocos pueden vestir.`, `Uniforms that few get to wear.`,
+    `VER ARCHIVO PRIVÉ`, `VIEW PRIVÉ ARCHIVE`,
+    `YOSSICO PRIVÉ · MEMBRESÍA MENSUAL`, `YOSSICO PRIVÉ · MONTHLY MEMBERSHIP`,
+    `Únete a YOSSICO`, `Join YOSSICO`,
+    `Pieza Privé YOSSICO`, `YOSSICO Privé piece`,
+    `Dra. Sofía Restrepo`, `Dr. Sofía Restrepo`,
+    `Correo Electrónico *`, `Email *`,
+    `Nombre y Apellido *`, `Full Name *`,
+    `Teléfono (WhatsApp) *`, `Phone (WhatsApp) *`,
+    `1° - 2° Semestre (Básicas)`, `1st - 2nd Semester (Basic Sciences)`,
+    `3° - 4° Semestre (Básicas)`, `3rd - 4th Semester (Basic Sciences)`,
+    `5° - 6° Semestre (Preclínicas)`, `5th - 6th Semester (Pre-clinical)`,
+    `7° - 8° Semestre (Clínicas)`, `7th - 8th Semester (Clinical)`,
+    `9° - 10° Semestre (Clínicas)`, `9th - 10th Semester (Clinical)`,
+    `Internado`, `Internship`,
+    `ACREDITACIÓN ACADÉMICA`, `ACADEMIC VERIFICATION`,
+    `Alcance del programa:`, `Program scope:`,
+    `Aplica de manera recurrente en nuestras líneas Signature, Essentials, Core y Capas durante todo tu periodo de formación universitaria.`, `Applies on every order across our Signature, Essentials, Core and Capas lines throughout your university training.`,
+    `Aquí te enviaremos tu código activo.`, `We will send your active code here.`,
+    `Año Estimado de Graduación *`, `Expected Graduation Year *`,
+    `Bacteriología y Laboratorio`, `Bacteriology and Laboratory`,
+    `CONFIRMAR POR WHATSAPP →`, `CONFIRM ON WHATSAPP →`,
+    `Carnet Estudiantil Vigente o Certificado de Matrícula *`, `Current Student ID or Enrollment Certificate *`,
+    `Carrera en Salud *`, `Healthcare Program *`,
+    `Certifico que actualmente me encuentro cursando estudios activos en el área de salud.`, `I certify that I am currently enrolled in a healthcare program.`,
+    `Completa tus datos y adjunta tu carnet vigente para recibir tu código personal en WhatsApp.`, `Fill in your details and attach your current student ID to receive your personal code on WhatsApp.`,
+    `Conocemos la exigencia de tus turnos de práctica, rotaciones hospitalarias e internado. Por eso te acompañamos con un 15% de descuento permanente en todos tus uniformes médicos durante tu formación.`, `We know how demanding your clinical shifts, hospital rotations and internship are. That is why we support you with a permanent 15% discount on all your medical uniforms throughout your training.`,
+    `Desempeño en Turnos`, `Built for Long Shifts`,
+    `EXPLORAR COLECCIÓN`, `EXPLORE THE COLLECTION`,
+    `El beneficio estudiantil aplica sobre prendas y sets regulares del catálogo. No incluye piezas de archivo reservadas para miembros de`, `The student benefit applies to regular catalog pieces and sets. It does not include archive pieces reserved for members of`,
+    `Enfermería`, `Nursing`,
+    `Medicina`, `Medicine`,
+    `Odontología`, `Dentistry`,
+    `Fisioterapia`, `Physical Therapy`,
+    `Nutrición y Dietética`, `Nutrition and Dietetics`,
+    `Instrumentación Quirúrgica`, `Surgical Technology`,
+    `Terapia Ocupacional / Fonoaudiología`, `Occupational Therapy / Speech Therapy`,
+    `Otra carrera del área de la salud`, `Other healthcare program`,
+    `Otra Institución`, `Other Institution`,
+    `Posgrado / Residencia Médica`, `Graduate / Medical Residency`,
+    `Formatos: JPG, PNG o PDF (máx. 8MB). Puedes tomarle una foto clara desde tu celular.`, `Formats: JPG, PNG or PDF (max. 8MB). You can take a clear photo with your phone.`,
+    `Hemos registrado tus datos correctamente. Nuestro equipo verificará tu acreditación académica y te enviaremos tu código personal de 15% OFF directamente a tu WhatsApp.`, `We have registered your details. Our team will verify your academic status and send your personal 15% OFF code straight to your WhatsApp.`,
+    `Registra tu año estimado de graduación una sola vez. Tu código personal permanece activo sin trámites adicionales en cada semestre.`, `Register your expected graduation year once. Your personal code stays active every semester with no extra steps.`,
+    `Selecciona tu carrera`, `Select your program`,
+    `Selecciona tu institución`, `Select your institution`,
+    `Selecciona tu semestre`, `Select your semester`,
+    `Si usas correo institucional (.edu.co), tu validación es prioritaria.`, `If you use your university email (.edu.co), your verification is prioritized.`,
+    `Telas técnicas antifluido de alta durabilidad y caída estructurada, diseñadas para acompañar rotaciones clínicas de 24 horas.`, `Highly durable fluid-resistant technical fabrics with a structured drape, designed for 24-hour clinical rotations.`,
+    `Toca aquí o arrastra una foto de tu carnet universitario`, `Tap here or drag a photo of your student ID`,
+    `Tu uniforme, a la`, `Your uniform, at your`,
+    `altura.`, `level.`,
+    `Tu vocación empieza aquí.`, `Your calling starts here.`,
+    `Universidad / Institución *`, `University / Institution *`,
+    `Valida tu condición de`, `Verify your`,
+    `estudiante.`, `student status.`,
+    `Vigencia hasta tu Grado`, `Valid Until Graduation`,
+    `Ej. tu.nombre@javeriana.edu.co`, `E.g. your.name@javeriana.edu.co`,
+    `Puño`, `Cuff`,
+    `pantalón`, `pants`,
+    `Ilustración de cómo tomar medidas`, `Illustration of how to take measurements`,
+    `Gracias`, `Thank you`,
+    `por tu pedido.`, `for your order.`,
+    `Rastrear un pedido →`, `Track an order →`,
+    `Tu pedido ha sido recibido. Te contactaremos pronto a través de WhatsApp para coordinar todos los detalles del envío.`, `Your order has been received. We will contact you soon on WhatsApp to arrange all the shipping details.`,
+    `Avísame cuando abra →`, `Notify me at launch →`,
+    `Tu carrito queda guardado. Déjanos tus datos y te avisamos apenas abra el Drop 01.`, `Your cart is saved. Leave your details and we will let you know as soon as Drop 01 opens.`,
+    `Empieza con el`, `Start with the`,
+    `uniforme`, `uniform`,
+    `adecuado.`, `made for you.`,
+    `Tu uniforme te`, `Your uniform is`,
+    `espera.`, `waiting.`,
+    `Profesional de la salud con el set LIMA de YOSSICO`, `Healthcare professional wearing the YOSSICO LIMA set`,
+    `Profesional de la salud con el set OSLO de YOSSICO`, `Healthcare professional wearing the YOSSICO OSLO set`,
+    `Crea tu cuenta, accede a descuentos exclusivos y sé la primera en conocer cada nuevo drop de YOSSICO.`, `Create your account, unlock exclusive discounts and be the first to know about every new YOSSICO drop.`,
+    `Accede a tu perfil para ver tus descuentos, gestionar tus datos y estar lista para el próximo drop.`, `Access your profile to see your discounts, manage your details and be ready for the next drop.`,
+    `Correo electrónico`, `Email`,
+  ]);
+
+  add([
+    // Auditoría de inglés (2): textos que aparecen al interactuar
+    `USD / AÑO`, `USD / YEAR`,
+    `USD / MES`, `USD / MONTH`,
+    `Ver y comprar`, `Shop now`,
+    `Nombre *`, `Name *`,
+    `Tu pedido`, `Your order`,
+    `Tu nombre y apellido`, `Your first and last name`,
+    `Teléfono / WhatsApp`, `Phone / WhatsApp`,
+    `(para recibir confirmación de pedido y número de guía)`, `(to receive your order confirmation and tracking number)`,
+    `Cambios de talla sin costo:`, `Free size exchanges:`,
+    `Si necesitas ajustar tu talla al recibirlo, te la cambiamos sin costo.`, `If you need a different size when it arrives, we exchange it for free.`,
+    `Envío asegurado:`, `Insured shipping:`,
+    `Despachos a toda Colombia con Coordinadora y Servientrega (2-5 días hábiles).`, `Shipping across Colombia with Coordinadora and Servientrega (2-5 business days).`,
+    `Telas certificadas antifluido:`, `Certified fluid-resistant fabrics:`,
+    `Alta durabilidad, respirabilidad y 4-way stretch.`, `High durability, breathability and 4-way stretch.`,
+    `(Estatuto del Consumidor, Ley 1480).`, `(Consumer Statute, Law 1480).`,
+    `Autorizo de manera previa, expresa e informada el tratamiento de mis datos personales conforme a la`, `I give my prior, express and informed authorization for the processing of my personal data under the`,
+    `(Ley Estatutaria 1581 de 2012 de Habeas Data).`, `(Statutory Law 1581 of 2012 on Habeas Data).`,
+    `Privacidad y Transparencia · SIC`, `Privacy & Transparency · SIC`,
+    `Utilizamos cookies técnicas necesarias para tu carrito y pago seguro, y cookies de analítica para mejorar nuestra tienda. Puedes consultar nuestra`, `We use technical cookies needed for your cart and secure payment, and analytics cookies to improve our store. You can read our`,
+    `Solo esenciales`, `Essentials only`,
+    `Aceptar todas`, `Accept all`,
+    `Correo o contraseña incorrectos.`, `Incorrect email or password.`,
+    `Ingresa tu contraseña.`, `Enter your password.`,
+    `Ingresa tu correo primero.`, `Enter your email first.`,
+    `Ingresa tu correo.`, `Enter your email.`,
+    `El correo no es válido.`, `The email is not valid.`,
+    `Ingresa un correo válido.`, `Enter a valid email.`,
+    `Escribe tu nombre.`, `Enter your first name.`,
+    `Escribe tu apellido.`, `Enter your last name.`,
+    `La contraseña debe tener al menos 8 caracteres.`, `Your password must be at least 8 characters long.`,
+    `Las contraseñas no coinciden.`, `The passwords do not match.`,
+    `Debes aceptar los Términos y Condiciones para registrarte.`, `You must accept the Terms and Conditions to sign up.`,
+    `Debes autorizar el tratamiento de datos personales conforme a la Ley 1581.`, `You must authorize the processing of personal data under Law 1581.`,
+    `Debes autorizar el tratamiento de datos personales conforme a la Ley 1581 de 2012.`, `You must authorize the processing of personal data under Law 1581 of 2012.`,
+    `Por favor, completa la verificación de seguridad.`, `Please complete the security check.`,
+    `Por favor completa la verificación de seguridad.`, `Please complete the security check.`,
+    `Casi listo. Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.`, `Almost done. Check your email to confirm your account before logging in.`,
+    `Este correo ya está registrado. Inicia sesión.`, `This email is already registered. Please log in.`,
+    `¡Revisa tu correo! Enviamos un link para restablecer tu contraseña.`, `Check your email! We sent you a link to reset your password.`,
+    `Error al enviar el correo. Verifica el email.`, `We could not send the email. Please check the address.`,
+    `Muy débil`, `Very weak`,
+    `Débil`, `Weak`,
+    `Regular`, `Fair`,
+    `Fuerte`, `Strong`,
+    `Creando cuenta...`, `Creating account...`,
+    `Iniciando sesión...`, `Logging in...`,
+    `Por favor ingresa tu correo.`, `Please enter your email.`,
+    `Por favor ingresa tu nombre.`, `Please enter your name.`,
+    `Por favor ingresa tu número de celular.`, `Please enter your phone number.`,
+    `Por favor ingresa un dato para buscar.`, `Please enter something to search for.`,
+    `Por favor, completa todos los campos requeridos.`, `Please fill in all the required fields.`,
+    `Por favor completa: nombre, ciudad y dirección de entrega.`, `Please fill in: name, city and delivery address.`,
+    `Por favor ingresa tu número de WhatsApp / celular para coordinar el despacho.`, `Please enter your WhatsApp / phone number so we can arrange delivery.`,
+    `Por favor ingresa un correo electrónico válido para enviarte el comprobante de pedido y número de guía.`, `Please enter a valid email so we can send your order receipt and tracking number.`,
+    `Por favor lee y acepta los Términos y Condiciones y la Política de Reembolso para continuar.`, `Please read and accept the Terms and Conditions and the Refund Policy to continue.`,
+    `Por favor autoriza el tratamiento de datos personales conforme a la Ley 1581 de 2012 para procesar tu pedido.`, `Please authorize the processing of personal data under Law 1581 of 2012 so we can process your order.`,
+    `El archivo supera los 8MB. Por favor sube una imagen más liviana.`, `The file is larger than 8MB. Please upload a smaller image.`,
+    `No pudimos procesar tu registro. Por favor contáctanos directamente a WhatsApp para activar tu membresía.`, `We could not process your registration. Please contact us on WhatsApp to activate your membership.`,
+  ]);
+
+  add([
+    `Detalle ÉTOILE PRIVÉ`, `ÉTOILE PRIVÉ detail`, `Exclusivo Suscriptoras`, `Members Exclusive`,
+    `Largo pantalón`, `Pants length`, `Largo top`, `Top length`, `Largo`, `Length`,
+  ]);
+  PARTS['Exclusivo Suscriptoras'] = 'Members Exclusive';
+
+  add([
+    // Auditoría de inglés (3): textos idénticos en español e inglés
+    `Enviar`, `Send`,
+    `· Ley 1581).`, `· Law 1581).`,
+    `(Ley 1581).`, `(Law 1581).`,
+    `Ruta`, `Breadcrumb`,
+    `Agregar al carrito`, `Add to cart`,
+    `Azul Marino`, `Navy`,
+    `Horario: Lunes a viernes, 9:00 a.m. – 5:00 p.m.`, `Hours: Monday to Friday, 9:00 a.m. – 5:00 p.m.`,
+    `Privacidad`, `Privacy`,
+    `Reembolsos`, `Refunds`,
+    `15% OFF Permanente`, `Permanent 15% OFF`,
+    `ARCHIVO PRIVADO`, `PRIVATE ARCHIVE`,
+    `Archivo Privado`, `Private Archive`,
+    `DESBLOQUEAR PIEZA →`, `UNLOCK PIECE →`,
+    `PIEZA RESERVADA`, `RESERVED PIECE`,
+    `Solo Miembros`, `Members Only`,
+    `· Miembros (−15%)`, `· Members (−15%)`,
+    `01 · Piezas Privadas`, `01 · Private Pieces`,
+    `02 · 15% OFF Permanente`, `02 · Permanent 15% OFF`,
+    `04 · Despacho Prioritario`, `04 · Priority Shipping`,
+    `Piezas Exclusivas`, `Exclusive Pieces`,
+    `Despacho Prioritario`, `Priority Shipping`,
+    `Privilegios`, `Privileges`,
+    `11° - 12° Semestre / Internado`, `11th - 12th Semester / Internship`,
+    `3° - 4° Semestre`, `3rd - 4th Semester`,
+    `9° - 10° Semestre (Rotaciones)`, `9th - 10th Semester (Rotations)`,
+    `Semestre Actual *`, `Current Semester *`,
+    `Medicina Veterinaria`, `Veterinary Medicine`,
+    `Ej. Camila Morales`, `E.g. Camila Morales`,
+    `Bienvenida a YOSSICO`, `Welcome to YOSSICO`,
+    `Programa Estudiantil Campus →`, `Campus Student Program →`,
+    `RECOMENDADO`, `RECOMMENDED`,
+    `SOLICITAR 15% OFF ESTUDIANTIL →`, `REQUEST STUDENT 15% OFF →`,
+    `SOLICITAR ACCESO →`, `REQUEST ACCESS →`,
+    `Solicitud`, `Request`,
+    `recibida.`, `received.`,
+    `YOSSICO CAMPUS · PROGRAMA ESTUDIANTIL`, `YOSSICO CAMPUS · STUDENT PROGRAM`,
+  ]);
+
   var ATTRS = ['placeholder', 'alt', 'title', 'aria-label'];
 
   function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
@@ -689,31 +977,60 @@
     if (c) return 'Cart (' + c[1] + ')';
     var m = n.match(/^(Set|Conjunto) ([A-ZÁÉÍÓÚ]+)$/);
     if (m) return m[2] + ' Set';
+    var mi = n.match(/^Miniatura (\d+)$/);                 // "Miniatura 3"
+    if (mi) return 'Thumbnail ' + mi[1];
+    var v = n.match(/^(.+) vista (\d+)$/);                 // "BOGOTÁ vista 2"
+    if (v) return v[1] + ' view ' + v[2];
+    var sc = n.match(/^Set ([A-ZÁÉÍÓÚ]+) (.+)$/);           // "Set BOGOTÁ Azul Marino"
+    if (sc && (PARTS.hasOwnProperty(sc[2]) || D.hasOwnProperty(sc[2]))) return sc[1] + ' set ' + (PARTS[sc[2]] || D[sc[2]]);
     return null;
+  }
+
+  /* En inglés, cualquier "$29.900 COP" se muestra en dólares (YOSSICO_MONEDA, en cart.js).
+     Lo que deba quedar en pesos se marca con data-moneda="cop". */
+  var RE_PESOS = /\$\s?(\d{1,3}(?:[.,]\d{3})+|\d+)\s?COP\b/g;
+  function pesos(numTxt) { return parseInt(String(numTxt).replace(/[.,]/g, ''), 10); }
+  function convertirPesos(str, node) {
+    if (typeof YOSSICO_MONEDA === 'undefined') return str;
+    var el = node && node.parentElement;
+    if (el && el.closest && el.closest('[data-moneda="cop"]')) return str;
+    str = str.replace(RE_PESOS, function (m, num) { return YOSSICO_MONEDA.fmt(YOSSICO_MONEDA.usd(pesos(num))); });
+    // "$29.900" seguido de una etiqueta "COP / MES" (precio partido en dos)
+    var sm = /^\$\s?(\d{1,3}(?:[.,]\d{3})+)$/.exec(str);
+    var sib = node ? node.nextSibling : null;
+    while (sib && sib.nodeType === 3 && !sib.nodeValue.trim()) sib = sib.nextSibling;
+    if (sm && sib && sib.nodeType === 1 && /^(COP|USD)\b/.test(sib.textContent.trim())) {
+      str = YOSSICO_MONEDA.fmt(YOSSICO_MONEDA.usd(pesos(sm[1])), false);
+      sib.textContent = sib.textContent.replace(/^\s*COP/, 'USD');
+    }
+    return str;
   }
 
   function doText(node) {
     var v = node.nodeValue;
     if (!v || !v.trim()) return;
     var t = translate(v);
-    if (t === null || t === norm(v)) return;
+    var out = convertirPesos(t !== null ? t : norm(v), node);
+    if (out === norm(v)) return;
     var lead = v.match(/^\s*/)[0], trail = v.match(/\s*$/)[0];
-    node.nodeValue = lead + t + trail;
+    node.nodeValue = lead + out + trail;
   }
 
   function doEl(el) {
     if (el.nodeType !== 1) return;
     var tag = el.tagName;
-    if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'SVG' || tag === 'NOSCRIPT') return;
+    if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return;
     if (el.getAttribute && el.getAttribute('translate') === 'no') return;
     ATTRS.forEach(function (a) {
       if (el.hasAttribute && el.hasAttribute(a)) {
-        var t = translate(el.getAttribute(a));
-        if (t !== null) el.setAttribute(a, t);
+        var actual = el.getAttribute(a);
+        var t = translate(actual);
+        // Solo se escribe si cambia: reescribir el mismo valor dispara otra mutación (bucle infinito)
+        if (t !== null && t !== actual) el.setAttribute(a, t);
       }
     });
     if (tag === 'INPUT' && (el.type === 'submit' || el.type === 'button') && el.value) {
-      var tv = translate(el.value); if (tv !== null) el.value = tv;
+      var tv = translate(el.value); if (tv !== null && tv !== el.value) el.value = tv;
     }
   }
 
@@ -725,7 +1042,7 @@
       acceptNode: function (n) {
         if (n.nodeType === 1) {
           var tg = n.tagName;
-          if (tg === 'SCRIPT' || tg === 'STYLE' || tg === 'NOSCRIPT' || tg === 'svg' || tg === 'SVG') return NodeFilter.FILTER_REJECT;
+          if (tg === 'SCRIPT' || tg === 'STYLE' || tg === 'NOSCRIPT') return NodeFilter.FILTER_REJECT;
           if (n.getAttribute('translate') === 'no') return NodeFilter.FILTER_REJECT;
         }
         return NodeFilter.FILTER_ACCEPT;
@@ -735,8 +1052,33 @@
     while ((n = w.nextNode())) { if (n.nodeType === 3) doText(n); else doEl(n); }
   }
 
+  /* Ventanas de alerta / confirmación del navegador también en inglés */
+  ['alert', 'confirm'].forEach(function (fn) {
+    var orig = window[fn];
+    if (typeof orig !== 'function') return;
+    window[fn] = function (msg) {
+      var t = typeof msg === 'string' ? translate(msg) : null;
+      return orig.call(window, t !== null ? t : msg);
+    };
+  });
+
+  /* Páginas legales: el documento vinculante es el español; se avisa en inglés */
+  function avisoLegal() {
+    if (!/(terminos|privacidad|reembolsos|cookies)\.html$/.test(location.pathname)) return;
+    var h1 = document.querySelector('h1');
+    if (!h1 || document.getElementById('yos-legal-en')) return;
+    var box = document.createElement('div');
+    box.id = 'yos-legal-en';
+    box.setAttribute('translate', 'no');
+    box.style.cssText = 'max-width:760px;margin:0 auto 28px;padding:14px 18px;border:1px solid #d6d4d1;border-radius:12px;background:#f6f6f4;font-family:Montserrat,sans-serif;font-size:12px;line-height:1.6;color:#4a4a4a;text-align:left;';
+    box.textContent = 'This legal document is published in Spanish, which is the legally binding version under Colombian law. ' +
+      'If you have any questions about its content, message us on WhatsApp (+57 312 730 0661) or email customerserviceyossico@gmail.com and we will gladly help you in English.';
+    h1.parentNode.insertBefore(box, h1);
+  }
+
   var busy = false;
   function start() {
+    avisoLegal();
     document.documentElement.lang = 'en';
     var t = translate(document.title); if (t !== null) document.title = t;
     walk(document.body);

@@ -126,7 +126,7 @@ function renderCart() {
             </div>
             <div class="cart-item__info">
                 <span class="cart-item__name">${escHtml(item.name)}</span>
-                <span class="cart-item__size">Talla ${escHtml(item.size)}</span>
+                <span class="cart-item__size">${YOSSICO_MONEDA.enUSD() ? 'Size' : 'Talla'} ${escHtml(item.size)}</span>
                 <span class="cart-item__price">${YOSSICO_MONEDA.fmtCOP(item.price)}</span>
                 <div class="cart-item__controls">
                     <button class="cart-qty-btn" data-action="dec" data-key="${escHtml(item.key)}">−</button>

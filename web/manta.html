@@ -1548,7 +1548,7 @@
                 el.className = 'pd-wiz__avail';
                 if (st === null) { el.textContent = ''; return; }
                 if (st <= 0) { el.textContent = 'Agotado'; el.classList.add('is-out'); }
-                else if (st <= LOW_STOCK_THRESHOLD) { el.textContent = `Últimas ${st}`; el.classList.add('is-low'); }
+                else if (st <= LOW_STOCK_THRESHOLD) { el.textContent = EN ? `Last ${st}` : `Últimas ${st}`; el.classList.add('is-low'); }
                 else { el.textContent = 'Disponible'; el.classList.add('is-ok'); }
             });
         }
@@ -1575,7 +1575,7 @@
         function mostrarSugerencia(t) {
             const hint = document.getElementById('pd-size-hint');
             if (!t) { hint.hidden = true; return; }
-            hint.innerHTML = `Según tus datos, te recomendamos la talla <strong>${t}</strong>.`;
+            hint.innerHTML = EN ? `Based on your details, we recommend size <strong>${t}</strong>.` : `Según tus datos, te recomendamos la talla <strong>${t}</strong>.`;
             hint.hidden = false;
         }
         guideToggle.addEventListener('click', () => {
@@ -1612,7 +1612,9 @@
             thumb.alt = `Set ${prod.name} ${c.label}`;
             const st = selectedSize ? getStock(activeColorKey, selectedSize) : null;
             document.getElementById('wiz-set-stock').textContent =
-                st === null ? '' : st <= LOW_STOCK_THRESHOLD ? `Últimas ${st} unidades en esta talla` : 'Disponible';
+                st === null ? '' : st <= LOW_STOCK_THRESHOLD
+                    ? (EN ? `Only ${st} left in this size` : `Últimas ${st} unidades en esta talla`)
+                    : (EN ? 'Available' : 'Disponible');
             // Montos en la moneda visible (COP en español, USD en inglés); el WhatsApp va en COP
             const M = YOSSICO_MONEDA, en = M.enUSD();
             const unidad = M.precio(prod.price), totalVis = unidad * qty;

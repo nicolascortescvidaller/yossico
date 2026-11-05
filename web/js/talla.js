@@ -21,6 +21,7 @@ const YOSSICO_TALLA = (() => {
     const RANGO_PESO = [57, 69, 81];
     const LARGO_PANTALON = { S: 100, M: 102, L: 104 };
     const STORE = 'yossico_mi_talla';
+    const EN = (() => { try { return localStorage.getItem('yos_lang') === 'en'; } catch (_) { return false; } })();
 
     const leer = () => { try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (_) { return null; } };
     const guardar = d => { try { localStorage.setItem(STORE, JSON.stringify(d)); } catch (_) {} };
@@ -53,15 +54,18 @@ const YOSSICO_TALLA = (() => {
         const talla = TALLAS[Math.min(idx, 2)];
         const notas = [];
         if (idx > 2) {
-            notas.push('Nuestra talla más grande es L y según tus datos podría quedarte justa. Escríbenos por WhatsApp y te asesoramos antes de comprar.');
+            notas.push(EN ? 'Our largest size is L and, based on your details, it might fit snugly. Message us on WhatsApp and we will advise you before you buy.'
+                          : 'Nuestra talla más grande es L y según tus datos podría quedarte justa. Escríbenos por WhatsApp y te asesoramos antes de comprar.');
         }
         if (d.estatura >= 172) {
-            notas.push(`Con tu estatura, el pantalón talla ${talla} (${LARGO_PANTALON[talla]} cm de largo) podría quedarte un poco corto.`);
+            notas.push(EN ? `For your height, the size ${talla} pants (${LARGO_PANTALON[talla]} cm long) might be a little short.`
+                          : `Con tu estatura, el pantalón talla ${talla} (${LARGO_PANTALON[talla]} cm de largo) podría quedarte un poco corto.`);
         } else if (d.estatura && d.estatura <= 152) {
-            notas.push('Con tu estatura, quizá quieras ajustar el ruedo del pantalón.');
+            notas.push(EN ? 'For your height, you may want to hem the pants.' : 'Con tu estatura, quizá quieras ajustar el ruedo del pantalón.');
         }
         if (base === 'peso') {
-            notas.push('Es una estimación con estatura y peso. Si agregas tu busto y cadera, la recomendación es más precisa.');
+            notas.push(EN ? 'This is an estimate based on height and weight. Add your bust and hips for a more accurate recommendation.'
+                          : 'Es una estimación con estatura y peso. Si agregas tu busto y cadera, la recomendación es más precisa.');
         }
         return { talla, notas, base };
     }
@@ -142,15 +146,15 @@ const YOSSICO_TALLA = (() => {
             const r = recomendar(d);
             res.hidden = false;
             if (!r) {
-                res.innerHTML = '<p class="yt__err">Escribe al menos tu peso, o tus medidas de busto, cintura o cadera.</p>';
+                res.innerHTML = `<p class="yt__err">${EN ? 'Enter at least your weight, or your bust, waist or hip measurements.' : 'Escribe al menos tu peso, o tus medidas de busto, cintura o cadera.'}</p>`;
                 return;
             }
             guardar({ ...d, talla: r.talla });
             res.innerHTML = `
-                <p class="yt__res-size">Tu talla recomendada: <strong>${r.talla}</strong></p>
+                <p class="yt__res-size">${EN ? 'Your recommended size:' : 'Tu talla recomendada:'} <strong>${r.talla}</strong></p>
                 ${r.notas.map(n => `<p>${n}</p>`).join('')}
-                <p class="yt__check">Revisa la tabla de medidas de abajo para confirmar antes de comprar.</p>
-                <button type="button" class="yt__use" id="yt-use">Elegir talla ${r.talla}</button>`;
+                <p class="yt__check">${EN ? 'Check the size chart below to confirm before buying.' : 'Revisa la tabla de medidas de abajo para confirmar antes de comprar.'}</p>
+                <button type="button" class="yt__use" id="yt-use">${EN ? 'Choose size' : 'Elegir talla'} ${r.talla}</button>`;
             $('yt-use').addEventListener('click', () => opts.onElegir && opts.onElegir(r.talla));
             if (opts.onRecomendar) opts.onRecomendar(r.talla);
         }
