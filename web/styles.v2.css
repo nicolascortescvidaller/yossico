@@ -2294,3 +2294,16 @@ html body :is(.breadcrumb__link, .modal__back, .pd__back) svg {
 html body :is(.breadcrumb__link, .modal__back, .pd__back):hover svg {
   transform: translateX(-3px);
 }
+
+/* Precios del carrito: números en Montserrat (cifras rectas), no en la serif */
+.cart-item__price, #cart-total-price {
+  font-family: var(--font-body);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.cart-item__price { font-size: 13px; font-weight: 500; }
+#cart-total-price { font-size: 18px; font-weight: 600; }
+
+/* Fichas de producto: fondo blanco en toda la página */
+body:has(main.pd) { background: #ffffff; }
+body:has(main.pd) .nav,
+body:has(main.pd) .nav.scrolled { background: rgba(255, 255, 255, 0.96); }

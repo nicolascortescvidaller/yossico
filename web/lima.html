@@ -28,7 +28,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=110">
+    <link rel="stylesheet" href="styles.v2.css?v=111">
     <style>
         /* ── Product Detail Layout ─────────────────────── */
         .pd {
@@ -708,7 +708,10 @@
         /* ── Pedido paso a paso (color → talla → tu set) ── */
         .pd__crumbs { display: flex; flex-wrap: wrap; gap: 10px; font-family: var(--font-body); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-light); margin-bottom: 22px; }
         .pd__crumbs a { color: var(--gray); text-decoration: none; }
-        .pd__price--top { font-size: 30px; margin: -14px 0 28px; }
+        .pd__price--top {
+            font-family: var(--font-body); font-size: 18px; font-weight: 500; letter-spacing: 0.3px;
+            font-variant-numeric: lining-nums tabular-nums; margin: -16px 0 28px;
+        }
         .pd__crumbs a:hover { color: var(--black); text-decoration: underline; text-underline-offset: 4px; }
         .pd__price-row { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
         .pd__price-row .pd__price { margin: 0; font-size: 32px; }
@@ -798,7 +801,7 @@
         .pd__guide-title { font-family: var(--font-body); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin: 6px 0 0; }
         .pd__guide-link { font-family: var(--font-body); font-size: 12px; color: var(--black); }
 
-        .pd-wiz__set { display: flex; gap: 14px; align-items: center; background: rgba(255,255,255,0.4); border: 1px solid rgba(17,17,17,0.1); border-radius: 16px; padding: 10px; margin-bottom: 22px; }
+        .pd-wiz__set { display: flex; gap: 14px; align-items: center; background: #f6f6f4; border: 1px solid rgba(17,17,17,0.08); border-radius: 16px; padding: 10px; margin-bottom: 22px; }
         .pd-wiz__set img { width: 60px; height: 76px; border-radius: 10px; object-fit: cover; object-position: top; background: var(--off-white); }
         .pd-wiz__set-name { font-family: var(--font-body); font-size: 14px; font-weight: 500; color: var(--black); margin: 0 0 4px; }
         .pd-wiz__set-stock { font-family: var(--font-body); font-size: 11px; color: #2f7d52; margin: 0; }
@@ -815,7 +818,7 @@
         .pd-wiz__total { display: flex; justify-content: space-between; align-items: baseline; }
         .pd-wiz__tax { font-family: var(--font-body); font-size: 10px; letter-spacing: 1px; color: var(--gray-light); margin: 2px 0 0; text-align: right; }
         .pd-wiz__total span { font-family: var(--font-body); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); }
-        .pd-wiz__total strong { font-family: var(--font-display); font-size: 30px; font-weight: 400; color: var(--black); }
+        .pd-wiz__total strong { font-family: var(--font-body); font-size: 20px; font-weight: 600; letter-spacing: 0.2px; font-variant-numeric: lining-nums tabular-nums; color: var(--black); }
         .pd__summary-ship { font-family: var(--font-body); font-size: 11px; color: var(--gray); margin: 6px 0 18px; text-align: right; }
         .pd__summary-ship.is-free { color: #2f7d52; }
         .pd-wiz .pd__ctas { margin-bottom: 0; }

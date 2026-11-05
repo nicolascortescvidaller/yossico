@@ -29,7 +29,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.v2.css?v=110">
+    <link rel="stylesheet" href="styles.v2.css?v=111">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         /* ── Layout ── */
@@ -994,6 +994,48 @@
             cursor: pointer;
             color: var(--gray);
             padding: 8px;
+        }
+    
+        /* ═══ Tarjetas de catálogo (grilla principal): foto → línea → nombre → precio → color ═══ */
+        #linea-uniformes .product-grid { grid-template-columns: repeat(3, 1fr); gap: 56px 24px; }
+        #linea-uniformes .gallery { height: auto; aspect-ratio: 4 / 5; background: #f2f2f0; }
+        #linea-uniformes .gallery__expand-hint,
+        #linea-uniformes .product-card__tag,
+        #linea-uniformes .product-card__sub,
+        #linea-uniformes .color-label,
+        #linea-uniformes .size-selector,
+        #linea-uniformes .product-card__cta,
+        #linea-uniformes .add-to-cart-btn { display: none !important; }
+        #linea-uniformes .gallery__btn { opacity: 0; transition: opacity 0.25s; }
+        #linea-uniformes .gallery:hover .gallery__btn { opacity: 1; }
+        #linea-uniformes .product-card__info {
+            padding: 16px 2px 0; gap: 0; align-items: flex-start; text-align: left;
+        }
+        #linea-uniformes .product-card__eyebrow {
+            order: 0; font-family: var(--font-body); font-size: 10px; font-weight: 500;
+            letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin-bottom: 6px;
+        }
+        #linea-uniformes .product-card__name {
+            order: 1; font-family: var(--font-body); font-size: 15px; font-weight: 500;
+            letter-spacing: 1px; text-transform: uppercase; text-align: left; margin: 0 0 6px; color: var(--black);
+        }
+        #linea-uniformes .product-card__price {
+            order: 2; font-family: var(--font-body); font-size: 14px; font-weight: 500;
+            letter-spacing: 0.3px; font-variant-numeric: lining-nums tabular-nums; color: var(--black); margin: 0 0 6px;
+        }
+        #linea-uniformes .product-card__color-name {
+            order: 3; font-family: var(--font-body); font-size: 12px; color: var(--gray); margin-bottom: 10px;
+        }
+        #linea-uniformes .color-selector { order: 4; display: flex; gap: 8px; margin: 0; justify-content: flex-start; }
+        #linea-uniformes .color-swatch {
+            width: 22px; height: 22px; border: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12);
+            transform: none !important;
+        }
+        #linea-uniformes .color-swatch.selected { box-shadow: 0 0 0 2px var(--off-white), 0 0 0 3px var(--black); }
+        @media (max-width: 900px) {
+            #linea-uniformes .product-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 36px 12px; }
+            #linea-uniformes .product-card__name { font-size: 13px; }
+            #linea-uniformes .gallery__btn { display: none; }
         }
     </style>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -3036,6 +3078,36 @@
   };
 })();
 </script>
+
+    <script>
+        /* Tarjetas de catálogo: la línea (Essentials/Signature/Core) va como texto sobre el nombre
+           y debajo del precio se muestra el nombre del color elegido. */
+        (function () {
+            const cards = document.querySelectorAll('#linea-uniformes .product-card');
+            function pintarColor(card) {
+                const sw = card.querySelector('.color-swatch.selected') || card.querySelector('.color-swatch');
+                const el = card.querySelector('.product-card__color-name');
+                if (el) el.textContent = sw ? (sw.dataset.label || '') : '';
+            }
+            cards.forEach(card => {
+                const info = card.querySelector('.product-card__info');
+                if (!info || info.querySelector('.product-card__eyebrow')) return;
+                const tag = card.querySelector('.product-card__tag');
+                const eyebrow = document.createElement('span');
+                eyebrow.className = 'product-card__eyebrow';
+                eyebrow.textContent = tag ? tag.textContent.trim() : '';
+                info.prepend(eyebrow);
+                const colorName = document.createElement('span');
+                colorName.className = 'product-card__color-name';
+                info.appendChild(colorName);
+                pintarColor(card);
+            });
+            ['click', 'mouseover'].forEach(ev => document.addEventListener(ev, e => {
+                const card = e.target.closest && e.target.closest('#linea-uniformes .product-card');
+                if (card && e.target.closest('.color-swatch')) setTimeout(() => pintarColor(card), 0);
+            }));
+        })();
+    </script>
 </body>
 
 
