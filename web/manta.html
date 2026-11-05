@@ -934,14 +934,16 @@
                     <a href="coleccion.html?linea=signature">Signature</a>
                     <a href="coleccion.html?linea=core">Core</a>
                     <div class="nav__dropdown-divider"></div>
-                    <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
+                    <a href="coleccion.html#linea-prive">Privé — Solo Miembros</a>
+                    <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
                 </div>
             </li>
+            <li><a href="prive.html">Privé</a></li>
+            <li><a href="estudiantes.html">Campus</a></li>
             <li><a href="acronimo.html">El Acrónimo</a></li>
             <li><a href="historia.html">Historia</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
             <li><a href="contacto.html">Contacto</a></li>
-            
         </ul>
   <div class="nav__actions">
     <a class="cart-icon-btn" id="cart-open" aria-label="Carrito" tabindex="0" role="button">
@@ -1249,7 +1251,7 @@
         document.getElementById('pd-breadcrumb-name').textContent = prod.name;
         document.getElementById('pd-name').textContent  = prod.name;
         document.getElementById('pd-sub').textContent   = prod.sub;
-        document.getElementById('pd-price').textContent = prod.priceDisplay;
+        document.getElementById('pd-price').textContent = YOSSICO_MONEDA.fmtCOP(prod.price);
         document.getElementById('pd-desc').textContent  = prod.desc;
 
         /* ─────────────────────────────────────────────
@@ -1470,6 +1472,11 @@
         const ENVIO_GRATIS_DESDE = 300000;
         const fmtCOP = n => '$' + Math.round(n).toLocaleString('es-CO');
         const colorObj = () => prod.colors.find(c => c.key === activeColorKey) || prod.colors[0];
+        /* En inglés: nombres de color y "Size" */
+        const EN = typeof YOSSICO_MONEDA !== 'undefined' && YOSSICO_MONEDA.enUSD();
+        const COLOR_EN = { 'Negro': 'Black', 'Azul Marino': 'Navy', 'Vinotinto': 'Burgundy', 'Azul Pacífico': 'Pacific Blue', 'Verde Oliva': 'Olive Green' };
+        const nombreColor = label => (EN && COLOR_EN[label]) || label;
+        const palabraTalla = EN ? 'Size' : 'Talla';
 
         function abrirPaso(n, desplazar) {
             const hecho = { 1: !!wiz.color, 2: !!wiz.talla };
@@ -1503,7 +1510,7 @@
             activeColorKey = c.key;
             wiz.color = c.key;
             colorNameEl.textContent = c.label;
-            document.getElementById('wiz-val-color').textContent = c.label;
+            document.getElementById('wiz-val-color').textContent = nombreColor(c.label);
             mostrarColor(c);
             try {
                 const u = new URL(window.location.href);
@@ -1520,7 +1527,7 @@
             btn.className = 'pd__color-swatch pd-wiz__color' + (c.key === wiz.color ? ' selected' : '');
             btn.dataset.color = c.key;
             btn.setAttribute('aria-label', c.label);
-            btn.innerHTML = `<span class="pd-wiz__dot" style="background:${c.hex}"></span><span class="pd-wiz__cname">${c.label}</span>`;
+            btn.innerHTML = `<span class="pd-wiz__dot" style="background:${c.hex}"></span><span class="pd-wiz__cname">${nombreColor(c.label)}</span>`;
             btn.addEventListener('mouseenter', () => { if (window.matchMedia('(hover: hover)').matches) mostrarColor(c); });
             btn.addEventListener('click', () => elegirColor(c));
             colorsContainer.appendChild(btn);
@@ -1532,7 +1539,7 @@
             h1.querySelector('.pd-wiz__edit').remove();
         }
         colorNameEl.textContent = initialColorObj.label;
-        if (wiz.color) document.getElementById('wiz-val-color').textContent = initialColorObj.label;
+        if (wiz.color) document.getElementById('wiz-val-color').textContent = nombreColor(initialColorObj.label);
 
         /* Paso 2 · Talla: muestra la disponibilidad de cada talla en el color elegido */
         function pintarDisponibilidad() {
@@ -1552,7 +1559,7 @@
                 btn.classList.add('selected');
                 selectedSize = btn.dataset.size;
                 wiz.talla = selectedSize;
-                document.getElementById('wiz-val-talla').textContent = `Talla ${selectedSize}`;
+                document.getElementById('wiz-val-talla').textContent = `${palabraTalla} ${selectedSize}`;
                 actualizarResumen();
                 setTimeout(() => abrirPaso(3, true), 250);
             });
@@ -1599,20 +1606,25 @@
             const qty   = parseInt(qtyInput.value) || 1;
             const total = prod.price * qty;
             const c     = colorObj();
-            document.getElementById('wiz-set-name').textContent = `${prod.name} · ${c.label} · Talla ${selectedSize || '–'}`;
+            document.getElementById('wiz-set-name').textContent = `${prod.name} · ${nombreColor(c.label)} · ${palabraTalla} ${selectedSize || '–'}`;
             const thumb = document.getElementById('wiz-thumb');
             thumb.src = (c.imgs && c.imgs[0]) || prod.defaultImgs[0];
             thumb.alt = `Set ${prod.name} ${c.label}`;
             const st = selectedSize ? getStock(activeColorKey, selectedSize) : null;
             document.getElementById('wiz-set-stock').textContent =
                 st === null ? '' : st <= LOW_STOCK_THRESHOLD ? `Últimas ${st} unidades en esta talla` : 'Disponible';
-            document.getElementById('pd-summary-total').textContent = fmtCOP(total);
+            // Montos en la moneda visible (COP en español, USD en inglés); el WhatsApp va en COP
+            const M = YOSSICO_MONEDA, en = M.enUSD();
+            const unidad = M.precio(prod.price), totalVis = unidad * qty;
+            document.getElementById('pd-summary-total').textContent = M.fmt(totalVis, en);
             document.getElementById('wiz-unit-row').hidden = qty === 1;
-            document.getElementById('wiz-unit').textContent = `${fmtCOP(prod.price)} × ${qty}`;
-            document.getElementById('wiz-total-label').textContent = qty === 1 ? 'Precio del set' : `Total · ${qty} sets`;
+            document.getElementById('wiz-unit').textContent = `${M.fmt(unidad, en)} × ${qty}`;
+            document.getElementById('wiz-total-label').textContent = qty === 1
+                ? (en ? 'Set price' : 'Precio del set') : (en ? `Total · ${qty} sets` : `Total · ${qty} sets`);
             const ship  = document.getElementById('pd-summary-ship');
-            const falta = ENVIO_GRATIS_DESDE - total;
-            ship.textContent = falta <= 0 ? '✓ Envío gratis' : `Te faltan ${fmtCOP(falta)} para el envío gratis`;
+            const falta = M.precio(ENVIO_GRATIS_DESDE) - totalVis;
+            ship.textContent = falta <= 0 ? (en ? '✓ Free shipping' : '✓ Envío gratis')
+                : (en ? `You're ${M.fmt(falta, true)} away from free shipping` : `Te faltan ${fmtCOP(falta)} para el envío gratis`);
             ship.classList.toggle('is-free', falta <= 0);
             const msg = `Hola, quiero pedir ${qty} ${qty > 1 ? 'sets' : 'set'} ${prod.name} en color ${c.label}, talla ${selectedSize || '(por definir)'}. Total ${fmtCOP(total)}.`;
             document.getElementById('pd-wa').href = `https://wa.me/573127300661?text=${encodeURIComponent(msg)}`;

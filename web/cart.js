@@ -2,6 +2,32 @@
    YOSSICO — Cart
    ─────────────────────────────────────────────── */
 
+/* ── Moneda: pesos en español, dólares en inglés ──────────────
+   Los precios en USD son una sugerencia: tasa de referencia + 5 %.
+   Para ajustarlos, cambia TASA_COP_POR_USD o la tabla PRECIOS_USD.
+   El cobro (Wompi) y los pedidos por WhatsApp siempre van en COP. */
+const YOSSICO_MONEDA = (() => {
+    const TASA_COP_POR_USD = 4000;   // tasa de referencia (COP por 1 USD)
+    const RECARGO_USD = 1.05;        // los precios en dólares van 5 % por encima
+    const PRECIOS_USD = {            // precio en COP → precio redondeado en USD
+        229900: 60,                  // Core (Bogotá, Manta)
+        275900: 72,                  // Essentials (Oslo, Lima)
+        339900: 89,                  // Signature (Milan, Kyoto)
+        300000: 79                   // umbral de envío gratis
+    };
+    const enUSD = () => { try { return localStorage.getItem('yos_lang') === 'en'; } catch (_) { return false; } };
+    const usd = cop => PRECIOS_USD[cop] !== undefined ? PRECIOS_USD[cop] : Math.round(cop / TASA_COP_POR_USD * RECARGO_USD);
+    /* Precio unitario en la moneda que ve la clienta */
+    const precio = cop => enUSD() ? usd(cop) : cop;
+    /* Formatea un monto que ya está en la moneda visible */
+    const fmt = (n, conMoneda = true) => enUSD()
+        ? '$' + (Math.round(n * 100) / 100).toLocaleString('en-US') + (conMoneda ? ' USD' : '')
+        : '$' + Math.round(n).toLocaleString('es-CO') + (conMoneda ? ' COP' : '');
+    /* Convierte y formatea un precio unitario en COP */
+    const fmtCOP = (cop, conMoneda = true) => fmt(precio(cop), conMoneda);
+    return { enUSD, usd, precio, fmt, fmtCOP, ENVIO_GRATIS_COP: 300000 };
+})();
+
 const CART_KEY = 'yossico_cart';
 const WA_NUMBER = '573127300661';
 
@@ -101,7 +127,7 @@ function renderCart() {
             <div class="cart-item__info">
                 <span class="cart-item__name">${escHtml(item.name)}</span>
                 <span class="cart-item__size">Talla ${escHtml(item.size)}</span>
-                <span class="cart-item__price">${Cart.formatPrice(item.price)}</span>
+                <span class="cart-item__price">${YOSSICO_MONEDA.fmtCOP(item.price)}</span>
                 <div class="cart-item__controls">
                     <button class="cart-qty-btn" data-action="dec" data-key="${escHtml(item.key)}">−</button>
                     <span class="cart-qty-num">${item.qty}</span>
@@ -117,7 +143,7 @@ function renderCart() {
 
     /* Total */
     const tp = document.getElementById('cart-total-price');
-    if (tp) tp.textContent = Cart.formatPrice(Cart.total);
+    if (tp) tp.textContent = YOSSICO_MONEDA.fmt(items.reduce((t, i) => t + YOSSICO_MONEDA.precio(i.price) * i.qty, 0));
 
     /* Checkout button → redirect to checkout page */
     const co = document.getElementById('cart-checkout');

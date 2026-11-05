@@ -69,6 +69,7 @@
     /* Submit */
     .ck-submit { width:100%; padding:18px; background:var(--black); color:var(--white); border:none; font-family:var(--font-body); font-weight:300; font-size:10px; letter-spacing:3px; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:12px; transition:background .2s; }
     .ck-submit:hover { background:#222; }
+    .ck-cop-note { font-family:var(--font-body); font-size:11px; color:var(--gray); text-align:right; margin:8px 0 0; }
     .ck-submit svg { width:18px; height:18px; fill:currentColor; }
     .ck-legal { font-family:var(--font-body); font-size:9px; color:var(--gray-light); text-align:center; margin-top:12px; letter-spacing:0.5px; line-height:1.7; }
     .ck-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; gap:16px; text-align:center; }
@@ -116,20 +117,22 @@
       YOSSICO
     </a>
     <ul class="nav__links">
-      <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
-        <div class="nav__dropdown-menu">
-          <a href="coleccion.html?linea=essentials">Essentials</a>
-          <a href="coleccion.html?linea=signature">Signature</a>
-          <a href="coleccion.html?linea=core">Core</a>
-          <div class="nav__dropdown-divider"></div>
-          <a href="coleccion.html?linea=capas">Capas — Hoodies</a>
-        </div>
-      </li>
-      <li><a href="acronimo.html">El Acrónimo</a></li>
-      <li><a href="historia.html">Historia</a></li>
-      <li><a href="nosotros.html">Nosotros</a></li>
-      <li><a href="contacto.html">Contacto</a></li>
-      
+        <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+            <div class="nav__dropdown-menu">
+                <a href="coleccion.html?linea=essentials">Essentials</a>
+                <a href="coleccion.html?linea=signature">Signature</a>
+                <a href="coleccion.html?linea=core">Core</a>
+                <div class="nav__dropdown-divider"></div>
+                <a href="coleccion.html#linea-prive">Privé — Solo Miembros</a>
+                <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+            </div>
+        </li>
+        <li><a href="prive.html">Privé</a></li>
+        <li><a href="estudiantes.html">Campus</a></li>
+        <li><a href="acronimo.html">El Acrónimo</a></li>
+        <li><a href="historia.html">Historia</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
     </ul>
   <div class="nav__actions">
     <a class="cart-icon-btn" id="cart-open" aria-label="Carrito" tabindex="0" role="button">
@@ -175,8 +178,28 @@
     // WA_NUMBER and CART_KEY are already declared in cart.js (global scope)
     // Redeclaring them with const here causes a SyntaxError that kills the whole script
 
-    function fmtPrice(n) {
+    // Montos en pesos: para el cobro y el mensaje de WhatsApp
+    function fmtPesos(n) {
       return '$' + Math.round(n).toLocaleString('es-CO') + ' COP';
+    }
+    // Montos que ve la clienta: COP en español; en inglés, USD (con la misma proporción del carrito)
+    let factorUSD = 0;
+    function fmtPrice(n) {
+      if (typeof YOSSICO_MONEDA === 'undefined' || !YOSSICO_MONEDA.enUSD() || !factorUSD) return fmtPesos(n);
+      return YOSSICO_MONEDA.fmt(Math.round(n * factorUSD * 100) / 100);
+    }
+    const enIngles = () => typeof YOSSICO_MONEDA !== 'undefined' && YOSSICO_MONEDA.enUSD();
+    // Precio de un producto: en inglés usa su precio exacto en USD
+    function fmtItem(precioCOP, qty) {
+      return enIngles() ? YOSSICO_MONEDA.fmt(YOSSICO_MONEDA.usd(precioCOP) * qty) : fmtPesos(precioCOP * qty);
+    }
+    // En inglés, debajo del total se informa el monto exacto que se cobra en pesos
+    function notaPesos(n) {
+      const el = document.getElementById('ck-cop-note');
+      if (!el) return;
+      const en = typeof YOSSICO_MONEDA !== 'undefined' && YOSSICO_MONEDA.enUSD();
+      el.hidden = !en;
+      el.textContent = en ? `Your payment is processed in Colombian pesos: ${fmtPesos(n)}.` : '';
     }
     function getCart() {
       try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch { return []; }
@@ -198,6 +221,10 @@
 
     function renderCheckout(items) {
       const t = cartTotal(items);
+      if (typeof YOSSICO_MONEDA !== 'undefined' && t > 0) {
+        const tUSD = items.reduce((s, i) => s + YOSSICO_MONEDA.usd(i.price) * i.qty, 0);
+        factorUSD = tUSD / t;
+      }
       document.getElementById('ck-body').innerHTML = `
         <!-- LEFT: order summary -->
         <div class="ck-summary">
@@ -212,8 +239,8 @@
                   <p class="ck-item__meta">${i.line ? esc(i.line) + ' · ' : ''}Talla ${esc(i.size)} · ×${i.qty}</p>
                 </div>
                 <div>
-                  <p class="ck-item__price">${fmtPrice(i.price * i.qty)}</p>
-                  <p class="ck-item__sub">${fmtPrice(i.price)} c/u</p>
+                  <p class="ck-item__price">${fmtItem(i.price, i.qty)}</p>
+                  <p class="ck-item__sub">${fmtItem(i.price, 1)} ${enIngles() ? 'each' : 'c/u'}</p>
                 </div>
               </div>`).join('')}
           </div>
@@ -222,6 +249,7 @@
             <span class="ck-total-label">Total</span>
             <span class="ck-total-value" id="ck-total-display">${fmtPrice(t)}</span>
           </div>
+          <p class="ck-cop-note" id="ck-cop-note" hidden></p>
         </div>
 
         <!-- RIGHT: form -->
@@ -431,6 +459,7 @@
           }
 
           document.getElementById('ck-total-display').textContent = fmtPrice(newTotal) + ` (${labelDesc})`;
+          notaPesos(newTotal);
           msg.style.color = '#27ae60'; 
           msg.textContent = `¡Código aplicado! ${labelDesc}`; 
           msg.style.display = 'block';
@@ -498,10 +527,10 @@
         /* ── 2. Construir URL de WhatsApp (sincrónico) ─────────── */
         let waMsg = 'Hola YOSSICO, quiero confirmar mi pedido:%0A%0A';
         items.forEach(i => {
-          waMsg += `▸ ${i.name} | ${i.line || ''} | Talla ${i.size} | ×${i.qty} | ${fmtPrice(i.price * i.qty)}%0A`;
+          waMsg += `▸ ${i.name} | ${i.line || ''} | Talla ${i.size} | ×${i.qty} | ${fmtPesos(i.price * i.qty)}%0A`;
         });
         if (dcode) waMsg += `%0ACódigo: ${dcode}%0A`;
-        waMsg += `%0A*Total: ${fmtPrice(finalTotal)}*%0A`;
+        waMsg += `%0A*Total: ${fmtPesos(finalTotal)}*%0A`;
         waMsg += `%0ANombre: ${nombre}`;
         if (tel)   waMsg += `%0ATeléfono: ${tel}`;
         waMsg += `%0ACiudad: ${ciudad}`;
@@ -758,6 +787,8 @@
     // hoisting de funciones, se llamaba a sí mismo en bucle y dejaba el checkout vacío.)
     function ckInit() {
       ckRender();
+      const t0 = cartTotal(getCart());
+      if (t0) notaPesos(t0);
       // Esperar un tick para que el DOM del checkout esté listo
       setTimeout(initMetodoPago, 50);
     }

@@ -1083,7 +1083,6 @@
             <li><a href="historia.html">Historia</a></li>
             <li><a href="nosotros.html">Nosotros</a></li>
             <li><a href="contacto.html">Contacto</a></li>
-            
         </ul>
   <div class="nav__actions">
     <a class="cart-icon-btn" id="cart-open" aria-label="Carrito" tabindex="0" role="button">
@@ -3102,6 +3101,25 @@
                 info.appendChild(colorName);
                 pintarColor(card);
             });
+            /* Precio en la moneda visible (USD en inglés). Se guarda el valor en COP la primera vez. */
+            function pintarPrecios() {
+                if (typeof YOSSICO_MONEDA === 'undefined') return;
+                document.querySelectorAll('.product-card__price').forEach(el => {
+                    // Si el texto no es el que pusimos, es un precio en COP nuevo (HTML o Editor Web)
+                    if (el.textContent !== el.dataset.txt) {
+                        const cop = parseInt((el.textContent || '').replace(/[^0-9]/g, ''), 10);
+                        if (!cop) return;
+                        el.dataset.cop = cop;
+                    }
+                    const txt = YOSSICO_MONEDA.fmtCOP(Number(el.dataset.cop));
+                    el.dataset.txt = txt;
+                    if (el.textContent !== txt) el.textContent = txt;
+                });
+            }
+            pintarPrecios();
+            window.addEventListener('load', pintarPrecios);
+            setTimeout(pintarPrecios, 1500);   // por si el Editor Web reescribe las tarjetas
+
             ['click', 'mouseover'].forEach(ev => document.addEventListener(ev, e => {
                 const card = e.target.closest && e.target.closest('#linea-uniformes .product-card');
                 if (card && e.target.closest('.color-swatch')) setTimeout(() => pintarColor(card), 0);

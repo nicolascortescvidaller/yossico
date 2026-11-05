@@ -398,7 +398,7 @@
         var ansModel = '';
         if (/oslo/i.test(q)) {
           ansModel = isEn
-            ? `<strong>Set OSLO ($275,900 COP) — Essentials Line:</strong><br>
+            ? `<strong>Set OSLO ($72 USD) — Essentials Line:</strong><br>
                • <strong>Top:</strong> Contemporary cross V-neck, tailored feminine silhouette.<br>
                • <strong>Pant:</strong> Jogger fit with soft elastic ankle cuffs and 6 tactical pockets for medical instruments.<br>
                • <strong>Colors:</strong> Deep Black, Navy Blue, Surgical Green.`
@@ -409,7 +409,7 @@
                • Confeccionado en tela técnica antifluido 4-way stretch.`;
         } else if (/milan/i.test(q)) {
           ansModel = isEn
-            ? `<strong>Set MILAN ($339,900 COP) — Signature Line:</strong><br>
+            ? `<strong>Set MILAN ($89 USD) — Signature Line:</strong><br>
                • <strong>Top:</strong> Mandarin collar with hidden front zipper and tailored seams.<br>
                • <strong>Pant:</strong> Tailored slim-straight fit with invisible waistband and flush side pockets.<br>
                • YOSSICO's flagship statement piece for an editorial, elevated clinical aesthetic.`
@@ -419,7 +419,7 @@
                • Nuestro diseño insignia para profesionales que buscan un estilo editorial impecable en consulta y clínica.`;
         } else if (/kyoto/i.test(q)) {
           ansModel = isEn
-            ? `<strong>Set KYOTO ($339,900 COP) — Oriental Fluid Line:</strong><br>
+            ? `<strong>Set KYOTO ($89 USD) — Oriental Fluid Line:</strong><br>
                • <strong>Top:</strong> Kimono-inspired wrap silhouette with secure interior tie.<br>
                • <strong>Pant:</strong> Fluid palazzo straight-leg cut for unmatched poise and comfort on long shifts.`
             : `<strong>Set KYOTO ($339.900 COP) — Silueta Envolvente:</strong><br>
@@ -427,7 +427,7 @@
                • <strong>Pantalón:</strong> Bota recta estilo palazzo fluido que aporta porte elegante y máxima frescura en jornadas extensas.`;
         } else if (/lima/i.test(q)) {
           ansModel = isEn
-            ? `<strong>Set LIMA ($275,900 COP) — Relaxed Comfort:</strong><br>
+            ? `<strong>Set LIMA ($72 USD) — Relaxed Comfort:</strong><br>
                • <strong>Top:</strong> Wide scoop neck with reinforced side slits for easy movement.<br>
                • <strong>Pant:</strong> Classic anatomic jogger with soft waistband that won't dig in.`
             : `<strong>Set LIMA ($275.900 COP) — Silueta Relajada:</strong><br>
@@ -435,7 +435,7 @@
                • <strong>Pantalón:</strong> Jogger clásico con pretina anatómica suave que no marca la cintura.`;
         } else if (/bogota|bogotá/i.test(q)) {
           ansModel = isEn
-            ? `<strong>Set BOGOTÁ ($229,900 COP) — Core Line:</strong><br>
+            ? `<strong>Set BOGOTÁ ($60 USD) — Core Line:</strong><br>
                • <strong>Top:</strong> Clean deep V-neck with two spacious lower pockets.<br>
                • <strong>Pant:</strong> Straight classic cut built for high durability on 12h-24h shifts.`
             : `<strong>Set BOGOTÁ ($229.900 COP) — Línea Core:</strong><br>
@@ -458,11 +458,11 @@
       else if (/(modelo|coleccion|colección|conjunto|catalogo|catálogo|prendas|productos)/i.test(q)) {
         var ansColeccion = isEn
           ? `<strong>YOSSICO Medical Collection 2026:</strong><br>
-             • <strong>Set OSLO:</strong> $275,900 COP (Essentials jogger)<br>
-             • <strong>Set MILAN:</strong> $339,900 COP (Signature mandarin collar)<br>
-             • <strong>Set KYOTO:</strong> $339,900 COP (Wrap top & palazzo pant)<br>
-             • <strong>Set LIMA:</strong> $275,900 COP (Relaxed scoop neck)<br>
-             • <strong>Set BOGOTÁ:</strong> $229,900 COP (Core classic straight)`
+             • <strong>Set OSLO:</strong> $72 USD (Essentials jogger)<br>
+             • <strong>Set MILAN:</strong> $89 USD (Signature mandarin collar)<br>
+             • <strong>Set KYOTO:</strong> $89 USD (Wrap top & palazzo pant)<br>
+             • <strong>Set LIMA:</strong> $72 USD (Relaxed scoop neck)<br>
+             • <strong>Set BOGOTÁ:</strong> $60 USD (Core classic straight)`
           : `<strong>Colección de Sets Médicos YOSSICO:</strong><br>
              • <strong>Set OSLO:</strong> $275.900 COP (Línea Essentials · Pantalón jogger con 6 bolsillos)<br>
              • <strong>Set MILAN:</strong> $339.900 COP (Línea Signature · Cuello mao con cremallera oculta)<br>
@@ -519,7 +519,7 @@
         var ansEnvio = isEn
           ? `<strong>Nationwide Shipping & Logistics:</strong><br>
              • <strong>Coverage:</strong> We ship to all municipalities across Colombia via Coordinadora & Servientrega.<br>
-             • <strong>Free Shipping:</strong> On orders equal to or exceeding $300,000 COP.<br>
+             • <strong>Free Shipping:</strong> On orders equal to or exceeding $79 USD.<br>
              • <strong>Delivery Time:</strong> 4 to 10 business days depending on destination city.<br>
              • <strong>Order Tracking:</strong> You can trace your tracking number live on our tracking portal.`
           : `<strong>Envíos y logística nacional:</strong><br>
@@ -537,7 +537,7 @@
       else if (/(precio|costo|cuanto vale|descuento|codigo|código|promocion|promoción|pago|tarjeta|wompi|pse|nequi|cuotas|bancolombia)/i.test(q)) {
         var ansPago = isEn
           ? `<strong>Pricing & Payment Options:</strong><br>
-             • <strong>Scrub Sets:</strong> From $229,900 to $339,900 COP.<br>
+             • <strong>Scrub Sets:</strong> From $60 to $89 USD (charged in Colombian pesos at checkout).<br>
              • <strong>Payment Methods:</strong> Credit and debit cards, PSE, Bancolombia transfer, Nequi, and interest-free installments via Wompi.<br>
              • <strong>Welcome Discount:</strong> By subscribing to DROP 01 you receive 10% off your first purchase.`
           : `<strong>Precios y formas de pago:</strong><br>

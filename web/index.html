@@ -983,23 +983,22 @@
     </a>
 
     <ul class="nav__links">
-      <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
-        <div class="nav__dropdown-menu">
-          <a href="coleccion.html?linea=essentials">Essentials</a>
-          <a href="coleccion.html?linea=signature">Signature</a>
-          <a href="coleccion.html?linea=core">Core</a>
-          <div class="nav__dropdown-divider"></div>
-          <a href="coleccion.html#linea-prive">Privé — Solo Miembros</a>
-          <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
-        </div>
-      </li>
-      <li><a href="prive.html">Privé</a></li>
-      <li><a href="estudiantes.html">Campus</a></li>
-      <li><a href="acronimo.html">El Acrónimo</a></li>
-      <li><a href="historia.html">Historia</a></li>
-      <li><a href="nosotros.html">Nosotros</a></li>
-      <li><a href="contacto.html">Contacto</a></li>
-      
+        <li class="nav__dropdown"><a href="coleccion.html">Colección</a>
+            <div class="nav__dropdown-menu">
+                <a href="coleccion.html?linea=essentials">Essentials</a>
+                <a href="coleccion.html?linea=signature">Signature</a>
+                <a href="coleccion.html?linea=core">Core</a>
+                <div class="nav__dropdown-divider"></div>
+                <a href="coleccion.html#linea-prive">Privé — Solo Miembros</a>
+                <a href="coleccion.html#linea-capas">Capas — Hoodies</a>
+            </div>
+        </li>
+        <li><a href="prive.html">Privé</a></li>
+        <li><a href="estudiantes.html">Campus</a></li>
+        <li><a href="acronimo.html">El Acrónimo</a></li>
+        <li><a href="historia.html">Historia</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
     </ul>
   <div class="nav__actions">
     <a class="cart-icon-btn" id="cart-open" aria-label="Carrito" tabindex="0" role="button">
@@ -1211,7 +1210,7 @@
         const prod = YOSSICO_PRODUCTS[card.dataset.prod];
         if (!prod) return;
         const el = card.querySelector('[data-price]');
-        if (el && prod.price) el.textContent = '$' + prod.price.toLocaleString('es-CO');
+        if (el && prod.price) el.textContent = YOSSICO_MONEDA.fmtCOP(prod.price, YOSSICO_MONEDA.enUSD());
 
         const img = card.querySelector('.destacados__img img');
         const nameEl = card.querySelector('[data-color-name]');
