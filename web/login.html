@@ -28,240 +28,7 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.v2.css?v=111">
-    <style>
-        /* ── Auth Page Layout ──────────────────────────────────── */
-        .auth-page {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: #ffffff;
-        }
-
-        /* Left panel — brand (white) */
-        .auth-panel {
-            background: #f7f7f7;
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 180px 64px 60px 64px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-panel__tag {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 9px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--gray);
-            margin-bottom: 24px;
-        }
-
-        .auth-panel__headline {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: clamp(36px, 4vw, 56px);
-            line-height: 1.1;
-            letter-spacing: -0.5px;
-            color: var(--black);
-            margin-bottom: 28px;
-        }
-
-        .auth-panel__headline em {
-            font-style: italic;
-            color: var(--gray);
-        }
-
-        .auth-panel__sub {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 13px;
-            line-height: 1.9;
-            letter-spacing: 0.5px;
-            color: var(--gray-mid);
-            max-width: 320px;
-        }
-
-        .auth-panel__footer {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: var(--gray);
-        }
-
-        /* Right panel — form */
-        .auth-form-panel {
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 60px 72px;
-        }
-
-        .auth-form-panel__title {
-            font-family: var(--font-display);
-            font-weight: 400;
-            font-size: clamp(24px, 2.5vw, 36px);
-            letter-spacing: -0.3px;
-            color: var(--black);
-            margin-bottom: 8px;
-        }
-
-        .auth-form-panel__sub {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-            color: var(--gray);
-            margin-bottom: 48px;
-        }
-
-        /* Form fields — full border, clean */
-        .auth-field {
-            margin-bottom: 24px;
-        }
-
-        .auth-field__label {
-            display: block;
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 9px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--gray-mid);
-            margin-bottom: 8px;
-        }
-
-        .auth-field__input {
-            width: 100%;
-            background: #ffffff;
-            border: 1px solid var(--border);
-            padding: 12px 14px;
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 14px;
-            color: var(--black);
-            outline: none;
-            transition: border-color 0.2s;
-            box-sizing: border-box;
-        }
-
-        .auth-field__input:focus {
-            border-color: var(--black);
-        }
-
-        .auth-field__input::placeholder {
-            color: var(--gray-light);
-        }
-
-        .auth-field__error {
-            display: block;
-            margin-top: 6px;
-            font-family: var(--font-body);
-            font-size: 10px;
-            color: #c0392b;
-            letter-spacing: 0.3px;
-        }
-
-        .auth-field__hint {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 8px;
-        }
-
-        .auth-field__hint a {
-            font-family: var(--font-body);
-            font-size: 10px;
-            font-weight: 400;
-            color: var(--gray);
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            transition: color 0.2s;
-        }
-
-        .auth-field__hint a:hover {
-            color: var(--black);
-        }
-
-        .auth-remember {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 32px;
-        }
-
-        .auth-remember input[type="checkbox"] {
-            width: 14px;
-            height: 14px;
-            accent-color: var(--black);
-            cursor: pointer;
-        }
-
-        .auth-remember label {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 11px;
-            color: var(--gray-mid);
-            cursor: pointer;
-        }
-
-        .auth-submit {
-            width: 100%;
-            padding: 18px 24px;
-            background: var(--black);
-            color: var(--white);
-            border: none;
-            font-family: var(--font-body);
-            font-weight: 500;
-            font-size: 11px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background 0.2s, opacity 0.2s;
-            margin-bottom: 28px;
-        }
-
-        .auth-submit:hover { background: #333; }
-        .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .auth-switch {
-            font-family: var(--font-body);
-            font-weight: 400;
-            font-size: 11px;
-            color: var(--gray);
-            text-align: center;
-        }
-
-        .auth-switch a {
-            color: var(--black);
-            text-decoration: underline;
-            text-underline-offset: 3px;
-        }
-
-        .auth-alert {
-            padding: 12px 16px;
-            margin-bottom: 24px;
-            font-family: var(--font-body);
-            font-size: 11px;
-            font-weight: 400;
-            border-left: 3px solid;
-            display: none;
-        }
-
-        .auth-alert.error  { border-color: #c0392b; background: #fdf2f2; color: #c0392b; }
-        .auth-alert.success { border-color: #27ae60; background: #f0faf4; color: #1a7a40; }
-        .auth-alert.show   { display: block; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .auth-page { grid-template-columns: 1fr; }
-            .auth-panel { display: none; }
-            .auth-form-panel { padding: 48px 32px; }
-        }
-    </style>
+    <link rel="stylesheet" href="auth.css?v=1">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <script src="/analytics.js" defer></script>
@@ -300,58 +67,57 @@
     <!-- Auth Page -->
     <div class="auth-page">
 
-        <!-- Left: brand panel -->
+        <!-- Izquierda: foto de marca -->
         <div class="auth-panel">
+            <img src="img/hd/oslo_navy_front.webp" class="auth-panel__img" alt="Profesional de la salud con el set OSLO de YOSSICO">
             <div class="auth-panel__body">
                 <p class="auth-panel__tag">Bienvenida de vuelta</p>
-                <h2 class="auth-panel__headline">
-                    Tu uniforme<br>te <em>espera.</em>
-                </h2>
-                <p class="auth-panel__sub">
-                    Accede a tu perfil para ver tus descuentos, gestionar tus datos y estar lista para el próximo drop.
-                </p>
+                <h2 class="auth-panel__headline">Tu uniforme te <em>espera.</em></h2>
+                <p class="auth-panel__sub">Accede a tu perfil para ver tus descuentos, gestionar tus datos y estar lista para el próximo drop.</p>
             </div>
-            <p class="auth-panel__footer">© 2026 YOSSICO · Colombia</p>
         </div>
 
-        <!-- Right: form -->
+        <!-- Derecha: formulario -->
         <div class="auth-form-panel">
-            <h1 class="auth-form-panel__title">Iniciar sesión</h1>
-            <p class="auth-form-panel__sub">Ingresa tus datos para acceder a tu cuenta.</p>
+            <div class="auth-form">
+                <h1 class="auth-form__title">Inicia sesión</h1>
+                <p class="auth-form__sub">Ingresa con tu correo y contraseña para ver tus pedidos y descuentos.</p>
 
-            <div class="auth-alert" id="auth-alert"></div>
+                <div class="auth-alert" id="auth-alert"></div>
 
-            <form id="login-form" novalidate>
-                <div class="auth-field">
-                    <label class="auth-field__label" for="login-email">Correo electrónico</label>
-                    <input class="auth-field__input" id="login-email" type="email" placeholder="tu@correo.com"
-                        autocomplete="email" required>
-                    <span class="auth-field__error" id="err-email"></span>
-                </div>
-
-                <div class="auth-field">
-                    <label class="auth-field__label" for="login-password">Contraseña</label>
-                    <input class="auth-field__input" id="login-password" type="password" placeholder="••••••••"
-                        autocomplete="current-password" required>
-                    <span class="auth-field__error" id="err-password"></span>
-                    <div class="auth-field__hint">
-                        <a href="#" id="forgot-link">¿Olvidaste tu contraseña?</a>
+                <form id="login-form" novalidate>
+                    <div class="auth-field">
+                        <label class="auth-field__label" for="login-email">Correo electrónico</label>
+                        <input class="auth-field__input" id="login-email" type="email" placeholder="tu@correo.com" autocomplete="email" required>
+                        <span class="auth-field__error" id="err-email"></span>
                     </div>
+
+                    <div class="auth-field">
+                        <label class="auth-field__label" for="login-password">Contraseña</label>
+                        <div class="auth-field__wrap">
+                            <input class="auth-field__input" id="login-password" type="password" placeholder="Tu contraseña" autocomplete="current-password" required>
+                            <button type="button" class="auth-eye" data-eye="login-password" aria-label="Mostrar contraseña"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                        </div>
+                        <span class="auth-field__error" id="err-password"></span>
+                        <div class="auth-field__hint"><a href="#" id="forgot-link">¿Olvidaste tu contraseña?</a></div>
+                    </div>
+
+                    <div class="auth-checks">
+                        <label class="auth-check">
+                            <input type="checkbox" id="remember-me" checked>
+                            <span>Recordarme en este dispositivo</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="auth-submit" id="login-btn">Iniciar sesión</button>
+                </form>
+
+                <div class="auth-switch-box">
+                    <p>¿Aún no tienes cuenta?</p>
+                    <a href="registro.html" class="auth-switch-btn">Crea tu cuenta</a>
                 </div>
-
-                <div class="auth-remember">
-                    <input type="checkbox" id="remember-me">
-                    <label for="remember-me">Recordarme en este dispositivo</label>
-                </div>
-
-                <button type="submit" class="auth-submit" id="login-btn">Iniciar sesión</button>
-            </form>
-
-            <p class="auth-switch">
-                ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
-            </p>
+            </div>
         </div>
-
     </div>
 
     <script src="script.js"></script>
@@ -378,9 +144,25 @@
                 errEmail.textContent = '';
                 errPass.textContent = '';
                 alert.className = 'auth-alert';
-                document.getElementById('login-email').style.borderBottomColor = '';
-                document.getElementById('login-password').style.borderBottomColor = '';
+                document.getElementById('login-email').classList.remove('is-error');
+                document.getElementById('login-password').classList.remove('is-error');
             }
+
+            // Mostrar / ocultar contraseña
+            document.querySelectorAll('.auth-eye').forEach(b => b.addEventListener('click', () => {
+                const inp = document.getElementById(b.dataset.eye);
+                const ver = inp.type === 'password';
+                inp.type = ver ? 'text' : 'password';
+                b.setAttribute('aria-label', ver ? 'Ocultar contraseña' : 'Mostrar contraseña');
+            }));
+
+            // Al escribir, se quita el aviso de error de ese campo
+            [['login-email', errEmail], ['login-password', errPass]].forEach(([id, err]) => {
+                document.getElementById(id).addEventListener('input', () => {
+                    document.getElementById(id).classList.remove('is-error');
+                    err.textContent = '';
+                });
+            });
 
             // Forgot password
             document.getElementById('forgot-link').addEventListener('click', async (e) => {
@@ -409,15 +191,16 @@
 
                 let hasError = false;
                 if (!email) {
-                    document.getElementById('login-email').style.borderBottomColor = '#c0392b';
+                    document.getElementById('login-email').classList.add('is-error');
                     errEmail.textContent = 'Ingresa tu correo.';
                     hasError = true;
                 } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    document.getElementById('login-email').classList.add('is-error');
                     errEmail.textContent = 'El correo no es válido.';
                     hasError = true;
                 }
                 if (!password) {
-                    document.getElementById('login-password').style.borderBottomColor = '#c0392b';
+                    document.getElementById('login-password').classList.add('is-error');
                     errPass.textContent = 'Ingresa tu contraseña.';
                     hasError = true;
                 }
