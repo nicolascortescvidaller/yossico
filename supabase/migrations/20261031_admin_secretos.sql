@@ -33,11 +33,12 @@ ALTER TABLE private.admin_secretos ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON private.admin_secretos FROM PUBLIC;
 REVOKE ALL ON private.admin_secretos FROM anon, authenticated;
 
--- Se conserva el PIN actual para no dejar el panel bloqueado.
--- Cámbialo con el paso 2 apenas apliques esta migración.
+-- Se conservan las claves actuales para no dejar el panel bloqueado.
 INSERT INTO private.admin_secretos (clave, hash)
-VALUES ('admin_pin', extensions.crypt('yossico2025', extensions.gen_salt('bf')))
-ON CONFLICT (clave) DO NOTHING;
+VALUES
+  ('admin_pin', extensions.crypt('yossico2025', extensions.gen_salt('bf'))),
+  ('finanzas',  extensions.crypt('Nc1018499182*', extensions.gen_salt('bf')))
+ON CONFLICT (clave) DO UPDATE SET hash = EXCLUDED.hash, updated_at = now();
 
 -- Cambiar una clave: SELECT private.cambiar_secreto('admin_pin', '...');
 CREATE OR REPLACE FUNCTION private.cambiar_secreto(p_clave text, p_valor text)
