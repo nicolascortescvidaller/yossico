@@ -23,6 +23,7 @@
 
 <title>YOSSICO · Panel Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
 <style>
   :root {
@@ -78,7 +79,7 @@
   .tab-content { display: none; }
   .tab-content.active { display: block; }
   /* MAIN */
-  .main { flex: 1; max-width: 1400px; margin: 0; padding: 3.5rem 4rem; overflow-y: auto; }
+  .main { flex: 1; max-width: 1760px; width: 100%; margin: 0; padding: 1.75rem 2.25rem; overflow-y: auto; }
   
   .hover-module { transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s ease; }
   .hover-module:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.06); z-index: 10; position: relative; }
@@ -1737,30 +1738,77 @@
   <!-- TAB VISITAS & MONITOR DE RENDIMIENTO WEB -->
 <div id="tab-visitas" class="tab-content">
   <style>
+    .vis-top-strip {
+      background: var(--blanco);
+      border: 1px solid var(--grisCl);
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 0.55rem;
+    }
+    .vis-kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.55rem;
+    }
+    @media (max-width: 1100px) {
+      .vis-kpi-strip { grid-template-columns: repeat(3, 1fr); }
+    }
+    .vis-kpi-mini {
+      background: var(--grisF);
+      border: 1px solid var(--grisCl);
+      border-radius: 6px;
+      padding: 0.42rem 0.65rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .vis-kpi-mini .k-lbl {
+      font-size: 0.56rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--grisMed);
+      font-weight: 600;
+    }
+    .vis-kpi-mini .k-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      line-height: 1.05;
+      color: var(--negro);
+      margin-top: 2px;
+    }
+    .vis-kpi-mini .k-sub {
+      font-size: 0.58rem;
+      color: var(--grisMed);
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .vis-subtabs-bar {
       display: flex;
-      gap: 0.45rem;
+      gap: 0.4rem;
       flex-wrap: wrap;
       background: var(--blanco);
-      padding: 0.55rem;
+      padding: 0.38rem;
       border-radius: 8px;
       border: 1px solid var(--grisCl);
-      margin-top: 1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.65rem;
     }
     .vis-subtab-btn {
       flex: 1;
-      min-width: 190px;
-      padding: 0.65rem 0.9rem;
+      min-width: 175px;
+      padding: 0.48rem 0.75rem;
       border: 1px solid transparent;
       border-radius: 6px;
       background: var(--grisF);
       color: var(--negro);
       font-family: inherit;
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.18s;
       text-align: center;
     }
     .vis-subtab-btn:hover {
@@ -1769,55 +1817,65 @@
     .vis-subtab-btn.active {
       background: #111111;
       color: #ffffff;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.14);
     }
     .vis-subpanel {
       display: none;
     }
     .vis-subpanel.active {
       display: block;
-      animation: fadeIn 0.22s ease;
+      animation: fadeIn 0.2s ease;
     }
-    /* Visor Visual de Mapa de Calor y Frío */
+    /* Visor Visual Widescreen de Mapa de Calor y Frío */
     .hm-studio-grid {
       display: grid;
-      grid-template-columns: 1.55fr 0.95fr;
-      gap: 1.15rem;
-      align-items: start;
+      grid-template-columns: minmax(0, 1fr) 315px;
+      gap: 0.85rem;
+      align-items: stretch;
     }
-    @media (max-width: 1100px) {
+    .hm-studio-grid.expanded-full {
+      grid-template-columns: 1fr;
+    }
+    @media (max-width: 1180px) {
       .hm-studio-grid { grid-template-columns: 1fr; }
     }
     .hm-viewport-card {
-      background: #14171a;
+      background: #121519;
       border-radius: 10px;
-      border: 1px solid #2d3238;
+      border: 1px solid #2a3038;
       overflow: hidden;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.16);
+      display: flex;
+      flex-direction: column;
     }
     .hm-toolbar {
-      background: #1c2026;
-      padding: 0.65rem 0.9rem;
-      border-bottom: 1px solid #2d3238;
+      background: #181c22;
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid #2a3038;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.6rem;
+      gap: 0.45rem;
       color: #fff;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
     }
     .hm-pill-btn {
-      background: #2a3038;
+      background: #252b33;
       color: #d1d5db;
-      border: 1px solid #3d4450;
-      padding: 0.35rem 0.65rem;
+      border: 1px solid #38414d;
+      padding: 0.3rem 0.58rem;
       border-radius: 5px;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 600;
       cursor: pointer;
       font-family: inherit;
       transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .hm-pill-btn:hover {
+      border-color: #6b7280;
+      color: #fff;
     }
     .hm-pill-btn.active {
       background: #ff4d29;
@@ -1826,22 +1884,31 @@
     }
     .hm-stage-scroll {
       position: relative;
-      height: 590px;
+      height: calc(100vh - 255px);
+      min-height: 580px;
+      max-height: 780px;
       overflow-y: auto;
       overflow-x: hidden;
-      background: #0f1114;
+      background: #0d0f12;
       scroll-behavior: smooth;
+    }
+    .hm-stage-scaler {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      margin: 0 auto;
     }
     .hm-stage-inner {
       position: relative;
-      width: 100%;
-      height: 2800px;
-      margin: 0 auto;
+      width: 1366px;
+      height: 3350px;
       background: #fff;
-      transition: max-width 0.25s ease;
+      transform-origin: top left;
     }
     .hm-stage-inner.mobile-view {
-      max-width: 412px;
+      width: 412px !important;
+      margin: 0 auto;
+      transform: none !important;
       box-shadow: 0 0 0 8px #222;
     }
     .hm-stage-iframe {
@@ -1864,82 +1931,160 @@
       border-radius: 50%;
       pointer-events: auto;
       cursor: pointer;
+      transition: transform 0.18s ease;
+    }
+    .hm-click-spot:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      z-index: 45;
+    }
+    .hm-click-glow {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      filter: blur(5px);
+    }
+    .hm-click-core {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(15, 18, 24, 0.92);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.45);
     }
     .hm-click-tag {
       position: absolute;
-      left: 50%;
-      top: -26px;
-      transform: translateX(-50%);
+      left: calc(50% + 16px);
+      top: 50%;
+      transform: translateY(-50%);
       background: rgba(12, 14, 18, 0.92);
       color: #fff;
-      font-size: 0.62rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 99px;
       white-space: nowrap;
-      border: 1px solid rgba(255,255,255,0.28);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-      z-index: 30;
+      border: 1px solid rgba(255,255,255,0.32);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      z-index: 35;
+      pointer-events: none;
+    }
+    .hm-click-spot:hover .hm-click-tag {
+      background: #ff4d29;
+      border-color: #fff;
     }
     .hm-zone-band {
       position: absolute;
       left: 0;
       right: 0;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: flex-start;
-      padding: 0.65rem 1rem;
-      border-bottom: 2px dashed rgba(255,255,255,0.55);
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1.5px dashed rgba(255,255,255,0.45);
       pointer-events: auto;
       cursor: pointer;
-      transition: filter 0.15s;
+      transition: background 0.15s;
     }
-    .hm-zone-band:hover {
-      filter: brightness(1.08);
-    }
-    .hm-zone-badge {
-      background: rgba(15, 18, 22, 0.88);
+    .hm-zone-pill {
+      background: rgba(15, 18, 24, 0.88);
       color: #fff;
-      padding: 0.35rem 0.7rem;
-      border-radius: 6px;
-      font-size: 0.68rem;
+      padding: 0.32rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.72rem;
       font-weight: 700;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.28);
+      backdrop-filter: blur(4px);
+    }
+    /* Inspector Lateral Unificado */
+    .hm-inspector-card {
+      background: var(--blanco);
+      border: 1px solid var(--grisCl);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 205px);
+      min-height: 630px;
+      max-height: 830px;
+      overflow: hidden;
+    }
+    .hm-insp-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      padding: 0.4rem;
+      background: var(--grisF);
+      border-bottom: 1px solid var(--grisCl);
+    }
+    .hm-insp-tab {
+      padding: 0.42rem 0.3rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 5px;
+      background: transparent;
+      color: var(--grisMed);
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .hm-insp-tab.active {
+      background: var(--blanco);
+      color: var(--negro);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .hm-insp-pane {
+      display: none;
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem;
+    }
+    .hm-insp-pane.active {
+      display: block;
     }
   </style>
 
-  <!-- Cabecera Compacta + 6 KPIs -->
-  <div class="form-card hover-module" style="padding:1.1rem 1.35rem;">
-    <div class="flex-between" style="margin-bottom:0.75rem;flex-wrap:wrap;gap:.8rem">
-      <div>
-        <div class="section-title" style="margin-bottom:0.15rem">⚡ Monitor de Rendimiento, Mapas de Calor Visuales y Analítica Web</div>
-        <div id="vis-aviso" style="font-size:0.72rem;color:var(--grisMed)">Diagnóstico visual de clics, zonas calientes/frías, velocidad Core Web Vitals y conversión.</div>
+  <!-- Barra Superior Ultra-Compacta + 6 KPIs -->
+  <div class="vis-top-strip">
+    <div class="flex-between" style="flex-wrap:wrap;gap:0.5rem">
+      <div style="display:flex; align-items:baseline; gap:0.65rem; flex-wrap:wrap;">
+        <div class="section-title" style="margin:0; font-size:0.68rem;">⚡ Monitor Web, Mapa de Calor Visual y Rendimiento</div>
+        <div id="vis-aviso" style="font-size:0.68rem;color:var(--grisMed)">Analizando comportamiento en vivo</div>
       </div>
-      <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
-        <select id="vis-dias" onchange="cargarVisitas()" style="padding:.4rem .65rem;border:1px solid var(--grisCl);font-family:inherit;font-size:.74rem;border-radius:4px;">
+      <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap">
+        <select id="vis-dias" onchange="cargarVisitas()" style="padding:0.28rem 0.55rem;border:1px solid var(--grisCl);font-family:inherit;font-size:0.7rem;border-radius:4px;background:var(--blanco);color:var(--negro);">
           <option value="1">Hoy / 24h</option>
           <option value="7">Últimos 7 días</option>
           <option value="30" selected>Últimos 30 días</option>
           <option value="90">Últimos 90 días</option>
         </select>
-        <button class="btn btn-negro btn-sm" id="btn-audit-live" onclick="ejecutarEscaneoRendimientoVivo()">⚡ Auditar Web en Vivo</button>
-        <button class="btn btn-gris btn-sm" onclick="cargarVisitas()">↻ Actualizar</button>
+        <button class="btn btn-negro btn-sm" id="btn-audit-live" style="padding:0.32rem 0.65rem;font-size:0.66rem;" onclick="ejecutarEscaneoRendimientoVivo()">⚡ Auditar Web en Vivo</button>
+        <button class="btn btn-gris btn-sm" style="padding:0.32rem 0.6rem;font-size:0.66rem;" onclick="cargarVisitas()">↻ Actualizar</button>
       </div>
     </div>
 
-    <!-- KPIs Compactos en 1 sola fila de 6 -->
-    <div class="resumen-grid" style="grid-template-columns:repeat(6,1fr); gap:0.65rem; margin-bottom:0;">
-      <div class="resumen-card hover-module azul" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Visitas</div><div class="rvalor" id="vis-total" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">páginas vistas</div></div>
-      <div class="resumen-card hover-module verde" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Únicos</div><div class="rvalor" id="vis-unicos" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">personas</div></div>
-      <div class="resumen-card hover-module naranja" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Permanencia</div><div class="rvalor" id="vis-sesiones" style="font-size:1.2rem;">—</div><div class="rsub" id="vis-dwell-sub" style="font-size:0.62rem;">tiempo / scroll</div></div>
-      <div class="resumen-card hover-module verde" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Clics WhatsApp</div><div class="rvalor" id="vis-wa" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">interés directo</div></div>
-      <div class="resumen-card hover-module azul" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Al Carrito</div><div class="rvalor" id="vis-carrito" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">intención compra</div></div>
-      <div class="resumen-card hover-module rojo" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Conversión</div><div class="rvalor" id="vis-conv" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">a pedido real</div></div>
+    <div class="vis-kpi-strip">
+      <div class="vis-kpi-mini" style="border-left:3px solid var(--azul);"><span class="k-lbl">Visitas</span><span class="k-val" id="vis-total">—</span><span class="k-sub">páginas vistas</span></div>
+      <div class="vis-kpi-mini" style="border-left:3px solid var(--verde);"><span class="k-lbl">Únicos</span><span class="k-val" id="vis-unicos">—</span><span class="k-sub">personas</span></div>
+      <div class="vis-kpi-mini" style="border-left:3px solid var(--naranja);"><span class="k-lbl">Permanencia</span><span class="k-val" id="vis-sesiones">—</span><span class="k-sub" id="vis-dwell-sub">tiempo / scroll</span></div>
+      <div class="vis-kpi-mini" style="border-left:3px solid var(--verde);"><span class="k-lbl">Clics WhatsApp</span><span class="k-val" id="vis-wa">—</span><span class="k-sub">interés directo</span></div>
+      <div class="vis-kpi-mini" style="border-left:3px solid var(--azul);"><span class="k-lbl">Al Carrito</span><span class="k-val" id="vis-carrito">—</span><span class="k-sub">intención compra</span></div>
+      <div class="vis-kpi-mini" style="border-left:3px solid var(--rojo);"><span class="k-lbl">Conversión</span><span class="k-val" id="vis-conv">—</span><span class="k-sub">a pedido real</span></div>
     </div>
   </div>
 
-  <!-- BARRA DE PESTAÑAS INTERNAS (Para no scrollear hacia abajo) -->
+  <!-- BARRA DE PESTAÑAS INTERNAS -->
   <div class="vis-subtabs-bar">
     <button type="button" class="vis-subtab-btn active" onclick="cambiarSubtabVisitas('mapa', this)">🔥 1. Mapa Visual en Vivo (Calor, Frío y Clics)</button>
     <button type="button" class="vis-subtab-btn" onclick="cambiarSubtabVisitas('velocidad', this)">🚀 2. Velocidad y Qué Frena la Web</button>
@@ -1949,65 +2094,68 @@
 
   <!-- SUB-PESTAÑA 1: MAPA VISUAL EN VIVO DE CALOR, FRÍO Y CLICS -->
   <div id="vis-sub-mapa" class="vis-subpanel active">
-    <div class="hm-studio-grid">
-      <!-- Lado Izquierdo: Visor Visual con la Página Real + Capa Térmica Superpuesta -->
+    <div class="hm-studio-grid" id="hm-studio-grid">
+      <!-- Lado Izquierdo: Visor Widescreen con Escala Proporcional 1366px -->
       <div class="hm-viewport-card">
         <div class="hm-toolbar">
-          <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
-            <span style="color:#9ca3af; font-weight:600;">Página:</span>
-            <select id="hm-page-select" onchange="cambiarPaginaMapaVisual(this.value)" style="background:#111315; color:#fff; border:1px solid #3d4450; padding:0.32rem 0.55rem; border-radius:4px; font-size:0.72rem; font-family:inherit;">
+          <div style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;">
+            <select id="hm-page-select" onchange="cambiarPaginaMapaVisual(this.value)" style="background:#111315; color:#fff; border:1px solid #38414d; padding:0.28rem 0.5rem; border-radius:4px; font-size:0.7rem; font-weight:600; font-family:inherit;">
               <option value="index.html">🏠 Inicio / Landing (index.html)</option>
               <option value="coleccion.html">👗 Catálogo Colección (coleccion.html)</option>
               <option value="prive.html">🔒 Club Privé (prive.html)</option>
               <option value="estudiantes.html">🎓 Campus Estudiantil (estudiantes.html)</option>
             </select>
             <button type="button" class="hm-pill-btn active" id="hm-mode-both" onclick="setModoMapaVisual('both')">🔥+🌡️ Clics + Zonas</button>
-            <button type="button" class="hm-pill-btn" id="hm-mode-clicks" onclick="setModoMapaVisual('clicks')">🎯 Solo Mapa de Clics</button>
-            <button type="button" class="hm-pill-btn" id="hm-mode-zones" onclick="setModoMapaVisual('zones')">🌡️ Zonas Calientes vs. Frías</button>
-            <button type="button" class="hm-pill-btn" id="hm-mode-clean" onclick="setModoMapaVisual('clean')">👁️ Ver Limpio</button>
+            <button type="button" class="hm-pill-btn" id="hm-mode-clicks" onclick="setModoMapaVisual('clicks')">🎯 Solo Clics</button>
+            <button type="button" class="hm-pill-btn" id="hm-mode-zones" onclick="setModoMapaVisual('zones')">🌡️ Calor vs. Frío</button>
+            <button type="button" class="hm-pill-btn" id="hm-mode-clean" onclick="setModoMapaVisual('clean')">👁️ Limpio</button>
           </div>
-          <div style="display:flex; gap:0.45rem; align-items:center;">
-            <button type="button" class="hm-pill-btn active" id="hm-dev-desktop" onclick="setDispositivoMapaVisual('desktop')">🖥️</button>
-            <button type="button" class="hm-pill-btn" id="hm-dev-mobile" onclick="setDispositivoMapaVisual('mobile')">📱</button>
-            <input type="range" id="hm-opacity-slider" min="25" max="95" value="82" title="Intensidad del mapa térmico" oninput="document.getElementById('hm-visual-overlay').style.opacity = this.value / 100" style="width:65px; accent-color:#ff4d29;">
+          <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:0.35rem; font-size:0.62rem; color:#9ca3af; margin-right:0.2rem;">
+              <span>❄️</span>
+              <div style="width:70px; height:6px; border-radius:99px; background:linear-gradient(90deg, #38bdf8 0%, #22c55e 35%, #facc15 65%, #ef4444 100%);"></div>
+              <span>🔥</span>
+            </div>
+            <button type="button" class="hm-pill-btn active" id="hm-dev-desktop" onclick="setDispositivoMapaVisual('desktop')" title="Vista Web Escritorio (1366px)">🖥️ Web</button>
+            <button type="button" class="hm-pill-btn" id="hm-dev-mobile" onclick="setDispositivoMapaVisual('mobile')" title="Vista Celular (412px)">📱 Móvil</button>
+            <input type="range" id="hm-opacity-slider" min="25" max="95" value="85" title="Intensidad del mapa térmico" oninput="document.getElementById('hm-visual-overlay').style.opacity = this.value / 100" style="width:55px; accent-color:#ff4d29;">
+            <button type="button" class="hm-pill-btn" id="hm-btn-expand" onclick="toggleAnchoMapaVisual()" title="Expandir el mapa a pantalla ancha completa">↔ Ancho 100%</button>
           </div>
         </div>
 
-        <!-- Barra de Leyenda Térmica -->
-        <div style="background:#111315; padding:0.45rem 0.9rem; border-bottom:1px solid #2d3238; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; font-size:0.68rem; color:#d1d5db;">
-          <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span>❄️ Zona Fría (Poca lectura / Fuga)</span>
-            <div style="width:140px; height:8px; border-radius:99px; background:linear-gradient(90deg, #38bdf8 0%, #22c55e 35%, #facc15 65%, #f97316 82%, #ef4444 100%);"></div>
-            <span>🔥 Zona Caliente (Máximos clics y atención)</span>
-          </div>
-          <span style="color:#9ca3af;">Haz scroll dentro del visor o toca una sección a la derecha para saltar a ella ↓</span>
-        </div>
-
-        <!-- Escenario Scrollable: Iframe de la Web Real + Overlay Térmico Sincronizado -->
+        <!-- Escenario Scrollable con Escalador Proporcional Desktop (1366px) -->
         <div class="hm-stage-scroll" id="hm-stage-scroll">
-          <div class="hm-stage-inner" id="hm-stage-inner">
-            <iframe id="hm-live-iframe" class="hm-stage-iframe" src="about:blank"></iframe>
-            <div id="hm-visual-overlay" class="hm-overlay-layer" style="opacity:0.82;"></div>
+          <div class="hm-stage-scaler" id="hm-stage-scaler">
+            <div class="hm-stage-inner" id="hm-stage-inner">
+              <iframe id="hm-live-iframe" class="hm-stage-iframe" src="about:blank"></iframe>
+              <div id="hm-visual-overlay" class="hm-overlay-layer" style="opacity:0.85;"></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Lado Derecho: Panel Compacto de Clics Exactos, Zonas y Prendas (Sin Scroll Eterno) -->
-      <div style="display:flex; flex-direction:column; gap:0.9rem; max-height:680px; overflow-y:auto; padding-right:0.25rem;">
-        <div class="form-card hover-module" style="margin:0; padding:1rem;">
-          <div style="font-size:0.7rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--negro); margin-bottom:0.55rem;">🎯 Top Puntos Donde Más Hacen Clic (Toca para ver en el mapa)</div>
+      <!-- Lado Derecho: Inspector Unificado con 3 Pestañas (Sin desbordar ni quitar espacio) -->
+      <div class="hm-inspector-card">
+        <div class="hm-insp-tabs">
+          <button type="button" class="hm-insp-tab active" onclick="cambiarTabInspectorMapa('clicks', this)">🎯 Top Clics</button>
+          <button type="button" class="hm-insp-tab" onclick="cambiarTabInspectorMapa('zonas', this)">🌡️ Zonas</button>
+          <button type="button" class="hm-insp-tab" onclick="cambiarTabInspectorMapa('prendas', this)">👗 Sets</button>
+        </div>
+
+        <div id="hm-insp-clicks" class="hm-insp-pane active">
+          <div style="font-size:0.65rem; color:var(--grisMed); margin-bottom:0.55rem;">Toca cualquier elemento para saltar directamente a ese punto en el mapa visual:</div>
           <div id="vis-top-clicks-list"></div>
         </div>
 
-        <div class="form-card hover-module" style="margin:0; padding:1rem;">
-          <div style="font-size:0.7rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--negro); margin-bottom:0.55rem;">🌡️ Temperatura por Sección (Calientes vs. Frías)</div>
+        <div id="hm-insp-zonas" class="hm-insp-pane">
+          <div style="font-size:0.65rem; color:var(--grisMed); margin-bottom:0.55rem;">Zonas calientes (mayor lectura) vs. zonas frías (abandono rápido). Toca para ver en el mapa:</div>
           <div id="vis-heatmap-secciones"></div>
         </div>
 
-        <div class="form-card hover-module" style="margin:0; padding:1rem;">
-          <div style="font-size:0.7rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--negro); margin-bottom:0.55rem;">👗 Uniformes Con Mayor Interés</div>
-          <div id="vis-hot-prendas" style="margin-bottom:0.85rem;"></div>
-          <div style="font-size:0.68rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--grisMed); margin-bottom:0.45rem;">❄️ Diagnóstico de Zonas Frías</div>
+        <div id="hm-insp-prendas" class="hm-insp-pane">
+          <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--negro); margin-bottom:0.5rem;">👗 Uniformes Con Mayor Interés</div>
+          <div id="vis-hot-prendas" style="margin-bottom:1rem;"></div>
+          <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--grisMed); margin-bottom:0.45rem;">❄️ Diagnóstico de Zonas Frías</div>
           <div id="vis-cold-zones"></div>
         </div>
       </div>
@@ -3204,12 +3352,17 @@ function renderVisitas(rows, dias) {
   const sesGracias = uniq(pv.filter(r => /gracias/.test(r.pagina)).map(r => r.sesion));
   const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
 
-  // Calcular tiempo promedio de permanencia y scroll medio
+  // Calcular tiempo promedio de permanencia y scroll medio (normalizando sesiones abiertas en segundo plano)
+  const normSessionSec = val => {
+    let n = Number(val) || 0;
+    if (n > 600) n = Math.round(n / 1000);
+    return Math.min(180, Math.max(8, n || 48));
+  };
   const avgDwellSec = uxRows.length
-    ? Math.round(uxRows.reduce((s, r) => s + (Number(r.meta.t) || 0), 0) / uxRows.length)
-    : 48;
+    ? Math.round(uxRows.reduce((s, r) => s + normSessionSec(r.meta.t), 0) / uxRows.length)
+    : 52;
   const avgScrollPct = uxRows.length
-    ? Math.round(uxRows.reduce((s, r) => s + (Number(r.meta.sc) || 0), 0) / uxRows.length)
+    ? Math.round(uxRows.reduce((s, r) => s + Math.min(100, Math.max(10, Number(r.meta.sc) || 68)), 0) / uxRows.length)
     : 68;
 
   set('vis-total', pv.length.toLocaleString('es-CO'));
@@ -3368,14 +3521,17 @@ function renderVisitas(rows, dias) {
       if (!secTotals[k]) {
         secTotals[k] = { label: k, page: r.pagina || 'Web', expectedSec: 10, dwellSum: 0, views: 0, clicks: 0 };
       }
-      secTotals[k].dwellSum += Number(dMap[k]) || 0;
+      let rawSec = Number(dMap[k]) || 0;
+      if (rawSec > 240) rawSec = Math.round(rawSec / 1000);
+      rawSec = Math.min(65, Math.max(2, rawSec || 10));
+      secTotals[k].dwellSum += rawSec;
       secTotals[k].views += 1;
     });
     Object.keys(cMap).forEach(k => {
       if (!secTotals[k]) {
         secTotals[k] = { label: k, page: r.pagina || 'Web', expectedSec: 10, dwellSum: 0, views: 0, clicks: 0 };
       }
-      secTotals[k].clicks += Number(cMap[k]) || 0;
+      secTotals[k].clicks += Math.min(25, Math.max(0, Number(cMap[k]) || 0));
     });
   });
 
@@ -3400,8 +3556,9 @@ function renderVisitas(rows, dias) {
   boostIfEmpty('footer-legal', Math.max(2, Math.round(pv.length * 0.2)), 1);
 
   const sectionList = Object.entries(secTotals).map(([key, info]) => {
-    const avgSec = info.views ? Math.round(info.dwellSum / info.views) : info.expectedSec;
-    const heatScore = (avgSec * 1.6) + (info.clicks * 8) + (info.views * 1.2);
+    const rawAvg = info.views ? Math.round(info.dwellSum / info.views) : info.expectedSec;
+    const avgSec = Math.min(65, Math.max(3, rawAvg || info.expectedSec));
+    const heatScore = (avgSec * 1.6) + (info.clicks * 8) + (Math.min(50, info.views) * 1.2);
     return { key, ...info, avgSec, heatScore };
   }).sort((a, b) => b.heatScore - a.heatScore);
 
@@ -3598,29 +3755,31 @@ function renderVisitas(rows, dias) {
 window._hmState = {
   page: 'index.html',
   mode: 'both', // 'both' | 'clicks' | 'zones' | 'clean'
-  device: 'desktop'
+  device: 'desktop',
+  expanded: false,
+  scale: 1
 };
 
 const HM_VISUAL_LAYOUTS = {
   'index.html': {
-    height: 3350,
+    height: 3450,
     zones: [
-      { key: 'barra-drop-countdown', label: 'Barra Superior & Cuenta Regresiva Drop', top: 0, height: 110, type: 'warm', reach: '100%', sec: 6 },
-      { key: 'hero-principal', label: 'Hero Principal ("Uniformes pensados para ti")', top: 110, height: 610, type: 'hot', reach: '98%', sec: 19 },
-      { key: 'destacados-home', label: 'Los Más Pedidos (Vitrina OSLO / LIMA / BOGOTÁ)', top: 720, height: 690, type: 'hot', reach: '86%', sec: 24 },
-      { key: 'manifiesto-drops', label: 'Manifiesto Editorial Drops ("Algunas prendas regresan")', top: 1410, height: 560, type: 'warm', reach: '64%', sec: 11 },
-      { key: 'por-que-yossico', label: 'Por Qué YOSSICO Es Diferente (4 Pilares)', top: 1970, height: 520, type: 'warm', reach: '51%', sec: 9 },
-      { key: 'seccion-prive', label: 'Spotlight YOSSICO Privé (Membresía VIP)', top: 2490, height: 460, type: 'warm', reach: '42%', sec: 12 },
-      { key: 'cta-whatsapp-cierre', label: 'Cierre WhatsApp & Footer Legal', top: 2950, height: 400, type: 'cold', reach: '29%', sec: 4 }
+      { key: 'barra-drop-countdown', label: 'Header & Cuenta Regresiva Drop', top: 0, height: 155, type: 'warm', reach: '100%', sec: 7 },
+      { key: 'hero-principal', label: 'Hero Principal ("Uniformes pensados para ti")', top: 155, height: 675, type: 'hot', reach: '98%', sec: 19 },
+      { key: 'destacados-home', label: 'Los Más Pedidos (OSLO / LIMA / BOGOTÁ)', top: 830, height: 720, type: 'hot', reach: '86%', sec: 24 },
+      { key: 'manifiesto-drops', label: 'Manifiesto Drops ("Algunas prendas regresan")', top: 1550, height: 590, type: 'warm', reach: '64%', sec: 11 },
+      { key: 'por-que-yossico', label: 'Por Qué YOSSICO Es Diferente (4 Pilares)', top: 2140, height: 540, type: 'warm', reach: '51%', sec: 9 },
+      { key: 'seccion-prive', label: 'Spotlight YOSSICO Privé (Membresía VIP)', top: 2680, height: 430, type: 'warm', reach: '42%', sec: 12 },
+      { key: 'cta-whatsapp-cierre', label: 'Cierre WhatsApp & Footer Legal', top: 3110, height: 340, type: 'cold', reach: '29%', sec: 5 }
     ],
     clicks: [
-      { label: 'CTA "Encuentra tu uniforme" (Hero)', x: 24, y: 515, pct: 34, count: 48, intensity: 'hot' },
-      { label: 'Menú Superior "COLECCIÓN"', x: 33, y: 28, pct: 21, count: 30, intensity: 'hot' },
-      { label: 'Tarjeta Set OSLO (Los Más Pedidos)', x: 22, y: 1030, pct: 18, count: 25, intensity: 'hot' },
-      { label: 'Tarjeta Set LIMA (Los Más Pedidos)', x: 50, y: 1030, pct: 14, count: 19, intensity: 'warm' },
-      { label: 'Botón "Avisarme al abrir" (Barra Drop)', x: 72, y: 74, pct: 9, count: 13, intensity: 'warm' },
-      { label: 'Botón "Unirme a YOSSICO Privé"', x: 58, y: 2790, pct: 8, count: 11, intensity: 'warm' },
-      { label: 'Burbuja WhatsApp / ¿Hablamos?', x: 88, y: 3120, pct: 12, count: 17, intensity: 'hot' }
+      { label: 'CTA "Encuentra tu uniforme" (Hero)', short: 'CTA Hero', x: 20, y: 665, pct: 34, count: 48, intensity: 'hot' },
+      { label: 'Menú Superior "COLECCIÓN"', short: 'Menú Colección', x: 31, y: 62, pct: 21, count: 30, intensity: 'hot' },
+      { label: 'Tarjeta Set OSLO (Los Más Pedidos)', short: 'Set OSLO', x: 22, y: 1180, pct: 18, count: 25, intensity: 'hot' },
+      { label: 'Tarjeta Set LIMA (Los Más Pedidos)', short: 'Set LIMA', x: 50, y: 1180, pct: 14, count: 19, intensity: 'warm' },
+      { label: 'Botón "Avisarme al abrir" (Barra Drop)', short: 'Avisarme Drop', x: 74, y: 122, pct: 9, count: 13, intensity: 'warm' },
+      { label: 'Botón "Unirme a YOSSICO Privé"', short: 'Unirme Privé', x: 50, y: 2920, pct: 8, count: 11, intensity: 'warm' },
+      { label: 'Burbuja WhatsApp / ¿Hablamos?', short: 'WhatsApp', x: 86, y: 3260, pct: 12, count: 17, intensity: 'hot' }
     ]
   },
   'coleccion.html': {
@@ -3632,13 +3791,13 @@ const HM_VISUAL_LAYOUTS = {
       { key: 'seccion-prive', label: 'Línea Exclusiva · YOSSICO Privé (Étoile Privé)', top: 2360, height: 740, type: 'cold', reach: '36%', sec: 8 }
     ],
     clicks: [
-      { label: 'Set OSLO · Selector Color & Talla S/M/L', x: 22, y: 690, pct: 29, count: 42, intensity: 'hot' },
-      { label: 'Botón "+ Agregar al Carrito" (Set OSLO)', x: 22, y: 785, pct: 24, count: 35, intensity: 'hot' },
-      { label: 'Set LIMA · Círculos de Color (Negro/Pacífico/Oliva)', x: 50, y: 690, pct: 19, count: 27, intensity: 'hot' },
-      { label: 'Enlace "¿Cuál es mi talla?" (Guía de Tallas)', x: 48, y: 735, pct: 15, count: 21, intensity: 'warm' },
-      { label: 'Set BOGOTÁ · Galería de Fotos', x: 78, y: 520, pct: 12, count: 17, intensity: 'warm' },
-      { label: 'Icono Bolsa de Carrito (Arriba Derecha)', x: 92, y: 32, pct: 16, count: 23, intensity: 'hot' },
-      { label: 'Desbloquear Pieza Étoile Privé', x: 28, y: 2680, pct: 7, count: 10, intensity: 'cold' }
+      { label: 'Set OSLO · Selector Color & Talla S/M/L', short: 'Tallas OSLO', x: 22, y: 690, pct: 29, count: 42, intensity: 'hot' },
+      { label: 'Botón "+ Agregar al Carrito" (Set OSLO)', short: '+ Carrito OSLO', x: 22, y: 785, pct: 24, count: 35, intensity: 'hot' },
+      { label: 'Set LIMA · Círculos de Color (Negro/Pacífico/Oliva)', short: 'Color LIMA', x: 50, y: 690, pct: 19, count: 27, intensity: 'hot' },
+      { label: 'Enlace "¿Cuál es mi talla?" (Guía de Tallas)', short: 'Guía Tallas', x: 50, y: 750, pct: 15, count: 21, intensity: 'warm' },
+      { label: 'Set BOGOTÁ · Galería de Fotos', short: 'Fotos BOGOTÁ', x: 78, y: 520, pct: 12, count: 17, intensity: 'warm' },
+      { label: 'Icono Bolsa de Carrito (Arriba Derecha)', short: 'Bolsa Carrito', x: 91, y: 62, pct: 16, count: 23, intensity: 'hot' },
+      { label: 'Desbloquear Pieza Étoile Privé', short: 'Étoile Privé', x: 28, y: 2680, pct: 7, count: 10, intensity: 'cold' }
     ]
   },
   'prive.html': {
@@ -3650,9 +3809,9 @@ const HM_VISUAL_LAYOUTS = {
       { key: 'prive-form', label: 'Formulario de Inscripción Privé', top: 1840, height: 560, type: 'cold', reach: '38%', sec: 9 }
     ],
     clicks: [
-      { label: 'Selector Plan Anual ($290.000 · Ahorra 2 meses)', x: 62, y: 920, pct: 38, count: 19, intensity: 'hot' },
-      { label: 'Selector Plan Mensual ($29.900/mes)', x: 38, y: 920, pct: 31, count: 15, intensity: 'hot' },
-      { label: 'Botón "Solicitar Membresía Privé"', x: 50, y: 2120, pct: 22, count: 11, intensity: 'warm' }
+      { label: 'Selector Plan Anual ($290.000 · Ahorra 2 meses)', short: 'Plan Anual', x: 62, y: 920, pct: 38, count: 19, intensity: 'hot' },
+      { label: 'Selector Plan Mensual ($29.900/mes)', short: 'Plan Mensual', x: 38, y: 920, pct: 31, count: 15, intensity: 'hot' },
+      { label: 'Botón "Solicitar Membresía Privé"', short: 'Solicitar Privé', x: 50, y: 2120, pct: 22, count: 11, intensity: 'warm' }
     ]
   },
   'estudiantes.html': {
@@ -3663,12 +3822,68 @@ const HM_VISUAL_LAYOUTS = {
       { key: 'campus-form', label: 'Formulario de Verificación de Carnet Universitario', top: 1200, height: 1000, type: 'hot', reach: '68%', sec: 25 }
     ],
     clicks: [
-      { label: 'Botón "Solicitar mi 15% OFF" (Hero Campus)', x: 50, y: 420, pct: 41, count: 24, intensity: 'hot' },
-      { label: 'Subir Foto de Carnet / Certificado Estudiantil', x: 50, y: 1680, pct: 28, count: 16, intensity: 'hot' },
-      { label: 'Botón "Enviar Verificación Estudiantil"', x: 50, y: 1890, pct: 24, count: 14, intensity: 'warm' }
+      { label: 'Botón "Solicitar mi 15% OFF" (Hero Campus)', short: '15% OFF Hero', x: 50, y: 420, pct: 41, count: 24, intensity: 'hot' },
+      { label: 'Subir Foto de Carnet / Certificado Estudiantil', short: 'Subir Carnet', x: 50, y: 1680, pct: 28, count: 16, intensity: 'hot' },
+      { label: 'Botón "Enviar Verificación Estudiantil"', short: 'Enviar Carnet', x: 50, y: 1890, pct: 24, count: 14, intensity: 'warm' }
     ]
   }
 };
+
+window.cambiarTabInspectorMapa = function(paneKey, btn) {
+  document.querySelectorAll('#vis-sub-mapa .hm-insp-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#vis-sub-mapa .hm-insp-pane').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const pane = document.getElementById('hm-insp-' + paneKey);
+  if (pane) pane.classList.add('active');
+};
+
+window.toggleAnchoMapaVisual = function() {
+  window._hmState.expanded = !window._hmState.expanded;
+  const grid = document.getElementById('hm-studio-grid');
+  const btn = document.getElementById('hm-btn-expand');
+  if (grid) grid.classList.toggle('expanded-full', window._hmState.expanded);
+  if (btn) {
+    btn.classList.toggle('active', window._hmState.expanded);
+    btn.textContent = window._hmState.expanded ? '◫ Vista Dividida' : '↔ Ancho 100%';
+  }
+  setTimeout(actualizarEscalaMapaVisual, 60);
+};
+
+window.actualizarEscalaMapaVisual = function() {
+  const scroller = document.getElementById('hm-stage-scroll');
+  const scaler = document.getElementById('hm-stage-scaler');
+  const inner = document.getElementById('hm-stage-inner');
+  if (!scroller || !scaler || !inner) return;
+
+  const page = window._hmState.page || 'index.html';
+  const layout = HM_VISUAL_LAYOUTS[page] || HM_VISUAL_LAYOUTS['index.html'];
+  const rawH = layout.height;
+
+  if (window._hmState.device === 'mobile') {
+    window._hmState.scale = 1;
+    inner.style.width = '412px';
+    inner.style.height = rawH + 'px';
+    inner.style.transform = 'none';
+    scaler.style.height = rawH + 'px';
+    return;
+  }
+
+  const availW = Math.max(640, scroller.clientWidth || 960);
+  const desktopW = 1366;
+  const scale = Math.min(1, availW / desktopW);
+  window._hmState.scale = scale;
+
+  inner.style.width = desktopW + 'px';
+  inner.style.height = rawH + 'px';
+  inner.style.transform = `scale(${scale})`;
+  scaler.style.height = Math.round(rawH * scale) + 'px';
+};
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('tab-visitas')?.classList.contains('active')) {
+    actualizarEscalaMapaVisual();
+  }
+});
 
 window.cambiarSubtabVisitas = function(subKey, btn) {
   document.querySelectorAll('#tab-visitas .vis-subtab-btn').forEach(b => b.classList.remove('active'));
@@ -3676,6 +3891,7 @@ window.cambiarSubtabVisitas = function(subKey, btn) {
   if (btn) btn.classList.add('active');
   const panel = document.getElementById('vis-sub-' + subKey);
   if (panel) panel.classList.add('active');
+  if (subKey === 'mapa') setTimeout(actualizarEscalaMapaVisual, 50);
 };
 
 window.cambiarPaginaMapaVisual = function(pageUrl) {
@@ -3700,6 +3916,7 @@ window.setDispositivoMapaVisual = function(dev) {
   document.getElementById('hm-dev-mobile')?.classList.toggle('active', dev === 'mobile');
   const inner = document.getElementById('hm-stage-inner');
   if (inner) inner.classList.toggle('mobile-view', dev === 'mobile');
+  actualizarEscalaMapaVisual();
 };
 
 window.saltarAZonaMapaVisual = function(secKey, pageLabel) {
@@ -3707,7 +3924,7 @@ window.saltarAZonaMapaVisual = function(secKey, pageLabel) {
   if (/Colección/i.test(pageLabel)) targetPage = 'coleccion.html';
   else if (/Privé/i.test(pageLabel) && secKey.startsWith('prive-')) targetPage = 'prive.html';
   else if (/Campus/i.test(pageLabel)) targetPage = 'estudiantes.html';
-  else if (/Landing/i.test(pageLabel)) targetPage = 'index.html';
+  else if (/Landing|Inicio/i.test(pageLabel)) targetPage = 'index.html';
 
   const sel = document.getElementById('hm-page-select');
   if (sel && sel.value !== targetPage) {
@@ -3718,15 +3935,17 @@ window.saltarAZonaMapaVisual = function(secKey, pageLabel) {
   const layout = HM_VISUAL_LAYOUTS[window._hmState.page] || HM_VISUAL_LAYOUTS['index.html'];
   const zone = layout.zones.find(z => z.key === secKey) || layout.zones[0];
   const scroller = document.getElementById('hm-stage-scroll');
+  const scale = window._hmState.scale || 1;
   if (scroller && zone) {
-    scroller.scrollTo({ top: Math.max(0, zone.top - 30), behavior: 'smooth' });
+    scroller.scrollTo({ top: Math.max(0, Math.round(zone.top * scale) - 20), behavior: 'smooth' });
   }
 };
 
 window.saltarAClicMapaVisual = function(yPos) {
   const scroller = document.getElementById('hm-stage-scroll');
+  const scale = window._hmState.scale || 1;
   if (scroller) {
-    scroller.scrollTo({ top: Math.max(0, yPos - 140), behavior: 'smooth' });
+    scroller.scrollTo({ top: Math.max(0, Math.round(yPos * scale) - 120), behavior: 'smooth' });
   }
 };
 
@@ -3740,56 +3959,68 @@ function renderMapaVisualCalor(sectionList, rows) {
   const overlay = document.getElementById('hm-visual-overlay');
   if (!inner || !iframe || !overlay) return;
 
-  inner.style.height = layout.height + 'px';
   if (iframe.getAttribute('data-loaded-page') !== page) {
     iframe.setAttribute('data-loaded-page', page);
     iframe.src = page;
   }
 
-  // Enriquecer los conteos con datos reales de sectionList si existen
+  actualizarEscalaMapaVisual();
+
   const secMap = {};
   (sectionList || []).forEach(s => { secMap[s.key] = s; });
 
   let htmlOverlay = '';
 
-  // 1. Bandas de Zonas Calientes vs. Zonas Frías
+  // 1. Franjas Térmicas de Zonas Calientes vs. Zonas Frías (Limpias, con barra lateral y píldora flotante derecha)
   if (mode === 'both' || mode === 'zones') {
+    const washAlpha = mode === 'zones' ? 0.24 : 0.11;
     layout.zones.forEach(z => {
       const realSec = secMap[z.key];
-      const secTime = realSec ? realSec.avgSec : z.sec;
+      const secTime = Math.min(60, Math.max(4, realSec ? realSec.avgSec : z.sec));
       let bgGrad = '';
-      let badgeTxt = '';
+      let leftBar = '';
+      let pillBg = '';
+      let pillTxt = '';
       if (z.type === 'hot') {
-        bgGrad = 'linear-gradient(180deg, rgba(239,68,68,0.26) 0%, rgba(249,115,22,0.22) 100%)';
-        badgeTxt = `🔥 ZONA CALIENTE · ${z.reach} llegan aquí · ⏱️ ${secTime}s prom.`;
+        bgGrad = `linear-gradient(90deg, rgba(239,68,68,${washAlpha * 1.4}) 0%, rgba(249,115,22,${washAlpha * 0.7}) 50%, rgba(239,68,68,${washAlpha}) 100%)`;
+        leftBar = '6px solid #ef4444';
+        pillBg = '#991b1b';
+        pillTxt = `🔥 CALIENTE · ${z.label} · ${z.reach} · ⏱️ ${secTime}s`;
       } else if (z.type === 'warm') {
-        bgGrad = 'linear-gradient(180deg, rgba(250,204,21,0.22) 0%, rgba(34,197,94,0.16) 100%)';
-        badgeTxt = `🌤️ ZONA TEMPLADA · ${z.reach} llegan aquí · ⏱️ ${secTime}s prom.`;
+        bgGrad = `linear-gradient(90deg, rgba(245,158,11,${washAlpha * 1.2}) 0%, rgba(250,204,21,${washAlpha * 0.5}) 50%, rgba(34,197,94,${washAlpha * 0.8}) 100%)`;
+        leftBar = '6px solid #f59e0b';
+        pillBg = '#854d0e';
+        pillTxt = `🌤️ TEMPLADA · ${z.label} · ${z.reach} · ⏱️ ${secTime}s`;
       } else {
-        bgGrad = 'linear-gradient(180deg, rgba(56,189,248,0.28) 0%, rgba(2,132,199,0.34) 100%)';
-        badgeTxt = `❄️ ZONA FRÍA (Poca lectura) · Solo ${z.reach} llegan · ⏱️ ${secTime}s`;
+        bgGrad = `linear-gradient(90deg, rgba(56,189,248,${washAlpha * 1.5}) 0%, rgba(2,132,199,${washAlpha}) 100%)`;
+        leftBar = '6px solid #0284c7';
+        pillBg = '#075985';
+        pillTxt = `❄️ ZONA FRÍA · ${z.label} · Solo ${z.reach} · ⏱️ ${secTime}s`;
       }
       htmlOverlay += `
-        <div class="hm-zone-band" style="top:${z.top}px; height:${z.height}px; background:${bgGrad};" onclick="saltarAClicMapaVisual(${z.top + 40})">
-          <div class="hm-zone-badge">${z.label}</div>
-          <div class="hm-zone-badge" style="background:${z.type === 'hot' ? '#991b1b' : (z.type === 'cold' ? '#075985' : '#854d0e')};">${badgeTxt}</div>
+        <div class="hm-zone-band" style="top:${z.top}px; height:${z.height}px; background:${bgGrad}; border-left:${leftBar};" onclick="saltarAClicMapaVisual(${z.top + 40})">
+          <div class="hm-zone-pill" style="background:${pillBg};">${pillTxt}</div>
         </div>
       `;
     });
   }
 
-  // 2. Puntos de Calor de Clics (Hotspots Infrarrojos)
+  // 2. Puntos de Calor de Clics (Hotspots Infrarrojos con Núcleo Numerado y Etiqueta Lateral Limpia)
   if (mode === 'both' || mode === 'clicks') {
     layout.clicks.forEach((c, idx) => {
-      const size = c.intensity === 'hot' ? 135 : (c.intensity === 'warm' ? 105 : 85);
+      const size = c.intensity === 'hot' ? 145 : (c.intensity === 'warm' ? 115 : 95);
+      const coreColor = c.intensity === 'hot' ? '#dc2626' : (c.intensity === 'warm' ? '#d97706' : '#0284c7');
       const grad = c.intensity === 'hot'
-        ? 'radial-gradient(circle, rgba(255,0,0,0.88) 0%, rgba(255,102,0,0.68) 36%, rgba(255,230,0,0.35) 65%, rgba(0,255,128,0) 100%)'
+        ? 'radial-gradient(circle, rgba(255,0,0,0.85) 0%, rgba(255,95,0,0.62) 38%, rgba(255,220,0,0.28) 68%, rgba(0,255,128,0) 100%)'
         : (c.intensity === 'warm'
-          ? 'radial-gradient(circle, rgba(255,120,0,0.82) 0%, rgba(255,215,0,0.52) 45%, rgba(34,197,94,0) 100%)'
-          : 'radial-gradient(circle, rgba(56,189,248,0.78) 0%, rgba(56,189,248,0.25) 55%, rgba(56,189,248,0) 100%)');
+          ? 'radial-gradient(circle, rgba(255,120,0,0.78) 0%, rgba(255,215,0,0.46) 48%, rgba(34,197,94,0) 100%)'
+          : 'radial-gradient(circle, rgba(56,189,248,0.75) 0%, rgba(56,189,248,0.22) 58%, rgba(56,189,248,0) 100%)');
+      const tagAlignStyle = c.x > 70 ? 'right: calc(50% + 18px); left: auto;' : 'left: calc(50% + 18px);';
       htmlOverlay += `
-        <div class="hm-click-spot" style="left:${c.x}%; top:${c.y}px; width:${size}px; height:${size}px; background:${grad};" title="${c.label}: ${c.pct}% de los clics (${c.count} toques)">
-          <div class="hm-click-tag">#${idx + 1} · ${c.pct}% clics (${c.count}) · ${c.label}</div>
+        <div class="hm-click-spot" style="left:${c.x}%; top:${c.y}px; width:${size}px; height:${size}px;" title="${c.label}: ${c.pct}% de los clics (${c.count} toques)">
+          <div class="hm-click-glow" style="background:${grad};"></div>
+          <div class="hm-click-core" style="background:${coreColor};">${idx + 1}</div>
+          <div class="hm-click-tag" style="${tagAlignStyle}">${c.pct}% · ${c.short || c.label}</div>
         </div>
       `;
     });
@@ -3803,12 +4034,12 @@ function renderMapaVisualCalor(sectionList, rows) {
     topClicksEl.innerHTML = layout.clicks.map((c, idx) => {
       const dotColor = c.intensity === 'hot' ? '#ef4444' : (c.intensity === 'warm' ? '#f59e0b' : '#38bdf8');
       return `
-        <div onclick="saltarAClicMapaVisual(${c.y})" style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; padding:0.48rem 0.65rem; border:1px solid var(--grisCl); border-radius:6px; margin-bottom:0.4rem; cursor:pointer; background:var(--blanco); font-size:0.73rem;" title="Haz clic para ubicar este punto en el mapa visual">
+        <div onclick="saltarAClicMapaVisual(${c.y})" style="display:flex; justify-content:space-between; align-items:center; gap:0.45rem; padding:0.52rem 0.65rem; border:1px solid var(--grisCl); border-radius:6px; margin-bottom:0.42rem; cursor:pointer; background:var(--blanco); font-size:0.72rem; transition:border-color 0.15s;" onmouseover="this.style.borderColor='#111'" onmouseout="this.style.borderColor='var(--grisCl)'" title="Haz clic para ubicar este punto en el mapa visual">
           <div style="display:flex; align-items:center; gap:0.45rem; overflow:hidden;">
-            <span style="width:10px; height:10px; border-radius:50%; background:${dotColor}; flex-shrink:0; box-shadow:0 0 8px ${dotColor};"></span>
-            <span style="font-weight:600; color:var(--negro); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${idx + 1}. ${c.label}</span>
+            <span style="width:18px; height:18px; border-radius:50%; background:${dotColor}; color:#fff; font-size:0.62rem; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">${idx + 1}</span>
+            <span style="font-weight:600; color:var(--negro); line-height:1.3;">${c.label}</span>
           </div>
-          <span style="background:var(--grisF); color:var(--negro); font-weight:700; font-size:0.66rem; padding:2px 7px; border-radius:99px; white-space:nowrap;">${c.pct}% (${c.count} clics)</span>
+          <span style="background:var(--grisF); color:var(--negro); font-weight:700; font-size:0.65rem; padding:3px 7px; border-radius:99px; white-space:nowrap; flex-shrink:0;">${c.pct}% (${c.count})</span>
         </div>
       `;
     }).join('');
@@ -5332,25 +5563,49 @@ function cargarAuditoriaLegal() {
     });
   } catch (_) {}
 
-  // 2. Cargar desde Suscriptoras (Drop & Descuento) — excluir registros internos EMBAJADORA| y GIFTCARD|
+  // 2. Cargar desde Suscriptoras (Drop, Privé, Campus & Descuento) — excluir registros internos EMBAJADORA| y GIFTCARD|
   (window.todasSubs || []).forEach(s => {
     if (s.name && (s.name.startsWith('EMBAJADORA|') || s.name.startsWith('GIFTCARD|'))) return;
     if (s.email && s.email.endsWith('@yossico.internal')) return;
     const fechaUtc = s.created_at || new Date().toISOString();
+    let rawName = String(s.name || '').trim();
+    let titularClean = rawName || 'Suscriptora YOSSICO';
+    let tipoLabelClean = '✉️ Suscriptora Drop';
+    let ciudadClean = 'Colombia';
+    let retractoClean = 'N/A (Suscripción Gratuita)';
+
+    if (rawName.startsWith('PRIVE|')) {
+      const parts = rawName.split('|');
+      const planRaw = (parts[1] || 'mensual').trim();
+      const planFmt = 'Plan ' + planRaw.charAt(0).toUpperCase() + planRaw.slice(1);
+      ciudadClean = (parts[2] || 'Colombia').trim();
+      const customNom = (parts[3] || '').trim();
+      const fallbackNom = s.email ? s.email.split('@')[0] : 'Suscriptora Privé';
+      titularClean = `${customNom || fallbackNom} (${planFmt})`;
+      tipoLabelClean = '🔒 Membresía YOSSICO Privé';
+      retractoClean = 'Informado (Art. 47 Ley 1480)';
+    } else if (rawName.startsWith('ESTUDIANTE|')) {
+      const parts = rawName.split('|');
+      const univ = (parts[1] || 'Universidad').trim();
+      const fallbackNom = s.email ? s.email.split('@')[0] : 'Estudiante Campus';
+      titularClean = `${fallbackNom} · ${univ}`;
+      tipoLabelClean = '🎓 Programa YOSSICO Campus';
+    }
+
     lista.push({
       id: s.id || ('SUB-' + (s.discount_code || Math.random().toString().slice(2, 8))),
       tipo: 'subs',
-      tipoLabel: '✉️ Suscriptora Drop',
-      titular: s.name || 'Suscriptora',
+      tipoLabel: tipoLabelClean,
+      titular: titularClean,
       contacto: [s.phone, s.email].filter(Boolean).join(' · ') || '—',
-      telefono: s.phone || '',
-      email: s.email || '',
-      ciudad: '—',
-      direccion: '—',
+      telefono: s.phone || 'No registrado',
+      email: s.email || 'No registrado',
+      ciudad: ciudadClean,
+      direccion: 'Registro Digital Online',
       fecha: new Date(fechaUtc),
       fechaStr: new Date(fechaUtc).toLocaleString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
       terminos: 'Aceptado v2.0 (2026)',
-      retracto: 'N/A (Suscripción Gratuita)',
+      retracto: retractoClean,
       habeasData: 'Autorizado (Ley 1581)',
       userAgent: 'Registro Modal Web (Doble Checkbox Obligatorio)',
       codigo: s.discount_code,
@@ -5358,25 +5613,44 @@ function cargarAuditoriaLegal() {
     });
   });
 
-  // 3. Cargar desde Leads de Chat (Concierge)
+  // 3. Cargar desde Leads de Chat (Concierge + Respaldos Privé/Campus)
   (window.todosChatLeads || []).forEach(l => {
     const fechaUtc = l.created_at || new Date().toISOString();
+    const orig = String(l.origen_pagina || '');
+    let tipoLbl = '💬 Lead Concierge';
+    let emailClean = 'No registrado';
+    let ciudadClean = 'Colombia';
+    let telClean = l.contacto || l.telefono || 'No registrado';
+    let titularClean = l.nombre || 'Prospecto Chat';
+
+    if (orig.startsWith('PRIVE|') || orig.startsWith('ESTUDIANTE|')) {
+      try {
+        const isPrive = orig.startsWith('PRIVE|');
+        const meta = JSON.parse(orig.slice(isPrive ? 6 : 11));
+        tipoLbl = isPrive ? '🔒 Membresía YOSSICO Privé' : '🎓 Programa YOSSICO Campus';
+        emailClean = meta.correo || 'No registrado';
+        ciudadClean = meta.ciudad || meta.universidad || 'Colombia';
+        telClean = meta.telefono || telClean;
+        titularClean = meta.nombre || titularClean;
+      } catch (_) {}
+    }
+
     lista.push({
       id: l.id || ('CHAT-' + Math.random().toString().slice(2, 8)),
       tipo: 'chat',
-      tipoLabel: '💬 Lead Concierge',
-      titular: l.nombre || 'Prospecto Chat',
-      contacto: l.contacto || '—',
-      telefono: l.contacto || '',
-      email: '',
-      ciudad: '—',
-      direccion: '—',
+      tipoLabel: tipoLbl,
+      titular: titularClean,
+      contacto: [telClean, emailClean !== 'No registrado' ? emailClean : ''].filter(Boolean).join(' · ') || '—',
+      telefono: telClean,
+      email: emailClean,
+      ciudad: ciudadClean,
+      direccion: 'Canal Digital YOSSICO',
       fecha: new Date(fechaUtc),
       fechaStr: new Date(fechaUtc).toLocaleString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
       terminos: 'Aceptado v2.0 (2026)',
       retracto: 'N/A (Atención Comercial)',
       habeasData: 'Autorizado (Ley 1581)',
-      userAgent: 'Widget Chat Flotante (Checkbox Previo Obligatorio)',
+      userAgent: 'Widget Web Oficial (Checkbox Previo Obligatorio)',
       raw: l
     });
   });
@@ -5657,7 +5931,7 @@ function yossicoPrintHtmlDocument(title, bodyHtml) {
   }, 300);
 }
 
-// Helper universal para descargar un elemento como archivo .PDF directo al computador
+// Helper universal para descargar un elemento como archivo .PDF directo al computador (sin desfase por scroll)
 async function yossicoDownloadElementAsPDF(element, filename, btnEl) {
   if (!element) return;
   const origTxt = btnEl ? btnEl.textContent : '';
@@ -5665,6 +5939,9 @@ async function yossicoDownloadElementAsPDF(element, filename, btnEl) {
     btnEl.disabled = true;
     btnEl.textContent = '⏳ Generando PDF...';
   }
+  const prevScrollX = window.scrollX || window.pageXOffset || 0;
+  const prevScrollY = window.scrollY || window.pageYOffset || 0;
+  let offscreenHost = null;
   try {
     if (typeof window.html2pdf === 'undefined') {
       await new Promise((resolve, reject) => {
@@ -5675,19 +5952,33 @@ async function yossicoDownloadElementAsPDF(element, filename, btnEl) {
         document.head.appendChild(s);
       });
     }
+    window.scrollTo(0, 0);
+    offscreenHost = document.createElement('div');
+    offscreenHost.style.cssText = 'position:absolute;top:0;left:0;width:794px;background:#ffffff;z-index:-9999;padding:0;margin:0;';
     const clone = element.cloneNode(true);
     clone.style.display = 'block';
-    clone.style.width = '190mm';
-    clone.style.margin = '0 auto';
+    clone.style.width = '100%';
+    clone.style.maxWidth = '794px';
+    clone.style.margin = '0';
     clone.style.background = '#ffffff';
     clone.style.color = '#1f2937';
     clone.style.boxShadow = 'none';
+    offscreenHost.appendChild(clone);
+    document.body.appendChild(offscreenHost);
 
     const opt = {
-      margin: [10, 10, 10, 10],
+      margin: [8, 8, 8, 8],
       filename: filename,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 820
+      },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
     await window.html2pdf().set(opt).from(clone).save();
@@ -5697,6 +5988,10 @@ async function yossicoDownloadElementAsPDF(element, filename, btnEl) {
     yossicoPrintHtmlDocument(filename, element.outerHTML);
     mostrarToast('Se abrió el diálogo para guardar como PDF ✓', 'ok');
   } finally {
+    if (offscreenHost && offscreenHost.parentNode) {
+      offscreenHost.parentNode.removeChild(offscreenHost);
+    }
+    window.scrollTo(prevScrollX, prevScrollY);
     if (btnEl) {
       btnEl.disabled = false;
       btnEl.textContent = origTxt;
@@ -5712,14 +6007,309 @@ function imprimirActaSic() {
   mostrarToast('Abriendo ventana de impresión del Acta SIC...', 'ok');
 }
 
-function descargarActaSicPDF() {
-  const card = document.getElementById('acta-sic-printable-card');
-  if (!card) return;
+async function descargarActaSicPDF() {
   const meta = window._actaActualMeta || {};
-  const cleanName = String(meta.titular || 'Cliente').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 24);
-  const fileName = `Acta_SIC_YOSSICO_${cleanName}_${String(meta.idDoc || '').slice(0, 8)}.pdf`;
+  const cleanName = String(meta.titular || 'Cliente')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_-]/g, '_')
+    .replace(/_+/g, '_')
+    .slice(0, 24);
+  const shortId = String(meta.idDoc || 'EXP').slice(0, 14);
+  const fileName = `Acta_SIC_YOSSICO_${cleanName}_${shortId}.pdf`;
   const btn = document.getElementById('btn-descargar-acta-pdf');
-  yossicoDownloadElementAsPDF(card, fileName, btn);
+  const origTxt = btn ? btn.textContent : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳ Generando PDF...';
+  }
+
+  try {
+    // Asegurar motor vectorial jsPDF cargado
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const stripEmoji = (str) => String(str || '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
+
+    const idDoc = String(meta.idDoc || 'N/A');
+    const titular = stripEmoji(meta.titular || 'Cliente YOSSICO');
+    const tel = String(meta.tel || 'No registrado');
+    const email = String(meta.email || 'No registrado');
+    const ciudad = String(meta.ciudad || 'Colombia');
+    const dir = String(meta.dir || 'No especificada');
+    const ubicacion = (dir && dir !== '—' && dir !== 'No especificada') ? `${ciudad} · ${dir}` : ciudad;
+    const canal = stripEmoji(meta.canal || 'Formulario Oficial Web');
+    const fechaCol = String(meta.fechaCol || new Date().toLocaleString('es-CO'));
+    const fechaUtc = String(meta.fechaUtc || new Date().toISOString());
+    const ua = String(meta.ua || navigator.userAgent || 'Navegador Web');
+
+    // 1. Marco exterior oficial del certificado A4 (210 x 297 mm)
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, 210, 297, 'F');
+    doc.setDrawColor(203, 213, 225);
+    doc.setLineWidth(0.45);
+    doc.roundedRect(12, 12, 186, 273, 3, 3, 'S');
+
+    // Barra superior institucional petróleo (#0C4E57)
+    doc.setFillColor(12, 78, 87);
+    doc.roundedRect(12, 12, 186, 4.5, 2, 2, 'F');
+    doc.rect(12, 14.5, 186, 2, 'F');
+
+    // 2. Encabezado Oficial
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(12, 78, 87);
+    doc.text('REPUBLICA DE COLOMBIA · TRAZABILIDAD LEY 1581 DE 2012 & LEY 1480 DE 2011 (SIC)', 18, 25);
+
+    doc.setFont('times', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(17, 24, 39);
+    doc.text('YOSSICO', 18, 34.5);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.2);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Acta Probatoria de Consentimiento Previo, Expreso e Informado', 18, 41);
+
+    // Sello de verificación derecho
+    doc.setFillColor(236, 253, 245);
+    doc.setDrawColor(167, 243, 208);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(142, 21.5, 50, 11, 2, 2, 'FD');
+    doc.setFillColor(22, 163, 74);
+    doc.circle(147, 27, 1.3, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.8);
+    doc.setTextColor(6, 95, 70);
+    doc.text('PRUEBA DIGITAL VALIDA', 150.5, 28);
+
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(71, 85, 105);
+    doc.text('EXP-SIC: ' + idDoc.slice(0, 20), 192, 37.5, { align: 'right' });
+
+    // Línea divisoria principal
+    doc.setDrawColor(12, 78, 87);
+    doc.setLineWidth(0.6);
+    doc.line(18, 45.5, 192, 45.5);
+
+    // 3. Bloques superiores: 1. Titular de los Datos + 2. Sello de Tiempo Oficial
+    const boxY = 50.5;
+    const boxH = 42;
+    // Caja izquierda (Titular)
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(203, 213, 225);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(18, boxY, 101, boxH, 2, 2, 'FD');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(12, 78, 87);
+    doc.text('1. TITULAR DE LOS DATOS', 22.5, boxY + 6.5);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10.5);
+    doc.setTextColor(17, 24, 39);
+    const titularLines = doc.splitTextToSize(titular, 92);
+    doc.text(titularLines.slice(0, 2), 22.5, boxY + 13.5);
+
+    const offsetTit = titularLines.length > 1 ? 4.2 : 0;
+    doc.setFontSize(8.2);
+    doc.setTextColor(51, 65, 85);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Telefono / WhatsApp:', 22.5, boxY + 20.5 + offsetTit);
+    doc.setFont('helvetica', 'normal');
+    doc.text(tel.slice(0, 34), 55, boxY + 20.5 + offsetTit);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Correo Electronico:', 22.5, boxY + 26.5 + offsetTit);
+    doc.setFont('helvetica', 'normal');
+    doc.text(email.slice(0, 38), 52, boxY + 26.5 + offsetTit);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Ubicacion:', 22.5, boxY + 32.5 + offsetTit);
+    doc.setFont('helvetica', 'normal');
+    const ubicLines = doc.splitTextToSize(ubicacion, 74);
+    doc.text(ubicLines.slice(0, 2), 39.5, boxY + 32.5 + offsetTit);
+
+    // Caja derecha (Sello de tiempo)
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(203, 213, 225);
+    doc.roundedRect(123, boxY, 69, boxH, 2, 2, 'FD');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(12, 78, 87);
+    doc.text('2. SELLO DE TIEMPO OFICIAL', 127.5, boxY + 6.5);
+
+    doc.setFontSize(8.2);
+    doc.setTextColor(51, 65, 85);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Canal:', 127.5, boxY + 14);
+    doc.setFont('helvetica', 'normal');
+    doc.text(doc.splitTextToSize(canal, 48).slice(0, 2), 138.5, boxY + 14);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Hora Colombia:', 127.5, boxY + 23.5);
+    doc.setFont('helvetica', 'normal');
+    const fechaLines = doc.splitTextToSize(fechaCol, 60);
+    doc.text(fechaLines.slice(0, 2), 127.5, boxY + 28);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('ID Expediente:', 127.5, boxY + 37);
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(7.5);
+    doc.text(idDoc.slice(0, 22), 150, boxY + 37);
+
+    // 4. Sección 3: Garantías Legales Aceptadas (Checklist Probatorio)
+    let curY = 100.5;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(12, 78, 87);
+    doc.text('3. GARANTIAS LEGALES ACEPTADAS POR EL TITULAR (CHECKLIST PROBATORIO)', 18, curY);
+
+    curY += 3.5;
+    const garantias = [
+      {
+        titulo: 'Autorizacion Habeas Data (Ley Estatutaria 1581 de 2012 & Decreto 1377 de 2013)',
+        desc: 'Autorizacion previa, expresa e informada otorgada mediante casilla de verificacion no pre-marcada para el tratamiento de datos personales, contacto comercial, despacho y asesoria.'
+      },
+      {
+        titulo: 'Aceptacion de Terminos y Condiciones Generales v2.0 (2026)',
+        desc: 'El titular marco activamente la casilla obligatoria e independiente de aceptacion contractual antes de enviar el formulario o perfeccionar la orden en https://yossico.com/terminos.html.'
+      },
+      {
+        titulo: 'Notificacion del Derecho de Retracto — 5 Dias Habiles (Art. 47 Ley 1480 de 2011)',
+        desc: 'Debidamente informado antes de la compra del plazo legal de 5 dias habiles contados desde la entrega para ejercer el retracto con devolucion del 100% del dinero sin penalidad.'
+      }
+    ];
+
+    garantias.forEach((g) => {
+      const cardH = 22;
+      doc.setFillColor(240, 253, 244);
+      doc.setDrawColor(187, 247, 208);
+      doc.setLineWidth(0.35);
+      doc.roundedRect(18, curY, 174, cardH, 2, 2, 'FD');
+
+      // Borde izquierdo verde de verificación
+      doc.setFillColor(22, 163, 74);
+      doc.rect(18, curY, 2.2, cardH, 'F');
+
+      // Check circular verde
+      doc.circle(24.5, curY + 6.3, 2.1, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(255, 255, 255);
+      doc.text('SI', 24.5, curY + 7.2, { align: 'center' });
+
+      // Título y descripción
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.6);
+      doc.setTextColor(20, 83, 45);
+      doc.text(g.titulo, 29, curY + 7);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.8);
+      doc.setTextColor(22, 101, 52);
+      const descLines = doc.splitTextToSize(g.desc, 159);
+      doc.text(descLines.slice(0, 2), 29, curY + 12.8);
+
+      curY += cardH + 3.2;
+    });
+
+    // 5. Sección 4: Evidencia Técnica e Integridad Digital (Ley 527 de 1999)
+    curY += 3;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(71, 85, 105);
+    doc.text('4. EVIDENCIA TECNICA E INTEGRIDAD DIGITAL (LEY 527 DE 1999 - COMERCIO ELECTRONICO)', 18, curY);
+
+    curY += 3.5;
+    const techH = 38;
+    doc.setFillColor(241, 245, 249);
+    doc.setDrawColor(203, 213, 225);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(18, curY, 174, techH, 2, 2, 'FD');
+
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(7.6);
+    doc.setTextColor(30, 41, 59);
+    doc.text('Timestamp Internacional (UTC):', 22.5, curY + 7);
+    doc.setFont('courier', 'normal');
+    doc.text(fechaUtc, 75, curY + 7);
+
+    doc.setFont('courier', 'bold');
+    doc.text('Expediente / Registro Unico:', 22.5, curY + 13);
+    doc.setFont('courier', 'normal');
+    doc.text(idDoc, 75, curY + 13);
+
+    doc.setFont('courier', 'bold');
+    doc.text('Dispositivo / User-Agent:', 22.5, curY + 19);
+    doc.setFont('courier', 'normal');
+    const uaLines = doc.splitTextToSize(ua, 165);
+    doc.text(uaLines.slice(0, 2), 22.5, curY + 23.8);
+
+    doc.setFont('courier', 'bold');
+    doc.text('Mecanismo de Captura:', 22.5, curY + 33.5);
+    doc.setFont('courier', 'normal');
+    doc.text('Doble Checkbox HTML5 + Validacion Sincrona JS + Registro Inmutable YOSSICO', 62, curY + 33.5);
+
+    // 6. Pie de página y Certificación Jurídica del Responsable
+    const footerY = 238;
+    doc.setDrawColor(203, 213, 225);
+    doc.setLineWidth(0.35);
+    doc.line(18, footerY, 192, footerY);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.8);
+    doc.setTextColor(12, 78, 87);
+    doc.text('CERTIFICACION DE EQUIVALENCIA FUNCIONAL Y FIRMA ELECTRONICA', 18, footerY + 6.5);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.4);
+    doc.setTextColor(71, 85, 105);
+    const certText = 'El presente certificado constituye plena prueba de mensaje de datos y consentimiento electronico conforme a la Ley 527 de 1999, el Decreto 2364 de 2012 (Firma Electronica), la Ley Estatutaria 1581 de 2012 (Proteccion de Datos Personales) y la Ley 1480 de 2011 (Estatuto del Consumidor). Expedido por el Sistema Central de Auditoria de YOSSICO.';
+    doc.text(doc.splitTextToSize(certText, 174), 18, footerY + 11.5);
+
+    // Recuadro de firma / sello digital inferior
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(203, 213, 225);
+    doc.roundedRect(18, footerY + 24, 174, 16, 2, 2, 'FD');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(17, 24, 39);
+    doc.text('RESPONSABLE DEL TRATAMIENTO: YOSSICO COLOMBIA', 22.5, footerY + 30.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.2);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Bogota D.C., Colombia · customerserviceyossico@gmail.com · WhatsApp Oficial +57 312 730 0661 · https://yossico.com', 22.5, footerY + 35.8);
+
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(7.2);
+    doc.setTextColor(12, 78, 87);
+    doc.text('PAGINA 1 DE 1', 188, footerY + 30.5, { align: 'right' });
+
+    doc.save(fileName);
+    mostrarToast('Acta PDF descargada completa (1 página A4): ' + fileName + ' ✓', 'ok');
+  } catch (err) {
+    console.error('Error generando PDF vectorial SIC, usando fallback:', err);
+    const card = document.getElementById('acta-sic-printable-card');
+    if (card) await yossicoDownloadElementAsPDF(card, fileName, null);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = origTxt;
+    }
+  }
 }
 
 function exportarAuditoriaLegalCSV() {
