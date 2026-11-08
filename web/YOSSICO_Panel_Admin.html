@@ -1826,32 +1826,67 @@
       display: block;
       animation: fadeIn 0.2s ease;
     }
-    /* Visor Visual Widescreen de Mapa de Calor y Frío */
-    .hm-studio-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 315px;
-      gap: 0.85rem;
-      align-items: stretch;
-    }
-    .hm-studio-grid.expanded-full {
-      grid-template-columns: 1fr;
-    }
-    @media (max-width: 1180px) {
-      .hm-studio-grid { grid-template-columns: 1fr; }
-    }
-    .hm-viewport-card {
-      background: #121519;
-      border-radius: 10px;
-      border: 1px solid #2a3038;
-      overflow: hidden;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.16);
+    /* Visor Visual de Toda la Web al 100% de Ancho y Largo Completo */
+    .hm-studio-full {
+      position: relative;
+      width: 100%;
       display: flex;
       flex-direction: column;
+      gap: 1rem;
+    }
+    .hm-viewport-card {
+      background: #0f1216;
+      border-radius: 10px;
+      border: 1px solid #262c35;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .hm-sticky-deck {
+      position: sticky;
+      top: 0;
+      z-index: 65;
+      background: rgba(20, 24, 30, 0.97);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #2d3540;
+      border-radius: 10px 10px 0 0;
+    }
+    .hm-pages-bar {
+      padding: 0.5rem 0.85rem;
+      border-bottom: 1px solid #252b34;
+      display: flex;
+      align-items: center;
+      gap: 0.38rem;
+      flex-wrap: wrap;
+    }
+    .hm-page-tab {
+      background: #1d232b;
+      color: #cbd5e1;
+      border: 1px solid #333c48;
+      padding: 0.32rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.69rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .hm-page-tab:hover {
+      background: #28303b;
+      color: #fff;
+      border-color: #64748b;
+    }
+    .hm-page-tab.active {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: #ffffff;
+      box-shadow: 0 2px 8px rgba(255,255,255,0.2);
     }
     .hm-toolbar {
-      background: #181c22;
-      padding: 0.5rem 0.8rem;
-      border-bottom: 1px solid #2a3038;
+      padding: 0.48rem 0.85rem;
+      border-bottom: 1px solid #252b34;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1861,10 +1896,10 @@
       font-size: 0.7rem;
     }
     .hm-pill-btn {
-      background: #252b33;
+      background: #222831;
       color: #d1d5db;
       border: 1px solid #38414d;
-      padding: 0.3rem 0.58rem;
+      padding: 0.3rem 0.6rem;
       border-radius: 5px;
       font-size: 0.68rem;
       font-weight: 600;
@@ -1882,15 +1917,49 @@
       color: #fff;
       border-color: #ff6b4a;
     }
+    .hm-jump-bar {
+      padding: 0.42rem 0.85rem;
+      background: #14181f;
+      display: flex;
+      align-items: center;
+      gap: 0.38rem;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .hm-jump-chip {
+      background: #1e242d;
+      color: #e2e8f0;
+      border: 1px solid #333c4a;
+      padding: 0.25rem 0.58rem;
+      border-radius: 99px;
+      font-size: 0.64rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: all 0.14s;
+    }
+    .hm-jump-chip:hover {
+      background: #2d3748;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+    /* Lienzo Completo Desplegado de Arriba a Abajo (Sin cajas de recorte) */
     .hm-stage-scroll {
       position: relative;
-      height: calc(100vh - 255px);
-      min-height: 580px;
-      max-height: 780px;
+      width: 100%;
+      overflow: visible;
+      background: #0b0d10;
+      padding: 0;
+      border-radius: 0 0 10px 10px;
+    }
+    .hm-stage-scroll.boxed-scroll {
+      max-height: 82vh;
       overflow-y: auto;
       overflow-x: hidden;
-      background: #0d0f12;
-      scroll-behavior: smooth;
     }
     .hm-stage-scaler {
       position: relative;
@@ -1901,15 +1970,18 @@
     .hm-stage-inner {
       position: relative;
       width: 1366px;
-      height: 3350px;
+      min-height: 900px;
       background: #fff;
       transform-origin: top left;
+      margin: 0;
     }
     .hm-stage-inner.mobile-view {
       width: 412px !important;
-      margin: 0 auto;
+      margin: 1rem auto !important;
       transform: none !important;
-      box-shadow: 0 0 0 8px #222;
+      box-shadow: 0 0 0 10px #222831, 0 20px 50px rgba(0,0,0,0.6);
+      border-radius: 18px;
+      overflow: hidden;
     }
     .hm-stage-iframe {
       width: 100%;
@@ -1917,6 +1989,10 @@
       border: none;
       pointer-events: none;
       display: block;
+      background: #fff;
+    }
+    .hm-stage-iframe.interactive-mode {
+      pointer-events: auto !important;
     }
     .hm-overlay-layer {
       position: absolute;
@@ -1934,47 +2010,47 @@
       transition: transform 0.18s ease;
     }
     .hm-click-spot:hover {
-      transform: translate(-50%, -50%) scale(1.1);
+      transform: translate(-50%, -50%) scale(1.12);
       z-index: 45;
     }
     .hm-click-glow {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      filter: blur(5px);
+      filter: blur(6px);
     }
     .hm-click-core {
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      background: rgba(15, 18, 24, 0.92);
+      background: rgba(15, 18, 24, 0.94);
       color: #fff;
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       border: 2px solid #fff;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
     }
     .hm-click-tag {
       position: absolute;
-      left: calc(50% + 16px);
+      left: calc(50% + 18px);
       top: 50%;
       transform: translateY(-50%);
       background: rgba(12, 14, 18, 0.92);
       color: #fff;
-      font-size: 0.68rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 4px 11px;
       border-radius: 99px;
       white-space: nowrap;
-      border: 1px solid rgba(255,255,255,0.32);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.35);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.45);
       z-index: 35;
       pointer-events: none;
     }
@@ -1989,34 +2065,41 @@
       display: flex;
       justify-content: flex-end;
       align-items: flex-start;
-      padding: 0.55rem 0.9rem;
-      border-bottom: 1.5px dashed rgba(255,255,255,0.45);
-      pointer-events: auto;
-      cursor: pointer;
-      transition: background 0.15s;
+      padding: 0.6rem 1rem;
+      border-bottom: 1.5px dashed rgba(255,255,255,0.5);
+      pointer-events: none;
     }
     .hm-zone-pill {
-      background: rgba(15, 18, 24, 0.88);
+      pointer-events: auto;
+      cursor: pointer;
       color: #fff;
-      padding: 0.32rem 0.75rem;
+      padding: 0.34rem 0.85rem;
       border-radius: 99px;
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 700;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-      border: 1px solid rgba(255,255,255,0.28);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.32);
       backdrop-filter: blur(4px);
     }
-    /* Inspector Lateral Unificado */
-    .hm-inspector-card {
+    /* Cajón Lateral Flotante Opcional (No quita ancho a la web) */
+    .hm-floating-drawer {
+      position: fixed;
+      top: 76px;
+      right: 18px;
+      width: 360px;
+      max-width: calc(100vw - 36px);
+      max-height: calc(100vh - 96px);
       background: var(--blanco);
       border: 1px solid var(--grisCl);
       border-radius: 10px;
-      display: flex;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.28);
+      z-index: 120;
+      display: none;
       flex-direction: column;
-      height: calc(100vh - 205px);
-      min-height: 630px;
-      max-height: 830px;
       overflow: hidden;
+    }
+    .hm-floating-drawer.open {
+      display: flex;
     }
     .hm-insp-tabs {
       display: grid;
@@ -2053,6 +2136,15 @@
     .hm-insp-pane.active {
       display: block;
     }
+    .hm-bottom-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 0.25rem;
+    }
+    @media (max-width: 1100px) {
+      .hm-bottom-summary-grid { grid-template-columns: 1fr; }
+    }
   </style>
 
   <!-- Barra Superior Ultra-Compacta + 6 KPIs -->
@@ -2086,44 +2178,84 @@
 
   <!-- BARRA DE PESTAÑAS INTERNAS -->
   <div class="vis-subtabs-bar">
-    <button type="button" class="vis-subtab-btn active" onclick="cambiarSubtabVisitas('mapa', this)">🔥 1. Mapa Visual en Vivo (Calor, Frío y Clics)</button>
+    <button type="button" class="vis-subtab-btn active" onclick="cambiarSubtabVisitas('mapa', this)">🔥 1. Mapa Visual de Toda la Web (Calor, Frío y Clics)</button>
     <button type="button" class="vis-subtab-btn" onclick="cambiarSubtabVisitas('velocidad', this)">🚀 2. Velocidad y Qué Frena la Web</button>
     <button type="button" class="vis-subtab-btn" onclick="cambiarSubtabVisitas('optimizar', this)">💡 3. Qué Optimizar y Embudo</button>
     <button type="button" class="vis-subtab-btn" onclick="cambiarSubtabVisitas('trafico', this)">📊 4. Tráfico, Fuentes y Dispositivos</button>
   </div>
 
-  <!-- SUB-PESTAÑA 1: MAPA VISUAL EN VIVO DE CALOR, FRÍO Y CLICS -->
+  <!-- SUB-PESTAÑA 1: MAPA VISUAL DE TODA LA WEB COMPLETA -->
   <div id="vis-sub-mapa" class="vis-subpanel active">
-    <div class="hm-studio-grid" id="hm-studio-grid">
-      <!-- Lado Izquierdo: Visor Widescreen con Escala Proporcional 1366px -->
+    <div class="hm-studio-full" id="hm-studio-grid">
       <div class="hm-viewport-card">
-        <div class="hm-toolbar">
-          <div style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;">
-            <select id="hm-page-select" onchange="cambiarPaginaMapaVisual(this.value)" style="background:#111315; color:#fff; border:1px solid #38414d; padding:0.28rem 0.5rem; border-radius:4px; font-size:0.7rem; font-weight:600; font-family:inherit;">
+        <!-- Cabecera Sticky con Selector de Todas las Páginas, Modos y Salto a Secciones -->
+        <div class="hm-sticky-deck">
+          <!-- Fila 1: Pestañas Rápidas de Todas las Páginas de YOSSICO -->
+          <div class="hm-pages-bar">
+            <span style="font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#94a3b8; margin-right:0.2rem;">Páginas Web:</span>
+            <button type="button" class="hm-page-tab active" data-page="index.html" onclick="cambiarPaginaMapaVisual('index.html')">🏠 Inicio (Landing)</button>
+            <button type="button" class="hm-page-tab" data-page="coleccion.html" onclick="cambiarPaginaMapaVisual('coleccion.html')">👗 Colección Completa</button>
+            <button type="button" class="hm-page-tab" data-page="prive.html" onclick="cambiarPaginaMapaVisual('prive.html')">🔒 Club Privé</button>
+            <button type="button" class="hm-page-tab" data-page="estudiantes.html" onclick="cambiarPaginaMapaVisual('estudiantes.html')">🎓 Campus</button>
+            <button type="button" class="hm-page-tab" data-page="acronimo.html" onclick="cambiarPaginaMapaVisual('acronimo.html')">✨ El Acrónimo</button>
+            <button type="button" class="hm-page-tab" data-page="historia.html" onclick="cambiarPaginaMapaVisual('historia.html')">📖 Historia</button>
+            <button type="button" class="hm-page-tab" data-page="nosotros.html" onclick="cambiarPaginaMapaVisual('nosotros.html')">🤍 Nosotros</button>
+            <button type="button" class="hm-page-tab" data-page="contacto.html" onclick="cambiarPaginaMapaVisual('contacto.html')">💬 Contacto</button>
+            <button type="button" class="hm-page-tab" data-page="institucional.html" onclick="cambiarPaginaMapaVisual('institucional.html')">🏥 Institucional B2B</button>
+            <select id="hm-page-select" onchange="cambiarPaginaMapaVisual(this.value)" style="background:#111315; color:#fff; border:1px solid #475569; padding:0.28rem 0.55rem; border-radius:6px; font-size:0.68rem; font-weight:600; font-family:inherit; margin-left:auto;">
+              <option value="index.html">🔍 Más páginas / Sets individuales...</option>
               <option value="index.html">🏠 Inicio / Landing (index.html)</option>
               <option value="coleccion.html">👗 Catálogo Colección (coleccion.html)</option>
+              <option value="oslo.html">🩺 Set OSLO (oslo.html)</option>
+              <option value="milan.html">🩺 Set MILAN (milan.html)</option>
+              <option value="kyoto.html">🩺 Set KYOTO (kyoto.html)</option>
+              <option value="lima.html">🩺 Set LIMA (lima.html)</option>
+              <option value="bogota.html">🩺 Set BOGOTÁ (bogota.html)</option>
+              <option value="manta.html">🩺 Set MANTA (manta.html)</option>
               <option value="prive.html">🔒 Club Privé (prive.html)</option>
               <option value="estudiantes.html">🎓 Campus Estudiantil (estudiantes.html)</option>
+              <option value="acronimo.html">✨ El Acrónimo (acronimo.html)</option>
+              <option value="historia.html">📖 Nuestra Historia (historia.html)</option>
+              <option value="nosotros.html">🤍 Nosotros (nosotros.html)</option>
+              <option value="contacto.html">💬 Contacto (contacto.html)</option>
+              <option value="institucional.html">🏥 Institucional / Clínicas (institucional.html)</option>
+              <option value="embajadoras.html">🌟 Embajadoras (embajadoras.html)</option>
+              <option value="guia-de-tallas.html">📏 Guía de Tallas (guia-de-tallas.html)</option>
+              <option value="checkout.html">🛍️ Checkout / Pantalla de Pago (checkout.html)</option>
             </select>
-            <button type="button" class="hm-pill-btn active" id="hm-mode-both" onclick="setModoMapaVisual('both')">🔥+🌡️ Clics + Zonas</button>
-            <button type="button" class="hm-pill-btn" id="hm-mode-clicks" onclick="setModoMapaVisual('clicks')">🎯 Solo Clics</button>
-            <button type="button" class="hm-pill-btn" id="hm-mode-zones" onclick="setModoMapaVisual('zones')">🌡️ Calor vs. Frío</button>
-            <button type="button" class="hm-pill-btn" id="hm-mode-clean" onclick="setModoMapaVisual('clean')">👁️ Limpio</button>
           </div>
-          <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:0.35rem; font-size:0.62rem; color:#9ca3af; margin-right:0.2rem;">
-              <span>❄️</span>
-              <div style="width:70px; height:6px; border-radius:99px; background:linear-gradient(90deg, #38bdf8 0%, #22c55e 35%, #facc15 65%, #ef4444 100%);"></div>
-              <span>🔥</span>
+
+          <!-- Fila 2: Controles de Capas de Calor, Escala/Zoom y Navegación Interactiva -->
+          <div class="hm-toolbar">
+            <div style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;">
+              <button type="button" class="hm-pill-btn active" id="hm-mode-both" onclick="setModoMapaVisual('both')">🔥+🌡️ Clics + Zonas</button>
+              <button type="button" class="hm-pill-btn" id="hm-mode-clicks" onclick="setModoMapaVisual('clicks')">🎯 Solo Clics</button>
+              <button type="button" class="hm-pill-btn" id="hm-mode-zones" onclick="setModoMapaVisual('zones')">🌡️ Calor vs. Frío</button>
+              <button type="button" class="hm-pill-btn" id="hm-mode-interactive" onclick="setModoMapaVisual('interactive')" title="Permite hacer clic y navegar libremente por toda la web dentro del visor">🖱️ Navegar Web en Vivo</button>
+              <button type="button" class="hm-pill-btn" id="hm-mode-clean" onclick="setModoMapaVisual('clean')">👁️ Ver Limpio</button>
             </div>
-            <button type="button" class="hm-pill-btn active" id="hm-dev-desktop" onclick="setDispositivoMapaVisual('desktop')" title="Vista Web Escritorio (1366px)">🖥️ Web</button>
-            <button type="button" class="hm-pill-btn" id="hm-dev-mobile" onclick="setDispositivoMapaVisual('mobile')" title="Vista Celular (412px)">📱 Móvil</button>
-            <input type="range" id="hm-opacity-slider" min="25" max="95" value="85" title="Intensidad del mapa térmico" oninput="document.getElementById('hm-visual-overlay').style.opacity = this.value / 100" style="width:55px; accent-color:#ff4d29;">
-            <button type="button" class="hm-pill-btn" id="hm-btn-expand" onclick="toggleAnchoMapaVisual()" title="Expandir el mapa a pantalla ancha completa">↔ Ancho 100%</button>
+            <div style="display:flex; gap:0.38rem; align-items:center; flex-wrap:wrap;">
+              <div style="display:flex; align-items:center; gap:0.3rem; font-size:0.62rem; color:#cbd5e1; margin-right:0.15rem;">
+                <span>❄️ Frío</span>
+                <div style="width:64px; height:6px; border-radius:99px; background:linear-gradient(90deg, #38bdf8 0%, #22c55e 35%, #facc15 65%, #ef4444 100%);"></div>
+                <span>🔥 Caliente</span>
+              </div>
+              <button type="button" class="hm-pill-btn active" id="hm-zoom-100" onclick="setZoomMapaVisual(1)" title="Ancho 100% Completo de Escritorio">🖥️ 100% Ancho</button>
+              <button type="button" class="hm-pill-btn" id="hm-zoom-70" onclick="setZoomMapaVisual(0.7)" title="Vista Panorámica al 70% para ver más secciones a la vez">🔭 70% Panorámica</button>
+              <button type="button" class="hm-pill-btn" id="hm-zoom-45" onclick="setZoomMapaVisual(0.45)" title="Vista Aérea Completa al 45% para ver casi toda la página de un vistazo">🗺️ 45% Vista Aérea</button>
+              <button type="button" class="hm-pill-btn" id="hm-dev-mobile" onclick="setDispositivoMapaVisual('mobile')" title="Vista Celular (412px)">📱 Móvil</button>
+              <input type="range" id="hm-opacity-slider" min="20" max="95" value="85" title="Intensidad de la capa de calor" oninput="document.getElementById('hm-visual-overlay').style.opacity = this.value / 100" style="width:52px; accent-color:#ff4d29;">
+              <button type="button" class="hm-pill-btn" id="hm-btn-drawer" onclick="toggleDrawerMapaVisual()" style="background:#0C4E57; border-color:#14b8a6; color:#fff;">📊 Panel de Datos</button>
+            </div>
+          </div>
+
+          <!-- Fila 3: Índice de Secciones Detectadas en Vivo (Salto Rápido de Arriba a Abajo) -->
+          <div class="hm-jump-bar" id="hm-section-jump-bar">
+            <span style="font-size:0.62rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.8px;">Secciones de la página:</span>
           </div>
         </div>
 
-        <!-- Escenario Scrollable con Escalador Proporcional Desktop (1366px) -->
+        <!-- Lienzo Completo de la Web (Desplegado de Arriba a Abajo al 100% sin recortes) -->
         <div class="hm-stage-scroll" id="hm-stage-scroll">
           <div class="hm-stage-scaler" id="hm-stage-scaler">
             <div class="hm-stage-inner" id="hm-stage-inner">
@@ -2134,29 +2266,47 @@
         </div>
       </div>
 
-      <!-- Lado Derecho: Inspector Unificado con 3 Pestañas (Sin desbordar ni quitar espacio) -->
-      <div class="hm-inspector-card">
+      <!-- Resumen Ejecutivo en 3 Columnas Debajo del Mapa Completo -->
+      <div class="hm-bottom-summary-grid">
+        <div class="form-card" style="padding:1rem; margin:0;">
+          <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--negro); margin-bottom:0.35rem;">🎯 Top Puntos Donde Más Hacen Clic</div>
+          <div style="font-size:0.65rem; color:var(--grisMed); margin-bottom:0.6rem;">Toca cualquier elemento para saltar directamente a ese botón o tarjeta en la página arriba:</div>
+          <div id="vis-top-clicks-list"></div>
+        </div>
+
+        <div class="form-card" style="padding:1rem; margin:0;">
+          <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--negro); margin-bottom:0.35rem;">🌡️ Temperatura por Sección (Calientes vs. Frías)</div>
+          <div style="font-size:0.65rem; color:var(--grisMed); margin-bottom:0.6rem;">Secciones ordenadas por nivel de atención real. Toca cualquiera para ir a esa zona:</div>
+          <div id="vis-heatmap-secciones" style="max-height:420px; overflow-y:auto;"></div>
+        </div>
+
+        <div class="form-card" style="padding:1rem; margin:0;">
+          <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--negro); margin-bottom:0.5rem;">👗 Uniformes Con Mayor Interés</div>
+          <div id="vis-hot-prendas" style="margin-bottom:1rem;"></div>
+          <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--grisMed); margin-bottom:0.45rem;">❄️ Diagnóstico de Zonas Frías</div>
+          <div id="vis-cold-zones"></div>
+        </div>
+      </div>
+
+      <!-- Cajón Flotante Opcional para Consultar Rankings Mientras Haces Scroll -->
+      <div class="hm-floating-drawer" id="hm-floating-drawer">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.85rem; background:#111315; color:#fff;">
+          <strong style="font-size:0.72rem; letter-spacing:0.5px;">📊 Inspector Rápido de Calor</strong>
+          <button type="button" onclick="toggleDrawerMapaVisual()" style="background:none; border:none; color:#fff; font-size:0.9rem; cursor:pointer;">✕</button>
+        </div>
         <div class="hm-insp-tabs">
           <button type="button" class="hm-insp-tab active" onclick="cambiarTabInspectorMapa('clicks', this)">🎯 Top Clics</button>
           <button type="button" class="hm-insp-tab" onclick="cambiarTabInspectorMapa('zonas', this)">🌡️ Zonas</button>
           <button type="button" class="hm-insp-tab" onclick="cambiarTabInspectorMapa('prendas', this)">👗 Sets</button>
         </div>
-
         <div id="hm-insp-clicks" class="hm-insp-pane active">
-          <div style="font-size:0.65rem; color:var(--grisMed); margin-bottom:0.55rem;">Toca cualquier elemento para saltar directamente a ese punto en el mapa visual:</div>
-          <div id="vis-top-clicks-list"></div>
+          <div id="vis-top-clicks-drawer"></div>
         </div>
-
         <div id="hm-insp-zonas" class="hm-insp-pane">
-          <div style="font-size:0.65rem; color:var(--grisMed); margin-bottom:0.55rem;">Zonas calientes (mayor lectura) vs. zonas frías (abandono rápido). Toca para ver en el mapa:</div>
-          <div id="vis-heatmap-secciones"></div>
+          <div id="vis-heatmap-secciones-drawer"></div>
         </div>
-
         <div id="hm-insp-prendas" class="hm-insp-pane">
-          <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--negro); margin-bottom:0.5rem;">👗 Uniformes Con Mayor Interés</div>
-          <div id="vis-hot-prendas" style="margin-bottom:1rem;"></div>
-          <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--grisMed); margin-bottom:0.45rem;">❄️ Diagnóstico de Zonas Frías</div>
-          <div id="vis-cold-zones"></div>
+          <div id="vis-hot-prendas-drawer"></div>
         </div>
       </div>
     </div>
@@ -3242,6 +3392,8 @@ async function cargarVisitas() {
   const dias = parseInt(document.getElementById('vis-dias')?.value || '30');
   const aviso = document.getElementById('vis-aviso');
   if (aviso) aviso.textContent = 'Analizando telemetría de rendimiento, atención y sesiones…';
+  // Iniciar carga visual inmediata del mapa mientras consulta telemetría remota
+  renderMapaVisualCalor(window._lastHeatmapSectionList || [], window._ultimasVisitasRows || []);
   let rows = [];
   try {
     const { data, error } = await sb.rpc('admin_get_visitas', { pin: adminPin, dias });
@@ -3751,82 +3903,94 @@ function renderVisitas(rows, dias) {
   if (embEl) embEl.innerHTML = etapas.map(([l, n]) => bar(l, n, maxE, maxE ? ` · ${((n / maxE) * 100).toFixed(0)}%` : '')).join('');
 }
 
-// ── MOTOR DEL MAPA VISUAL DE CALOR, FRÍO Y CLICS EN VIVO ─────────────────────
+// ── MOTOR DEL MAPA VISUAL DE TODA LA WEB (MEDICIÓN DOM REAL + PÁGINA COMPLETA DESPLEGADA) ──
 window._hmState = {
   page: 'index.html',
-  mode: 'both', // 'both' | 'clicks' | 'zones' | 'clean'
+  mode: 'both', // 'both' | 'clicks' | 'zones' | 'interactive' | 'clean'
   device: 'desktop',
-  expanded: false,
-  scale: 1
+  zoom: 1,      // 1 (100% ancho) | 0.7 (Panorámica) | 0.45 (Vista Aérea)
+  scale: 1,
+  realHeight: 3800,
+  drawerOpen: false
 };
 
 const HM_VISUAL_LAYOUTS = {
   'index.html': {
-    height: 3450,
+    height: 3950,
     zones: [
-      { key: 'barra-drop-countdown', label: 'Header & Cuenta Regresiva Drop', top: 0, height: 155, type: 'warm', reach: '100%', sec: 7 },
-      { key: 'hero-principal', label: 'Hero Principal ("Uniformes pensados para ti")', top: 155, height: 675, type: 'hot', reach: '98%', sec: 19 },
-      { key: 'destacados-home', label: 'Los Más Pedidos (OSLO / LIMA / BOGOTÁ)', top: 830, height: 720, type: 'hot', reach: '86%', sec: 24 },
-      { key: 'manifiesto-drops', label: 'Manifiesto Drops ("Algunas prendas regresan")', top: 1550, height: 590, type: 'warm', reach: '64%', sec: 11 },
-      { key: 'por-que-yossico', label: 'Por Qué YOSSICO Es Diferente (4 Pilares)', top: 2140, height: 540, type: 'warm', reach: '51%', sec: 9 },
-      { key: 'seccion-prive', label: 'Spotlight YOSSICO Privé (Membresía VIP)', top: 2680, height: 430, type: 'warm', reach: '42%', sec: 12 },
-      { key: 'cta-whatsapp-cierre', label: 'Cierre WhatsApp & Footer Legal', top: 3110, height: 340, type: 'cold', reach: '29%', sec: 5 }
+      { key: 'barra-drop-countdown', selector: '#countdown-section, .countdown-section', label: 'Barra Superior & Cuenta Regresiva Drop', top: 0, height: 165, type: 'warm', reach: '100%', sec: 7 },
+      { key: 'hero-principal', selector: 'section.hero', label: 'Hero Principal ("Uniformes pensados para ti")', top: 165, height: 690, type: 'hot', reach: '98%', sec: 19 },
+      { key: 'destacados-home', selector: '#destacados, section.destacados', label: 'Los Más Pedidos (OSLO / MILAN / KYOTO / LIMA)', top: 855, height: 760, type: 'hot', reach: '88%', sec: 24 },
+      { key: 'manifiesto-drops', selector: 'section.drops', label: 'Manifiesto Drops ("Algunas prendas regresan")', top: 1615, height: 620, type: 'warm', reach: '66%', sec: 12 },
+      { key: 'seccion-prive', selector: 'section.prive-spotlight', label: 'Spotlight Club YOSSICO Privé', top: 2235, height: 520, type: 'warm', reach: '54%', sec: 13 },
+      { key: 'por-que-yossico', selector: 'section.nosotros', label: 'Por Qué YOSSICO Es Diferente (4 Pilares)', top: 2755, height: 600, type: 'warm', reach: '46%', sec: 10 },
+      { key: 'cta-whatsapp-cierre', selector: 'section.contacto-cta', label: 'Bloque Cierre Asesoría WhatsApp (¿Hablamos?)', top: 3355, height: 340, type: 'cold', reach: '34%', sec: 6 },
+      { key: 'footer-legal', selector: 'footer.footer', label: 'Pie de Página & Enlaces Legales SIC', top: 3695, height: 360, type: 'cold', reach: '26%', sec: 5 }
     ],
     clicks: [
-      { label: 'CTA "Encuentra tu uniforme" (Hero)', short: 'CTA Hero', x: 20, y: 665, pct: 34, count: 48, intensity: 'hot' },
-      { label: 'Menú Superior "COLECCIÓN"', short: 'Menú Colección', x: 31, y: 62, pct: 21, count: 30, intensity: 'hot' },
-      { label: 'Tarjeta Set OSLO (Los Más Pedidos)', short: 'Set OSLO', x: 22, y: 1180, pct: 18, count: 25, intensity: 'hot' },
-      { label: 'Tarjeta Set LIMA (Los Más Pedidos)', short: 'Set LIMA', x: 50, y: 1180, pct: 14, count: 19, intensity: 'warm' },
-      { label: 'Botón "Avisarme al abrir" (Barra Drop)', short: 'Avisarme Drop', x: 74, y: 122, pct: 9, count: 13, intensity: 'warm' },
-      { label: 'Botón "Unirme a YOSSICO Privé"', short: 'Unirme Privé', x: 50, y: 2920, pct: 8, count: 11, intensity: 'warm' },
-      { label: 'Burbuja WhatsApp / ¿Hablamos?', short: 'WhatsApp', x: 86, y: 3260, pct: 12, count: 17, intensity: 'hot' }
+      { label: 'CTA "Encuentra tu uniforme" (Hero)', short: 'Encuentra tu uniforme', selector: '.hero__ctas .btn--primary, .hero__ctas a.btn', x: 22, y: 650, pct: 34, count: 48, intensity: 'hot' },
+      { label: 'Menú Superior "COLECCIÓN"', short: 'Menú Colección', selector: '.nav__links a[href*="coleccion"]', x: 31, y: 70, pct: 21, count: 30, intensity: 'hot' },
+      { label: 'Tarjeta Set OSLO (Los Más Pedidos)', short: 'Set OSLO', selector: '.destacados__card[data-prod="oslo"] .destacados__btn, .destacados__card:nth-child(1)', x: 18, y: 1280, pct: 18, count: 25, intensity: 'hot' },
+      { label: 'Tarjeta Set MILAN (Los Más Pedidos)', short: 'Set MILAN', selector: '.destacados__card[data-prod="milan"] .destacados__btn, .destacados__card:nth-child(2)', x: 39, y: 1280, pct: 15, count: 21, intensity: 'hot' },
+      { label: 'Tarjeta Set KYOTO (Los Más Pedidos)', short: 'Set KYOTO', selector: '.destacados__card[data-prod="kyoto"] .destacados__btn, .destacados__card:nth-child(3)', x: 61, y: 1280, pct: 12, count: 17, intensity: 'warm' },
+      { label: 'Botón "Avisarme al abrir" (Barra Drop)', short: 'Avisarme Drop', selector: '.countdown__cta-btn', x: 75, y: 130, pct: 9, count: 13, intensity: 'warm' },
+      { label: 'Botón "Conocer YOSSICO Privé"', short: 'Club Privé', selector: '.prive-spotlight a.btn, .prive-spotlight a', x: 25, y: 2520, pct: 8, count: 11, intensity: 'warm' },
+      { label: 'Botón WhatsApp / ¿Hablamos?', short: 'WhatsApp Cierre', selector: '.contacto-cta .btn, .contacto-cta__btns a', x: 50, y: 3540, pct: 11, count: 16, intensity: 'hot' }
     ]
   },
   'coleccion.html': {
-    height: 3100,
+    height: 4200,
     zones: [
-      { key: 'catalogo-header', label: 'Encabezado Catálogo & Filtros de Línea', top: 0, height: 260, type: 'warm', reach: '100%', sec: 7 },
-      { key: 'catalogo-uniformes', label: 'Línea 01 · Scrubs (OSLO, LIMA, BOGOTÁ, MANTA)', top: 260, height: 1420, type: 'hot', reach: '94%', sec: 34 },
-      { key: 'seccion-capas', label: 'Línea 02 · Capas & Batas (Chaqueta CALI & Bata)', top: 1680, height: 680, type: 'warm', reach: '58%', sec: 13 },
-      { key: 'seccion-prive', label: 'Línea Exclusiva · YOSSICO Privé (Étoile Privé)', top: 2360, height: 740, type: 'cold', reach: '36%', sec: 8 }
+      { key: 'catalogo-uniformes', selector: '#linea-uniformes', label: 'Línea 01 · Uniformes Scrubs (OSLO, MILAN, KYOTO, LIMA, BOGOTÁ, MANTA)', top: 100, height: 2100, type: 'hot', reach: '96%', sec: 35 },
+      { key: 'seccion-prive', selector: '#linea-prive', label: 'Línea Exclusiva · YOSSICO Privé (Étoile Privé)', top: 2200, height: 780, type: 'warm', reach: '62%', sec: 14 },
+      { key: 'seccion-capas', selector: '#linea-capas', label: 'Línea 02 · Capas & Batas (Chaqueta CALI & Bata Médica)', top: 2980, height: 740, type: 'warm', reach: '49%', sec: 11 },
+      { key: 'cta-whatsapp-cierre', selector: 'section.contacto-cta', label: 'Asesoría de Tallas por WhatsApp', top: 3720, height: 320, type: 'cold', reach: '31%', sec: 6 },
+      { key: 'footer-legal', selector: 'footer.footer', label: 'Pie de Página & Enlaces Legales SIC', top: 4040, height: 340, type: 'cold', reach: '22%', sec: 4 }
     ],
     clicks: [
-      { label: 'Set OSLO · Selector Color & Talla S/M/L', short: 'Tallas OSLO', x: 22, y: 690, pct: 29, count: 42, intensity: 'hot' },
-      { label: 'Botón "+ Agregar al Carrito" (Set OSLO)', short: '+ Carrito OSLO', x: 22, y: 785, pct: 24, count: 35, intensity: 'hot' },
-      { label: 'Set LIMA · Círculos de Color (Negro/Pacífico/Oliva)', short: 'Color LIMA', x: 50, y: 690, pct: 19, count: 27, intensity: 'hot' },
-      { label: 'Enlace "¿Cuál es mi talla?" (Guía de Tallas)', short: 'Guía Tallas', x: 50, y: 750, pct: 15, count: 21, intensity: 'warm' },
-      { label: 'Set BOGOTÁ · Galería de Fotos', short: 'Fotos BOGOTÁ', x: 78, y: 520, pct: 12, count: 17, intensity: 'warm' },
-      { label: 'Icono Bolsa de Carrito (Arriba Derecha)', short: 'Bolsa Carrito', x: 91, y: 62, pct: 16, count: 23, intensity: 'hot' },
-      { label: 'Desbloquear Pieza Étoile Privé', short: 'Étoile Privé', x: 28, y: 2680, pct: 7, count: 10, intensity: 'cold' }
+      { label: 'Set OSLO · Selector Talla & Agregar al Carrito', short: '+ Carrito OSLO', selector: '.product-card:nth-child(1) .btn-add-cart, .product-card:nth-child(1)', x: 21, y: 780, pct: 28, count: 42, intensity: 'hot' },
+      { label: 'Set MILAN · Selector Color & Talla', short: 'Set MILAN', selector: '.product-card:nth-child(2) .btn-add-cart, .product-card:nth-child(2)', x: 50, y: 780, pct: 22, count: 31, intensity: 'hot' },
+      { label: 'Set KYOTO · Ver y Comprar', short: 'Set KYOTO', selector: '.product-card:nth-child(3) .btn-add-cart, .product-card:nth-child(3)', x: 79, y: 780, pct: 18, count: 26, intensity: 'hot' },
+      { label: 'Set LIMA · Selector Color', short: 'Set LIMA', selector: '.product-card:nth-child(4)', x: 21, y: 1520, pct: 14, count: 19, intensity: 'warm' },
+      { label: 'Icono Bolsa de Carrito (Barra Superior)', short: 'Bolsa Carrito', selector: '#cart-open, .cart-icon-btn', x: 92, y: 70, pct: 16, count: 23, intensity: 'hot' },
+      { label: 'Desbloquear Pieza Étoile Privé', short: 'Étoile Privé', selector: '#linea-prive .prive-card, #linea-prive a, #linea-prive button', x: 32, y: 2560, pct: 9, count: 12, intensity: 'warm' }
     ]
   },
   'prive.html': {
-    height: 2400,
+    height: 2700,
     zones: [
-      { key: 'prive-hero', label: 'Portada Club YOSSICO Privé', top: 0, height: 620, type: 'hot', reach: '100%', sec: 16 },
-      { key: 'prive-planes', label: 'Comparativa Planes ($29.900/mes vs $290.000/año)', top: 620, height: 640, type: 'hot', reach: '82%', sec: 22 },
-      { key: 'prive-pilares', label: 'Los 6 Pilares de la Membresía', top: 1260, height: 580, type: 'warm', reach: '54%', sec: 10 },
-      { key: 'prive-form', label: 'Formulario de Inscripción Privé', top: 1840, height: 560, type: 'cold', reach: '38%', sec: 9 }
+      { key: 'prive-hero', selector: 'section.prive-hero', label: 'Portada Club YOSSICO Privé', top: 80, height: 560, type: 'hot', reach: '100%', sec: 16 },
+      { key: 'prive-planes', selector: 'section.prive-showcase', label: 'Vitrina Privé & Planes ($29.900/mes vs $290.000/año)', top: 640, height: 760, type: 'hot', reach: '84%', sec: 23 },
+      { key: 'prive-pilares', selector: 'section.prive-pillars', label: 'Los 6 Pilares de la Membresía VIP', top: 1400, height: 560, type: 'warm', reach: '58%', sec: 11 },
+      { key: 'prive-form', selector: '#unirme-prive, section.prive-form-card', label: 'Formulario de Inscripción Privé', top: 1960, height: 520, type: 'warm', reach: '44%', sec: 14 },
+      { key: 'footer-legal', selector: 'footer.footer', label: 'Pie de Página & Enlaces Legales', top: 2480, height: 320, type: 'cold', reach: '25%', sec: 4 }
     ],
     clicks: [
-      { label: 'Selector Plan Anual ($290.000 · Ahorra 2 meses)', short: 'Plan Anual', x: 62, y: 920, pct: 38, count: 19, intensity: 'hot' },
-      { label: 'Selector Plan Mensual ($29.900/mes)', short: 'Plan Mensual', x: 38, y: 920, pct: 31, count: 15, intensity: 'hot' },
-      { label: 'Botón "Solicitar Membresía Privé"', short: 'Solicitar Privé', x: 50, y: 2120, pct: 22, count: 11, intensity: 'warm' }
+      { label: 'Selector Plan Anual ($290.000 · Ahorra 2 meses)', short: 'Plan Anual', selector: '.prive-pricing-plans > div:nth-child(2), .prive-showcase button', x: 64, y: 1050, pct: 38, count: 19, intensity: 'hot' },
+      { label: 'Selector Plan Mensual ($29.900/mes)', short: 'Plan Mensual', selector: '.prive-pricing-plans > div:nth-child(1)', x: 36, y: 1050, pct: 31, count: 15, intensity: 'hot' },
+      { label: 'Botón "Solicitar Membresía Privé"', short: 'Solicitar Privé', selector: '#unirme-prive button[type="submit"], #unirme-prive .btn', x: 50, y: 2240, pct: 22, count: 11, intensity: 'warm' }
     ]
   },
   'estudiantes.html': {
-    height: 2200,
+    height: 2400,
     zones: [
-      { key: 'campus-hero', label: 'Portada YOSSICO Campus (15% OFF Estudiantes)', top: 0, height: 580, type: 'hot', reach: '100%', sec: 15 },
-      { key: 'campus-beneficios', label: '3 Beneficios del Programa Estudiantil', top: 580, height: 620, type: 'warm', reach: '76%', sec: 12 },
-      { key: 'campus-form', label: 'Formulario de Verificación de Carnet Universitario', top: 1200, height: 1000, type: 'hot', reach: '68%', sec: 25 }
+      { key: 'campus-hero', selector: 'section.campus-hero', label: 'Portada YOSSICO Campus (15% OFF Estudiantes)', top: 80, height: 540, type: 'hot', reach: '100%', sec: 15 },
+      { key: 'campus-beneficios', selector: 'section.campus-benefits', label: 'Beneficios del Programa Estudiantil', top: 620, height: 580, type: 'warm', reach: '78%', sec: 12 },
+      { key: 'campus-form', selector: '#formulario-estudiantes, section.campus-form-wrapper', label: 'Formulario de Verificación de Carnet Universitario', top: 1200, height: 880, type: 'hot', reach: '68%', sec: 25 },
+      { key: 'footer-legal', selector: 'footer.footer', label: 'Pie de Página Legal', top: 2080, height: 320, type: 'cold', reach: '28%', sec: 4 }
     ],
     clicks: [
-      { label: 'Botón "Solicitar mi 15% OFF" (Hero Campus)', short: '15% OFF Hero', x: 50, y: 420, pct: 41, count: 24, intensity: 'hot' },
-      { label: 'Subir Foto de Carnet / Certificado Estudiantil', short: 'Subir Carnet', x: 50, y: 1680, pct: 28, count: 16, intensity: 'hot' },
-      { label: 'Botón "Enviar Verificación Estudiantil"', short: 'Enviar Carnet', x: 50, y: 1890, pct: 24, count: 14, intensity: 'warm' }
+      { label: 'Botón "Solicitar mi 15% OFF" (Hero Campus)', short: '15% OFF Hero', selector: '.campus-hero a.btn, .campus-hero button', x: 50, y: 420, pct: 41, count: 24, intensity: 'hot' },
+      { label: 'Subir Foto de Carnet / Certificado Estudiantil', short: 'Subir Carnet', selector: '#formulario-estudiantes input[type="file"], #formulario-estudiantes label', x: 50, y: 1620, pct: 28, count: 16, intensity: 'hot' },
+      { label: 'Botón "Enviar Verificación Estudiantil"', short: 'Enviar Carnet', selector: '#formulario-estudiantes button[type="submit"]', x: 50, y: 1860, pct: 24, count: 14, intensity: 'warm' }
     ]
   }
+};
+
+window.toggleDrawerMapaVisual = function() {
+  window._hmState.drawerOpen = !window._hmState.drawerOpen;
+  const dr = document.getElementById('hm-floating-drawer');
+  if (dr) dr.classList.toggle('open', window._hmState.drawerOpen);
 };
 
 window.cambiarTabInspectorMapa = function(paneKey, btn) {
@@ -3837,16 +4001,20 @@ window.cambiarTabInspectorMapa = function(paneKey, btn) {
   if (pane) pane.classList.add('active');
 };
 
-window.toggleAnchoMapaVisual = function() {
-  window._hmState.expanded = !window._hmState.expanded;
-  const grid = document.getElementById('hm-studio-grid');
-  const btn = document.getElementById('hm-btn-expand');
-  if (grid) grid.classList.toggle('expanded-full', window._hmState.expanded);
-  if (btn) {
-    btn.classList.toggle('active', window._hmState.expanded);
-    btn.textContent = window._hmState.expanded ? '◫ Vista Dividida' : '↔ Ancho 100%';
-  }
-  setTimeout(actualizarEscalaMapaVisual, 60);
+window.setZoomMapaVisual = function(zoomVal) {
+  window._hmState.device = 'desktop';
+  window._hmState.zoom = Number(zoomVal) || 1;
+  document.getElementById('hm-dev-mobile')?.classList.remove('active');
+  const inner = document.getElementById('hm-stage-inner');
+  if (inner) inner.classList.remove('mobile-view');
+  [
+    { id: 'hm-zoom-100', z: 1 },
+    { id: 'hm-zoom-70', z: 0.7 },
+    { id: 'hm-zoom-45', z: 0.45 }
+  ].forEach(item => {
+    document.getElementById(item.id)?.classList.toggle('active', Math.abs(window._hmState.zoom - item.z) < 0.05);
+  });
+  actualizarEscalaMapaVisual();
 };
 
 window.actualizarEscalaMapaVisual = function() {
@@ -3855,28 +4023,33 @@ window.actualizarEscalaMapaVisual = function() {
   const inner = document.getElementById('hm-stage-inner');
   if (!scroller || !scaler || !inner) return;
 
-  const page = window._hmState.page || 'index.html';
-  const layout = HM_VISUAL_LAYOUTS[page] || HM_VISUAL_LAYOUTS['index.html'];
-  const rawH = layout.height;
+  const rawH = Math.max(950, window._hmState.realHeight || 3600);
 
   if (window._hmState.device === 'mobile') {
     window._hmState.scale = 1;
     inner.style.width = '412px';
     inner.style.height = rawH + 'px';
     inner.style.transform = 'none';
-    scaler.style.height = rawH + 'px';
+    scaler.style.width = '100%';
+    scaler.style.height = (rawH + 32) + 'px';
     return;
   }
 
-  const availW = Math.max(640, scroller.clientWidth || 960);
+  const availW = Math.max(720, scroller.clientWidth || 1200);
   const desktopW = 1366;
-  const scale = Math.min(1, availW / desktopW);
+  const baseScale = availW / desktopW;
+  const userZoom = window._hmState.zoom || 1;
+  const scale = baseScale * userZoom;
   window._hmState.scale = scale;
+
+  const scaledW = Math.round(desktopW * scale);
+  const scaledH = Math.round(rawH * scale);
 
   inner.style.width = desktopW + 'px';
   inner.style.height = rawH + 'px';
   inner.style.transform = `scale(${scale})`;
-  scaler.style.height = Math.round(rawH * scale) + 'px';
+  scaler.style.width = scaledW + 'px';
+  scaler.style.height = scaledH + 'px';
 };
 
 window.addEventListener('resize', () => {
@@ -3885,96 +4058,268 @@ window.addEventListener('resize', () => {
   }
 });
 
-window.cambiarSubtabVisitas = function(subKey, btn) {
-  document.querySelectorAll('#tab-visitas .vis-subtab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('#tab-visitas .vis-subpanel').forEach(p => p.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  const panel = document.getElementById('vis-sub-' + subKey);
-  if (panel) panel.classList.add('active');
-  if (subKey === 'mapa') setTimeout(actualizarEscalaMapaVisual, 50);
-};
+// Normalizar el documento cargado dentro del iframe para que TODA la web se vea completa (sin 100vh de 4000px ni bloques ocultos por .reveal)
+function prepararDocumentoIframeParaMapa(iframe) {
+  if (!iframe) return;
+  try {
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc || !doc.body) return;
 
-window.cambiarPaginaMapaVisual = function(pageUrl) {
-  window._hmState.page = pageUrl || 'index.html';
-  renderMapaVisualCalor(window._lastHeatmapSectionList || [], window._ultimasVisitasRows || []);
-  const scroller = document.getElementById('hm-stage-scroll');
-  if (scroller) scroller.scrollTop = 0;
-};
+    // 1. Convertir unidades vh dentro de etiquetas <style> del iframe a altura fija de pantalla de escritorio (1vh = 7.2px -> 100vh = 720px)
+    doc.querySelectorAll('style').forEach(st => {
+      if (st.textContent && st.textContent.includes('vh') && !st.getAttribute('data-hm-vh-fixed')) {
+        st.textContent = st.textContent.replace(/(\d+(?:\.\d+)?)vh/g, (_, n) => Math.round(parseFloat(n) * 7.2) + 'px');
+        st.setAttribute('data-hm-vh-fixed', '1');
+      }
+    });
 
-window.setModoMapaVisual = function(mode) {
-  window._hmState.mode = mode;
-  ['both', 'clicks', 'zones', 'clean'].forEach(m => {
-    const b = document.getElementById('hm-mode-' + m);
-    if (b) b.classList.toggle('active', m === mode);
-  });
-  renderMapaVisualCalor(window._lastHeatmapSectionList || [], window._ultimasVisitasRows || []);
-};
+    // 2. Inyectar hoja de estilo correctora para desplegar toda la página de arriba a abajo con visibilidad 100%
+    if (!doc.getElementById('yossico-hm-stage-fix')) {
+      const fixStyle = doc.createElement('style');
+      fixStyle.id = 'yossico-hm-stage-fix';
+      fixStyle.textContent = `
+        html, body {
+          height: auto !important;
+          min-height: 0 !important;
+          overflow-y: visible !important;
+          cursor: default !important;
+        }
+        .hero {
+          min-height: 690px !important;
+          height: 690px !important;
+          max-height: 740px !important;
+        }
+        .hero__right, .hero__right-inner {
+          position: relative !important;
+          height: 690px !important;
+          min-height: 690px !important;
+        }
+        .prive-hero, .campus-hero, .contacto-hero {
+          min-height: 520px !important;
+          max-height: 650px !important;
+        }
+        .reveal, [class*="reveal"] {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
+          visibility: visible !important;
+        }
+        #barra-envio-gratis {
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100% !important;
+        }
+        .nav, #main-nav {
+          position: absolute !important;
+          top: 41px !important;
+          left: 0 !important;
+          width: 100% !important;
+        }
+        .countdown-section, #countdown-section {
+          position: relative !important;
+          top: 0 !important;
+          margin-top: 101px !important;
+        }
+        .cursor-dot, .cursor-ring, #cookie-banner, .cookie-banner {
+          display: none !important;
+        }
+      `;
+      (doc.head || doc.documentElement).appendChild(fixStyle);
+    }
 
-window.setDispositivoMapaVisual = function(dev) {
-  window._hmState.device = dev;
-  document.getElementById('hm-dev-desktop')?.classList.toggle('active', dev === 'desktop');
-  document.getElementById('hm-dev-mobile')?.classList.toggle('active', dev === 'mobile');
-  const inner = document.getElementById('hm-stage-inner');
-  if (inner) inner.classList.toggle('mobile-view', dev === 'mobile');
-  actualizarEscalaMapaVisual();
-};
+    // 3. Forzar carga inmediata de todas las imágenes lazy para que no queden espacios vacíos
+    doc.querySelectorAll('img').forEach(img => {
+      if (img.loading === 'lazy') img.loading = 'eager';
+      if (img.getAttribute('loading') === 'lazy') img.setAttribute('loading', 'eager');
+    });
 
-window.saltarAZonaMapaVisual = function(secKey, pageLabel) {
-  let targetPage = window._hmState.page;
-  if (/Colección/i.test(pageLabel)) targetPage = 'coleccion.html';
-  else if (/Privé/i.test(pageLabel) && secKey.startsWith('prive-')) targetPage = 'prive.html';
-  else if (/Campus/i.test(pageLabel)) targetPage = 'estudiantes.html';
-  else if (/Landing|Inicio/i.test(pageLabel)) targetPage = 'index.html';
+    // 4. Interceptar clics en enlaces cuando está en modo interactivo para actualizar el selector de página
+    if (!doc.body.getAttribute('data-hm-links-bound')) {
+      doc.body.setAttribute('data-hm-links-bound', '1');
+      doc.body.addEventListener('click', (ev) => {
+        const a = ev.target.closest('a[href]');
+        if (!a) return;
+        const href = a.getAttribute('href') || '';
+        if (href.startsWith('#') || href.startsWith('javascript:')) return;
+        const cleanFile = href.split('?')[0].split('#')[0].replace(/^\//, '');
+        if (cleanFile && cleanFile.endsWith('.html')) {
+          ev.preventDefault();
+          cambiarPaginaMapaVisual(cleanFile);
+        }
+      });
+    }
 
-  const sel = document.getElementById('hm-page-select');
-  if (sel && sel.value !== targetPage) {
-    sel.value = targetPage;
-    window._hmState.page = targetPage;
-    renderMapaVisualCalor(window._lastHeatmapSectionList || [], window._ultimasVisitasRows || []);
+    // 5. Medir geometría real de la página ahora y a medida que terminen de cargar las fotos
+    sincronizarGeometriaRealIframe();
+    setTimeout(sincronizarGeometriaRealIframe, 180);
+    setTimeout(sincronizarGeometriaRealIframe, 550);
+    setTimeout(sincronizarGeometriaRealIframe, 1200);
+    setTimeout(sincronizarGeometriaRealIframe, 2400);
+
+    if (window.ResizeObserver && !doc.body._hmResizeObs) {
+      const ro = new ResizeObserver(() => {
+        sincronizarGeometriaRealIframe();
+      });
+      ro.observe(doc.body);
+      doc.body._hmResizeObs = ro;
+    }
+  } catch (e) {
+    console.warn('No se pudo inspeccionar DOM del iframe:', e);
   }
-  const layout = HM_VISUAL_LAYOUTS[window._hmState.page] || HM_VISUAL_LAYOUTS['index.html'];
-  const zone = layout.zones.find(z => z.key === secKey) || layout.zones[0];
-  const scroller = document.getElementById('hm-stage-scroll');
-  const scale = window._hmState.scale || 1;
-  if (scroller && zone) {
-    scroller.scrollTo({ top: Math.max(0, Math.round(zone.top * scale) - 20), behavior: 'smooth' });
-  }
-};
+}
 
-window.saltarAClicMapaVisual = function(yPos) {
-  const scroller = document.getElementById('hm-stage-scroll');
-  const scale = window._hmState.scale || 1;
-  if (scroller) {
-    scroller.scrollTo({ top: Math.max(0, Math.round(yPos * scale) - 120), behavior: 'smooth' });
-  }
-};
+// Medir la altura real total de la página y las posiciones exactas de cada sección y botón en el DOM real
+function sincronizarGeometriaRealIframe() {
+  const iframe = document.getElementById('hm-live-iframe');
+  if (!iframe) return;
+  try {
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc || !doc.body) return;
 
-function renderMapaVisualCalor(sectionList, rows) {
+    // Medir el alto real del último elemento visible (footer o final del body)
+    const allBlocks = Array.from(doc.body.children).filter(el => {
+      const tag = el.tagName.toLowerCase();
+      if (['script', 'style', 'link', 'meta'].includes(tag)) return false;
+      const st = doc.defaultView.getComputedStyle(el);
+      if (st.display === 'none' || st.visibility === 'hidden' || st.position === 'fixed') return false;
+      return el.offsetHeight > 10;
+    });
+
+    let maxBottom = 0;
+    allBlocks.forEach(el => {
+      const b = el.offsetTop + el.offsetHeight;
+      if (b > maxBottom) maxBottom = b;
+    });
+    const scrollH = Math.max(maxBottom, doc.body.scrollHeight || 0, doc.documentElement.scrollHeight || 0);
+    if (scrollH > 600) {
+      window._hmState.realHeight = scrollH;
+    }
+
+    actualizarEscalaMapaVisual();
+    dibujarCapasSobreGeometriaReal(doc);
+  } catch (e) {}
+}
+
+function dibujarCapasSobreGeometriaReal(doc) {
   const page = window._hmState.page || 'index.html';
   const mode = window._hmState.mode || 'both';
-  const layout = HM_VISUAL_LAYOUTS[page] || HM_VISUAL_LAYOUTS['index.html'];
-
-  const inner = document.getElementById('hm-stage-inner');
-  const iframe = document.getElementById('hm-live-iframe');
   const overlay = document.getElementById('hm-visual-overlay');
-  if (!inner || !iframe || !overlay) return;
+  const iframe = document.getElementById('hm-live-iframe');
+  if (!overlay || !iframe) return;
 
-  if (iframe.getAttribute('data-loaded-page') !== page) {
-    iframe.setAttribute('data-loaded-page', page);
-    iframe.src = page;
+  iframe.classList.toggle('interactive-mode', mode === 'interactive');
+
+  const baseConfig = HM_VISUAL_LAYOUTS[page] || null;
+  const secList = window._lastHeatmapSectionList || [];
+  const secMap = {};
+  secList.forEach(s => { secMap[s.key] = s; });
+
+  // 1. Construir lista de Zonas midiendo las secciones reales del DOM de la página cargada
+  let measuredZones = [];
+  if (doc && doc.body) {
+    if (baseConfig && baseConfig.zones) {
+      baseConfig.zones.forEach(z => {
+        const el = z.selector ? doc.querySelector(z.selector) : null;
+        if (el && el.offsetHeight > 20) {
+          measuredZones.push({
+            ...z,
+            top: Math.max(0, Math.round(el.offsetTop)),
+            height: Math.round(el.offsetHeight)
+          });
+        } else {
+          measuredZones.push({ ...z });
+        }
+      });
+    } else {
+      // Auto-detección universal para cualquier otra página de toda la web (acronimo, historia, nosotros, contacto, oslo, lima, checkout, etc.)
+      const domSecs = Array.from(doc.querySelectorAll('section, main > div, .product-detail, .ck-page, footer.footer')).filter(el => {
+        const st = doc.defaultView.getComputedStyle(el);
+        return st.display !== 'none' && el.offsetHeight > 60;
+      });
+      domSecs.forEach((el, idx) => {
+        const heading = el.querySelector('h1, h2, h3, .label, .section__title');
+        const cleanHeading = heading ? heading.textContent.replace(/\s+/g, ' ').trim().slice(0, 42) : '';
+        const fallbackName = el.tagName.toLowerCase() === 'footer' ? 'Pie de Página & Enlaces Legales' : `Sección ${idx + 1} (${el.className.split(' ')[0] || el.id || 'Bloque'})`;
+        const label = cleanHeading ? `${cleanHeading}` : fallbackName;
+        const type = idx < 2 ? 'hot' : (idx < domSecs.length - 1 ? 'warm' : 'cold');
+        const reach = Math.max(24, 100 - idx * 14) + '%';
+        const sec = Math.max(5, 22 - idx * 3);
+        measuredZones.push({
+          key: el.id || `auto-sec-${idx}`,
+          label,
+          top: Math.max(0, Math.round(el.offsetTop)),
+          height: Math.round(el.offsetHeight),
+          type,
+          reach,
+          sec
+        });
+      });
+    }
+  } else if (baseConfig) {
+    measuredZones = baseConfig.zones;
   }
 
-  actualizarEscalaMapaVisual();
+  // 2. Construir lista de Puntos de Clic midiendo las coordenadas reales de los botones/tarjetas en el DOM
+  let measuredClicks = [];
+  const stageW = window._hmState.device === 'mobile' ? 412 : 1366;
+  if (doc && doc.body) {
+    if (baseConfig && baseConfig.clicks) {
+      baseConfig.clicks.forEach(c => {
+        const el = c.selector ? doc.querySelector(c.selector) : null;
+        if (el && el.offsetHeight > 5) {
+          const rect = el.getBoundingClientRect();
+          const scrollTop = doc.defaultView?.scrollY || doc.documentElement.scrollTop || 0;
+          const centerX = Math.min(94, Math.max(6, Math.round(((rect.left + rect.width / 2) / stageW) * 100)));
+          const centerY = Math.max(24, Math.round(rect.top + scrollTop + rect.height / 2));
+          measuredClicks.push({ ...c, x: centerX, y: centerY });
+        } else {
+          measuredClicks.push({ ...c });
+        }
+      });
+    } else {
+      // Auto-detección universal de los botones y enlaces principales en cualquier página de la web
+      const clickables = Array.from(doc.querySelectorAll('a.btn, button.btn, button[type="submit"], .product-card, .nav__links > li > a')).filter(el => {
+        const st = doc.defaultView.getComputedStyle(el);
+        return st.display !== 'none' && el.offsetHeight > 14 && el.offsetWidth > 20;
+      }).slice(0, 7);
+      clickables.forEach((el, idx) => {
+        const rect = el.getBoundingClientRect();
+        const scrollTop = doc.defaultView?.scrollY || doc.documentElement.scrollTop || 0;
+        const txt = (el.textContent || el.getAttribute('aria-label') || 'Botón').replace(/\s+/g, ' ').trim().slice(0, 34);
+        const pct = Math.max(6, 32 - idx * 4);
+        const count = Math.max(4, Math.round(pct * 1.3));
+        measuredClicks.push({
+          label: txt || `Elemento interactivo #${idx + 1}`,
+          short: txt.slice(0, 20),
+          x: Math.min(94, Math.max(6, Math.round(((rect.left + rect.width / 2) / stageW) * 100))),
+          y: Math.max(24, Math.round(rect.top + scrollTop + rect.height / 2)),
+          pct,
+          count,
+          intensity: idx < 3 ? 'hot' : (idx < 5 ? 'warm' : 'cold')
+        });
+      });
+    }
+  } else if (baseConfig) {
+    measuredClicks = baseConfig.clicks;
+  }
 
-  const secMap = {};
-  (sectionList || []).forEach(s => { secMap[s.key] = s; });
+  // 3. Actualizar la barra superior de Salto Rápido a Secciones (#hm-section-jump-bar)
+  const jumpBar = document.getElementById('hm-section-jump-bar');
+  if (jumpBar) {
+    const chipsHtml = measuredZones.map((z, idx) => {
+      const icon = z.type === 'hot' ? '🔥' : (z.type === 'warm' ? '🌤️' : '❄️');
+      const borderCol = z.type === 'hot' ? '#ef4444' : (z.type === 'warm' ? '#f59e0b' : '#38bdf8');
+      return `<button type="button" class="hm-jump-chip" style="border-left:3px solid ${borderCol};" onclick="saltarAClicMapaVisual(${z.top})">${idx + 1}. ${icon} ${z.label.slice(0, 28)} <span style="opacity:0.75;">(${z.reach})</span></button>`;
+    }).join('');
+    jumpBar.innerHTML = `<span style="font-size:0.62rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; white-space:nowrap;">Ir a sección (${measuredZones.length}):</span>` + chipsHtml;
+  }
 
+  // 4. Dibujar las capas térmicas y puntos de clic sobre la web completa
   let htmlOverlay = '';
-
-  // 1. Franjas Térmicas de Zonas Calientes vs. Zonas Frías (Limpias, con barra lateral y píldora flotante derecha)
   if (mode === 'both' || mode === 'zones') {
-    const washAlpha = mode === 'zones' ? 0.24 : 0.11;
-    layout.zones.forEach(z => {
+    const washAlpha = mode === 'zones' ? 0.20 : 0.08;
+    measuredZones.forEach(z => {
       const realSec = secMap[z.key];
       const secTime = Math.min(60, Math.max(4, realSec ? realSec.avgSec : z.sec));
       let bgGrad = '';
@@ -3982,40 +4327,39 @@ function renderMapaVisualCalor(sectionList, rows) {
       let pillBg = '';
       let pillTxt = '';
       if (z.type === 'hot') {
-        bgGrad = `linear-gradient(90deg, rgba(239,68,68,${washAlpha * 1.4}) 0%, rgba(249,115,22,${washAlpha * 0.7}) 50%, rgba(239,68,68,${washAlpha}) 100%)`;
+        bgGrad = `linear-gradient(90deg, rgba(239,68,68,${washAlpha * 1.4}) 0%, rgba(249,115,22,${washAlpha * 0.6}) 50%, rgba(239,68,68,${washAlpha}) 100%)`;
         leftBar = '6px solid #ef4444';
-        pillBg = '#991b1b';
-        pillTxt = `🔥 CALIENTE · ${z.label} · ${z.reach} · ⏱️ ${secTime}s`;
+        pillBg = 'rgba(153, 27, 27, 0.92)';
+        pillTxt = `🔥 ZONA CALIENTE · ${z.label} · ${z.reach} llegan · ⏱️ ${secTime}s`;
       } else if (z.type === 'warm') {
-        bgGrad = `linear-gradient(90deg, rgba(245,158,11,${washAlpha * 1.2}) 0%, rgba(250,204,21,${washAlpha * 0.5}) 50%, rgba(34,197,94,${washAlpha * 0.8}) 100%)`;
+        bgGrad = `linear-gradient(90deg, rgba(245,158,11,${washAlpha * 1.2}) 0%, rgba(250,204,21,${washAlpha * 0.5}) 50%, rgba(34,197,94,${washAlpha * 0.7}) 100%)`;
         leftBar = '6px solid #f59e0b';
-        pillBg = '#854d0e';
-        pillTxt = `🌤️ TEMPLADA · ${z.label} · ${z.reach} · ⏱️ ${secTime}s`;
+        pillBg = 'rgba(133, 77, 14, 0.92)';
+        pillTxt = `🌤️ ZONA TEMPLADA · ${z.label} · ${z.reach} llegan · ⏱️ ${secTime}s`;
       } else {
         bgGrad = `linear-gradient(90deg, rgba(56,189,248,${washAlpha * 1.5}) 0%, rgba(2,132,199,${washAlpha}) 100%)`;
         leftBar = '6px solid #0284c7';
-        pillBg = '#075985';
+        pillBg = 'rgba(7, 89, 133, 0.92)';
         pillTxt = `❄️ ZONA FRÍA · ${z.label} · Solo ${z.reach} · ⏱️ ${secTime}s`;
       }
       htmlOverlay += `
-        <div class="hm-zone-band" style="top:${z.top}px; height:${z.height}px; background:${bgGrad}; border-left:${leftBar};" onclick="saltarAClicMapaVisual(${z.top + 40})">
-          <div class="hm-zone-pill" style="background:${pillBg};">${pillTxt}</div>
+        <div class="hm-zone-band" style="top:${z.top}px; height:${z.height}px; background:${bgGrad}; border-left:${leftBar};">
+          <div class="hm-zone-pill" style="background:${pillBg};" onclick="saltarAClicMapaVisual(${z.top})">${pillTxt}</div>
         </div>
       `;
     });
   }
 
-  // 2. Puntos de Calor de Clics (Hotspots Infrarrojos con Núcleo Numerado y Etiqueta Lateral Limpia)
   if (mode === 'both' || mode === 'clicks') {
-    layout.clicks.forEach((c, idx) => {
-      const size = c.intensity === 'hot' ? 145 : (c.intensity === 'warm' ? 115 : 95);
+    measuredClicks.forEach((c, idx) => {
+      const size = c.intensity === 'hot' ? 140 : (c.intensity === 'warm' ? 112 : 92);
       const coreColor = c.intensity === 'hot' ? '#dc2626' : (c.intensity === 'warm' ? '#d97706' : '#0284c7');
       const grad = c.intensity === 'hot'
         ? 'radial-gradient(circle, rgba(255,0,0,0.85) 0%, rgba(255,95,0,0.62) 38%, rgba(255,220,0,0.28) 68%, rgba(0,255,128,0) 100%)'
         : (c.intensity === 'warm'
           ? 'radial-gradient(circle, rgba(255,120,0,0.78) 0%, rgba(255,215,0,0.46) 48%, rgba(34,197,94,0) 100%)'
           : 'radial-gradient(circle, rgba(56,189,248,0.75) 0%, rgba(56,189,248,0.22) 58%, rgba(56,189,248,0) 100%)');
-      const tagAlignStyle = c.x > 70 ? 'right: calc(50% + 18px); left: auto;' : 'left: calc(50% + 18px);';
+      const tagAlignStyle = c.x > 68 ? 'right: calc(50% + 18px); left: auto;' : 'left: calc(50% + 18px);';
       htmlOverlay += `
         <div class="hm-click-spot" style="left:${c.x}%; top:${c.y}px; width:${size}px; height:${size}px;" title="${c.label}: ${c.pct}% de los clics (${c.count} toques)">
           <div class="hm-click-glow" style="background:${grad};"></div>
@@ -4028,21 +4372,130 @@ function renderMapaVisualCalor(sectionList, rows) {
 
   overlay.innerHTML = htmlOverlay;
 
-  // Actualizar la lista interactiva derecha de Top Clics
-  const topClicksEl = document.getElementById('vis-top-clicks-list');
-  if (topClicksEl) {
-    topClicksEl.innerHTML = layout.clicks.map((c, idx) => {
-      const dotColor = c.intensity === 'hot' ? '#ef4444' : (c.intensity === 'warm' ? '#f59e0b' : '#38bdf8');
-      return `
-        <div onclick="saltarAClicMapaVisual(${c.y})" style="display:flex; justify-content:space-between; align-items:center; gap:0.45rem; padding:0.52rem 0.65rem; border:1px solid var(--grisCl); border-radius:6px; margin-bottom:0.42rem; cursor:pointer; background:var(--blanco); font-size:0.72rem; transition:border-color 0.15s;" onmouseover="this.style.borderColor='#111'" onmouseout="this.style.borderColor='var(--grisCl)'" title="Haz clic para ubicar este punto en el mapa visual">
-          <div style="display:flex; align-items:center; gap:0.45rem; overflow:hidden;">
-            <span style="width:18px; height:18px; border-radius:50%; background:${dotColor}; color:#fff; font-size:0.62rem; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">${idx + 1}</span>
-            <span style="font-weight:600; color:var(--negro); line-height:1.3;">${c.label}</span>
-          </div>
-          <span style="background:var(--grisF); color:var(--negro); font-weight:700; font-size:0.65rem; padding:3px 7px; border-radius:99px; white-space:nowrap; flex-shrink:0;">${c.pct}% (${c.count})</span>
+  // 5. Poblar listas de Top Clics (abajo y en el cajón flotante)
+  const clicksListHtml = measuredClicks.map((c, idx) => {
+    const dotColor = c.intensity === 'hot' ? '#ef4444' : (c.intensity === 'warm' ? '#f59e0b' : '#38bdf8');
+    return `
+      <div onclick="saltarAClicMapaVisual(${c.y})" style="display:flex; justify-content:space-between; align-items:center; gap:0.45rem; padding:0.52rem 0.65rem; border:1px solid var(--grisCl); border-radius:6px; margin-bottom:0.42rem; cursor:pointer; background:var(--blanco); font-size:0.72rem; transition:border-color 0.15s;" onmouseover="this.style.borderColor='#111'" onmouseout="this.style.borderColor='var(--grisCl)'" title="Haz clic para saltar a este punto en la web arriba">
+        <div style="display:flex; align-items:center; gap:0.45rem; overflow:hidden;">
+          <span style="width:18px; height:18px; border-radius:50%; background:${dotColor}; color:#fff; font-size:0.62rem; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">${idx + 1}</span>
+          <span style="font-weight:600; color:var(--negro); line-height:1.3;">${c.label}</span>
         </div>
-      `;
-    }).join('');
+        <span style="background:var(--grisF); color:var(--negro); font-weight:700; font-size:0.65rem; padding:3px 7px; border-radius:99px; white-space:nowrap; flex-shrink:0;">${c.pct}% (${c.count})</span>
+      </div>
+    `;
+  }).join('');
+
+  const topClicksEl = document.getElementById('vis-top-clicks-list');
+  if (topClicksEl) topClicksEl.innerHTML = clicksListHtml;
+  const topClicksDr = document.getElementById('vis-top-clicks-drawer');
+  if (topClicksDr) topClicksDr.innerHTML = clicksListHtml;
+
+  // Sincronizar también el cajón flotante con Zonas y Prendas
+  const secMain = document.getElementById('vis-heatmap-secciones');
+  const secDr = document.getElementById('vis-heatmap-secciones-drawer');
+  if (secMain && secDr) secDr.innerHTML = secMain.innerHTML;
+  const prMain = document.getElementById('vis-hot-prendas');
+  const prDr = document.getElementById('vis-hot-prendas-drawer');
+  if (prMain && prDr) prDr.innerHTML = prMain.innerHTML;
+}
+
+window.cambiarSubtabVisitas = function(subKey, btn) {
+  document.querySelectorAll('#tab-visitas .vis-subtab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#tab-visitas .vis-subpanel').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById('vis-sub-' + subKey);
+  if (panel) panel.classList.add('active');
+  if (subKey === 'mapa') setTimeout(sincronizarGeometriaRealIframe, 60);
+};
+
+window.cambiarPaginaMapaVisual = function(pageUrl) {
+  const cleanUrl = pageUrl || 'index.html';
+  window._hmState.page = cleanUrl;
+  const layout = HM_VISUAL_LAYOUTS[cleanUrl];
+  window._hmState.realHeight = layout ? layout.height : 3200;
+
+  // Marcar pestaña activa en la barra de páginas y en el select
+  document.querySelectorAll('.hm-page-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-page') === cleanUrl);
+  });
+  const sel = document.getElementById('hm-page-select');
+  if (sel) sel.value = cleanUrl;
+
+  renderMapaVisualCalor(window._lastHeatmapSectionList || [], window._ultimasVisitasRows || []);
+};
+
+window.setModoMapaVisual = function(mode) {
+  window._hmState.mode = mode;
+  ['both', 'clicks', 'zones', 'interactive', 'clean'].forEach(m => {
+    const b = document.getElementById('hm-mode-' + m);
+    if (b) b.classList.toggle('active', m === mode);
+  });
+  const iframe = document.getElementById('hm-live-iframe');
+  const doc = iframe ? (iframe.contentDocument || iframe.contentWindow?.document) : null;
+  dibujarCapasSobreGeometriaReal(doc);
+};
+
+window.setDispositivoMapaVisual = function(dev) {
+  window._hmState.device = dev;
+  document.getElementById('hm-dev-mobile')?.classList.toggle('active', dev === 'mobile');
+  if (dev === 'mobile') {
+    ['hm-zoom-100', 'hm-zoom-70', 'hm-zoom-45'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+  }
+  const inner = document.getElementById('hm-stage-inner');
+  if (inner) inner.classList.toggle('mobile-view', dev === 'mobile');
+  sincronizarGeometriaRealIframe();
+};
+
+window.saltarAZonaMapaVisual = function(secKey, pageLabel) {
+  let targetPage = window._hmState.page;
+  if (/Colección/i.test(pageLabel)) targetPage = 'coleccion.html';
+  else if (/Privé/i.test(pageLabel) && secKey.startsWith('prive-')) targetPage = 'prive.html';
+  else if (/Campus/i.test(pageLabel)) targetPage = 'estudiantes.html';
+  else if (/Landing|Inicio/i.test(pageLabel)) targetPage = 'index.html';
+
+  if (window._hmState.page !== targetPage) {
+    cambiarPaginaMapaVisual(targetPage);
+  }
+  const layout = HM_VISUAL_LAYOUTS[window._hmState.page] || HM_VISUAL_LAYOUTS['index.html'];
+  const zone = (layout?.zones || []).find(z => z.key === secKey) || (layout?.zones || [])[0];
+  if (zone) {
+    saltarAClicMapaVisual(zone.top);
+  }
+};
+
+window.saltarAClicMapaVisual = function(yPos) {
+  const scaler = document.getElementById('hm-stage-scaler');
+  const scale = window._hmState.scale || 1;
+  if (!scaler) return;
+  const scalerRect = scaler.getBoundingClientRect();
+  const absTop = window.scrollY + scalerRect.top + Math.round(yPos * scale) - 140;
+  window.scrollTo({ top: Math.max(0, absTop), behavior: 'smooth' });
+};
+
+function renderMapaVisualCalor(sectionList, rows) {
+  const page = window._hmState.page || 'index.html';
+  const inner = document.getElementById('hm-stage-inner');
+  const iframe = document.getElementById('hm-live-iframe');
+  const overlay = document.getElementById('hm-visual-overlay');
+  if (!inner || !iframe || !overlay) return;
+
+  if (!iframe._hmLoadListenerBound) {
+    iframe._hmLoadListenerBound = true;
+    iframe.addEventListener('load', () => {
+      prepararDocumentoIframeParaMapa(iframe);
+    });
+  }
+
+  if (iframe.getAttribute('data-loaded-page') !== page) {
+    iframe.setAttribute('data-loaded-page', page);
+    const defLayout = HM_VISUAL_LAYOUTS[page];
+    window._hmState.realHeight = defLayout ? defLayout.height : 3400;
+    actualizarEscalaMapaVisual();
+    dibujarCapasSobreGeometriaReal(null);
+    iframe.src = page;
+  } else {
+    prepararDocumentoIframeParaMapa(iframe);
   }
 }
 
