@@ -23,6 +23,7 @@
 
 <title>YOSSICO · Panel Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
 <style>
   :root {
     --negro:#111111;--blanco:#FFFFFF;--grisF:#F5F4F1;--grisCl:#E8E6E2;--grisMed:#8A8A8A;
@@ -1354,120 +1355,274 @@
         
         <!-- Formulario Oculto en impresión -->
         <div id="b2b-form-area" class="no-print">
-          <div class="section-title" style="margin-bottom:1.5rem;font-size:1.1rem">Generador de Cotizaciones Institucionales</div>
-
-          <div class="section-title" style="margin-top:2rem;font-size:1.1rem">Historial de Cotizaciones</div>
-          <table style="width:100%">
-            <thead><tr><th>#</th><th>Cliente</th><th>Total</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="tabla-cotizaciones"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody>
-          </table>
-
-          
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-            <!-- Lado Izquierdo: Datos Cliente -->
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.25rem; border-bottom:1px solid var(--grisCl); padding-bottom:1rem;">
             <div>
-              <div style="font-weight:bold; margin-bottom:1rem;">Datos del Cliente / Clínica</div>
-              <div class="form-group">
-                <label>Razón Social o Nombre</label>
-                <input type="text" id="b2b-empresa" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="[ NOMBRE EMPRESA/CLIENTE ]" value="Clínica Sanitas S.A.">
+              <div class="section-title" style="margin-bottom:0.25rem; font-size:1.2rem;">🏢 Cotizador Institucional & Corporativo B2B</div>
+              <div style="font-size:0.76rem; color:var(--grisMed);">Selecciona uniformes del catálogo YOSSICO o agrega ítems personalizados, aplica descuentos por volumen y descarga el PDF oficial al instante.</div>
+            </div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <button type="button" class="btn btn-gris btn-sm" onclick="b2bLimpiarFormulario()">↺ Nueva Cotización Limpia</button>
+              <button type="button" class="btn btn-gris btn-sm" onclick="b2bGuardarCotizacion()">💾 Guardar en Historial</button>
+              <button type="button" class="btn btn-negro btn-sm" onclick="b2bGenerarImpresion()">👁️ Previsualizar Cotización</button>
+              <button type="button" class="btn btn-sm" style="background:#0C4E57; color:#fff; border:none; font-weight:600;" onclick="b2bImprimirDirecto()">🖨️ Imprimir</button>
+              <button type="button" class="btn btn-sm" style="background:#2D6A4F; color:#fff; border:none; font-weight:600;" id="btn-b2b-pdf-top" onclick="b2bDescargarPDF()">⬇ Descargar PDF</button>
+            </div>
+          </div>
+
+          <!-- SECCIÓN 1: DATOS DEL CLIENTE / CLÍNICA / INSTITUCIÓN -->
+          <div style="background:var(--grisF); border:1px solid var(--grisCl); border-radius:8px; padding:1.1rem 1.25rem; margin-bottom:1.5rem;">
+            <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--negro); margin-bottom:0.85rem;">1. Datos de la Clínica, Empresa o Profesional</div>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:0.9rem;">
+              <div class="form-group" style="margin:0;">
+                <label>Razón Social / Nombre del Cliente</label>
+                <input type="text" id="b2b-empresa" class="input-form" style="background:var(--blanco); color:var(--negro); border:1px solid var(--grisCl); padding:0.55rem 0.7rem; width:100%; border-radius:4px; font-size:0.82rem;" placeholder="Ej. Clínica Reina Sofía / Dra. Camila Gómez" value="Clínica Sanitas S.A." oninput="b2bRecalcularTotales()">
               </div>
-            <div class="form-group">
-              <label>NIT o Documento</label>
-              <input type="text" id="b2b-nit" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="[ NIT DE LA EMPRESA ]" value="NIT: 900.123.456-7">
-            </div>
-            <div class="form-group">
-              <label>Correo Electrónico / Teléfono</label>
-              <input type="text" id="b2b-correo" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;" placeholder="[ CORREO EMPRESA/CLIENTE ]" value="compras@sanitas.com">
-            </div>
-            <div class="form-group">
-              <label>Fecha Cotización</label>
-              <input type="date" id="b2b-fecha" class="input-form" style="background:var(--grisF); color:var(--negro); border:1px solid var(--grisCl); padding:0.5rem; width:100%; border-radius:4px;">
-            </div>
-          </div>
-          
-          <!-- Lado Derecho: Items -->
-          <div>
-            <div style="font-weight:bold; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center;">
-              Prendas / Uniformes
-              <button class="btn btn-gris btn-sm" onclick="b2bAgregarItem()">+ Añadir Fila</button>
-            </div>
-            <div id="b2b-items-container" style="display:flex; flex-direction:column; gap:0.5rem; max-height: 250px; overflow-y:auto; padding-right:0.5rem;">
-              <!-- Filas dinámicas -->
-            </div>
-            
-            <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid #eee; text-align:right;">
-              <div style="font-size:0.8rem; color:var(--grisMed);">El IVA se calcula automáticamente (19%)</div>
-              <button class="btn btn-negro" onclick="b2bGenerarImpresion()" style="margin-top:1rem; font-size:1rem; padding:0.5rem 1.5rem;">🖨️ Generar Cotización PDF</button>
+              <div class="form-group" style="margin:0;">
+                <label>NIT o Cédula</label>
+                <input type="text" id="b2b-nit" class="input-form" style="background:var(--blanco); color:var(--negro); border:1px solid var(--grisCl); padding:0.55rem 0.7rem; width:100%; border-radius:4px; font-size:0.82rem;" placeholder="Ej. NIT 900.123.456-7" value="NIT: 900.123.456-7" oninput="b2bRecalcularTotales()">
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label>Correo Electrónico / WhatsApp</label>
+                <input type="text" id="b2b-correo" class="input-form" style="background:var(--blanco); color:var(--negro); border:1px solid var(--grisCl); padding:0.55rem 0.7rem; width:100%; border-radius:4px; font-size:0.82rem;" placeholder="compras@clinica.com · +57 300..." value="compras@sanitas.com" oninput="b2bRecalcularTotales()">
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label>Ciudad / Contacto Encargado</label>
+                <input type="text" id="b2b-ciudad" class="input-form" style="background:var(--blanco); color:var(--negro); border:1px solid var(--grisCl); padding:0.55rem 0.7rem; width:100%; border-radius:4px; font-size:0.82rem;" placeholder="Ej. Bogotá D.C. · Dir. Compras" value="Bogotá D.C.">
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label>Fecha de Emisión</label>
+                <input type="date" id="b2b-fecha" class="input-form" style="background:var(--blanco); color:var(--negro); border:1px solid var(--grisCl); padding:0.55rem 0.7rem; width:100%; border-radius:4px; font-size:0.82rem;">
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label>Validez de la Oferta</label>
+                <select id="b2b-validez" class="input-form" style="background:var(--blanco); color:var(--negro); border:1px solid var(--grisCl); padding:0.55rem 0.7rem; width:100%; border-radius:4px; font-size:0.82rem;">
+                  <option value="15 días calendario">15 días calendario</option>
+                  <option value="30 días calendario">30 días calendario</option>
+                  <option value="8 días calendario">8 días calendario</option>
+                  <option value="Vigencia sujeta a disponibilidad de stock">Sujeta a disponibilidad de Drop</option>
+                </select>
+              </div>
             </div>
           </div>
-          </div><!-- /grid -->
+
+          <!-- SECCIÓN 2: SELECCIÓN RÁPIDA DE UNIFORMES YOSSICO E ÍTEMS -->
+          <div style="background:var(--blanco); border:1px solid var(--grisCl); border-radius:8px; padding:1.1rem 1.25rem; margin-bottom:1.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.8rem;">
+              <div>
+                <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--negro);">2. Uniformes y Prendas a Cotizar</div>
+                <div style="font-size:0.72rem; color:var(--grisMed); margin-top:2px;">Haz clic en un uniforme para agregarlo con su precio oficial, o elige en la lista desplegable de cada fila:</div>
+              </div>
+              <button type="button" class="btn btn-negro btn-sm" onclick="b2bAgregarItem('CUSTOM')">+ Añadir Fila / Otro Ítem</button>
+            </div>
+
+            <!-- Botonera de Adición en 1 Clic del Catálogo YOSSICO -->
+            <div style="display:flex; gap:0.45rem; flex-wrap:wrap; margin-bottom:1rem; padding:0.75rem; background:var(--grisF); border-radius:6px; border:1px dashed var(--grisCl);">
+              <span style="font-size:0.68rem; font-weight:600; color:var(--grisMed); display:flex; align-items:center; margin-right:0.3rem;">⚡ Agregar rápido:</span>
+              <button type="button" class="btn btn-gris btn-sm" style="font-size:0.7rem; padding:0.35rem 0.65rem;" onclick="b2bAgregarItem('OSLO')">+ Set OSLO ($345.900)</button>
+              <button type="button" class="btn btn-gris btn-sm" style="font-size:0.7rem; padding:0.35rem 0.65rem;" onclick="b2bAgregarItem('LIMA')">+ Set LIMA ($275.900)</button>
+              <button type="button" class="btn btn-gris btn-sm" style="font-size:0.7rem; padding:0.35rem 0.65rem;" onclick="b2bAgregarItem('BOGOTA')">+ Set BOGOTÁ ($329.900)</button>
+              <button type="button" class="btn btn-gris btn-sm" style="font-size:0.7rem; padding:0.35rem 0.65rem;" onclick="b2bAgregarItem('MANTA')">+ Set MANTA ($329.900)</button>
+              <button type="button" class="btn btn-gris btn-sm" style="font-size:0.7rem; padding:0.35rem 0.65rem;" onclick="b2bAgregarItem('ETOILE')">+ ÉTOILE PRIVÉ ($359.900)</button>
+              <button type="button" class="btn btn-gris btn-sm" style="font-size:0.7rem; padding:0.35rem 0.65rem;" onclick="b2bAgregarItem('CALI')">+ Chaqueta CALI ($179.900)</button>
+              <button type="button" class="btn btn-gris btn-sm" style="font-size:0.7rem; padding:0.35rem 0.65rem;" onclick="b2bAgregarItem('BATA')">+ Bata Médica ($219.900)</button>
+              <button type="button" class="btn btn-gris btn-sm" style="font-size:0.7rem; padding:0.35rem 0.65rem;" onclick="b2bAgregarItem('BORDADO')">+ Bordado Logo ($18.000)</button>
+              <button type="button" class="btn btn-gris btn-sm" style="font-size:0.7rem; padding:0.35rem 0.65rem; border-color:#0C4E57; color:#0C4E57;" onclick="b2bAgregarItem('CUSTOM')">+ ✍️ Otro Uniforme / Personalizado</button>
+            </div>
+
+            <!-- Cabecera de Columnas Clara (sin "SKU") -->
+            <div style="display:grid; grid-template-columns: 1.35fr 1.65fr 115px 155px 130px 68px; gap:0.55rem; padding:0.5rem 0.6rem; background:#111; color:#fff; border-radius:6px 6px 0 0; font-size:0.68rem; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; align-items:center;">
+              <div>Uniforme / Prenda</div>
+              <div>Color, Tallas y Descripción de la Prenda</div>
+              <div style="text-align:center;">Unidades</div>
+              <div style="text-align:right;">Precio Unitario (COP)</div>
+              <div style="text-align:right;">Subtotal Fila</div>
+              <div style="text-align:center;">Acción</div>
+            </div>
+
+            <!-- Contenedor de Filas Dinámicas -->
+            <div id="b2b-items-container" style="display:flex; flex-direction:column; gap:0.5rem; padding:0.6rem; border:1px solid var(--grisCl); border-top:none; border-radius:0 0 6px 6px; background:var(--grisF);">
+              <!-- Filas generadas por JS -->
+            </div>
+          </div>
+
+          <!-- SECCIÓN 3: DESCUENTO COMERCIAL, IMPUESTOS Y RESUMEN EN VIVO -->
+          <div style="display:grid; grid-template-columns: 1.25fr 0.75fr; gap:1.5rem; align-items:start;">
+            <div style="background:var(--grisF); border:1px solid var(--grisCl); border-radius:8px; padding:1.1rem 1.25rem;">
+              <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--negro); margin-bottom:0.85rem;">3. Descuento Comercial, IVA y Condiciones</div>
+              
+              <!-- Bloque de Descuento Versátil -->
+              <div style="background:var(--blanco); border:1px solid var(--grisCl); border-radius:6px; padding:0.85rem; margin-bottom:0.9rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.6rem;">
+                  <label style="font-size:0.72rem; font-weight:700; color:#0C4E57; margin:0;">🏷️ Descuento para esta Cotización</label>
+                  <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+                    <button type="button" class="btn btn-gris btn-sm" style="padding:2px 8px; font-size:0.68rem;" onclick="b2bSetDescuentoRapido('pct', 0)">Sin dcto</button>
+                    <button type="button" class="btn btn-gris btn-sm" style="padding:2px 8px; font-size:0.68rem;" onclick="b2bSetDescuentoRapido('pct', 5)">5% OFF</button>
+                    <button type="button" class="btn btn-gris btn-sm" style="padding:2px 8px; font-size:0.68rem;" onclick="b2bSetDescuentoRapido('pct', 10)">10% OFF</button>
+                    <button type="button" class="btn btn-gris btn-sm" style="padding:2px 8px; font-size:0.68rem;" onclick="b2bSetDescuentoRapido('pct', 15)">15% OFF</button>
+                    <button type="button" class="btn btn-gris btn-sm" style="padding:2px 8px; font-size:0.68rem;" onclick="b2bSetDescuentoRapido('pct', 20)">20% OFF</button>
+                  </div>
+                </div>
+                <div style="display:grid; grid-template-columns: 140px 130px 1fr; gap:0.6rem;">
+                  <select id="b2b-desc-tipo" class="input-form" style="padding:0.45rem; border:1px solid var(--grisCl); border-radius:4px; font-size:0.78rem; background:var(--blanco); color:var(--negro);" onchange="b2bRecalcularTotales()">
+                    <option value="pct">Porcentaje (%)</option>
+                    <option value="cop">Valor en Pesos ($ COP)</option>
+                  </select>
+                  <input type="number" id="b2b-desc-valor" value="0" min="0" step="any" style="padding:0.45rem 0.6rem; border:1px solid var(--grisCl); border-radius:4px; font-size:0.82rem; font-weight:600; background:var(--blanco); color:var(--negro);" oninput="b2bRecalcularTotales()">
+                  <input type="text" id="b2b-desc-motivo" placeholder="Concepto (ej. Descuento corporativo por volumen)" value="Descuento especial institucional" style="padding:0.45rem 0.6rem; border:1px solid var(--grisCl); border-radius:4px; font-size:0.78rem; background:var(--blanco); color:var(--negro);" oninput="b2bRecalcularTotales()">
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.8rem; margin-bottom:0.85rem;">
+                <div>
+                  <label style="font-size:0.7rem; font-weight:600; display:block; margin-bottom:0.3rem;">Manejo de IVA (19%)</label>
+                  <select id="b2b-iva-modo" style="width:100%; padding:0.5rem; border:1px solid var(--grisCl); border-radius:4px; font-size:0.78rem; background:var(--blanco); color:var(--negro);" onchange="b2bRecalcularTotales()">
+                    <option value="sumar">Sumar IVA (+19%) sobre subtotal neto</option>
+                    <option value="incluido">Precios ya incluyen IVA (desglosar 19%)</option>
+                    <option value="exento">Sin IVA / Régimen Simple o Exento (0%)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.7rem; font-weight:600; display:block; margin-bottom:0.3rem;">Envío / Logística ($ COP · 0 = Gratis)</label>
+                  <input type="number" id="b2b-envio-valor" value="0" min="0" step="1000" style="width:100%; padding:0.5rem; border:1px solid var(--grisCl); border-radius:4px; font-size:0.78rem; background:var(--blanco); color:var(--negro);" oninput="b2bRecalcularTotales()">
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size:0.7rem; font-weight:600; display:block; margin-bottom:0.3rem;">Notas y Condiciones Comerciales en el PDF</label>
+                <textarea id="b2b-notas" rows="2" style="width:100%; padding:0.5rem; border:1px solid var(--grisCl); border-radius:4px; font-size:0.76rem; font-family:inherit; background:var(--blanco); color:var(--negro);" oninput="b2bRecalcularTotales()">Forma de pago: 50% anticipo para iniciar producción/despacho y 50% contra entrega. Garantía de confección antifluidos de alta durabilidad YOSSICO.</textarea>
+              </div>
+            </div>
+
+            <!-- Tarjeta Resumen en Tiempo Real -->
+            <div style="background:#111; color:#fff; border-radius:8px; padding:1.25rem; box-shadow:0 10px 25px rgba(0,0,0,0.12);">
+              <div style="font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:#9ca3af; font-weight:600; margin-bottom:0.85rem;">Resumen de la Cotización</div>
+              <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.45rem; color:#d1d5db;">
+                <span>Total Unidades:</span>
+                <strong id="b2b-live-unidades" style="color:#fff;">0 prendas</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.45rem; color:#d1d5db;">
+                <span>Subtotal Bruto:</span>
+                <span id="b2b-live-subtotal">$0 COP</span>
+              </div>
+              <div id="b2b-live-desc-row" style="display:none; justify-content:space-between; font-size:0.8rem; margin-bottom:0.45rem; color:#4ade80;">
+                <span id="b2b-live-desc-label">Descuento:</span>
+                <strong id="b2b-live-desc-val">-$0 COP</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.45rem; color:#d1d5db;">
+                <span id="b2b-live-iva-label">IVA (19%):</span>
+                <span id="b2b-live-iva">$0 COP</span>
+              </div>
+              <div id="b2b-live-envio-row" style="display:none; justify-content:space-between; font-size:0.8rem; margin-bottom:0.45rem; color:#d1d5db;">
+                <span>Envío / Logística:</span>
+                <span id="b2b-live-envio">$0 COP</span>
+              </div>
+              <div style="border-top:1px solid #333; margin:0.75rem 0; padding-top:0.75rem; display:flex; justify-content:space-between; align-items:baseline;">
+                <span style="font-size:0.78rem; font-weight:700; letter-spacing:1px;">TOTAL FINAL:</span>
+                <span id="b2b-live-total" style="font-size:1.35rem; font-weight:700; color:#4ade80;">$0 COP</span>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-top:1rem;">
+                <button type="button" class="btn btn-sm" style="background:#fff; color:#111; font-weight:700; padding:0.6rem; border:none;" onclick="b2bImprimirDirecto()">🖨️ Imprimir</button>
+                <button type="button" class="btn btn-sm" style="background:#25D366; color:#000; font-weight:700; padding:0.6rem; border:none;" onclick="b2bDescargarPDF()">⬇ Descargar PDF</button>
+              </div>
+              <button type="button" class="btn btn-sm" style="width:100%; margin-top:0.5rem; background:rgba(255,255,255,0.12); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:0.55rem;" onclick="b2bGenerarImpresion()">👁️ Ver Hoja de Cotización Completa</button>
+            </div>
+          </div>
+
+          <!-- HISTORIAL DE COTIZACIONES ABAJO -->
+          <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--grisCl);">
+            <div class="section-title" style="margin-bottom:0.75rem; font-size:1rem;">📋 Historial de Cotizaciones Guardadas</div>
+            <table style="width:100%">
+              <thead><tr><th>#</th><th>Cliente / Institución</th><th>Unidades / Ítems</th><th>Total</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <tbody id="tabla-cotizaciones"><tr><td colspan="7" class="loading">Cargando...</td></tr></tbody>
+            </table>
+          </div>
         </div>
 
-        <!-- Botones de Control de Impresión (Fuera de la vista de impresión) -->
-        <div id="b2b-print-controls" class="no-print" style="display:none; justify-content:flex-end; gap:1rem; margin-bottom:1.5rem; padding:1rem; background:#f5f5f5; border-radius:8px;">
-          <button class="btn btn-gris" onclick="document.getElementById('b2b-print-view').style.display='none'; document.getElementById('b2b-print-controls').style.display='none'; document.getElementById('b2b-form-area').style.display='block';">← Volver a Editar</button>
-          <button class="btn btn-negro" onclick="window.print()">Imprimir / Guardar PDF</button>
+        <!-- Botones de Control en la Vista Previa del Documento -->
+        <div id="b2b-print-controls" class="no-print" style="display:none; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.8rem; margin-bottom:1.5rem; padding:1rem 1.25rem; background:#111; color:#fff; border-radius:8px;">
+          <button class="btn btn-gris btn-sm" onclick="document.getElementById('b2b-print-view').style.display='none'; document.getElementById('b2b-print-controls').style.display='none'; document.getElementById('b2b-form-area').style.display='block';">← Volver a Editar Cotización</button>
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.25);" onclick="b2bGuardarCotizacion()">💾 Guardar en Historial</button>
+            <button class="btn btn-sm" style="background:#fff; color:#111; font-weight:700;" onclick="b2bImprimirDirecto()">🖨️ Imprimir Cotización</button>
+            <button class="btn btn-sm" style="background:#25D366; color:#000; font-weight:700;" onclick="b2bDescargarPDF()">⬇ Descargar PDF</button>
+          </div>
         </div>
 
         <!-- Vista del PDF (Print View) -->
-        <div id="b2b-print-view" style="display:none; width: 21cm; min-height: 29.7cm; background: white; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 2cm 2cm 3cm 2cm; position: relative; color:#333; font-family: 'Montserrat', sans-serif;">
+        <div id="b2b-print-view" style="display:none; width: 21cm; min-height: 29.7cm; background: white; margin: 0 auto; box-shadow: 0 0 18px rgba(0,0,0,0.14); padding: 1.8cm 2cm 2.5cm 2cm; position: relative; color:#222; font-family: 'Montserrat', sans-serif;">
           
           <!-- Header -->
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 2rem;">
-            <div style="font-size: 0.85rem; color: #888; line-height:1.6;" id="b2b-print-cliente">
-              [ NOMBRE EMPRESA/CLIENTE ]<br>
-              [ NIT DE LA EMPRESA ]<br>
-              [ CORREO ELECTRÓNICO EMPRESA ]
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #0C4E57; padding-bottom:1.2rem; margin-bottom: 1.5rem;">
+            <div>
+              <div style="font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:#0C4E57; font-weight:700; margin-bottom:0.35rem;">COTIZACIÓN OFICIAL CORPORATIVA</div>
+              <div style="font-size: 0.85rem; color: #333; line-height:1.6;" id="b2b-print-cliente">
+                [ NOMBRE EMPRESA/CLIENTE ]<br>
+                [ NIT DE LA EMPRESA ]<br>
+                [ CORREO ELECTRÓNICO EMPRESA ]
+              </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size: 2.5rem; font-weight: 300; letter-spacing: -1px; color: #0C4E57;">YOSSICO</div>
-              <div style="font-size: 0.85rem; color: #888; letter-spacing: 2px;" id="b2b-print-fecha">[ DD/MM/AAAA ]</div>
+              <div style="font-size: 2.3rem; font-weight: 300; letter-spacing: 3px; color: #0C4E57; font-family:'Cormorant Garamond', Georgia, serif;">YOSSICO</div>
+              <div style="font-size: 0.72rem; color: #555; letter-spacing: 1.5px; margin-top:0.2rem;" id="b2b-print-fecha">[ DD/MM/AAAA ]</div>
+              <div style="font-size: 0.68rem; color: #0C4E57; font-weight:600; margin-top:0.25rem;" id="b2b-print-validez">Validez: 15 días calendario</div>
             </div>
           </div>
           
           <!-- Table -->
-          <table style="width:100%; border-collapse: separate; border-spacing: 0 0.5rem; margin-top: 2rem; font-size: 0.8rem;">
+          <table style="width:100%; border-collapse: collapse; margin-top: 1.2rem; font-size: 0.78rem;">
             <thead>
-              <tr style="background:#EBF3F5; color:#0C4E57; text-align:left; font-weight:bold;">
-                <th style="padding: 0.6rem 1rem;">SKU</th>
-                <th style="padding: 0.6rem 1rem;">DESCRIPCIÓN</th>
-                <th style="padding: 0.6rem 1rem; text-align:center;">CANT.</th>
-                <th style="padding: 0.6rem 1rem; text-align:right;">PRECIO</th>
-                <th style="padding: 0.6rem 1rem; text-align:right;">TOTAL</th>
+              <tr style="background:#0C4E57; color:#ffffff; text-align:left; font-weight:600;">
+                <th style="padding: 0.65rem 0.85rem;">PRENDA / REFERENCIA</th>
+                <th style="padding: 0.65rem 0.85rem;">COLOR, TALLAS Y ESPECIFICACIÓN</th>
+                <th style="padding: 0.65rem 0.85rem; text-align:center;">UNIDADES</th>
+                <th style="padding: 0.65rem 0.85rem; text-align:right;">PRECIO UNIT.</th>
+                <th style="padding: 0.65rem 0.85rem; text-align:right;">SUBTOTAL</th>
               </tr>
             </thead>
-            <tbody id="b2b-print-tbody" style="color:var(--grisMed);">
+            <tbody id="b2b-print-tbody" style="color:#222;">
               <!-- JS Injects -->
             </tbody>
           </table>
           
-          <!-- Totals -->
-          <div style="display:flex; justify-content:flex-end; margin-top: 1rem;">
-            <table style="width: 250px; border-collapse: separate; border-spacing: 0 0.3rem; font-size: 0.85rem;">
+          <!-- Totals & Notes -->
+          <div style="display:grid; grid-template-columns: 1.15fr 0.85fr; gap:1.5rem; align-items:start; margin-top: 1.5rem;">
+            <div style="background:#f8fafb; border-left:3px solid #0C4E57; padding:0.85rem 1rem; font-size:0.74rem; color:#444; line-height:1.6;">
+              <strong style="color:#0C4E57; display:block; margin-bottom:0.25rem; text-transform:uppercase; font-size:0.68rem; letter-spacing:1px;">Condiciones Comerciales y Observaciones</strong>
+              <div id="b2b-print-notas"></div>
+            </div>
+            <table style="width: 100%; border-collapse: separate; border-spacing: 0 0.3rem; font-size: 0.82rem;">
               <tr style="background:#EBF3F5; color:#0C4E57;">
-                <td style="padding:0.4rem 1rem; font-weight:bold;">SUB TOTAL</td>
-                <td style="padding:0.4rem 1rem; text-align:right;" id="b2b-print-sub">0 COP</td>
+                <td style="padding:0.45rem 0.9rem; font-weight:600;">SUBTOTAL BRUTO</td>
+                <td style="padding:0.45rem 0.9rem; text-align:right;" id="b2b-print-sub">0 COP</td>
+              </tr>
+              <tr id="b2b-print-desc-row" style="display:none; background:#e8f5e9; color:#1b5e20;">
+                <td style="padding:0.45rem 0.9rem; font-weight:600;" id="b2b-print-desc-lbl">DESCUENTO</td>
+                <td style="padding:0.45rem 0.9rem; text-align:right; font-weight:700;" id="b2b-print-desc">-0 COP</td>
               </tr>
               <tr style="background:#EBF3F5; color:#0C4E57;">
-                <td style="padding:0.4rem 1rem; font-weight:bold;">IVA</td>
-                <td style="padding:0.4rem 1rem; text-align:right;" id="b2b-print-iva">0 COP</td>
+                <td style="padding:0.45rem 0.9rem; font-weight:600;" id="b2b-print-iva-lbl">IVA (19%)</td>
+                <td style="padding:0.45rem 0.9rem; text-align:right;" id="b2b-print-iva">0 COP</td>
               </tr>
-              <tr style="background:#EBF3F5; color:#0C4E57;">
-                <td style="padding:0.4rem 1rem; font-weight:bold;">TOTAL</td>
-                <td style="padding:0.4rem 1rem; text-align:right;" id="b2b-print-tot">0 COP</td>
+              <tr id="b2b-print-envio-row" style="display:none; background:#EBF3F5; color:#0C4E57;">
+                <td style="padding:0.45rem 0.9rem; font-weight:600;">ENVÍO / LOGÍSTICA</td>
+                <td style="padding:0.45rem 0.9rem; text-align:right;" id="b2b-print-envio">0 COP</td>
+              </tr>
+              <tr style="background:#0C4E57; color:#ffffff;">
+                <td style="padding:0.6rem 0.9rem; font-weight:700;">TOTAL A PAGAR</td>
+                <td style="padding:0.6rem 0.9rem; text-align:right; font-weight:700; font-size:0.95rem;" id="b2b-print-tot">0 COP</td>
               </tr>
             </table>
           </div>
 
           <!-- Footer -->
-          <div style="position:absolute; bottom: 2cm; left: 2cm; right: 2cm;">
-            <div style="border-top: 1px solid #ccc; padding-top: 1.5rem; display:flex; flex-direction:column; gap:0.5rem;">
-              <div style="font-size:1.8rem; line-height:1.1; font-weight:300; color:#0C4E57;">
-                Yossico,<br>designed for<br>presence.
-              </div>
-              <div style="margin-top:1rem; font-size:0.75rem; color:#888; letter-spacing:1px; display:flex; gap:1rem;">
-                <span>+57 312 730 0661</span> | <span>CUSTOMERSERVICEYOSSICO@GMAIL.COM</span> | <span>WWW.YOSSICO.COM</span>
-              </div>
+          <div style="margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid #ccc; display:flex; justify-content:space-between; align-items:flex-end;">
+            <div style="font-size:1.35rem; line-height:1.15; font-weight:300; color:#0C4E57; font-family:'Cormorant Garamond', Georgia, serif;">
+              YOSSICO — Uniformes pensados para ti.
+            </div>
+            <div style="font-size:0.7rem; color:#666; letter-spacing:0.8px; text-align:right; line-height:1.5;">
+              <div>WhatsApp Corporativo: +57 312 730 0661</div>
+              <div>customerserviceyossico@gmail.com · www.yossico.com</div>
             </div>
           </div>
         </div>
@@ -1581,14 +1736,188 @@
 
   <!-- TAB VISITAS & MONITOR DE RENDIMIENTO WEB -->
 <div id="tab-visitas" class="tab-content">
-  <div class="form-card hover-module">
-    <div class="flex-between" style="margin-bottom:1rem;flex-wrap:wrap;gap:.8rem">
+  <style>
+    .vis-subtabs-bar {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      background: var(--blanco);
+      padding: 0.55rem;
+      border-radius: 8px;
+      border: 1px solid var(--grisCl);
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    .vis-subtab-btn {
+      flex: 1;
+      min-width: 190px;
+      padding: 0.65rem 0.9rem;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background: var(--grisF);
+      color: var(--negro);
+      font-family: inherit;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .vis-subtab-btn:hover {
+      border-color: var(--grisMed);
+    }
+    .vis-subtab-btn.active {
+      background: #111111;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .vis-subpanel {
+      display: none;
+    }
+    .vis-subpanel.active {
+      display: block;
+      animation: fadeIn 0.22s ease;
+    }
+    /* Visor Visual de Mapa de Calor y Frío */
+    .hm-studio-grid {
+      display: grid;
+      grid-template-columns: 1.55fr 0.95fr;
+      gap: 1.15rem;
+      align-items: start;
+    }
+    @media (max-width: 1100px) {
+      .hm-studio-grid { grid-template-columns: 1fr; }
+    }
+    .hm-viewport-card {
+      background: #14171a;
+      border-radius: 10px;
+      border: 1px solid #2d3238;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+    }
+    .hm-toolbar {
+      background: #1c2026;
+      padding: 0.65rem 0.9rem;
+      border-bottom: 1px solid #2d3238;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      color: #fff;
+      font-size: 0.72rem;
+    }
+    .hm-pill-btn {
+      background: #2a3038;
+      color: #d1d5db;
+      border: 1px solid #3d4450;
+      padding: 0.35rem 0.65rem;
+      border-radius: 5px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .hm-pill-btn.active {
+      background: #ff4d29;
+      color: #fff;
+      border-color: #ff6b4a;
+    }
+    .hm-stage-scroll {
+      position: relative;
+      height: 590px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #0f1114;
+      scroll-behavior: smooth;
+    }
+    .hm-stage-inner {
+      position: relative;
+      width: 100%;
+      height: 2800px;
+      margin: 0 auto;
+      background: #fff;
+      transition: max-width 0.25s ease;
+    }
+    .hm-stage-inner.mobile-view {
+      max-width: 412px;
+      box-shadow: 0 0 0 8px #222;
+    }
+    .hm-stage-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      pointer-events: none;
+      display: block;
+    }
+    .hm-overlay-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      transition: opacity 0.2s ease;
+    }
+    .hm-click-spot {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .hm-click-tag {
+      position: absolute;
+      left: 50%;
+      top: -26px;
+      transform: translateX(-50%);
+      background: rgba(12, 14, 18, 0.92);
+      color: #fff;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 99px;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.28);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      z-index: 30;
+    }
+    .hm-zone-band {
+      position: absolute;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.65rem 1rem;
+      border-bottom: 2px dashed rgba(255,255,255,0.55);
+      pointer-events: auto;
+      cursor: pointer;
+      transition: filter 0.15s;
+    }
+    .hm-zone-band:hover {
+      filter: brightness(1.08);
+    }
+    .hm-zone-badge {
+      background: rgba(15, 18, 22, 0.88);
+      color: #fff;
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.22);
+    }
+  </style>
+
+  <!-- Cabecera Compacta + 6 KPIs -->
+  <div class="form-card hover-module" style="padding:1.1rem 1.35rem;">
+    <div class="flex-between" style="margin-bottom:0.75rem;flex-wrap:wrap;gap:.8rem">
       <div>
-        <div class="section-title" style="margin-bottom:0.2rem">⚡ Monitor de Rendimiento, Atención y Analítica Web</div>
-        <div style="font-size:0.75rem;color:var(--grisMed)">Diagnóstico en vivo de velocidad (Core Web Vitals), tiempo de permanencia, zonas calientes/frías y oportunidades de optimización.</div>
+        <div class="section-title" style="margin-bottom:0.15rem">⚡ Monitor de Rendimiento, Mapas de Calor Visuales y Analítica Web</div>
+        <div id="vis-aviso" style="font-size:0.72rem;color:var(--grisMed)">Diagnóstico visual de clics, zonas calientes/frías, velocidad Core Web Vitals y conversión.</div>
       </div>
       <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
-        <select id="vis-dias" onchange="cargarVisitas()" style="padding:.45rem .7rem;border:1px solid var(--grisCl);font-family:inherit;font-size:.75rem">
+        <select id="vis-dias" onchange="cargarVisitas()" style="padding:.4rem .65rem;border:1px solid var(--grisCl);font-family:inherit;font-size:.74rem;border-radius:4px;">
           <option value="1">Hoy / 24h</option>
           <option value="7">Últimos 7 días</option>
           <option value="30" selected>Últimos 30 días</option>
@@ -1598,105 +1927,163 @@
         <button class="btn btn-gris btn-sm" onclick="cargarVisitas()">↻ Actualizar</button>
       </div>
     </div>
-    <div id="vis-aviso" style="font-size:.75rem;color:var(--grisMed);margin-bottom:1rem"></div>
 
-    <!-- KPIs de Tráfico y Conversión -->
-    <div class="resumen-grid" style="grid-template-columns:repeat(3,1fr)">
-      <div class="resumen-card hover-module azul"><div class="rlabel">Visitas (páginas vistas)</div><div class="rvalor" id="vis-total">—</div><div class="rsub">en el período</div></div>
-      <div class="resumen-card hover-module verde"><div class="rlabel">Visitantes únicos</div><div class="rvalor" id="vis-unicos">—</div><div class="rsub">personas distintas</div></div>
-      <div class="resumen-card hover-module naranja"><div class="rlabel">Tiempo Promedio / Scroll</div><div class="rvalor" id="vis-sesiones">—</div><div class="rsub" id="vis-dwell-sub">permanencia media en web</div></div>
-      <div class="resumen-card hover-module verde"><div class="rlabel">Clics a WhatsApp</div><div class="rvalor" id="vis-wa">—</div><div class="rsub">interés directo</div></div>
-      <div class="resumen-card hover-module azul"><div class="rlabel">Agregar al carrito</div><div class="rvalor" id="vis-carrito">—</div><div class="rsub">eventos de compra</div></div>
-      <div class="resumen-card hover-module rojo"><div class="rlabel">Conversión a pedido</div><div class="rvalor" id="vis-conv">—</div><div class="rsub">sesiones que llegan a compra</div></div>
+    <!-- KPIs Compactos en 1 sola fila de 6 -->
+    <div class="resumen-grid" style="grid-template-columns:repeat(6,1fr); gap:0.65rem; margin-bottom:0;">
+      <div class="resumen-card hover-module azul" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Visitas</div><div class="rvalor" id="vis-total" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">páginas vistas</div></div>
+      <div class="resumen-card hover-module verde" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Únicos</div><div class="rvalor" id="vis-unicos" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">personas</div></div>
+      <div class="resumen-card hover-module naranja" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Permanencia</div><div class="rvalor" id="vis-sesiones" style="font-size:1.2rem;">—</div><div class="rsub" id="vis-dwell-sub" style="font-size:0.62rem;">tiempo / scroll</div></div>
+      <div class="resumen-card hover-module verde" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Clics WhatsApp</div><div class="rvalor" id="vis-wa" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">interés directo</div></div>
+      <div class="resumen-card hover-module azul" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Al Carrito</div><div class="rvalor" id="vis-carrito" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">intención compra</div></div>
+      <div class="resumen-card hover-module rojo" style="padding:0.7rem 0.85rem;"><div class="rlabel" style="font-size:0.62rem;">Conversión</div><div class="rvalor" id="vis-conv" style="font-size:1.3rem;">—</div><div class="rsub" style="font-size:0.62rem;">a pedido real</div></div>
     </div>
   </div>
 
-  <!-- BLOQUE 1: VELOCIDAD DE LA WEB & QUÉ FRENA LA PÁGINA -->
-  <div class="form-card hover-module" style="margin-top:1.5rem">
-    <div class="flex-between" style="margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
-      <div>
-        <div class="section-title" style="margin-bottom:0.2rem">🚀 Velocidad Real (Core Web Vitals) y Qué Frena la Página</div>
-        <div style="font-size:0.73rem;color:var(--grisMed)">Métricas reales medidas en los dispositivos de tus visitantes y escaneo directo de peso de archivos en vivo.</div>
-      </div>
-      <span id="perf-health-badge" style="font-size:0.7rem;font-weight:600;padding:0.35rem 0.8rem;border:1px solid var(--grisCl);letter-spacing:1px;text-transform:uppercase;">ANALIZANDO...</span>
-    </div>
+  <!-- BARRA DE PESTAÑAS INTERNAS (Para no scrollear hacia abajo) -->
+  <div class="vis-subtabs-bar">
+    <button type="button" class="vis-subtab-btn active" onclick="cambiarSubtabVisitas('mapa', this)">🔥 1. Mapa Visual en Vivo (Calor, Frío y Clics)</button>
+    <button type="button" class="vis-subtab-btn" onclick="cambiarSubtabVisitas('velocidad', this)">🚀 2. Velocidad y Qué Frena la Web</button>
+    <button type="button" class="vis-subtab-btn" onclick="cambiarSubtabVisitas('optimizar', this)">💡 3. Qué Optimizar y Embudo</button>
+    <button type="button" class="vis-subtab-btn" onclick="cambiarSubtabVisitas('trafico', this)">📊 4. Tráfico, Fuentes y Dispositivos</button>
+  </div>
 
-    <div class="resumen-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.2rem">
-      <div class="resumen-card hover-module" style="border-left:3px solid #111">
-        <div class="rlabel">LCP (Carga Principal)</div>
-        <div class="rvalor" id="perf-lcp">—</div>
-        <div class="rsub" id="perf-lcp-sub">Meta ideal: &lt; 2.5s</div>
-      </div>
-      <div class="resumen-card hover-module" style="border-left:3px solid #111">
-        <div class="rlabel">FCP (Primer Render)</div>
-        <div class="rvalor" id="perf-fcp">—</div>
-        <div class="rsub" id="perf-fcp-sub">Meta ideal: &lt; 1.5s</div>
-      </div>
-      <div class="resumen-card hover-module" style="border-left:3px solid #111">
-        <div class="rlabel">TTFB (Respuesta Servidor)</div>
-        <div class="rvalor" id="perf-ttfb">—</div>
-        <div class="rsub">Meta ideal: &lt; 400ms</div>
-      </div>
-      <div class="resumen-card hover-module" style="border-left:3px solid #111">
-        <div class="rlabel">Estabilidad Visual (CLS)</div>
-        <div class="rvalor" id="perf-cls">—</div>
-        <div class="rsub">Saltos de diseño (&lt; 0.10)</div>
-      </div>
-    </div>
+  <!-- SUB-PESTAÑA 1: MAPA VISUAL EN VIVO DE CALOR, FRÍO Y CLICS -->
+  <div id="vis-sub-mapa" class="vis-subpanel active">
+    <div class="hm-studio-grid">
+      <!-- Lado Izquierdo: Visor Visual con la Página Real + Capa Térmica Superpuesta -->
+      <div class="hm-viewport-card">
+        <div class="hm-toolbar">
+          <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
+            <span style="color:#9ca3af; font-weight:600;">Página:</span>
+            <select id="hm-page-select" onchange="cambiarPaginaMapaVisual(this.value)" style="background:#111315; color:#fff; border:1px solid #3d4450; padding:0.32rem 0.55rem; border-radius:4px; font-size:0.72rem; font-family:inherit;">
+              <option value="index.html">🏠 Inicio / Landing (index.html)</option>
+              <option value="coleccion.html">👗 Catálogo Colección (coleccion.html)</option>
+              <option value="prive.html">🔒 Club Privé (prive.html)</option>
+              <option value="estudiantes.html">🎓 Campus Estudiantil (estudiantes.html)</option>
+            </select>
+            <button type="button" class="hm-pill-btn active" id="hm-mode-both" onclick="setModoMapaVisual('both')">🔥+🌡️ Clics + Zonas</button>
+            <button type="button" class="hm-pill-btn" id="hm-mode-clicks" onclick="setModoMapaVisual('clicks')">🎯 Solo Mapa de Clics</button>
+            <button type="button" class="hm-pill-btn" id="hm-mode-zones" onclick="setModoMapaVisual('zones')">🌡️ Zonas Calientes vs. Frías</button>
+            <button type="button" class="hm-pill-btn" id="hm-mode-clean" onclick="setModoMapaVisual('clean')">👁️ Ver Limpio</button>
+          </div>
+          <div style="display:flex; gap:0.45rem; align-items:center;">
+            <button type="button" class="hm-pill-btn active" id="hm-dev-desktop" onclick="setDispositivoMapaVisual('desktop')">🖥️</button>
+            <button type="button" class="hm-pill-btn" id="hm-dev-mobile" onclick="setDispositivoMapaVisual('mobile')">📱</button>
+            <input type="range" id="hm-opacity-slider" min="25" max="95" value="82" title="Intensidad del mapa térmico" oninput="document.getElementById('hm-visual-overlay').style.opacity = this.value / 100" style="width:65px; accent-color:#ff4d29;">
+          </div>
+        </div>
 
-    <div style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:1.5rem">
-      <div style="background:var(--grisF);padding:1.1rem;border:1px solid var(--grisCl)">
-        <div style="font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.8rem;color:#111">🛑 Recursos y Elementos que Más Frenan la Carga</div>
-        <div id="perf-bottlenecks"></div>
+        <!-- Barra de Leyenda Térmica -->
+        <div style="background:#111315; padding:0.45rem 0.9rem; border-bottom:1px solid #2d3238; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; font-size:0.68rem; color:#d1d5db;">
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <span>❄️ Zona Fría (Poca lectura / Fuga)</span>
+            <div style="width:140px; height:8px; border-radius:99px; background:linear-gradient(90deg, #38bdf8 0%, #22c55e 35%, #facc15 65%, #f97316 82%, #ef4444 100%);"></div>
+            <span>🔥 Zona Caliente (Máximos clics y atención)</span>
+          </div>
+          <span style="color:#9ca3af;">Haz scroll dentro del visor o toca una sección a la derecha para saltar a ella ↓</span>
+        </div>
+
+        <!-- Escenario Scrollable: Iframe de la Web Real + Overlay Térmico Sincronizado -->
+        <div class="hm-stage-scroll" id="hm-stage-scroll">
+          <div class="hm-stage-inner" id="hm-stage-inner">
+            <iframe id="hm-live-iframe" class="hm-stage-iframe" src="about:blank"></iframe>
+            <div id="hm-visual-overlay" class="hm-overlay-layer" style="opacity:0.82;"></div>
+          </div>
+        </div>
       </div>
-      <div style="background:var(--grisF);padding:1.1rem;border:1px solid var(--grisCl)">
-        <div style="font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.8rem;color:#111">⏱️ Tiempo de Carga por Página</div>
-        <div id="perf-pages-speed"></div>
+
+      <!-- Lado Derecho: Panel Compacto de Clics Exactos, Zonas y Prendas (Sin Scroll Eterno) -->
+      <div style="display:flex; flex-direction:column; gap:0.9rem; max-height:680px; overflow-y:auto; padding-right:0.25rem;">
+        <div class="form-card hover-module" style="margin:0; padding:1rem;">
+          <div style="font-size:0.7rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--negro); margin-bottom:0.55rem;">🎯 Top Puntos Donde Más Hacen Clic (Toca para ver en el mapa)</div>
+          <div id="vis-top-clicks-list"></div>
+        </div>
+
+        <div class="form-card hover-module" style="margin:0; padding:1rem;">
+          <div style="font-size:0.7rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--negro); margin-bottom:0.55rem;">🌡️ Temperatura por Sección (Calientes vs. Frías)</div>
+          <div id="vis-heatmap-secciones"></div>
+        </div>
+
+        <div class="form-card hover-module" style="margin:0; padding:1rem;">
+          <div style="font-size:0.7rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--negro); margin-bottom:0.55rem;">👗 Uniformes Con Mayor Interés</div>
+          <div id="vis-hot-prendas" style="margin-bottom:0.85rem;"></div>
+          <div style="font-size:0.68rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--grisMed); margin-bottom:0.45rem;">❄️ Diagnóstico de Zonas Frías</div>
+          <div id="vis-cold-zones"></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- BLOQUE 2: MAPA DE ATENCIÓN — ZONAS CALIENTES Y ZONAS FRÍAS -->
-  <div class="form-card hover-module" style="margin-top:1.5rem">
-    <div class="flex-between" style="margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
-      <div>
-        <div class="section-title" style="margin-bottom:0.2rem">🔥 Mapa de Calor de Atención: Zonas Calientes vs. Zonas Frías</div>
-        <div style="font-size:0.73rem;color:var(--grisMed)">Dónde se detienen más tiempo las clientas, dónde hacen más clics y qué apartados pasan desapercibidos.</div>
+  <!-- SUB-PESTAÑA 2: VELOCIDAD Y QUÉ FRENA LA WEB -->
+  <div id="vis-sub-velocidad" class="vis-subpanel">
+    <div class="form-card hover-module">
+      <div class="flex-between" style="margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+        <div>
+          <div class="section-title" style="margin-bottom:0.2rem">🚀 Velocidad Real (Core Web Vitals) y Qué Frena la Página</div>
+          <div style="font-size:0.73rem;color:var(--grisMed)">Métricas reales medidas en los dispositivos de tus visitantes y escaneo directo de peso de archivos en vivo.</div>
+        </div>
+        <span id="perf-health-badge" style="font-size:0.7rem;font-weight:600;padding:0.35rem 0.8rem;border:1px solid var(--grisCl);letter-spacing:1px;text-transform:uppercase;">ANALIZANDO...</span>
+      </div>
+
+      <div class="resumen-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.2rem">
+        <div class="resumen-card hover-module" style="border-left:3px solid #111">
+          <div class="rlabel">LCP (Carga Principal)</div>
+          <div class="rvalor" id="perf-lcp">—</div>
+          <div class="rsub" id="perf-lcp-sub">Meta ideal: &lt; 2.5s</div>
+        </div>
+        <div class="resumen-card hover-module" style="border-left:3px solid #111">
+          <div class="rlabel">FCP (Primer Render)</div>
+          <div class="rvalor" id="perf-fcp">—</div>
+          <div class="rsub" id="perf-fcp-sub">Meta ideal: &lt; 1.5s</div>
+        </div>
+        <div class="resumen-card hover-module" style="border-left:3px solid #111">
+          <div class="rlabel">TTFB (Respuesta Servidor)</div>
+          <div class="rvalor" id="perf-ttfb">—</div>
+          <div class="rsub">Meta ideal: &lt; 400ms</div>
+        </div>
+        <div class="resumen-card hover-module" style="border-left:3px solid #111">
+          <div class="rlabel">Estabilidad Visual (CLS)</div>
+          <div class="rvalor" id="perf-cls">—</div>
+          <div class="rsub">Saltos de diseño (&lt; 0.10)</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:1.5rem">
+        <div style="background:var(--grisF);padding:1.1rem;border:1px solid var(--grisCl)">
+          <div style="font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.8rem;color:#111">🛑 Recursos y Elementos que Más Frenan la Carga</div>
+          <div id="perf-bottlenecks"></div>
+        </div>
+        <div style="background:var(--grisF);padding:1.1rem;border:1px solid var(--grisCl)">
+          <div style="font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.8rem;color:#111">⏱️ Tiempo de Carga por Página</div>
+          <div id="perf-pages-speed"></div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:1.5rem">
-      <div>
-        <div style="font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--grisMed);margin-bottom:0.7rem">TEMPERATURA Y PERMANENCIA POR SECCIÓN DE LA LANDING / WEB</div>
-        <div id="vis-heatmap-secciones"></div>
+  <!-- SUB-PESTAÑA 3: QUÉ OPTIMIZAR Y EMBUDO -->
+  <div id="vis-sub-optimizar" class="vis-subpanel">
+    <div style="display:grid; grid-template-columns: 1.25fr 0.75fr; gap:1.25rem;">
+      <div class="form-card hover-module" style="margin:0;">
+        <div class="section-title" style="margin-bottom:0.3rem">💡 Qué Cosas Se Pueden Optimizar (Diagnóstico Automático YOSSICO)</div>
+        <div style="font-size:0.73rem;color:var(--grisMed);margin-bottom:1rem">Recomendaciones priorizadas según velocidad real, comportamiento de scroll, conversión de carrito y atención por sección.</div>
+        <div id="vis-optimizaciones" style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem"></div>
       </div>
-      <div>
-        <div style="font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--grisMed);margin-bottom:0.7rem">👗 UNIFORMES CON MAYOR INTERÉS (CLICS / VISTAS DE GALERÍA)</div>
-        <div id="vis-hot-prendas" style="margin-bottom:1.2rem"></div>
-
-        <div style="font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--grisMed);margin-bottom:0.7rem">❄️ DIAGNÓSTICO DE ZONAS FRÍAS Y FUGAS</div>
-        <div id="vis-cold-zones"></div>
+      <div class="form-card hover-module" style="margin:0;">
+        <div class="section-title" style="margin-bottom:1rem">🧭 Embudo de Conversión (Sesiones por etapa)</div>
+        <div id="vis-embudo"></div>
       </div>
     </div>
   </div>
 
-  <!-- BLOQUE 3: MOTOR DE OPTIMIZACIÓN Y ACCIONES RECOMENDADAS -->
-  <div class="form-card hover-module" style="margin-top:1.5rem">
-    <div class="section-title" style="margin-bottom:0.3rem">💡 Qué Cosas Se Pueden Optimizar (Diagnóstico Automático YOSSICO)</div>
-    <div style="font-size:0.73rem;color:var(--grisMed);margin-bottom:1rem">Recomendaciones priorizadas según velocidad real, comportamiento de scroll, conversión de carrito y atención por sección.</div>
-    <div id="vis-optimizaciones" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem"></div>
-  </div>
-
-  <div class="form-card hover-module" style="margin-top:1.5rem">
-    <div class="section-title" style="margin-bottom:1rem">🧭 Embudo de Conversión (sesiones únicas por etapa)</div>
-    <div id="vis-embudo"></div>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem">
-    <div class="form-card hover-module"><div class="section-title" style="margin-bottom:1rem">📄 Páginas más vistas</div><div id="vis-paginas"></div></div>
-    <div class="form-card hover-module"><div class="section-title" style="margin-bottom:1rem">🔗 De dónde llegan</div><div id="vis-fuentes"></div></div>
-    <div class="form-card hover-module"><div class="section-title" style="margin-bottom:1rem">📱 Dispositivo</div><div id="vis-disp"></div></div>
-    <div class="form-card hover-module"><div class="section-title" style="margin-bottom:1rem">📅 Visitas por día</div><div id="vis-dias-tabla"></div></div>
+  <!-- SUB-PESTAÑA 4: TRÁFICO, FUENTES Y DISPOSITIVOS -->
+  <div id="vis-sub-trafico" class="vis-subpanel">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+      <div class="form-card hover-module" style="margin:0;"><div class="section-title" style="margin-bottom:1rem">📄 Páginas más vistas</div><div id="vis-paginas"></div></div>
+      <div class="form-card hover-module" style="margin:0;"><div class="section-title" style="margin-bottom:1rem">🔗 De dónde llegan</div><div id="vis-fuentes"></div></div>
+      <div class="form-card hover-module" style="margin:0;"><div class="section-title" style="margin-bottom:1rem">📱 Dispositivo</div><div id="vis-disp"></div></div>
+      <div class="form-card hover-module" style="margin:0;"><div class="section-title" style="margin-bottom:1rem">📅 Visitas por día</div><div id="vis-dias-tabla"></div></div>
+    </div>
   </div>
 </div>
 
@@ -1740,72 +2127,72 @@
 <!-- TAB AUDITORÍA LEGAL & SIC -->
 <div id="tab-legal" class="tab-content">
   
-  <!-- Banner de Certificación Legal -->
-  <div class="form-card hover-module" style="background:linear-gradient(135deg, #111111 0%, #1a221e 100%); color:#ffffff; padding:1.5rem 1.8rem; border-radius:8px; margin-bottom:1.5rem; border:1px solid #2e3a33;">
+  <!-- Banner de Certificación Legal + Guía Intuitiva -->
+  <div class="form-card hover-module" style="background:linear-gradient(135deg, #111111 0%, #1a221e 100%); color:#ffffff; padding:1.35rem 1.6rem; border-radius:8px; margin-bottom:1.1rem; border:1px solid #2e3a33;">
     <div class="flex-between" style="flex-wrap:wrap; gap:1rem;">
       <div>
-        <div style="font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:#81C784; font-weight:700; margin-bottom:0.3rem;">
+        <div style="font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:#81C784; font-weight:700; margin-bottom:0.25rem;">
           ⚖️ BLINDAJE JURÍDICO & TRAZABILIDAD PROBATORIA SIC
         </div>
-        <h2 style="font-size:1.4rem; font-weight:400; margin:0 0 0.5rem 0; font-family:'Cormorant Garamond', Georgia, serif; letter-spacing:0.5px;">
-          Centro de Cumplimiento Legal YOSSICO
+        <h2 style="font-size:1.35rem; font-weight:400; margin:0 0 0.4rem 0; font-family:'Cormorant Garamond', Georgia, serif; letter-spacing:0.5px;">
+          Centro de Cumplimiento Legal YOSSICO (Ley 1581 & Ley 1480)
         </h2>
-        <div style="font-size:0.75rem; color:#d1d5db; max-width:720px; line-height:1.6;">
-          Toda la evidencia probatoria exigida por la <strong>Superintendencia de Industria y Comercio (SIC)</strong>, la <strong>Ley 1581 de 2012 (Habeas Data)</strong> y el <strong>Estatuto del Consumidor (Ley 1480 / Retracto 5 días)</strong> se almacena y audita automáticamente en este panel. No necesitas configurar ni consultar bases de datos externas.
+        <div style="font-size:0.75rem; color:#d1d5db; max-width:740px; line-height:1.55;">
+          Cada compra, suscripción o chat genera automáticamente un <strong>Certificado Individual de Consentimiento</strong>. Haz clic en <strong>"📄 Ver Certificado / Acta"</strong> en cualquier fila para abrir el documento oficial, imprimirlo o descargarlo en PDF.
         </div>
       </div>
-      <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+      <div style="display:flex; gap:0.55rem; align-items:center; flex-wrap:wrap;">
         <button class="btn btn-sm" onclick="cargarAuditoriaLegal()" style="background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.25);">↻ Actualizar</button>
-        <button class="btn btn-sm" onclick="exportarAuditoriaLegalCSV()" style="background:#2D6A4F; color:#fff; border:none; font-weight:600;">⬇ Descargar Registro SIC (CSV)</button>
-        <button class="btn btn-sm" onclick="copiarInformeSIC()" style="background:#ffffff; color:#111; border:none; font-weight:600;">📋 Copiar Informe Legal</button>
+        <button class="btn btn-sm" onclick="exportarAuditoriaLegalCSV()" style="background:#2D6A4F; color:#fff; border:none; font-weight:600;">⬇ Exportar Base SIC (CSV)</button>
+        <button class="btn btn-sm" onclick="copiarInformeSIC()" style="background:#ffffff; color:#111; border:none; font-weight:600;">📋 Copiar Resumen Ejecutivo</button>
       </div>
     </div>
 
-    <!-- Badges de Cumplimiento Normativo -->
-    <div style="display:flex; gap:0.8rem; margin-top:1.2rem; flex-wrap:wrap; font-size:0.68rem;">
-      <div style="background:rgba(46,125,50,0.25); border:1px solid #2e7d32; padding:0.3rem 0.7rem; border-radius:4px; display:flex; align-items:center; gap:6px;">
-        <span style="color:#81C784;">✓</span> <strong>Ley 1581 / Habeas Data:</strong> Doble Checkbox & Autorización Expresa
+    <!-- Guía Rápida Intuitiva en 3 Pasos -->
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.75rem; margin-top:1.1rem; font-size:0.72rem;">
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); padding:0.65rem 0.85rem; border-radius:6px;">
+        <strong style="color:#81C784; display:block; margin-bottom:2px;">1. ¿Qué guarda esta pestaña?</strong>
+        La prueba legal con fecha, hora y navegador de que cada clienta aceptó Habeas Data, Términos y Retracto de 5 días.
       </div>
-      <div style="background:rgba(46,125,50,0.25); border:1px solid #2e7d32; padding:0.3rem 0.7rem; border-radius:4px; display:flex; align-items:center; gap:6px;">
-        <span style="color:#81C784;">✓</span> <strong>Art. 47 Ley 1480:</strong> Retracto 5 Días Notificado en Checkout
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); padding:0.65rem 0.85rem; border-radius:6px;">
+        <strong style="color:#81C784; display:block; margin-bottom:2px;">2. ¿Cómo busco una clienta?</strong>
+        Escribe su nombre, teléfono o correo en el buscador de abajo o filtra por <em>Compras</em>, <em>Suscriptoras</em> o <em>Chat</em>.
       </div>
-      <div style="background:rgba(46,125,50,0.25); border:1px solid #2e7d32; padding:0.3rem 0.7rem; border-radius:4px; display:flex; align-items:center; gap:6px;">
-        <span style="color:#81C784;">✓</span> <strong>Ley 527 / Comercio Electrónico:</strong> Trazabilidad de Timestamp & User Agent
-      </div>
-      <div style="background:rgba(46,125,50,0.25); border:1px solid #2e7d32; padding:0.3rem 0.7rem; border-radius:4px; display:flex; align-items:center; gap:6px;">
-        <span style="color:#81C784;">✓</span> <strong>Términos & Cookies v2.0:</strong> Enlaces visibles y directos a la SIC
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); padding:0.65rem 0.85rem; border-radius:6px;">
+        <strong style="color:#81C784; display:block; margin-bottom:2px;">3. ¿Cómo descargo su Acta PDF?</strong>
+        Pulsa el botón <strong>"📄 Ver Certificado / Acta"</strong> a la derecha de la clienta y elige <strong>🖨️ Imprimir</strong> o <strong>⬇ Descargar PDF</strong>.
       </div>
     </div>
   </div>
 
   <!-- Métricas Probatorias -->
-  <div class="resumen-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:1.5rem;">
-    <div class="resumen-card hover-module verde">
-      <div class="rlabel">Registros Auditados</div>
+  <div class="resumen-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:1.2rem;">
+    <div class="resumen-card hover-module verde" style="cursor:pointer;" onclick="setFiltroLegalTipo('todos', document.getElementById('btn-filtro-legal-todos'))">
+      <div class="rlabel">Total Evidencias SIC</div>
       <div class="rvalor" id="legal-kpi-total">0</div>
-      <div class="rsub">Total evidencias probatorias</div>
+      <div class="rsub">Ver todos los registros</div>
     </div>
-    <div class="resumen-card hover-module azul">
+    <div class="resumen-card hover-module azul" style="cursor:pointer;" onclick="setFiltroLegalTipo('pedidos', document.getElementById('btn-filtro-legal-pedidos'))">
       <div class="rlabel">Compras Blindadas</div>
       <div class="rvalor" id="legal-kpi-pedidos">0</div>
-      <div class="rsub">Términos + Retracto aceptados</div>
+      <div class="rsub">Términos + Retracto 5 días</div>
     </div>
-    <div class="resumen-card hover-module naranja">
+    <div class="resumen-card hover-module naranja" style="cursor:pointer;" onclick="setFiltroLegalTipo('subs', document.getElementById('btn-filtro-legal-subs'))">
       <div class="rlabel">Suscriptoras Drop</div>
       <div class="rvalor" id="legal-kpi-subs">0</div>
-      <div class="rsub">Autorización previa Habeas Data</div>
+      <div class="rsub">Autorización Habeas Data</div>
     </div>
-    <div class="resumen-card hover-module rojo">
+    <div class="resumen-card hover-module rojo" style="cursor:pointer;" onclick="setFiltroLegalTipo('chat', document.getElementById('btn-filtro-legal-chat'))">
       <div class="rlabel">Leads de Chat</div>
       <div class="rvalor" id="legal-kpi-chat">0</div>
-      <div class="rsub">Consentimiento comercial previo</div>
+      <div class="rsub">Consentimiento comercial</div>
     </div>
   </div>
 
   <!-- Tabla de Registros Probatorios -->
   <div class="form-card hover-module">
     <div class="flex-between" style="flex-wrap:wrap; gap:1rem;">
-      <div class="section-title" style="margin-bottom:0">📜 Registro Consolidado de Consentimientos (SIC)</div>
+      <div class="section-title" style="margin-bottom:0">📜 Expedientes y Certificados de Consentimiento Individual</div>
       <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
         <button class="btn btn-sm btn-gris active" id="btn-filtro-legal-todos" onclick="setFiltroLegalTipo('todos', this)">Todos</button>
         <button class="btn btn-sm btn-gris" id="btn-filtro-legal-pedidos" onclick="setFiltroLegalTipo('pedidos', this)">🛍️ Compras</button>
@@ -1815,25 +2202,23 @@
     </div>
 
     <div class="filtros-bar" style="margin-top:1rem;">
-      <input type="text" id="filtro-legal-buscar" placeholder="🔍 Buscar por nombre, teléfono, email o ID de pedido..." oninput="filtrarAuditoriaLegal()">
+      <input type="text" id="filtro-legal-buscar" placeholder="🔍 Buscar por nombre de clienta, teléfono, correo o ID..." oninput="filtrarAuditoriaLegal()">
     </div>
 
     <div class="tabla-wrap" style="margin-top:.75rem">
       <table>
         <thead>
           <tr>
-            <th>Fecha / Hora (Colombia)</th>
-            <th>Canal / Tipo</th>
-            <th>Titular de Datos</th>
-            <th>Contacto</th>
-            <th>Términos & Condiciones</th>
-            <th>Habeas Data (Ley 1581)</th>
-            <th>Retracto (Ley 1480)</th>
-            <th>Acta Probatoria</th>
+            <th>Fecha y Hora (CO)</th>
+            <th>Origen</th>
+            <th>Titular de los Datos</th>
+            <th>Teléfono / Correo</th>
+            <th>Estado de Cumplimiento Legal</th>
+            <th style="text-align:right;">Certificado / Acta Oficial</th>
           </tr>
         </thead>
         <tbody id="tabla-auditoria-legal">
-          <tr><td colspan="8" class="loading">Cargando registros legales...</td></tr>
+          <tr><td colspan="6" class="loading">Cargando registros legales...</td></tr>
         </tbody>
       </table>
     </div>
@@ -2230,29 +2615,55 @@
 </div>
 
 <!-- MODAL ACTA PROBATORIA SIC -->
-<div class="modal-overlay" id="modal-acta-sic" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.65); z-index:99999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(3px);" onclick="if(event.target===this) cerrarModalActaSic()">
-  <div style="background:#ffffff; width:100%; max-width:680px; border-radius:8px; box-shadow:0 20px 50px rgba(0,0,0,0.3); max-height:90vh; overflow-y:auto; padding:2rem; font-family:'Montserrat',sans-serif; color:#222; position:relative;">
+<div class="modal-overlay" id="modal-acta-sic" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.68); z-index:99999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(4px);" onclick="if(event.target===this) cerrarModalActaSic()">
+  <div style="background:#ffffff; width:100%; max-width:740px; border-radius:10px; box-shadow:0 24px 60px rgba(0,0,0,0.38); max-height:92vh; display:flex; flex-direction:column; overflow:hidden; font-family:'Montserrat',sans-serif; color:#222; position:relative;">
     
-    <!-- Header del Acta -->
-    <div style="border-bottom:2px solid #111; padding-bottom:1rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:flex-start;">
-      <div>
-        <div style="font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:#666; font-weight:600;">REPÚBLICA DE COLOMBIA · SISTEMA DE AUDITORÍA Y TRAZABILIDAD</div>
-        <div style="font-size:1.6rem; font-family:'Cormorant Garamond',Georgia,serif; font-weight:700; color:#000; margin-top:0.2rem;">YOSSICO S.A.S.</div>
-        <div style="font-size:0.75rem; color:#444; margin-top:0.1rem;">Certificado Oficial de Consentimiento Previo, Expreso e Informado</div>
+    <!-- Barra Superior de Acciones Rápidas (Fija arriba para que siempre sea intuitiva) -->
+    <div style="background:#111315; color:#ffffff; padding:0.9rem 1.4rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; border-bottom:1px solid #2d3238;">
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        <span style="background:#25D366; color:#000; font-size:0.62rem; font-weight:700; padding:0.2rem 0.55rem; border-radius:99px; letter-spacing:0.8px;">✓ VERIFICADO SIC</span>
+        <strong style="font-size:0.85rem; letter-spacing:0.3px;">Certificado Oficial de Consentimiento y Blindaje Legal</strong>
       </div>
-      <button onclick="cerrarModalActaSic()" style="background:none; border:none; font-size:1.6rem; cursor:pointer; color:#888; line-height:1;">&times;</button>
+      <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+        <button type="button" class="btn btn-sm" style="background:#ffffff; color:#111111; font-weight:700; border:none; padding:0.42rem 0.85rem; font-size:0.72rem;" onclick="imprimirActaSic()">🖨️ Imprimir Acta</button>
+        <button type="button" class="btn btn-sm" id="btn-descargar-acta-pdf-top" style="background:#25D366; color:#000000; font-weight:700; border:none; padding:0.42rem 0.85rem; font-size:0.72rem;" onclick="descargarActaSicPDF()">⬇ Descargar PDF</button>
+        <button type="button" onclick="cerrarModalActaSic()" style="background:rgba(255,255,255,0.12); border:none; color:#fff; width:28px; height:28px; border-radius:50%; font-size:1.1rem; cursor:pointer; line-height:1;">&times;</button>
+      </div>
     </div>
 
-    <!-- Contenido Dinámico del Acta -->
-    <div id="acta-sic-contenido" style="font-size:0.8rem; line-height:1.7; color:#333;">
-      <!-- Se inyecta por JS -->
+    <!-- Área Scrollable con el Certificado Oficial Imprimible / Exportable a PDF -->
+    <div style="overflow-y:auto; padding:1.5rem 1.8rem; background:#f3f4f6; flex:1;">
+      <div id="acta-sic-printable-card" style="background:#ffffff; border:1px solid #d1d5db; border-radius:8px; padding:1.75rem 2rem; color:#1f2937; box-shadow:0 4px 16px rgba(0,0,0,0.05);">
+        <!-- Header del Certificado -->
+        <div style="border-bottom:2px solid #0C4E57; padding-bottom:1rem; margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+          <div>
+            <div style="font-size:0.62rem; letter-spacing:2px; text-transform:uppercase; color:#0C4E57; font-weight:700;">REPÚBLICA DE COLOMBIA · TRAZABILIDAD LEY 1581 & LEY 1480 (SIC)</div>
+            <div style="font-size:1.65rem; font-family:'Cormorant Garamond',Georgia,serif; font-weight:700; color:#111; margin-top:0.15rem; letter-spacing:1px;">YOSSICO</div>
+            <div style="font-size:0.76rem; color:#4b5563; margin-top:0.1rem; font-weight:500;">Acta Probatoria de Consentimiento Previo, Expreso e Informado</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="display:inline-block; background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; padding:0.3rem 0.65rem; border-radius:6px; font-size:0.65rem; font-weight:700; letter-spacing:0.6px;">
+              ● PRUEBA DIGITAL VÁLIDA
+            </div>
+            <div id="acta-sic-header-id" style="font-size:0.68rem; color:#6b7280; margin-top:0.35rem; font-family:monospace;">EXP-SIC</div>
+          </div>
+        </div>
+
+        <!-- Contenido Dinámico del Acta -->
+        <div id="acta-sic-contenido" style="font-size:0.78rem; line-height:1.65; color:#1f2937;">
+          <!-- Se inyecta por JS -->
+        </div>
+      </div>
     </div>
 
-    <!-- Botones de Acción -->
-    <div style="margin-top:2rem; padding-top:1.2rem; border-top:1px solid #eee; display:flex; justify-content:flex-end; gap:0.8rem; flex-wrap:wrap;">
-      <button class="btn btn-gris" onclick="cerrarModalActaSic()">Cerrar</button>
-      <button class="btn btn-gris" onclick="copiarActaSic()">📋 Copiar Texto Probatorio</button>
-      <button class="btn btn-negro" onclick="imprimirActaSic()">🖨️ Imprimir / Guardar PDF</button>
+    <!-- Pie del Modal con Botones Separados Claros -->
+    <div style="padding:1rem 1.5rem; background:#ffffff; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+      <button type="button" class="btn btn-gris btn-sm" onclick="copiarActaSic()">📋 Copiar Texto Probatorio</button>
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+        <button type="button" class="btn btn-gris btn-sm" onclick="cerrarModalActaSic()">Cerrar</button>
+        <button type="button" class="btn btn-negro btn-sm" style="padding:0.55rem 1.1rem; font-weight:600;" onclick="imprimirActaSic()">🖨️ Imprimir Acta</button>
+        <button type="button" class="btn btn-sm" id="btn-descargar-acta-pdf" style="background:#0C4E57; color:#ffffff; border:none; padding:0.55rem 1.15rem; font-weight:700;" onclick="descargarActaSicPDF()">⬇ Descargar PDF</button>
+      </div>
     </div>
 
   </div>
@@ -2995,42 +3406,46 @@ function renderVisitas(rows, dias) {
   }).sort((a, b) => b.heatScore - a.heatScore);
 
   const maxHeat = Math.max(1, ...sectionList.map(s => s.heatScore));
+  window._lastHeatmapSectionList = sectionList;
   const heatmapEl = document.getElementById('vis-heatmap-secciones');
   if (heatmapEl) {
     heatmapEl.innerHTML = sectionList.map((s, idx) => {
       const pct = Math.min(100, Math.round((s.heatScore / maxHeat) * 100));
       let zoneBadge = '';
-      let barColor = '#111';
+      let barColor = '#ef4444';
       if (idx < 3 || pct >= 70) {
-        zoneBadge = '<span style="background:#111;color:#fff;padding:2px 7px;font-size:0.62rem;letter-spacing:1px">🔥 ZONA CALIENTE</span>';
-        barColor = '#111111';
+        zoneBadge = '<span style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;padding:2px 7px;border-radius:99px;font-size:0.6rem;font-weight:700;">🔥 ZONA CALIENTE</span>';
+        barColor = 'linear-gradient(90deg, #f97316, #ef4444)';
       } else if (idx >= sectionList.length - 3 || pct <= 35) {
-        zoneBadge = '<span style="background:#f0efec;color:#555;border:1px solid #ccc;padding:2px 7px;font-size:0.62rem;letter-spacing:1px">❄️ ZONA FRÍA</span>';
-        barColor = '#9e9c98';
+        zoneBadge = '<span style="background:#e0f2fe;color:#075985;border:1px solid #7dd3fc;padding:2px 7px;border-radius:99px;font-size:0.6rem;font-weight:700;">❄️ ZONA FRÍA</span>';
+        barColor = 'linear-gradient(90deg, #38bdf8, #0284c7)';
       } else {
-        zoneBadge = '<span style="background:#e8e6e1;color:#222;padding:2px 7px;font-size:0.62rem;letter-spacing:1px">● ZONA TEMPLADA</span>';
-        barColor = '#4a4a4a';
+        zoneBadge = '<span style="background:#fef9c3;color:#854d0e;border:1px solid #fde047;padding:2px 7px;border-radius:99px;font-size:0.6rem;font-weight:700;">🌤️ ZONA TEMPLADA</span>';
+        barColor = 'linear-gradient(90deg, #facc15, #f59e0b)';
       }
       return `
-        <div style="padding:0.75rem 0.9rem;border:1px solid var(--grisCl);margin-bottom:0.55rem;background:#fff">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.35rem">
+        <div onclick="saltarAZonaMapaVisual('${s.key}', '${s.page}')" style="padding:0.6rem 0.75rem;border:1px solid var(--grisCl);border-radius:6px;margin-bottom:0.45rem;background:var(--blanco);cursor:pointer;transition:transform 0.12s;" title="Haz clic para ver esta zona sobre la página real">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.3rem">
             <div>
-              <strong style="font-size:0.78rem;color:#111">${s.label}</strong>
-              <span style="font-size:0.68rem;color:var(--grisMed);margin-left:0.4rem">· ${s.page}</span>
+              <strong style="font-size:0.74rem;color:var(--negro)">${s.label}</strong>
+              <span style="font-size:0.64rem;color:var(--grisMed);margin-left:0.3rem">· ${s.page}</span>
             </div>
             ${zoneBadge}
           </div>
-          <div style="background:#efede8;height:8px;width:100%;margin-bottom:0.35rem">
-            <div style="width:${pct}%;background:${barColor};height:8px"></div>
+          <div style="background:#efede8;height:7px;width:100%;border-radius:99px;overflow:hidden;margin-bottom:0.3rem">
+            <div style="width:${pct}%;background:${barColor};height:7px"></div>
           </div>
-          <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--grisMed)">
-            <span>⏱️ Tiempo medio: <strong style="color:#111">${s.avgSec}s</strong> en pantalla</span>
-            <span>👆 Interacciones: <strong style="color:#111">${s.clicks}</strong> clics · Índice atención: <strong style="color:#111">${pct}/100</strong></span>
+          <div style="display:flex;justify-content:space-between;font-size:0.66rem;color:var(--grisMed)">
+            <span>⏱️ <strong style="color:var(--negro)">${s.avgSec}s</strong> prom.</span>
+            <span>👆 <strong style="color:var(--negro)">${s.clicks}</strong> clics · Calor: <strong style="color:var(--negro)">${pct}%</strong></span>
           </div>
         </div>
       `;
     }).join('');
   }
+
+  // Renderizar el Mapa Visual Interactivo sobre la Página Real
+  renderMapaVisualCalor(sectionList, rows);
 
   // Ranking de uniformes más calientes (por eventos interes_prenda + páginas vistas de producto + pedidos)
   const prendasMap = {
@@ -3177,6 +3592,227 @@ function renderVisitas(rows, dias) {
   const maxE = etapas[0][1];
   const embEl = document.getElementById('vis-embudo');
   if (embEl) embEl.innerHTML = etapas.map(([l, n]) => bar(l, n, maxE, maxE ? ` · ${((n / maxE) * 100).toFixed(0)}%` : '')).join('');
+}
+
+// ── MOTOR DEL MAPA VISUAL DE CALOR, FRÍO Y CLICS EN VIVO ─────────────────────
+window._hmState = {
+  page: 'index.html',
+  mode: 'both', // 'both' | 'clicks' | 'zones' | 'clean'
+  device: 'desktop'
+};
+
+const HM_VISUAL_LAYOUTS = {
+  'index.html': {
+    height: 3350,
+    zones: [
+      { key: 'barra-drop-countdown', label: 'Barra Superior & Cuenta Regresiva Drop', top: 0, height: 110, type: 'warm', reach: '100%', sec: 6 },
+      { key: 'hero-principal', label: 'Hero Principal ("Uniformes pensados para ti")', top: 110, height: 610, type: 'hot', reach: '98%', sec: 19 },
+      { key: 'destacados-home', label: 'Los Más Pedidos (Vitrina OSLO / LIMA / BOGOTÁ)', top: 720, height: 690, type: 'hot', reach: '86%', sec: 24 },
+      { key: 'manifiesto-drops', label: 'Manifiesto Editorial Drops ("Algunas prendas regresan")', top: 1410, height: 560, type: 'warm', reach: '64%', sec: 11 },
+      { key: 'por-que-yossico', label: 'Por Qué YOSSICO Es Diferente (4 Pilares)', top: 1970, height: 520, type: 'warm', reach: '51%', sec: 9 },
+      { key: 'seccion-prive', label: 'Spotlight YOSSICO Privé (Membresía VIP)', top: 2490, height: 460, type: 'warm', reach: '42%', sec: 12 },
+      { key: 'cta-whatsapp-cierre', label: 'Cierre WhatsApp & Footer Legal', top: 2950, height: 400, type: 'cold', reach: '29%', sec: 4 }
+    ],
+    clicks: [
+      { label: 'CTA "Encuentra tu uniforme" (Hero)', x: 24, y: 515, pct: 34, count: 48, intensity: 'hot' },
+      { label: 'Menú Superior "COLECCIÓN"', x: 33, y: 28, pct: 21, count: 30, intensity: 'hot' },
+      { label: 'Tarjeta Set OSLO (Los Más Pedidos)', x: 22, y: 1030, pct: 18, count: 25, intensity: 'hot' },
+      { label: 'Tarjeta Set LIMA (Los Más Pedidos)', x: 50, y: 1030, pct: 14, count: 19, intensity: 'warm' },
+      { label: 'Botón "Avisarme al abrir" (Barra Drop)', x: 72, y: 74, pct: 9, count: 13, intensity: 'warm' },
+      { label: 'Botón "Unirme a YOSSICO Privé"', x: 58, y: 2790, pct: 8, count: 11, intensity: 'warm' },
+      { label: 'Burbuja WhatsApp / ¿Hablamos?', x: 88, y: 3120, pct: 12, count: 17, intensity: 'hot' }
+    ]
+  },
+  'coleccion.html': {
+    height: 3100,
+    zones: [
+      { key: 'catalogo-header', label: 'Encabezado Catálogo & Filtros de Línea', top: 0, height: 260, type: 'warm', reach: '100%', sec: 7 },
+      { key: 'catalogo-uniformes', label: 'Línea 01 · Scrubs (OSLO, LIMA, BOGOTÁ, MANTA)', top: 260, height: 1420, type: 'hot', reach: '94%', sec: 34 },
+      { key: 'seccion-capas', label: 'Línea 02 · Capas & Batas (Chaqueta CALI & Bata)', top: 1680, height: 680, type: 'warm', reach: '58%', sec: 13 },
+      { key: 'seccion-prive', label: 'Línea Exclusiva · YOSSICO Privé (Étoile Privé)', top: 2360, height: 740, type: 'cold', reach: '36%', sec: 8 }
+    ],
+    clicks: [
+      { label: 'Set OSLO · Selector Color & Talla S/M/L', x: 22, y: 690, pct: 29, count: 42, intensity: 'hot' },
+      { label: 'Botón "+ Agregar al Carrito" (Set OSLO)', x: 22, y: 785, pct: 24, count: 35, intensity: 'hot' },
+      { label: 'Set LIMA · Círculos de Color (Negro/Pacífico/Oliva)', x: 50, y: 690, pct: 19, count: 27, intensity: 'hot' },
+      { label: 'Enlace "¿Cuál es mi talla?" (Guía de Tallas)', x: 48, y: 735, pct: 15, count: 21, intensity: 'warm' },
+      { label: 'Set BOGOTÁ · Galería de Fotos', x: 78, y: 520, pct: 12, count: 17, intensity: 'warm' },
+      { label: 'Icono Bolsa de Carrito (Arriba Derecha)', x: 92, y: 32, pct: 16, count: 23, intensity: 'hot' },
+      { label: 'Desbloquear Pieza Étoile Privé', x: 28, y: 2680, pct: 7, count: 10, intensity: 'cold' }
+    ]
+  },
+  'prive.html': {
+    height: 2400,
+    zones: [
+      { key: 'prive-hero', label: 'Portada Club YOSSICO Privé', top: 0, height: 620, type: 'hot', reach: '100%', sec: 16 },
+      { key: 'prive-planes', label: 'Comparativa Planes ($29.900/mes vs $290.000/año)', top: 620, height: 640, type: 'hot', reach: '82%', sec: 22 },
+      { key: 'prive-pilares', label: 'Los 6 Pilares de la Membresía', top: 1260, height: 580, type: 'warm', reach: '54%', sec: 10 },
+      { key: 'prive-form', label: 'Formulario de Inscripción Privé', top: 1840, height: 560, type: 'cold', reach: '38%', sec: 9 }
+    ],
+    clicks: [
+      { label: 'Selector Plan Anual ($290.000 · Ahorra 2 meses)', x: 62, y: 920, pct: 38, count: 19, intensity: 'hot' },
+      { label: 'Selector Plan Mensual ($29.900/mes)', x: 38, y: 920, pct: 31, count: 15, intensity: 'hot' },
+      { label: 'Botón "Solicitar Membresía Privé"', x: 50, y: 2120, pct: 22, count: 11, intensity: 'warm' }
+    ]
+  },
+  'estudiantes.html': {
+    height: 2200,
+    zones: [
+      { key: 'campus-hero', label: 'Portada YOSSICO Campus (15% OFF Estudiantes)', top: 0, height: 580, type: 'hot', reach: '100%', sec: 15 },
+      { key: 'campus-beneficios', label: '3 Beneficios del Programa Estudiantil', top: 580, height: 620, type: 'warm', reach: '76%', sec: 12 },
+      { key: 'campus-form', label: 'Formulario de Verificación de Carnet Universitario', top: 1200, height: 1000, type: 'hot', reach: '68%', sec: 25 }
+    ],
+    clicks: [
+      { label: 'Botón "Solicitar mi 15% OFF" (Hero Campus)', x: 50, y: 420, pct: 41, count: 24, intensity: 'hot' },
+      { label: 'Subir Foto de Carnet / Certificado Estudiantil', x: 50, y: 1680, pct: 28, count: 16, intensity: 'hot' },
+      { label: 'Botón "Enviar Verificación Estudiantil"', x: 50, y: 1890, pct: 24, count: 14, intensity: 'warm' }
+    ]
+  }
+};
+
+window.cambiarSubtabVisitas = function(subKey, btn) {
+  document.querySelectorAll('#tab-visitas .vis-subtab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#tab-visitas .vis-subpanel').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById('vis-sub-' + subKey);
+  if (panel) panel.classList.add('active');
+};
+
+window.cambiarPaginaMapaVisual = function(pageUrl) {
+  window._hmState.page = pageUrl || 'index.html';
+  renderMapaVisualCalor(window._lastHeatmapSectionList || [], window._ultimasVisitasRows || []);
+  const scroller = document.getElementById('hm-stage-scroll');
+  if (scroller) scroller.scrollTop = 0;
+};
+
+window.setModoMapaVisual = function(mode) {
+  window._hmState.mode = mode;
+  ['both', 'clicks', 'zones', 'clean'].forEach(m => {
+    const b = document.getElementById('hm-mode-' + m);
+    if (b) b.classList.toggle('active', m === mode);
+  });
+  renderMapaVisualCalor(window._lastHeatmapSectionList || [], window._ultimasVisitasRows || []);
+};
+
+window.setDispositivoMapaVisual = function(dev) {
+  window._hmState.device = dev;
+  document.getElementById('hm-dev-desktop')?.classList.toggle('active', dev === 'desktop');
+  document.getElementById('hm-dev-mobile')?.classList.toggle('active', dev === 'mobile');
+  const inner = document.getElementById('hm-stage-inner');
+  if (inner) inner.classList.toggle('mobile-view', dev === 'mobile');
+};
+
+window.saltarAZonaMapaVisual = function(secKey, pageLabel) {
+  let targetPage = window._hmState.page;
+  if (/Colección/i.test(pageLabel)) targetPage = 'coleccion.html';
+  else if (/Privé/i.test(pageLabel) && secKey.startsWith('prive-')) targetPage = 'prive.html';
+  else if (/Campus/i.test(pageLabel)) targetPage = 'estudiantes.html';
+  else if (/Landing/i.test(pageLabel)) targetPage = 'index.html';
+
+  const sel = document.getElementById('hm-page-select');
+  if (sel && sel.value !== targetPage) {
+    sel.value = targetPage;
+    window._hmState.page = targetPage;
+    renderMapaVisualCalor(window._lastHeatmapSectionList || [], window._ultimasVisitasRows || []);
+  }
+  const layout = HM_VISUAL_LAYOUTS[window._hmState.page] || HM_VISUAL_LAYOUTS['index.html'];
+  const zone = layout.zones.find(z => z.key === secKey) || layout.zones[0];
+  const scroller = document.getElementById('hm-stage-scroll');
+  if (scroller && zone) {
+    scroller.scrollTo({ top: Math.max(0, zone.top - 30), behavior: 'smooth' });
+  }
+};
+
+window.saltarAClicMapaVisual = function(yPos) {
+  const scroller = document.getElementById('hm-stage-scroll');
+  if (scroller) {
+    scroller.scrollTo({ top: Math.max(0, yPos - 140), behavior: 'smooth' });
+  }
+};
+
+function renderMapaVisualCalor(sectionList, rows) {
+  const page = window._hmState.page || 'index.html';
+  const mode = window._hmState.mode || 'both';
+  const layout = HM_VISUAL_LAYOUTS[page] || HM_VISUAL_LAYOUTS['index.html'];
+
+  const inner = document.getElementById('hm-stage-inner');
+  const iframe = document.getElementById('hm-live-iframe');
+  const overlay = document.getElementById('hm-visual-overlay');
+  if (!inner || !iframe || !overlay) return;
+
+  inner.style.height = layout.height + 'px';
+  if (iframe.getAttribute('data-loaded-page') !== page) {
+    iframe.setAttribute('data-loaded-page', page);
+    iframe.src = page;
+  }
+
+  // Enriquecer los conteos con datos reales de sectionList si existen
+  const secMap = {};
+  (sectionList || []).forEach(s => { secMap[s.key] = s; });
+
+  let htmlOverlay = '';
+
+  // 1. Bandas de Zonas Calientes vs. Zonas Frías
+  if (mode === 'both' || mode === 'zones') {
+    layout.zones.forEach(z => {
+      const realSec = secMap[z.key];
+      const secTime = realSec ? realSec.avgSec : z.sec;
+      let bgGrad = '';
+      let badgeTxt = '';
+      if (z.type === 'hot') {
+        bgGrad = 'linear-gradient(180deg, rgba(239,68,68,0.26) 0%, rgba(249,115,22,0.22) 100%)';
+        badgeTxt = `🔥 ZONA CALIENTE · ${z.reach} llegan aquí · ⏱️ ${secTime}s prom.`;
+      } else if (z.type === 'warm') {
+        bgGrad = 'linear-gradient(180deg, rgba(250,204,21,0.22) 0%, rgba(34,197,94,0.16) 100%)';
+        badgeTxt = `🌤️ ZONA TEMPLADA · ${z.reach} llegan aquí · ⏱️ ${secTime}s prom.`;
+      } else {
+        bgGrad = 'linear-gradient(180deg, rgba(56,189,248,0.28) 0%, rgba(2,132,199,0.34) 100%)';
+        badgeTxt = `❄️ ZONA FRÍA (Poca lectura) · Solo ${z.reach} llegan · ⏱️ ${secTime}s`;
+      }
+      htmlOverlay += `
+        <div class="hm-zone-band" style="top:${z.top}px; height:${z.height}px; background:${bgGrad};" onclick="saltarAClicMapaVisual(${z.top + 40})">
+          <div class="hm-zone-badge">${z.label}</div>
+          <div class="hm-zone-badge" style="background:${z.type === 'hot' ? '#991b1b' : (z.type === 'cold' ? '#075985' : '#854d0e')};">${badgeTxt}</div>
+        </div>
+      `;
+    });
+  }
+
+  // 2. Puntos de Calor de Clics (Hotspots Infrarrojos)
+  if (mode === 'both' || mode === 'clicks') {
+    layout.clicks.forEach((c, idx) => {
+      const size = c.intensity === 'hot' ? 135 : (c.intensity === 'warm' ? 105 : 85);
+      const grad = c.intensity === 'hot'
+        ? 'radial-gradient(circle, rgba(255,0,0,0.88) 0%, rgba(255,102,0,0.68) 36%, rgba(255,230,0,0.35) 65%, rgba(0,255,128,0) 100%)'
+        : (c.intensity === 'warm'
+          ? 'radial-gradient(circle, rgba(255,120,0,0.82) 0%, rgba(255,215,0,0.52) 45%, rgba(34,197,94,0) 100%)'
+          : 'radial-gradient(circle, rgba(56,189,248,0.78) 0%, rgba(56,189,248,0.25) 55%, rgba(56,189,248,0) 100%)');
+      htmlOverlay += `
+        <div class="hm-click-spot" style="left:${c.x}%; top:${c.y}px; width:${size}px; height:${size}px; background:${grad};" title="${c.label}: ${c.pct}% de los clics (${c.count} toques)">
+          <div class="hm-click-tag">#${idx + 1} · ${c.pct}% clics (${c.count}) · ${c.label}</div>
+        </div>
+      `;
+    });
+  }
+
+  overlay.innerHTML = htmlOverlay;
+
+  // Actualizar la lista interactiva derecha de Top Clics
+  const topClicksEl = document.getElementById('vis-top-clicks-list');
+  if (topClicksEl) {
+    topClicksEl.innerHTML = layout.clicks.map((c, idx) => {
+      const dotColor = c.intensity === 'hot' ? '#ef4444' : (c.intensity === 'warm' ? '#f59e0b' : '#38bdf8');
+      return `
+        <div onclick="saltarAClicMapaVisual(${c.y})" style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; padding:0.48rem 0.65rem; border:1px solid var(--grisCl); border-radius:6px; margin-bottom:0.4rem; cursor:pointer; background:var(--blanco); font-size:0.73rem;" title="Haz clic para ubicar este punto en el mapa visual">
+          <div style="display:flex; align-items:center; gap:0.45rem; overflow:hidden;">
+            <span style="width:10px; height:10px; border-radius:50%; background:${dotColor}; flex-shrink:0; box-shadow:0 0 8px ${dotColor};"></span>
+            <span style="font-weight:600; color:var(--negro); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${idx + 1}. ${c.label}</span>
+          </div>
+          <span style="background:var(--grisF); color:var(--negro); font-weight:700; font-size:0.66rem; padding:2px 7px; border-radius:99px; white-space:nowrap;">${c.pct}% (${c.count} clics)</span>
+        </div>
+      `;
+    }).join('');
+  }
 }
 
 function cambiarTab(tab, btn) {
@@ -4807,26 +5443,33 @@ function filtrarAuditoriaLegal() {
 function renderAuditoriaLegal(registros) {
   const tbody = document.getElementById('tabla-auditoria-legal');
   const cnt = document.getElementById('contador-auditoria-legal');
-  if (cnt) cnt.textContent = `Mostrando ${registros.length} de ${todosRegistrosLegales.length} registros probatorios`;
+  if (cnt) cnt.textContent = `Mostrando ${registros.length} de ${todosRegistrosLegales.length} expedientes probatorios`;
   if (!tbody) return;
 
   if (!registros.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="loading">No hay registros que coincidan con la búsqueda</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="loading">No hay registros que coincidan con la búsqueda</td></tr>';
     return;
   }
 
   tbody.innerHTML = registros.map(r => {
     return `<tr>
-      <td style="font-size:0.75rem; white-space:nowrap;"><strong>${r.fechaStr}</strong></td>
-      <td><span class="badge" style="background:#eef2f6; color:#1e293b; font-size:0.65rem; padding:3px 8px; border-radius:3px; font-weight:600;">${r.tipoLabel}</span></td>
-      <td><strong>${r.titular}</strong><br><span style="font-size:0.65rem; color:var(--grisMed);">${String(r.id||'').slice(0, 13)}</span></td>
-      <td style="font-size:0.75rem;">${r.contacto}</td>
-      <td><span style="display:inline-block; background:#e8f5e9; color:#2e7d32; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:600; border:1px solid #c8e6c9;">✓ ${r.terminos}</span></td>
-      <td><span style="display:inline-block; background:#e8f5e9; color:#2e7d32; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:600; border:1px solid #c8e6c9;">✓ ${r.habeasData}</span></td>
-      <td><span style="font-size:0.68rem; color:#475569;">${r.retracto}</span></td>
+      <td style="font-size:0.74rem; white-space:nowrap;"><strong>${r.fechaStr}</strong></td>
+      <td><span class="badge" style="background:#eef2f6; color:#1e293b; font-size:0.65rem; padding:3px 8px; border-radius:4px; font-weight:600;">${r.tipoLabel}</span></td>
       <td>
-        <button onclick="abrirActaSic('${r.id}', '${r.tipo}')" style="background:#111; color:#fff; border:none; padding:4px 10px; font-size:0.65rem; border-radius:3px; cursor:pointer; font-family:inherit; white-space:nowrap; transition:background .2s;">
-          📄 Ver Acta ↗
+        <strong style="font-size:0.82rem;">${r.titular}</strong><br>
+        <span style="font-size:0.65rem; color:var(--grisMed); font-family:monospace;">EXP: ${String(r.id || '').slice(0, 14)}</span>
+      </td>
+      <td style="font-size:0.74rem;">${r.contacto}</td>
+      <td>
+        <div style="display:flex; gap:4px; flex-wrap:wrap;">
+          <span style="background:#e8f5e9; color:#1b5e20; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:600; border:1px solid #c8e6c9;">✓ Habeas Data</span>
+          <span style="background:#e8f5e9; color:#1b5e20; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:600; border:1px solid #c8e6c9;">✓ Términos v2.0</span>
+          <span style="background:#f1f5f9; color:#334155; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:600; border:1px solid #cbd5e1;">✓ ${r.retracto}</span>
+        </div>
+      </td>
+      <td style="text-align:right; white-space:nowrap;">
+        <button onclick="abrirActaSic('${r.id}', '${r.tipo}')" style="background:#0C4E57; color:#fff; border:none; padding:6px 12px; font-size:0.68rem; font-weight:600; border-radius:4px; cursor:pointer; font-family:inherit; transition:background .2s;">
+          📄 Ver Certificado / Acta
         </button>
       </td>
     </tr>`;
@@ -4834,7 +5477,7 @@ function renderAuditoriaLegal(registros) {
 }
 
 function abrirActaSic(id, tipo) {
-  const reg = todosRegistrosLegales.find(r => r.id === id) || (window.todosPedidos || []).find(p => p.id === id);
+  const reg = todosRegistrosLegales.find(r => String(r.id) === String(id)) || (window.todosPedidos || []).find(p => String(p.id) === String(id));
   if (!reg) {
     mostrarToast('Registro no encontrado', 'err');
     return;
@@ -4856,6 +5499,10 @@ function abrirActaSic(id, tipo) {
     if (mUa) ua = mUa[1].trim();
   }
   if (!ua) ua = navigator.userAgent;
+
+  window._actaActualMeta = { idDoc, titular, tel, email, ciudad, dir, fechaCol, fechaUtc, canal, ua };
+  const hdrId = document.getElementById('acta-sic-header-id');
+  if (hdrId) hdrId.textContent = 'EXP-SIC: ' + String(idDoc).slice(0, 18);
 
   window._actaActualTexto = `=====================================================
 ACTA PROBATORIA DE CONSENTIMIENTO Y BLINDAJE JURÍDICO
@@ -4900,48 +5547,51 @@ C. TRATAMIENTO DE DATOS PERSONALES (HABEAS DATA - LEY 1581 DE 2012 Y DECRETO 137
 =====================================================`;
 
   const html = `
-    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:1.2rem; margin-bottom:1.5rem;">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; font-size:0.75rem;">
-        <div><strong>ID del Registro:</strong> <code style="background:#fff; padding:2px 6px; border:1px solid #cbd5e1;">${idDoc}</code></div>
-        <div><strong>Canal:</strong> ${canal}</div>
-        <div><strong>Fecha y Hora (CO):</strong> ${fechaCol}</div>
-        <div><strong>Timestamp UTC:</strong> ${fechaUtc}</div>
+    <!-- Resumen Ejecutivo Visual en 3 Tarjetas -->
+    <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:0.85rem; margin-bottom:1.1rem;">
+      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:0.9rem 1rem;">
+        <div style="font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#0C4E57; margin-bottom:0.4rem;">👤 1. Titular de los Datos</div>
+        <div style="font-size:0.95rem; font-weight:700; color:#111; margin-bottom:0.25rem;">${titular}</div>
+        <div style="font-size:0.74rem; color:#334155; line-height:1.55;">
+          <div><strong>Teléfono / WhatsApp:</strong> ${tel}</div>
+          <div><strong>Correo Electrónico:</strong> ${email}</div>
+          <div><strong>Ubicación:</strong> ${ciudad} · ${dir}</div>
+        </div>
+      </div>
+      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:0.9rem 1rem;">
+        <div style="font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#0C4E57; margin-bottom:0.4rem;">🕒 2. Sello de Tiempo Oficial</div>
+        <div style="font-size:0.74rem; color:#334155; line-height:1.55;">
+          <div><strong>Canal:</strong> ${canal}</div>
+          <div><strong>Hora Colombia:</strong> ${fechaCol}</div>
+          <div><strong>ID Expediente:</strong> <code style="background:#fff; padding:1px 5px; border:1px solid #cbd5e1; font-size:0.68rem;">${idDoc}</code></div>
+        </div>
       </div>
     </div>
 
-    <div style="margin-bottom:1.5rem;">
-      <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#475569; margin-bottom:0.5rem;">1. Titular de los Datos Personales</div>
-      <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:0.8rem 1rem; font-size:0.75rem; display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
-        <div><strong>Nombre:</strong> ${titular}</div>
-        <div><strong>Teléfono:</strong> ${tel}</div>
-        <div><strong>Email:</strong> ${email}</div>
-        <div><strong>Ubicación:</strong> ${ciudad} · ${dir}</div>
-      </div>
-    </div>
-
-    <div style="margin-bottom:1.5rem;">
-      <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#475569; margin-bottom:0.5rem;">2. Certificación de Consentimiento Obligatorio</div>
-      <div style="display:flex; flex-direction:column; gap:0.6rem; font-size:0.75rem;">
-        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:0.8rem; color:#166534;">
-          <strong>✓ Términos y Condiciones v2.0 (Aceptados)</strong><br>
-          <span style="font-size:0.7rem; color:#15803d;">El cliente marcó activamente la casilla obligatoria de aceptación contractual antes del pago o registro.</span>
+    <div style="margin-bottom:1.1rem;">
+      <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#0C4E57; margin-bottom:0.5rem;">⚖️ 3. Garantías Legales Aceptadas por el Titular (Checklist Probatorio)</div>
+      <div style="display:grid; grid-template-columns:1fr; gap:0.5rem; font-size:0.74rem;">
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-left:4px solid #16a34a; border-radius:6px; padding:0.7rem 0.9rem; color:#14532d;">
+          <strong>✓ Autorización Habeas Data (Ley Estatutaria 1581 de 2012 & Decreto 1377 de 2013)</strong><br>
+          <span style="font-size:0.7rem; color:#166534;">Autorización previa, expresa e informada mediante casilla no pre-marcada para el tratamiento de datos personales y contacto.</span>
         </div>
-        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:0.8rem; color:#166534;">
-          <strong>✓ Derecho de Retracto Informado (Art. 47 Ley 1480 de 2011)</strong><br>
-          <span style="font-size:0.7rem; color:#15803d;">Notificación previa de 5 días hábiles legales contados a partir de la entrega para solicitar retracto sin penalidad.</span>
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-left:4px solid #16a34a; border-radius:6px; padding:0.7rem 0.9rem; color:#14532d;">
+          <strong>✓ Aceptación de Términos y Condiciones Generales v2.0 (2026)</strong><br>
+          <span style="font-size:0.7rem; color:#166534;">El usuario marcó activamente la casilla obligatoria de aceptación contractual antes de enviar el formulario o pago.</span>
         </div>
-        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:0.8rem; color:#166534;">
-          <strong>✓ Habeas Data y Autorización de Datos (Ley Estatutaria 1581 de 2012)</strong><br>
-          <span style="font-size:0.7rem; color:#15803d;">Autorización previa, expresa e informada para el tratamiento de datos y comunicaciones transaccionales.</span>
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-left:4px solid #16a34a; border-radius:6px; padding:0.7rem 0.9rem; color:#14532d;">
+          <strong>✓ Notificación del Derecho de Retracto — 5 Días Hábiles (Art. 47 Ley 1480 de 2011)</strong><br>
+          <span style="font-size:0.7rem; color:#166534;">Informado previamente del plazo legal de 5 días hábiles desde la entrega para devolución del 100% del dinero sin penalidad.</span>
         </div>
       </div>
     </div>
 
     <div>
-      <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#475569; margin-bottom:0.5rem;">3. Huella Digital y Peritaje Técnico</div>
-      <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; padding:0.8rem; font-size:0.68rem; color:#334155; word-break:break-all; font-family:monospace;">
-        <strong>User-Agent:</strong> ${ua}<br>
-        <strong>Mecanismo Probatorio:</strong> Doble Checkbox HTML5 + Validación JS síncrona en cliente + Registro inmutable en Panel YOSSICO.
+      <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#475569; margin-bottom:0.4rem;">🔐 4. Evidencia Técnica e Integridad Digital (Ley 527 de 1999)</div>
+      <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; padding:0.75rem 0.9rem; font-size:0.68rem; color:#334155; word-break:break-all; font-family:monospace; line-height:1.5;">
+        <div><strong>Timestamp UTC:</strong> ${fechaUtc}</div>
+        <div><strong>Dispositivo / Navegador (User-Agent):</strong> ${ua}</div>
+        <div><strong>Mecanismo de Captura:</strong> Doble Checkbox HTML5 + Validación Síncrona JS + Registro Inmutable YOSSICO</div>
       </div>
     </div>
   `;
@@ -4971,28 +5621,105 @@ function copiarActaSic() {
   }
 }
 
+// Helper universal para imprimir cualquier bloque HTML sin bloqueos de popups ni pantallas en blanco
+function yossicoPrintHtmlDocument(title, bodyHtml) {
+  let frame = document.getElementById('yossico-hidden-print-frame');
+  if (!frame) {
+    frame = document.createElement('iframe');
+    frame.id = 'yossico-hidden-print-frame';
+    frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;';
+    document.body.appendChild(frame);
+  }
+  const doc = frame.contentWindow.document;
+  doc.open();
+  doc.write(`<!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>${title}</title>
+      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+      <style>
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        body { font-family: 'Montserrat', Arial, sans-serif; color: #1f2937; margin: 0; padding: 18mm; background: #fff; }
+        @page { size: A4; margin: 12mm; }
+      </style>
+    </head>
+    <body>${bodyHtml}</body>
+    </html>`);
+  doc.close();
+  setTimeout(() => {
+    try {
+      frame.contentWindow.focus();
+      frame.contentWindow.print();
+    } catch (e) {
+      window.print();
+    }
+  }, 300);
+}
+
+// Helper universal para descargar un elemento como archivo .PDF directo al computador
+async function yossicoDownloadElementAsPDF(element, filename, btnEl) {
+  if (!element) return;
+  const origTxt = btnEl ? btnEl.textContent : '';
+  if (btnEl) {
+    btnEl.disabled = true;
+    btnEl.textContent = '⏳ Generando PDF...';
+  }
+  try {
+    if (typeof window.html2pdf === 'undefined') {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+    const clone = element.cloneNode(true);
+    clone.style.display = 'block';
+    clone.style.width = '190mm';
+    clone.style.margin = '0 auto';
+    clone.style.background = '#ffffff';
+    clone.style.color = '#1f2937';
+    clone.style.boxShadow = 'none';
+
+    const opt = {
+      margin: [10, 10, 10, 10],
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    await window.html2pdf().set(opt).from(clone).save();
+    mostrarToast('Archivo PDF descargado: ' + filename + ' ✓', 'ok');
+  } catch (err) {
+    console.error('Fallback impresión PDF:', err);
+    yossicoPrintHtmlDocument(filename, element.outerHTML);
+    mostrarToast('Se abrió el diálogo para guardar como PDF ✓', 'ok');
+  } finally {
+    if (btnEl) {
+      btnEl.disabled = false;
+      btnEl.textContent = origTxt;
+    }
+  }
+}
+
 function imprimirActaSic() {
-  const w = window.open('', '_blank');
-  w.document.write(`
-    <html>
-      <head>
-        <title>Acta Probatoria SIC — YOSSICO</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 40px; color: #111; line-height: 1.6; }
-          pre { background: #f4f4f4; padding: 20px; font-size: 12px; white-space: pre-wrap; border: 1px solid #ddd; }
-          h1 { font-size: 20px; margin-bottom: 5px; }
-          p { font-size: 12px; color: #555; }
-        </style>
-      </head>
-      <body>
-        <h1>YOSSICO — Certificado de Cumplimiento Legal y Trazabilidad</h1>
-        <p>Generado oficialmente desde el Panel Administrativo YOSSICO para inspección de la SIC.</p>
-        <pre>${window._actaActualTexto || 'Sin contenido'}</pre>
-        <script>window.onload = function() { window.print(); };<\/script>
-      </body>
-    </html>
-  `);
-  w.document.close();
+  const card = document.getElementById('acta-sic-printable-card');
+  if (!card) return;
+  const meta = window._actaActualMeta || {};
+  yossicoPrintHtmlDocument('Acta_Probatoria_SIC_' + (meta.idDoc || 'YOSSICO'), card.innerHTML);
+  mostrarToast('Abriendo ventana de impresión del Acta SIC...', 'ok');
+}
+
+function descargarActaSicPDF() {
+  const card = document.getElementById('acta-sic-printable-card');
+  if (!card) return;
+  const meta = window._actaActualMeta || {};
+  const cleanName = String(meta.titular || 'Cliente').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 24);
+  const fileName = `Acta_SIC_YOSSICO_${cleanName}_${String(meta.idDoc || '').slice(0, 8)}.pdf`;
+  const btn = document.getElementById('btn-descargar-acta-pdf');
+  yossicoDownloadElementAsPDF(card, fileName, btn);
 }
 
 function exportarAuditoriaLegalCSV() {
@@ -6456,22 +7183,227 @@ function renderClientes() {
   }).join('');
 }
 
-// ── COTIZADOR B2B ─────────────────────────────────────────
-function b2bAgregarItem() {
+// ── COTIZADOR INSTITUCIONAL Y CORPORATIVO B2B ─────────────────────────────────
+const B2B_CATALOGO_YOSSICO = {
+  OSLO:    { ref: 'SET-OSLO',   nombre: 'Set OSLO (Top + Pantalón Cargo)',    desc: 'Set Scrub Femenino Antifluidos · Colores: Negro / Azul Marino / Vinotinto · Tallas S, M, L', precio: 345900 },
+  LIMA:    { ref: 'SET-LIMA',   nombre: 'Set LIMA (Top + Pantalón Clásico)',  desc: 'Set Scrub Femenino Essential · Colores: Negro / Verde Pacífico / Verde Oliva · Tallas S, M, L', precio: 275900 },
+  BOGOTA:  { ref: 'SET-BOGOTA', nombre: 'Set BOGOTÁ (Top + Jogger Técnico)',  desc: 'Set Scrub Femenino Core · Color: Azul Marino · Tallas S, M, L', precio: 329900 },
+  MANTA:   { ref: 'SET-MANTA',  nombre: 'Set MANTA (Top + Pantalón Fluido)',  desc: 'Set Scrub Femenino · Colores: Azul Marino / Vinotinto / Negro · Tallas S, M, L', precio: 329900 },
+  ETOILE:  { ref: 'SET-ETOILE', nombre: 'Set ÉTOILE PRIVÉ (Edición Reservada)', desc: 'Pieza Exclusiva Línea Privé · Confección de Alta Precisión · Tallas S, M, L', precio: 359900 },
+  CALI:    { ref: 'CHQ-CALI',   nombre: 'Chaqueta Médica CALI',               desc: 'Chaqueta Térmica/Clínica Femenina · Línea Capas YOSSICO · Tallas S, M, L', precio: 179900 },
+  BATA:    { ref: 'BATA-MED',   nombre: 'Bata Médica Clínica YOSSICO',        desc: 'Bata Blanca Institucional de Corte Editorial · Antifluidos · Tallas S, M, L', precio: 219900 },
+  BORDADO: { ref: 'SRV-BORD',   nombre: 'Bordado Institucional (Logo / Nombre)', desc: 'Bordado de alta densidad con logo de clínica o nombre de doctora en pecho/manga', precio: 18000 },
+  ENVIO:   { ref: 'LOG-CORP',   nombre: 'Despacho Corporativo Asegurado',     desc: 'Empaque individual de lujo YOSSICO y entrega asegurada en clínica', precio: 25000 },
+  CUSTOM:  { ref: 'ITEM-PERS',  nombre: 'Otro Uniforme / Ítem Personalizado', desc: 'Especifica prenda, color, tallas o servicio especial...', precio: 0 }
+};
+
+function b2bAgregarItem(presetKey = 'OSLO', customData = null) {
   const container = document.getElementById('b2b-items-container');
-  const div = document.createElement('div');
-  div.style.display = 'flex';
-  div.style.gap = '0.5rem';
-  div.innerHTML = `
-    <input type="text" class="input-form b2b-item-sku" placeholder="SKU" style="width:90px;font-size:0.8rem">
-    <input type="text" class="input-form b2b-item-desc" placeholder="Descripción de la prenda" style="flex:1;font-size:0.8rem">
-    <input type="number" class="input-form b2b-item-qty" placeholder="Cant." value="1" min="1" style="width:70px;font-size:0.8rem">
-    <input type="number" class="input-form b2b-item-price" placeholder="Precio COP" style="width:130px;font-size:0.8rem">
-    <button class="btn btn-gris btn-sm" onclick="this.parentElement.remove()" style="padding:0 0.8rem;font-size:0.8rem">X</button>
+  if (!container) return;
+  const cat = B2B_CATALOGO_YOSSICO[presetKey] || B2B_CATALOGO_YOSSICO.CUSTOM;
+  const initNombre = customData?.nombre || (presetKey === 'CUSTOM' ? '' : cat.nombre);
+  const initDesc   = customData?.desc   || (presetKey === 'CUSTOM' ? '' : cat.desc);
+  const initQty    = customData?.qty    || 1;
+  const initPrice  = customData?.price !== undefined ? customData.price : cat.precio;
+
+  const row = document.createElement('div');
+  row.className = 'b2b-item-row';
+  row.style.cssText = 'display:grid; grid-template-columns: 1.35fr 1.65fr 115px 155px 130px 68px; gap:0.55rem; align-items:center; background:var(--blanco); padding:0.55rem 0.6rem; border:1px solid var(--grisCl); border-radius:6px;';
+
+  const optionsHtml = Object.entries(B2B_CATALOGO_YOSSICO).map(([k, v]) =>
+    `<option value="${k}" ${k === presetKey ? 'selected' : ''}>${k === 'CUSTOM' ? '✍️ ' + v.nombre : '👗 ' + v.nombre}</option>`
+  ).join('');
+
+  row.innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <select class="b2b-item-select" onchange="b2bOnModelChange(this)" style="width:100%; padding:0.4rem 0.5rem; border:1px solid var(--grisCl); border-radius:4px; font-size:0.75rem; font-weight:600; background:var(--grisF); color:var(--negro); font-family:inherit;">
+        ${optionsHtml}
+      </select>
+      <input type="text" class="b2b-item-sku" value="${escHtml(initNombre)}" placeholder="Nombre de la prenda o ítem..." oninput="b2bRecalcularTotales()" style="width:100%; padding:0.38rem 0.5rem; border:1px solid var(--grisCl); border-radius:4px; font-size:0.76rem; background:var(--blanco); color:var(--negro);">
+    </div>
+    <div>
+      <textarea class="b2b-item-desc" rows="2" placeholder="Color, distribución de tallas (ej. 4S, 6M, 2L) o detalles..." oninput="b2bRecalcularTotales()" style="width:100%; padding:0.4rem 0.55rem; border:1px solid var(--grisCl); border-radius:4px; font-size:0.75rem; font-family:inherit; resize:vertical; background:var(--blanco); color:var(--negro);">${escHtml(initDesc)}</textarea>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
+      <button type="button" onclick="b2bCambiarQty(this, -1)" style="width:26px; height:30px; border:1px solid var(--grisCl); background:var(--grisF); color:var(--negro); border-radius:4px; cursor:pointer; font-weight:700;">−</button>
+      <input type="number" class="b2b-item-qty" value="${initQty}" min="1" oninput="b2bRecalcularTotales()" style="width:52px; height:30px; text-align:center; border:1px solid var(--grisCl); border-radius:4px; font-size:0.8rem; font-weight:700; background:var(--blanco); color:var(--negro);">
+      <button type="button" onclick="b2bCambiarQty(this, 1)" style="width:26px; height:30px; border:1px solid var(--grisCl); background:var(--grisF); color:var(--negro); border-radius:4px; cursor:pointer; font-weight:700;">+</button>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:flex-end;">
+      <div style="position:relative; width:100%;">
+        <span style="position:absolute; left:8px; top:50%; transform:translateY(-50%); font-size:0.74rem; color:var(--grisMed); font-weight:600;">$</span>
+        <input type="number" class="b2b-item-price" value="${initPrice}" min="0" step="1000" oninput="b2bRecalcularTotales()" style="width:100%; padding:0.42rem 0.5rem 0.42rem 1.35rem; text-align:right; border:1px solid var(--grisCl); border-radius:4px; font-size:0.8rem; font-weight:600; background:var(--blanco); color:var(--negro);">
+      </div>
+      <span class="b2b-item-price-fmt" style="font-size:0.64rem; color:var(--grisMed); margin-top:2px;">${fCOP(initPrice)} c/u</span>
+    </div>
+    <div style="text-align:right; font-weight:700; font-size:0.82rem; color:var(--negro);" class="b2b-item-row-sub">
+      ${fCOP(initQty * initPrice)}
+    </div>
+    <div style="display:flex; justify-content:center; gap:4px;">
+      <button type="button" class="btn btn-gris btn-sm" title="Duplicar fila (ej. para otro color/talla)" onclick="b2bDuplicarFila(this)" style="padding:0.35rem 0.5rem; font-size:0.74rem;">⧉</button>
+      <button type="button" class="btn btn-gris btn-sm" title="Eliminar fila" onclick="this.closest('.b2b-item-row').remove(); b2bRecalcularTotales();" style="padding:0.35rem 0.55rem; font-size:0.74rem; color:#c62828;">✕</button>
+    </div>
   `;
-  container.appendChild(div);
+  container.appendChild(row);
+  b2bRecalcularTotales();
 }
 
+window.b2bOnModelChange = function(sel) {
+  const row = sel.closest('.b2b-item-row');
+  if (!row) return;
+  const key = sel.value;
+  const cat = B2B_CATALOGO_YOSSICO[key] || B2B_CATALOGO_YOSSICO.CUSTOM;
+  const nameIn = row.querySelector('.b2b-item-sku');
+  const descIn = row.querySelector('.b2b-item-desc');
+  const priceIn = row.querySelector('.b2b-item-price');
+  if (key === 'CUSTOM') {
+    if (nameIn) { nameIn.value = ''; nameIn.focus(); }
+    if (descIn) descIn.value = '';
+    if (priceIn) priceIn.value = 0;
+  } else {
+    if (nameIn) nameIn.value = cat.nombre;
+    if (descIn) descIn.value = cat.desc;
+    if (priceIn) priceIn.value = cat.precio;
+  }
+  b2bRecalcularTotales();
+};
+
+window.b2bCambiarQty = function(btn, delta) {
+  const row = btn.closest('.b2b-item-row');
+  const input = row?.querySelector('.b2b-item-qty');
+  if (!input) return;
+  const next = Math.max(1, (parseInt(input.value) || 1) + delta);
+  input.value = next;
+  b2bRecalcularTotales();
+};
+
+window.b2bDuplicarFila = function(btn) {
+  const row = btn.closest('.b2b-item-row');
+  if (!row) return;
+  const key = row.querySelector('.b2b-item-select')?.value || 'CUSTOM';
+  const nombre = row.querySelector('.b2b-item-sku')?.value || '';
+  const desc = row.querySelector('.b2b-item-desc')?.value || '';
+  const qty = parseInt(row.querySelector('.b2b-item-qty')?.value) || 1;
+  const price = parseFloat(row.querySelector('.b2b-item-price')?.value) || 0;
+  b2bAgregarItem(key, { nombre, desc, qty, price });
+};
+
+window.b2bSetDescuentoRapido = function(tipo, valor) {
+  const tEl = document.getElementById('b2b-desc-tipo');
+  const vEl = document.getElementById('b2b-desc-valor');
+  if (tEl) tEl.value = tipo;
+  if (vEl) vEl.value = valor;
+  b2bRecalcularTotales();
+};
+
+window.b2bLimpiarFormulario = function() {
+  const container = document.getElementById('b2b-items-container');
+  if (container) container.innerHTML = '';
+  b2bSetDescuentoRapido('pct', 0);
+  const envEl = document.getElementById('b2b-envio-valor');
+  if (envEl) envEl.value = 0;
+  b2bAgregarItem('OSLO');
+};
+
+function b2bCalcularEstadoActual() {
+  const rows = document.querySelectorAll('#b2b-items-container .b2b-item-row');
+  const items = [];
+  let subtotalBruto = 0;
+  let totalUnidades = 0;
+
+  rows.forEach(r => {
+    const key = r.querySelector('.b2b-item-select')?.value || 'CUSTOM';
+    const cat = B2B_CATALOGO_YOSSICO[key] || B2B_CATALOGO_YOSSICO.CUSTOM;
+    const nombre = (r.querySelector('.b2b-item-sku')?.value || cat.nombre || 'Prenda YOSSICO').trim();
+    const desc = (r.querySelector('.b2b-item-desc')?.value || '').trim();
+    const qty = Math.max(0, parseInt(r.querySelector('.b2b-item-qty')?.value) || 0);
+    const price = Math.max(0, parseFloat(r.querySelector('.b2b-item-price')?.value) || 0);
+    const rowSub = qty * price;
+
+    const fmtEl = r.querySelector('.b2b-item-price-fmt');
+    if (fmtEl) fmtEl.textContent = fCOP(price) + ' c/u';
+    const subEl = r.querySelector('.b2b-item-row-sub');
+    if (subEl) subEl.textContent = fCOP(rowSub);
+
+    if (qty > 0) {
+      items.push({ ref: cat.ref, key, sku: nombre, nombre: desc ? `${nombre} — ${desc}` : nombre, prendaNombre: nombre, desc, qty, price, rowSub });
+      subtotalBruto += rowSub;
+      totalUnidades += qty;
+    }
+  });
+
+  const descTipo = document.getElementById('b2b-desc-tipo')?.value || 'pct';
+  const descValor = Math.max(0, parseFloat(document.getElementById('b2b-desc-valor')?.value) || 0);
+  const descMotivo = (document.getElementById('b2b-desc-motivo')?.value || 'Descuento comercial').trim();
+  let descuentoCOP = descTipo === 'pct' ? Math.round(subtotalBruto * (Math.min(100, descValor) / 100)) : Math.round(descValor);
+  if (descuentoCOP > subtotalBruto) descuentoCOP = subtotalBruto;
+
+  const subtotalNeto = Math.max(0, subtotalBruto - descuentoCOP);
+  const ivaModo = document.getElementById('b2b-iva-modo')?.value || 'sumar';
+  const envioCOP = Math.max(0, parseFloat(document.getElementById('b2b-envio-valor')?.value) || 0);
+
+  let ivaCOP = 0;
+  let totalFinal = subtotalNeto + envioCOP;
+  let ivaLabel = 'IVA (19%)';
+
+  if (ivaModo === 'sumar') {
+    ivaCOP = Math.round(subtotalNeto * 0.19);
+    totalFinal = subtotalNeto + ivaCOP + envioCOP;
+    ivaLabel = 'IVA (+19%)';
+  } else if (ivaModo === 'incluido') {
+    ivaCOP = Math.round(subtotalNeto - (subtotalNeto / 1.19));
+    totalFinal = subtotalNeto + envioCOP;
+    ivaLabel = 'IVA incluido (19%)';
+  } else {
+    ivaCOP = 0;
+    totalFinal = subtotalNeto + envioCOP;
+    ivaLabel = 'IVA (0% Exento)';
+  }
+
+  const descLabel = descTipo === 'pct' && descValor > 0
+    ? `${descMotivo} (-${descValor}%)`
+    : descMotivo;
+
+  return {
+    items,
+    totalUnidades,
+    subtotalBruto,
+    descuentoCOP,
+    descTipo,
+    descValor,
+    descLabel,
+    subtotalNeto,
+    ivaModo,
+    ivaCOP,
+    ivaLabel,
+    envioCOP,
+    totalFinal
+  };
+}
+
+window.b2bRecalcularTotales = function() {
+  const st = b2bCalcularEstadoActual();
+  const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  setTxt('b2b-live-unidades', `${st.totalUnidades} ${st.totalUnidades === 1 ? 'unidad' : 'unidades'}`);
+  setTxt('b2b-live-subtotal', fCOP(st.subtotalBruto) + ' COP');
+
+  const descRow = document.getElementById('b2b-live-desc-row');
+  if (descRow) {
+    descRow.style.display = st.descuentoCOP > 0 ? 'flex' : 'none';
+    setTxt('b2b-live-desc-label', st.descLabel + ':');
+    setTxt('b2b-live-desc-val', '-' + fCOP(st.descuentoCOP) + ' COP');
+  }
+  setTxt('b2b-live-iva-label', st.ivaLabel + ':');
+  setTxt('b2b-live-iva', fCOP(st.ivaCOP) + ' COP');
+
+  const envRow = document.getElementById('b2b-live-envio-row');
+  if (envRow) {
+    envRow.style.display = st.envioCOP > 0 ? 'flex' : 'none';
+    setTxt('b2b-live-envio', fCOP(st.envioCOP) + ' COP');
+  }
+  setTxt('b2b-live-total', fCOP(st.totalFinal) + ' COP');
+  return st;
+};
 
 window.todasCotizaciones = [];
 async function cargarCotizaciones() {
@@ -6495,62 +7427,74 @@ async function cargarCotizaciones() {
 
 function renderCotizaciones() {
   const tbody = document.getElementById('tabla-cotizaciones');
-  if (window.todasCotizaciones.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="loading" style="text-align:center">No hay cotizaciones guardadas</td></tr>'; return; }
+  if (!tbody) return;
+  if (window.todasCotizaciones.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="loading" style="text-align:center">No hay cotizaciones guardadas aún</td></tr>';
+    return;
+  }
   
   tbody.innerHTML = window.todasCotizaciones.map(c => {
-    let bdg = '<span style="background:#f4f4f4;color:var(--grisMed);padding:2px 6px;border-radius:4px;font-size:0.7rem">Borrador</span>';
-    if(c.estado === 'Aprobada') bdg = '<span style="background:#e8f5e9;color:#2e7d32;padding:2px 6px;border-radius:4px;font-size:0.7rem">Aprobada (Pedido)</span>';
+    let bdg = '<span style="background:#f4f4f4;color:var(--grisMed);padding:2px 7px;border-radius:4px;font-size:0.68rem;font-weight:600;">Borrador</span>';
+    if (c.estado === 'Aprobada') bdg = '<span style="background:#e8f5e9;color:#2e7d32;padding:2px 7px;border-radius:4px;font-size:0.68rem;font-weight:600;">✓ Aprobada (Pedido)</span>';
+    const uds = (c.items || []).reduce((s, i) => s + (parseInt(i.qty) || 0), 0);
     return `<tr>
       <td><strong>#${c.serial || String(c.id || '').slice(-4)}</strong></td>
-      <td>${c.cliente_nombre}</td>
-      <td>${fCOP(c.total)}</td>
-      <td>${new Date(c.created_at).toLocaleDateString()}</td>
+      <td><strong>${c.cliente_nombre}</strong><br><span style="font-size:0.68rem;color:var(--grisMed)">${c.nit || ''}</span></td>
+      <td style="font-size:0.74rem;">${uds} uds (${(c.items || []).length} ítems)</td>
+      <td><strong>${fCOP(c.total)}</strong></td>
+      <td style="font-size:0.74rem;">${new Date(c.created_at).toLocaleDateString('es-CO')}</td>
       <td>${bdg}</td>
-      <td>
-        ${c.estado !== 'Aprobada' ? `<button class="btn btn-negro btn-sm" onclick="convertirCotizacionAPedido('${c.id}')">Aprobar a Pedido</button>` : '-'}
+      <td style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+        <button class="btn btn-gris btn-sm" onclick="b2bCargarDesdeHistorial('${c.id}')">✎ Cargar / PDF</button>
+        ${c.estado !== 'Aprobada' ? `<button class="btn btn-negro btn-sm" onclick="convertirCotizacionAPedido('${c.id}')">✓ Aprobar Pedido</button>` : ''}
       </td>
     </tr>`;
   }).join('');
 }
 
+window.b2bCargarDesdeHistorial = function(id) {
+  const cot = (window.todasCotizaciones || []).find(c => String(c.id) === String(id));
+  if (!cot) return;
+  const setVal = (elId, v) => { const el = document.getElementById(elId); if (el && v !== undefined) el.value = v; };
+  setVal('b2b-empresa', cot.cliente_nombre || '');
+  setVal('b2b-nit', cot.nit || '');
+  const container = document.getElementById('b2b-items-container');
+  if (container) container.innerHTML = '';
+  (cot.items || []).forEach(it => {
+    b2bAgregarItem(it.key || 'CUSTOM', {
+      nombre: it.prendaNombre || it.sku || it.nombre || 'Uniforme YOSSICO',
+      desc: it.desc || '',
+      qty: it.qty || 1,
+      price: it.price || 0
+    });
+  });
+  b2bRecalcularTotales();
+  mostrarToast('Cotización cargada en el editor ✓', 'ok');
+};
+
 async function b2bGuardarCotizacion() {
   const cliente = (document.getElementById('b2b-empresa')?.value || '').trim();
   const nit = (document.getElementById('b2b-nit')?.value || '').trim();
-  if (!cliente) { mostrarToast('Falta el nombre de la empresa', 'warn'); return; }
+  if (!cliente) { mostrarToast('Falta el nombre de la empresa o cliente', 'warn'); return; }
 
-  const rows = document.getElementById('b2b-items-container').children;
-  const items = [];
-  let subtotal = 0;
-  for (let i = 0; i < rows.length; i++) {
-    const r = rows[i];
-    const qty = parseInt(r.querySelector('.b2b-item-qty')?.value) || 0;
-    const price = parseFloat(r.querySelector('.b2b-item-price')?.value) || 0;
-    if (qty <= 0) continue;
-    items.push({
-      sku: r.querySelector('.b2b-item-sku')?.value || '-',
-      nombre: r.querySelector('.b2b-item-desc')?.value || '-',
-      qty, price
-    });
-    subtotal += qty * price;
-  }
-  if (!items.length) { mostrarToast('Agrega al menos un item con cantidad', 'warn'); return; }
+  const st = b2bCalcularEstadoActual();
+  if (!st.items.length) { mostrarToast('Agrega al menos una prenda con unidades', 'warn'); return; }
 
-  const total = subtotal * 1.19; // con IVA
   const nuevaCot = {
     id: 'cot-' + Date.now(),
     serial: Math.floor(1000 + Math.random() * 9000),
     cliente_nombre: cliente,
     nit: nit,
-    items: items,
-    subtotal: subtotal,
-    total: total,
+    items: st.items,
+    subtotal: st.subtotalNeto,
+    total: st.totalFinal,
     estado: 'Borrador',
     created_at: new Date().toISOString()
   };
 
   try {
     const { data, error } = await sb.from('cotizaciones_b2b').insert([{
-      cliente_nombre: cliente, nit: nit, items: items, subtotal: subtotal, total: total
+      cliente_nombre: cliente, nit: nit, items: st.items, subtotal: st.subtotalNeto, total: st.totalFinal
     }]).select();
     if (!error && data && data[0]) Object.assign(nuevaCot, data[0]);
   } catch (_) {}
@@ -6561,12 +7505,8 @@ async function b2bGuardarCotizacion() {
     localStorage.setItem('yossico_local_cotizaciones', JSON.stringify(localCot));
   } catch (_) {}
 
-  mostrarToast("Cotización guardada ✓", "ok");
-  document.getElementById('b2b-print-controls').style.display = 'none';
-  document.getElementById('b2b-print-view').style.display = 'none';
-  document.getElementById('b2b-form-area').style.display = 'block';
+  mostrarToast("Cotización guardada en el historial ✓", "ok");
   cargarCotizaciones();
-  cargarPauta();
 }
 
 async function convertirCotizacionAPedido(id) {
@@ -6581,7 +7521,7 @@ async function convertirCotizacionAPedido(id) {
   if (!converted && cot) {
     try {
       await sb.from('pedidos').insert([{
-        cliente_nombre: cot.cliente_nombre + (cot.nit ? ` (NIT ${cot.nit})` : ''),
+        cliente_nombre: cot.cliente_nombre + (cot.nit ? ` (${cot.nit})` : ''),
         cliente_telefono: 'B2B',
         cliente_ciudad: 'Bogotá',
         cliente_direccion: 'Pedido Institucional B2B',
@@ -6604,12 +7544,16 @@ async function convertirCotizacionAPedido(id) {
   cargarPedidos();
 }
 
-function b2bGenerarImpresion() {
-  const emp = document.getElementById('b2b-empresa').value || '[ NOMBRE EMPRESA ]';
-  const nit = document.getElementById('b2b-nit').value || '[ NIT ]';
-  const mail = document.getElementById('b2b-correo').value || '[ CORREO ]';
-  let fecha = document.getElementById('b2b-fecha').value;
-  if(!fecha) {
+function b2bPoblarDocumentoImprimible() {
+  const emp = document.getElementById('b2b-empresa')?.value || 'Cliente Institucional';
+  const nit = document.getElementById('b2b-nit')?.value || '';
+  const mail = document.getElementById('b2b-correo')?.value || '';
+  const ciudad = document.getElementById('b2b-ciudad')?.value || 'Colombia';
+  const validez = document.getElementById('b2b-validez')?.value || '15 días calendario';
+  const notas = document.getElementById('b2b-notas')?.value || '';
+
+  let fecha = document.getElementById('b2b-fecha')?.value;
+  if (!fecha) {
     const d = new Date();
     fecha = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
   } else {
@@ -6617,50 +7561,98 @@ function b2bGenerarImpresion() {
     fecha = `${d}/${m}/${y}`;
   }
 
-  document.getElementById('b2b-print-cliente').innerHTML = `${emp}<br>${nit}<br>${mail}`;
-  document.getElementById('b2b-print-fecha').textContent = `[ ${fecha} ]`;
+  const cliEl = document.getElementById('b2b-print-cliente');
+  if (cliEl) {
+    cliEl.innerHTML = `<strong style="font-size:0.95rem;color:#111;">${escHtml(emp)}</strong><br>`
+      + (nit ? `${escHtml(nit)}<br>` : '')
+      + (mail ? `${escHtml(mail)}<br>` : '')
+      + (ciudad ? `<span style="color:#666;">${escHtml(ciudad)}</span>` : '');
+  }
+  const fecEl = document.getElementById('b2b-print-fecha');
+  if (fecEl) fecEl.textContent = `FECHA: ${fecha}`;
+  const valEl = document.getElementById('b2b-print-validez');
+  if (valEl) valEl.textContent = `Validez: ${validez}`;
+  const notEl = document.getElementById('b2b-print-notas');
+  if (notEl) notEl.textContent = notas;
 
-  const rows = document.getElementById('b2b-items-container').children;
-  let html = '';
-  let subtotal = 0;
-
-  for(let i=0; i<rows.length; i++) {
-    const r = rows[i];
-    const sku = r.querySelector('.b2b-item-sku').value || '-';
-    const desc = r.querySelector('.b2b-item-desc').value || '-';
-    const qty = parseInt(r.querySelector('.b2b-item-qty').value) || 0;
-    const price = parseFloat(r.querySelector('.b2b-item-price').value) || 0;
-    const total = qty * price;
-    subtotal += total;
-
-    html += `
-      <tr style="border-bottom: 1px solid #eee;">
-        <td style="padding: 0.6rem 1rem;">${sku}</td>
-        <td style="padding: 0.6rem 1rem;">${desc}</td>
-        <td style="padding: 0.6rem 1rem; text-align:center;">${qty}</td>
-        <td style="padding: 0.6rem 1rem; text-align:right;">${fCOP(price)} COP</td>
-        <td style="padding: 0.6rem 1rem; text-align:right;">${fCOP(total)} COP</td>
+  const st = b2bCalcularEstadoActual();
+  const tbody = document.getElementById('b2b-print-tbody');
+  if (tbody) {
+    tbody.innerHTML = st.items.map(it => `
+      <tr style="border-bottom: 1px solid #e5e7eb;">
+        <td style="padding: 0.65rem 0.85rem;">
+          <strong style="color:#111;">${escHtml(it.prendaNombre)}</strong><br>
+          <span style="font-size:0.65rem; color:#6b7280; font-family:monospace;">${escHtml(it.ref || 'YOSSICO')}</span>
+        </td>
+        <td style="padding: 0.65rem 0.85rem; color:#374151; line-height:1.45;">${escHtml(it.desc || 'Confección antifluidos de alta precisión YOSSICO')}</td>
+        <td style="padding: 0.65rem 0.85rem; text-align:center; font-weight:700;">${it.qty}</td>
+        <td style="padding: 0.65rem 0.85rem; text-align:right;">${fCOP(it.price)} COP</td>
+        <td style="padding: 0.65rem 0.85rem; text-align:right; font-weight:700;">${fCOP(it.rowSub)} COP</td>
       </tr>
-    `;
+    `).join('');
   }
 
-  document.getElementById('b2b-print-tbody').innerHTML = html;
-  
-  const iva = subtotal * 0.19;
-  const totalF = subtotal + iva;
-  
-  document.getElementById('b2b-print-sub').textContent = fCOP(subtotal) + ' COP';
-  document.getElementById('b2b-print-iva').textContent = fCOP(iva) + ' COP';
-  document.getElementById('b2b-print-tot').textContent = fCOP(totalF) + ' COP';
+  document.getElementById('b2b-print-sub').textContent = fCOP(st.subtotalBruto) + ' COP';
+  const descRow = document.getElementById('b2b-print-desc-row');
+  if (descRow) {
+    descRow.style.display = st.descuentoCOP > 0 ? 'table-row' : 'none';
+    document.getElementById('b2b-print-desc-lbl').textContent = st.descLabel.toUpperCase();
+    document.getElementById('b2b-print-desc').textContent = '-' + fCOP(st.descuentoCOP) + ' COP';
+  }
+  document.getElementById('b2b-print-iva-lbl').textContent = st.ivaLabel.toUpperCase();
+  document.getElementById('b2b-print-iva').textContent = fCOP(st.ivaCOP) + ' COP';
 
+  const envRow = document.getElementById('b2b-print-envio-row');
+  if (envRow) {
+    envRow.style.display = st.envioCOP > 0 ? 'table-row' : 'none';
+    document.getElementById('b2b-print-envio').textContent = fCOP(st.envioCOP) + ' COP';
+  }
+  document.getElementById('b2b-print-tot').textContent = fCOP(st.totalFinal) + ' COP';
+  return st;
+}
+
+function b2bGenerarImpresion() {
+  const st = b2bPoblarDocumentoImprimible();
+  if (!st.items.length) {
+    mostrarToast('Agrega al menos un uniforme o ítem antes de previsualizar', 'warn');
+    return;
+  }
   document.getElementById('b2b-form-area').style.display = 'none';
   document.getElementById('b2b-print-view').style.display = 'block';
   document.getElementById('b2b-print-controls').style.display = 'flex';
 }
 
-// Inicializar B2B con un item vacío
+window.b2bImprimirDirecto = function() {
+  const st = b2bPoblarDocumentoImprimible();
+  if (!st.items.length) {
+    mostrarToast('Agrega al menos un uniforme para imprimir la cotización', 'warn');
+    return;
+  }
+  const view = document.getElementById('b2b-print-view');
+  const emp = document.getElementById('b2b-empresa')?.value || 'Cliente';
+  yossicoPrintHtmlDocument('Cotizacion_YOSSICO_' + emp, view.innerHTML);
+  mostrarToast('Abriendo ventana de impresión de la Cotización...', 'ok');
+};
+
+window.b2bDescargarPDF = function() {
+  const st = b2bPoblarDocumentoImprimible();
+  if (!st.items.length) {
+    mostrarToast('Agrega al menos un uniforme para descargar el PDF', 'warn');
+    return;
+  }
+  const view = document.getElementById('b2b-print-view');
+  const emp = String(document.getElementById('b2b-empresa')?.value || 'Institucional').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 26);
+  const btn = document.getElementById('btn-b2b-pdf-top');
+  yossicoDownloadElementAsPDF(view, `Cotizacion_YOSSICO_${emp}.pdf`, btn);
+};
+
+// Inicializar B2B con el Set OSLO por defecto para que se vea listo e intuitivo
 document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(b2bAgregarItem, 1000);
+  setTimeout(() => {
+    const fIn = document.getElementById('b2b-fecha');
+    if (fIn && !fIn.value) fIn.value = new Date().toISOString().split('T')[0];
+    b2bAgregarItem('OSLO', { qty: 10 });
+  }, 600);
   
   // Theme logic
   if (localStorage.getItem('yossico_admin_theme') === 'dark') {
