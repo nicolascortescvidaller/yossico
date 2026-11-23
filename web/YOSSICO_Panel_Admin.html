@@ -814,8 +814,9 @@
           <button class="btn btn-negro btn-sm" onclick="exportarFinanzasCSV()">⬇ Descargar Reporte</button>
         </div>
 
-        <div style="display:flex; gap:0.5rem; border-bottom:1px solid var(--grisCl); margin-bottom:2rem; overflow-x:auto; padding-bottom:1px;">
+        <div style="display:flex; gap:0.5rem; border-bottom:1px solid var(--grisCl); margin-bottom:1.75rem; overflow-x:auto; padding-bottom:1px;">
           <button class="subtab-btn active" onclick="cambiarSubTabFinanzas('sub-resumen', this)">Resumen & KPIs</button>
+          <button class="subtab-btn" id="btn-subtab-preop" onclick="cambiarSubTabFinanzas('sub-preop', this)" style="font-weight:700; color:#0C4E57;">🏛️ Pre-Operacionales & Retorno Socio (30%)</button>
           <button class="subtab-btn" onclick="cambiarSubTabFinanzas('sub-unit', this)">Unit Economics</button>
           <button class="subtab-btn" onclick="cambiarSubTabFinanzas('sub-opex', this)">Gastos Operativos (OPEX)</button>
           <button class="subtab-btn" onclick="cambiarSubTabFinanzas('sub-simulador', this)">Simulador & Reparto</button>
@@ -839,7 +840,7 @@
             <div id="meta-pacing-marker" style="position:absolute; top:0; bottom:0; width:2px; background:#000; display:none;" title="Proyección a cierre de mes"></div>
           </div>
         </div>
-<div class="resumen-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1rem;">
+<div class="resumen-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.25rem;">
           <div class="resumen-card hover-module verde" style="background:var(--blanco); border-color:#e0f2e9">
             <div class="rlabel">Ingresos Brutos Reales</div>
             <div class="rvalor" id="fin-ingresos">$0</div>
@@ -848,7 +849,7 @@
           <div class="resumen-card hover-module naranja" style="background:var(--blanco); border-color:#fcecdb">
             <div class="rlabel">Costos Totales (Prod + OPEX)</div>
             <div class="rvalor" id="fin-costos">$0</div>
-            <div class="rsub">Costo de telas + Gastos operativos</div>
+            <div class="rsub" id="fin-costos-sub">Costo de telas + Gastos operativos</div>
           </div>
           <div class="resumen-card hover-module azul" style="background:var(--blanco); border-color:#ddecff">
             <div class="rlabel">Utilidad Neta del Negocio</div>
@@ -859,6 +860,55 @@
             <div class="rlabel" style="color:#c2185b">ROI Global</div>
             <div class="rvalor" id="fin-roi" style="color:#d81b60">0%</div>
             <div class="rsub">Retorno sobre la Inversión</div>
+          </div>
+        </div>
+
+        <!-- ESTRUCTURA DE CAPITAL: INVERSIÓN BASE ($40M) VS. PRE-OPERACIONALES ($20.15M) Y RETORNO DEL SOCIO (30%) -->
+        <div style="background:linear-gradient(135deg, #0d1f22 0%, #132f35 100%); color:#fff; border-radius:10px; padding:1.35rem 1.5rem; margin-bottom:1.75rem; border:1px solid #1f4e58; box-shadow:0 10px 28px rgba(12,78,87,0.16);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.8rem; margin-bottom:1.1rem; border-bottom:1px solid rgba(255,255,255,0.12); padding-bottom:0.9rem;">
+            <div>
+              <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                <span style="background:#14b8a6; color:#042f2e; font-size:0.6rem; font-weight:800; padding:2px 8px; border-radius:99px; letter-spacing:1px; text-transform:uppercase;">ESTRUCTURA SOCIETARIA 70% / 30%</span>
+                <span style="font-size:0.68rem; color:#99f6e4; letter-spacing:1.2px; text-transform:uppercase; font-weight:600;">Separación de Bolsas de Inversión · Actualizado 27/04/2026</span>
+              </div>
+              <div style="font-family:'Cormorant Garamond',serif; font-size:1.45rem; font-weight:600; margin-top:0.25rem;">Gastos Pre-Operacionales Aportados 100% por Nicolás & Retorno del Socio (30%)</div>
+              <div style="font-size:0.74rem; color:#cbd5e1; margin-top:0.15rem;">Independientes de los <strong>$40.000.000 COP</strong> de inversión operativa/inventario. El socio adquiere el <strong>30%</strong> de la compañía y debe retornar el <strong>30%</strong> de estos gastos pre-operacionales a Nicolás.</div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.45rem;">
+              <button type="button" onclick="cambiarSubTabFinanzas('sub-preop', document.getElementById('btn-subtab-preop'))" style="background:#ffffff; color:#0f172a; border:none; padding:0.48rem 0.95rem; border-radius:6px; font-size:0.72rem; font-weight:700; cursor:pointer; font-family:inherit; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                🏛️ Ver Desglose & Liquidación Socio →
+              </button>
+              <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.68rem; color:#cbd5e1; cursor:pointer;">
+                <input type="checkbox" id="chk-incluir-preop-finanzas" onchange="toggleIncluirPreopEnRentabilidad(this.checked)" style="accent-color:#14b8a6;">
+                Incluir Pre-Operacionales ($20.156.100) dentro de Costos Totales / Punto de Equilibrio
+              </label>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.85rem;">
+            <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:0.9rem 1rem;">
+              <div style="font-size:0.62rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; font-weight:600;">1. Inversión Asociada (Fondo Base)</div>
+              <div style="font-size:1.35rem; font-weight:700; font-family:'Cormorant Garamond',serif; color:#e2e8f0; margin-top:0.2rem;" id="res-preop-fondo40">$40.000.000</div>
+              <div style="font-size:0.66rem; color:#94a3b8; margin-top:0.2rem;">Bolsa independiente de lote / operación</div>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); border-radius:8px; padding:0.9rem 1rem;">
+              <div style="font-size:0.62rem; color:#99f6e4; text-transform:uppercase; letter-spacing:1px; font-weight:600;">2. Total Pre-Operacional (100% Nico)</div>
+              <div style="font-size:1.35rem; font-weight:700; font-family:'Cormorant Garamond',serif; color:#ffffff; margin-top:0.2rem;" id="res-preop-total">$20.156.100</div>
+              <div style="font-size:0.66rem; color:#cbd5e1; margin-top:0.2rem;">70% cuota Nico: <strong id="res-preop-cuota-nico">$14.109.270</strong></div>
+            </div>
+
+            <div style="background:rgba(245, 158, 11, 0.14); border:1.5px solid #f59e0b; border-radius:8px; padding:0.9rem 1rem;">
+              <div style="font-size:0.62rem; color:#fde68a; text-transform:uppercase; letter-spacing:1px; font-weight:700;">3. Retorno del Socio (30% → Nicolás)</div>
+              <div style="font-size:1.45rem; font-weight:700; font-family:'Cormorant Garamond',serif; color:#fbbf24; margin-top:0.2rem;" id="res-preop-retorno-socio">$6.046.830</div>
+              <div style="font-size:0.66rem; color:#fef3c7; margin-top:0.2rem;">Pendiente por retornar: <strong id="res-preop-saldo-socio">$6.046.830</strong></div>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:0.9rem 1rem;">
+              <div style="font-size:0.62rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; font-weight:600;">4. Capital Total Consolidado + SaaS</div>
+              <div style="font-size:1.35rem; font-weight:700; font-family:'Cormorant Garamond',serif; color:#38bdf8; margin-top:0.2rem;" id="res-preop-consolidado">$60.156.100</div>
+              <div style="font-size:0.66rem; color:#cbd5e1; margin-top:0.2rem;">OPEX Fijo Tech: <strong id="res-preop-usd-mes">$99 USD/mes</strong> ($1.188/año)</div>
+            </div>
           </div>
         </div>
 
@@ -1037,6 +1087,198 @@
         </div>
 
 </div>
+
+<div id="sub-preop" class="fin-subtab-content">
+  <!-- MÓDULO DE GASTOS PRE-OPERACIONALES ($20.156.100) Y RETORNO SOCIETARIO DEL 30% ($6.046.830) -->
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.25rem;">
+    <div>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.25rem;">
+        <span style="background:#0C4E57; color:#fff; font-size:0.62rem; font-weight:700; padding:3px 9px; border-radius:99px; letter-spacing:1px; text-transform:uppercase;">APORTADOS 100% POR NICOLÁS · INDEPENDIENTES DE LOS $40.000.000</span>
+        <span style="font-size:0.7rem; color:var(--grisMed); font-weight:600;">Actualizado: 27/04/2026</span>
+      </div>
+      <div class="section-title" style="margin:0; font-size:1.2rem; font-family:'Cormorant Garamond',serif;">Gastos Pre-Operacionales (Una sola vez) & Liquidación Retorno del Socio (30%)</div>
+      <div style="font-size:0.78rem; color:var(--grisMed); margin-top:0.25rem; max-width:920px; line-height:1.5;">
+        Estos gastos de constitución, activos fijos, marca, plataforma web y muestras (<strong>$20.156.100 COP</strong>) son totalmente independientes del presupuesto de <strong>$40.000.000 COP</strong> y fueron asumidos en un <strong>100% por Nicolás</strong>. Dado que el socio adquiere el <strong>30% de la compañía</strong>, debe realizar un retorno directo a Nicolás equivalente al <strong>30% ($6.046.830 COP)</strong>.
+      </div>
+    </div>
+    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+      <button type="button" class="btn btn-negro btn-sm" onclick="imprimirEstadoCuentaPreopSocio()" style="background:#0C4E57; border-color:#0C4E57;">📄 Imprimir / PDF Estado de Cuenta Socio ($6.046.830)</button>
+      <button type="button" class="btn btn-gris btn-sm" onclick="exportarPreoperacionalesCSV()">⬇ Exportar Excel / CSV</button>
+      <button type="button" class="btn btn-gris btn-sm" onclick="restaurarPreoperacionalesOficiales()" title="Restaurar los valores oficiales de la tabla del 27/04/2026">↺ Restaurar Tabla Base</button>
+    </div>
+  </div>
+
+  <!-- 4 KPIs de Liquidación Societaria Pre-Operacional -->
+  <div class="resumen-grid" style="grid-template-columns:repeat(4, 1fr); margin-bottom:1.5rem;">
+    <div class="resumen-card hover-module" style="background:var(--blanco); border-left:4px solid #111;">
+      <div class="rlabel">Total Gastos Pre-Operacionales</div>
+      <div class="rvalor" id="preop-kpi-total">$20.156.100</div>
+      <div class="rsub">Pagados 100% por Nicolás (Fuera de los $40M)</div>
+    </div>
+    <div class="resumen-card hover-module" style="background:var(--blanco); border-left:4px solid #0C4E57;">
+      <div class="rlabel" style="color:#0C4E57;">Cuota Patrimonial Nicolás (70%)</div>
+      <div class="rvalor" id="preop-kpi-nico70" style="color:#0C4E57;">$14.109.270</div>
+      <div class="rsub">70% correspondiente a su participación</div>
+    </div>
+    <div class="resumen-card hover-module" style="background:#fffbeb; border:1.5px solid #f59e0b; border-left:5px solid #d97706;">
+      <div class="rlabel" style="color:#b45309; font-weight:700;">Retorno Obligatorio Socio (30%)</div>
+      <div class="rvalor" id="preop-kpi-socio30" style="color:#b45309;">$6.046.830</div>
+      <div class="rsub" style="color:#92400e; font-weight:600;">30% por adquisición de la compañía → A favor de Nicolás</div>
+    </div>
+    <div class="resumen-card hover-module" style="background:var(--blanco); border-left:4px solid var(--rojo);">
+      <div class="rlabel" id="preop-kpi-saldo-lbl">Saldo Pendiente por Retornar (Socio)</div>
+      <div class="rvalor" id="preop-kpi-saldo" style="color:var(--rojo);">$6.046.830</div>
+      <div class="rsub" id="preop-kpi-abonado-sub">Abonado a hoy: $0 (0%)</div>
+    </div>
+  </div>
+
+  <!-- Bloque Comparativo de Bolsas de Inversión + Control de Abonos del Socio -->
+  <div style="display:grid; grid-template-columns:1.15fr 0.85fr; gap:1.25rem; margin-bottom:1.75rem;">
+    <!-- Tarjeta Izquierda: Separación Financiera de Bolsas ($40M vs $20.15M) -->
+    <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:1.2rem;">
+      <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#0C4E57; margin-bottom:0.8rem;">🏛️ Separación Contable de Bolsas de Capital en YOSSICO</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:0.9rem;">
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:0.85rem;">
+          <div style="font-size:0.64rem; color:#64748b; text-transform:uppercase; font-weight:700;">Bolsa 1 · Inversión Asociada / Operación</div>
+          <div style="font-size:1.3rem; font-weight:700; color:#0f172a; margin-top:0.2rem;">$40.000.000</div>
+          <div style="font-size:0.7rem; color:#475569; margin-top:0.25rem; line-height:1.45;">Capital destinado a producción de inventario, lote e inversión operativa asociada.</div>
+        </div>
+        <div style="background:#fff; border:1.5px solid #0C4E57; border-radius:6px; padding:0.85rem;">
+          <div style="font-size:0.64rem; color:#0C4E57; text-transform:uppercase; font-weight:700;">Bolsa 2 · Gastos Pre-Operacionales (100% Nico)</div>
+          <div style="font-size:1.3rem; font-weight:700; color:#0C4E57; margin-top:0.2rem;" id="preop-box2-total">$20.156.100</div>
+          <div style="font-size:0.7rem; color:#475569; margin-top:0.25rem; line-height:1.45;">Activos fijos, marca, web, muestras y cámara de comercio pagados 100% por Nicolás.</div>
+        </div>
+      </div>
+      <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:0.75rem 0.9rem; font-size:0.74rem; color:#334155; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <span><strong>Inversión Total Consolidada (Bolsa 1 + Bolsa 2):</strong></span>
+        <strong style="font-size:1.05rem; color:#0f172a;" id="preop-consolidado-total">$60.156.100 COP</strong>
+      </div>
+    </div>
+
+    <!-- Tarjeta Derecha: Control de Pago / Retorno del 30% del Socio a Nicolás -->
+    <div style="background:#fffbeb; border:1px solid #fcd34d; border-radius:8px; padding:1.2rem; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+          <span style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#92400e;">🤝 Control de Retorno del Socio (30% → Nicolás)</span>
+          <span id="preop-badge-estado-socio" style="background:#fef3c7; color:#b45309; border:1px solid #f59e0b; font-size:0.62rem; font-weight:700; padding:2px 8px; border-radius:99px;">PENDIENTE DE RETORNO</span>
+        </div>
+        <div style="font-size:0.74rem; color:#78350f; line-height:1.5; margin-bottom:0.85rem;">
+          Registra aquí si el socio realiza abonos directos a Nicolás para cubrir su <strong>30% (<span id="preop-txt-deuda-socio">$6.046.830</span>)</strong>, o márcalo para descontarlo automáticamente de su 30% de utilidades en el Simulador de Reparto.
+        </div>
+        <div style="display:grid; grid-template-columns:1fr auto; gap:0.5rem; align-items:end; margin-bottom:0.75rem;">
+          <div>
+            <label style="font-size:0.65rem; font-weight:700; color:#92400e; display:block; margin-bottom:3px;">Monto Abonado por el Socio a Nicolás (COP):</label>
+            <input type="number" id="preop-abono-socio-input" value="0" min="0" step="100000" style="width:100%; padding:0.45rem 0.6rem; border:1px solid #f59e0b; border-radius:5px; font-family:inherit; font-size:0.85rem; font-weight:700; background:#fff;" oninput="guardarAbonoPreopSocio(this.value)">
+          </div>
+          <button type="button" class="btn btn-negro btn-sm" onclick="marcarRetornoSocioPagadoTotal()" style="height:34px; font-size:0.66rem; background:#b45309; border-color:#b45309;">✓ Marcar 100% Pagado</button>
+        </div>
+      </div>
+      <div>
+        <div style="width:100%; height:8px; background:#fde68a; border-radius:99px; overflow:hidden; margin-bottom:0.35rem;">
+          <div id="preop-barra-abono-socio" style="width:0%; height:100%; background:#16a34a; transition:width 0.3s;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.68rem; color:#92400e; font-weight:600;">
+          <span id="preop-progreso-abono-txt">0% retornado a Nicolás</span>
+          <span>Meta 30%: <strong id="preop-meta-abono-txt">$6.046.830</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA 1: GASTOS PRE-OPERACIONALES (UNA SOLA VEZ) -->
+  <div style="background:var(--blanco); border:1px solid var(--grisCl); border-radius:8px; padding:1.25rem; margin-bottom:1.75rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+      <div>
+        <div class="section-title" style="margin:0; font-size:1rem;">1. Detalle de Gastos Pre-Operacionales (Una sola vez)</div>
+        <div style="font-size:0.73rem; color:var(--grisMed); margin-top:0.15rem;">Cada rubro muestra el 100% pagado por Nicolás, su 70% patrimonial y el <strong>30% exacto que debe retornar el socio</strong>. Puedes editar cualquier monto (ej. Impresoras) o agregar nuevos rubros.</div>
+      </div>
+    </div>
+
+    <!-- Formulario rápido para agregar o actualizar un rubro pre-operacional -->
+    <div style="display:grid; grid-template-columns:1.1fr 1.6fr 1fr 1.1fr auto; gap:0.65rem; align-items:end; background:var(--grisF); padding:0.85rem; border-radius:6px; border:1px solid var(--grisCl); margin-bottom:1.1rem;">
+      <div>
+        <label style="font-size:0.65rem; color:var(--grisMed); font-weight:600;">Categoría</label>
+        <select id="preop-new-cat" class="input-form" style="width:100%; padding:0.42rem; border:1px solid var(--grisCl); border-radius:4px; background:#fff; font-size:0.76rem;">
+          <option value="Activos Fijos">Activos Fijos</option>
+          <option value="Propiedad Intelectual">Propiedad Intelectual</option>
+          <option value="Infraestructura">Infraestructura</option>
+          <option value="Producto">Producto</option>
+          <option value="Registro Mercantil">Registro Mercantil</option>
+          <option value="Impresoras">Impresoras / Equipos</option>
+          <option value="Otros Pre-Operacionales">Otros Pre-Operacionales</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:0.65rem; color:var(--grisMed); font-weight:600;">Descripción del Gasto Pre-Operacional</label>
+        <input type="text" id="preop-new-desc" class="input-form" placeholder="Ej: Impresora Térmica de Guías / Etiquetas" style="width:100%; padding:0.42rem 0.55rem; border:1px solid var(--grisCl); border-radius:4px; background:#fff; font-size:0.76rem;">
+      </div>
+      <div>
+        <label style="font-size:0.65rem; color:var(--grisMed); font-weight:600;">Monto Aportado por Nico (COP)</label>
+        <input type="number" id="preop-new-monto" class="input-form" placeholder="Ej: 850000" min="0" step="10000" style="width:100%; padding:0.42rem 0.55rem; border:1px solid var(--grisCl); border-radius:4px; background:#fff; font-size:0.76rem;">
+      </div>
+      <div>
+        <label style="font-size:0.65rem; color:var(--grisMed); font-weight:600;">Estado</label>
+        <select id="preop-new-estado" class="input-form" style="width:100%; padding:0.42rem; border:1px solid var(--grisCl); border-radius:4px; background:#fff; font-size:0.76rem;">
+          <option value="Pagado">Pagado</option>
+          <option value="Pagado en 12 cuotas">Pagado en 12 cuotas</option>
+          <option value="Por ver">Por ver</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-negro btn-sm" onclick="agregarRubroPreoperacional()" style="height:33px;">+ Agregar Rubro</button>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="tabla-admin" style="margin-bottom:0.5rem;">
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Aportante Inicial</th>
+            <th style="text-align:right;">Monto Total (COP)</th>
+            <th style="text-align:right; color:#0C4E57;">70% Nicolás (Patrimonio)</th>
+            <th style="text-align:right; color:#b45309; background:#fffbeb;">30% Retorno Socio → Nico</th>
+            <th style="text-align:center;">Estado</th>
+            <th style="text-align:right;">Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-gastos-preoperacionales"></tbody>
+        <tfoot id="tfoot-gastos-preoperacionales"></tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- TABLA 2: GASTOS OPERACIONALES MENSUALES EN USD (TECH STACK & LÍNEA) -->
+  <div style="background:var(--blanco); border:1px solid var(--grisCl); border-radius:8px; padding:1.25rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+      <div>
+        <div class="section-title" style="margin:0; font-size:1rem; color:#2e7d32;">2. Gastos Operacionales Mensuales Fijos (Tech Stack & Atención en Línea — USD)</div>
+        <div style="font-size:0.73rem; color:var(--grisMed); margin-top:0.15rem;">Costos recurrentes mensuales de infraestructura digital contemplados en el registro oficial ($99 USD/mes · Proyección anual: $1.188 USD/año).</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.45rem; background:var(--grisF); padding:0.4rem 0.7rem; border-radius:6px; border:1px solid var(--grisCl);">
+        <span style="font-size:0.68rem; font-weight:600; color:var(--negro);">TRM Referencia (COP/USD):</span>
+        <input type="number" id="preop-trm-input" value="4200" min="3000" max="7000" step="50" style="width:78px; padding:0.25rem 0.4rem; border:1px solid var(--grisCl); border-radius:4px; font-weight:700; font-size:0.78rem; text-align:right;" oninput="renderGastosPreoperacionales()">
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="tabla-admin" style="margin-bottom:0;">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Observaciones</th>
+            <th style="text-align:right;">Monto Mensual (USD)</th>
+            <th style="text-align:right;">Equivalente Mensual (COP)</th>
+            <th style="text-align:right;">Proyección Anual (USD)</th>
+            <th style="text-align:right;">Proyección Anual (COP)</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-gastos-mensuales-usd"></tbody>
+        <tfoot id="tfoot-gastos-mensuales-usd"></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
 <div id="sub-unit" class="fin-subtab-content">
 <!-- UNIT ECONOMICS (CATÁLOGO) -->
         <div class="section-title" style="margin-top:0;font-size:1rem">Unit Economics (Márgenes por Modelo en Catálogo)</div>
@@ -1249,16 +1491,40 @@
                   
                   <div style="display:flex; flex-direction:column; gap:0.5rem;">
                     <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
-                      <span style="color:var(--verde)">70% → Nico</span>
+                      <span style="color:var(--verde)">70% → Nico (Base societaria)</span>
                       <span id="dist-rep-nico" style="font-weight:bold; color:var(--verde)">$0</span>
                     </div>
                     <div style="width:100%; height:4px; background:#e8f5e9; border-radius:2px; overflow:hidden;"><div style="width:70%; height:100%; background:var(--verde);"></div></div>
                     
                     <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:0.5rem;">
-                      <span style="color:var(--verde)">30% → Socio</span>
+                      <span style="color:var(--verde)">30% → Socio (Base societaria)</span>
                       <span id="dist-rep-socio" style="font-weight:bold; color:var(--verde)">$0</span>
                     </div>
                     <div style="width:100%; height:4px; background:#e8f5e9; border-radius:2px; overflow:hidden;"><div style="width:30%; height:100%; background:var(--verde);"></div></div>
+
+                    <!-- Cruce del Retorno del 30% Pre-Operacional del Socio ($6.046.830) -->
+                    <div style="margin-top:0.85rem; padding:0.75rem 0.85rem; background:#fffbeb; border:1px solid #f59e0b; border-radius:6px; font-size:0.72rem;">
+                      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                        <label style="display:flex; align-items:center; gap:0.35rem; font-weight:700; color:#92400e; cursor:pointer;">
+                          <input type="checkbox" id="chk-cruce-preop-sim" checked onchange="actualizarSimulador(document.getElementById('sim-slider')?.value || 100)" style="accent-color:#d97706;">
+                          Descontar al Socio Retorno Pre-Operacional (30%)
+                        </label>
+                        <span id="dist-preop-deuda-badge" style="font-weight:700; color:#b45309;">$6.046.830</span>
+                      </div>
+                      <div style="display:flex; justify-content:space-between; color:#78350f; padding:2px 0;">
+                        <span>(+) Transferencia del Socio → Nico (Retorno Pre-Op):</span>
+                        <strong id="dist-preop-cruce-val" style="color:#b45309;">$0</strong>
+                      </div>
+                      <div style="display:flex; justify-content:space-between; color:#14532d; padding:4px 0 2px; margin-top:3px; border-top:1px dashed #fcd34d; font-weight:700;">
+                        <span>= Total Efectivo a Recibir por Nicolás:</span>
+                        <span id="dist-rep-nico-final">$0</span>
+                      </div>
+                      <div style="display:flex; justify-content:space-between; color:#334155; padding:2px 0; font-weight:700;">
+                        <span>= Neto Libre para el Socio (Post-Retorno a Nico):</span>
+                        <span id="dist-rep-socio-final">$0</span>
+                      </div>
+                      <div id="dist-preop-restante-note" style="font-size:0.65rem; color:#92400e; margin-top:3px;"></div>
+                    </div>
                   </div>
                 </div>
 
@@ -3330,11 +3596,17 @@ function renderAlertasCRM(clientes) {
 
 function cambiarSubTabFinanzas(tabId, btn) {
   document.querySelectorAll('.fin-subtab-content').forEach(el => el.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
+  const targetEl = document.getElementById(tabId);
+  if (targetEl) targetEl.classList.add('active');
   
-  const nav = btn.closest('div');
-  nav.querySelectorAll('.subtab-btn').forEach(el => el.classList.remove('active'));
-  btn.classList.add('active');
+  if (btn) {
+    const nav = btn.closest('div');
+    if (nav) nav.querySelectorAll('.subtab-btn').forEach(el => el.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  if (typeof renderGastosPreoperacionales === 'function') {
+    renderGastosPreoperacionales();
+  }
 }
 
 var adminPin = null;
@@ -4544,8 +4816,9 @@ function cambiarTab(tab, btn) {
   } else if (tab === 'pauta') {
     if (window.todaPauta.length === 0) cargarPauta();
   } else if (tab === 'finanzas') {
+    if (typeof renderGastosPreoperacionales === 'function') renderGastosPreoperacionales();
     cargarGastos();
-    if(window.todosPedidos) renderFinanzas(window.todosPedidos);
+    renderFinanzas(window.todosPedidos || []);
     actualizarSimulador(document.getElementById('sim-slider')?.value || 100);
   } else if (tab === 'embajadoras' || tab === 'giftcards') {
     if (!window.todasSubs || window.todasSubs.length === 0) cargarSuscriptoras().then(() => renderEmbajadorasYGc());
@@ -7105,9 +7378,19 @@ function renderFinanzas(pedidos) {
   // todosGastos ya viene cargado con todos los registros desde cargarGastos().
   const sumGastos = todosGastos.reduce((acc, g) => acc + parseFloat(g.monto || 0), 0);
   const sumPauta = (typeof todaPauta !== 'undefined' ? todaPauta : (window.todaPauta || [])).reduce((acc, p) => acc + parseFloat(p.monto || 0), 0);
-  const totalOpex = sumGastos + sumPauta;
+  const preopResumen = typeof getResumenPreoperacional === 'function'
+    ? getResumenPreoperacional()
+    : { totalPreop: 20156100, cuotaNico70: 14109270, retornoSocio30: 6046830, saldoSocio: 6046830, incluirEnCostos: false };
+  const extraPreop = preopResumen.incluirEnCostos ? preopResumen.totalPreop : 0;
+  const totalOpex = sumGastos + sumPauta + extraPreop;
   
   const costosTotales = costosTotalesProd + totalOpex;
+  const costosSubEl = document.getElementById('fin-costos-sub');
+  if (costosSubEl) {
+    costosSubEl.textContent = preopResumen.incluirEnCostos
+      ? 'Prod + OPEX + Pre-Operacionales ($20.15M)'
+      : 'Costo de telas + Gastos operativos (Sin Pre-Op)';
+  }
 
   const utilidadNeta = ingresosBrutos - costosTotales;
   const margenNeto = ingresosBrutos > 0 ? ((utilidadNeta / ingresosBrutos) * 100).toFixed(1) : 0;
@@ -7182,10 +7465,11 @@ function renderFinanzas(pedidos) {
   try { renderMetodosPago(todosPedidos); } catch(e) { console.warn('renderMetodosPago', e); }
   try { cargarParamsFinancieros(); renderMargenNetoReal(ingresosBrutos, utilidadNeta, pagados); } catch(e) { console.warn('renderMargenNetoReal', e); }
 
-  // Nuevos módulos: Capital inmovilizado y Cashflow
+  // Nuevos módulos: Capital inmovilizado, Cashflow y Pre-Operacionales ($20.156.100 & Retorno Socio 30%)
   try { renderCapitalInmovilizado(getPrecioReal); } catch(e) { console.warn('renderCapitalInmovilizado error:', e); }
   try { renderCashflow(pagados, todosGastos); } catch(e) { console.warn('renderCashflow error:', e); }
   try { renderMetaMensual(); } catch(e) { console.warn('renderMetaMensual error:', e); }
+  try { if (typeof renderGastosPreoperacionales === 'function') renderGastosPreoperacionales(); } catch(e) { console.warn('renderGastosPreoperacionales error:', e); }
 
 
 
@@ -8945,9 +9229,38 @@ function actualizarSimulador(pctStr) {
     document.getElementById('dist-reinv-ped').textContent = fCOP(reinversion * 0.80);
     document.getElementById('dist-reinv-op').textContent = fCOP(reinversion * 0.20);
     
+    const baseNico70 = repartible * 0.70;
+    const baseSocio30 = repartible * 0.30;
     document.getElementById('dist-rep-total').textContent = fCOP(repartible);
-    document.getElementById('dist-rep-nico').textContent = fCOP(repartible * 0.70);
-    document.getElementById('dist-rep-socio').textContent = fCOP(repartible * 0.30);
+    document.getElementById('dist-rep-nico').textContent = fCOP(baseNico70);
+    document.getElementById('dist-rep-socio').textContent = fCOP(baseSocio30);
+
+    // Cruce con el Retorno del 30% de Gastos Pre-Operacionales a cargo del Socio ($6.046.830)
+    const preopRes = typeof getResumenPreoperacional === 'function'
+      ? getResumenPreoperacional()
+      : { retornoSocio30: 6046830, saldoSocio: 6046830 };
+    const aplicarCruce = document.getElementById('chk-cruce-preop-sim')?.checked !== false;
+    const deudaPendiente = preopRes.saldoSocio;
+    const descuentoAplicado = aplicarCruce ? Math.min(baseSocio30, deudaPendiente) : 0;
+    const nicoFinal = baseNico70 + descuentoAplicado;
+    const socioFinal = Math.max(0, baseSocio30 - descuentoAplicado);
+    const deudaRestantePostDrop = Math.max(0, deudaPendiente - descuentoAplicado);
+
+    const setSimTxt = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    setSimTxt('dist-preop-deuda-badge', fCOP(deudaPendiente));
+    setSimTxt('dist-preop-cruce-val', '+' + fCOP(descuentoAplicado));
+    setSimTxt('dist-rep-nico-final', fCOP(nicoFinal));
+    setSimTxt('dist-rep-socio-final', fCOP(socioFinal));
+    const noteEl = document.getElementById('dist-preop-restante-note');
+    if (noteEl) {
+      if (!aplicarCruce) {
+        noteEl.textContent = `Cruce desactivado. El socio mantiene pendiente retornar ${fCOP(deudaPendiente)} a Nicolás por fuera.`;
+      } else if (deudaRestantePostDrop > 0) {
+        noteEl.textContent = `Tras este drop, al socio aún le faltaría retornar ${fCOP(deudaRestantePostDrop)} a Nicolás para completar los ${fCOP(preopRes.retornoSocio30)}.`;
+      } else {
+        noteEl.textContent = `✓ Con este reparto queda 100% saldado el retorno pre-operacional de ${fCOP(preopRes.retornoSocio30)} a favor de Nicolás.`;
+      }
+    }
   }
 
   
@@ -8996,14 +9309,429 @@ function actualizarSimulador(pctStr) {
   });
 }
 
+// ── MÓDULO DE GASTOS PRE-OPERACIONALES ($20.156.100) & RETORNO DEL SOCIO (30% = $6.046.830) ──
+const PREOP_OFFICIAL_DEFAULT = [
+  { id: 'preop-1', categoria: 'Activos Fijos', descripcion: 'Celular', monto: 2599000, estado: 'Pagado en 12 cuotas', aportante: '100% Nicolás' },
+  { id: 'preop-2', categoria: 'Activos Fijos', descripcion: 'Estanterías', monto: 1100000, estado: 'Pagado', aportante: '100% Nicolás' },
+  { id: 'preop-3', categoria: 'Propiedad Intelectual', descripcion: 'Registro de marca', monto: 1599000, estado: 'Pagado', aportante: '100% Nicolás' },
+  { id: 'preop-4', categoria: 'Propiedad Intelectual', descripcion: 'Dominio (3 años)', monto: 300000, estado: 'Pagado', aportante: '100% Nicolás' },
+  { id: 'preop-5', categoria: 'Propiedad Intelectual', descripcion: 'Branding', monto: 2199100, estado: 'Pagado', aportante: '100% Nicolás' },
+  { id: 'preop-6', categoria: 'Infraestructura', descripcion: 'Página Web', monto: 7000000, estado: 'Pagado', aportante: '100% Nicolás' },
+  { id: 'preop-7', categoria: 'Infraestructura', descripcion: 'Hosting (3 años)', monto: 300000, estado: 'Pagado', aportante: '100% Nicolás' },
+  { id: 'preop-8', categoria: 'Producto', descripcion: 'Muestras', monto: 4859000, estado: 'Pagado', aportante: '100% Nicolás' },
+  { id: 'preop-9', categoria: 'Registro Mercantil', descripcion: 'Registro Mercantil', monto: 200000, estado: 'Pagado', aportante: '100% Nicolás' },
+  { id: 'preop-10', categoria: 'Impresoras', descripcion: 'Por ver', monto: 0, estado: 'Por ver', aportante: '100% Nicolás' }
+];
 
+const OPEX_MENSUAL_USD_DEFAULT = [
+  { concepto: 'Línea telefónica (SIM)', usdMes: 15, obs: 'Atención en línea' },
+  { concepto: 'GitHub (Git Hup)', usdMes: 4, obs: 'Control de versiones y desarrollo' },
+  { concepto: 'Vercel', usdMes: 20, obs: 'Deployment y hosting dinámico' },
+  { concepto: 'IA - Mantenimiento Web', usdMes: 60, obs: 'Esencial para actualizaciones y mantenimiento' }
+];
 
+function getGastosPreoperacionalesList() {
+  try {
+    const raw = localStorage.getItem('yossico_gastos_preoperacionales_v1');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (_) {}
+  return JSON.parse(JSON.stringify(PREOP_OFFICIAL_DEFAULT));
+}
 
+function saveGastosPreoperacionalesList(list) {
+  try {
+    localStorage.setItem('yossico_gastos_preoperacionales_v1', JSON.stringify(list));
+  } catch (_) {}
+}
 
+function getResumenPreoperacional() {
+  const items = getGastosPreoperacionalesList();
+  const totalPreop = items.reduce((s, it) => s + (parseFloat(it.monto) || 0), 0);
+  const cuotaNico70 = Math.round(totalPreop * 0.70);
+  const retornoSocio30 = Math.round(totalPreop * 0.30);
+  const abonoSocio = Math.max(0, parseFloat(localStorage.getItem('yossico_preop_abono_socio') || '0') || 0);
+  const saldoSocio = Math.max(0, retornoSocio30 - abonoSocio);
+  const incluirEnCostos = localStorage.getItem('yossico_preop_incluir_costos') === 'true';
+  const fondoBase40 = 40000000;
+  return {
+    items,
+    totalPreop,
+    cuotaNico70,
+    retornoSocio30,
+    abonoSocio,
+    saldoSocio,
+    incluirEnCostos,
+    fondoBase40,
+    consolidadoTotal: fondoBase40 + totalPreop
+  };
+}
 
+window.toggleIncluirPreopEnRentabilidad = function(checked) {
+  localStorage.setItem('yossico_preop_incluir_costos', checked ? 'true' : 'false');
+  renderFinanzas(window.todosPedidos || []);
+};
 
+window.guardarAbonoPreopSocio = function(val) {
+  const num = Math.max(0, parseFloat(val) || 0);
+  localStorage.setItem('yossico_preop_abono_socio', String(num));
+  renderGastosPreoperacionales();
+  if (typeof actualizarSimulador === 'function') {
+    actualizarSimulador(document.getElementById('sim-slider')?.value || 100);
+  }
+};
 
+window.marcarRetornoSocioPagadoTotal = function() {
+  const res = getResumenPreoperacional();
+  localStorage.setItem('yossico_preop_abono_socio', String(res.retornoSocio30));
+  const inp = document.getElementById('preop-abono-socio-input');
+  if (inp) inp.value = res.retornoSocio30;
+  renderGastosPreoperacionales();
+  if (typeof actualizarSimulador === 'function') {
+    actualizarSimulador(document.getElementById('sim-slider')?.value || 100);
+  }
+  mostrarToast(`Retorno del socio (${fCOP(res.retornoSocio30)}) marcado como 100% pagado a Nicolás ✓`, 'ok');
+};
 
+window.agregarRubroPreoperacional = function() {
+  const cat = document.getElementById('preop-new-cat')?.value || 'Otros Pre-Operacionales';
+  const desc = (document.getElementById('preop-new-desc')?.value || '').trim();
+  const monto = Math.max(0, parseFloat(document.getElementById('preop-new-monto')?.value || '0') || 0);
+  const estado = document.getElementById('preop-new-estado')?.value || 'Pagado';
+
+  if (!desc) {
+    mostrarToast('Escribe la descripción del gasto pre-operacional', 'warn');
+    return;
+  }
+  const list = getGastosPreoperacionalesList();
+  list.push({
+    id: 'preop-' + Date.now(),
+    categoria: cat,
+    descripcion: desc,
+    monto,
+    estado,
+    aportante: '100% Nicolás'
+  });
+  saveGastosPreoperacionalesList(list);
+  document.getElementById('preop-new-desc').value = '';
+  document.getElementById('preop-new-monto').value = '';
+  renderFinanzas(window.todosPedidos || []);
+  if (typeof actualizarSimulador === 'function') actualizarSimulador(document.getElementById('sim-slider')?.value || 100);
+  mostrarToast('Gasto pre-operacional agregado y recalculado el 30% del socio ✓', 'ok');
+};
+
+window.editarMontoRubroPreop = function(idx) {
+  const list = getGastosPreoperacionalesList();
+  const item = list[idx];
+  if (!item) return;
+  const nuevoMontoStr = prompt(`Editar monto en COP para "${item.categoria} — ${item.descripcion}" (aportado 100% por Nicolás):`, item.monto || 0);
+  if (nuevoMontoStr === null) return;
+  const nuevoMonto = Math.max(0, parseFloat(String(nuevoMontoStr).replace(/[^0-9.]/g, '')) || 0);
+  item.monto = nuevoMonto;
+  if (nuevoMonto > 0 && item.estado === 'Por ver') {
+    item.estado = 'Pagado';
+  }
+  saveGastosPreoperacionalesList(list);
+  renderFinanzas(window.todosPedidos || []);
+  if (typeof actualizarSimulador === 'function') actualizarSimulador(document.getElementById('sim-slider')?.value || 100);
+  mostrarToast(`Rubro "${item.descripcion}" actualizado a ${fCOP(nuevoMonto)} ✓`, 'ok');
+};
+
+window.eliminarRubroPreop = function(idx) {
+  const list = getGastosPreoperacionalesList();
+  const item = list[idx];
+  if (!item) return;
+  if (!confirm(`¿Eliminar el rubro pre-operacional "${item.descripcion}" (${fCOP(item.monto)})?`)) return;
+  list.splice(idx, 1);
+  saveGastosPreoperacionalesList(list);
+  renderFinanzas(window.todosPedidos || []);
+  if (typeof actualizarSimulador === 'function') actualizarSimulador(document.getElementById('sim-slider')?.value || 100);
+  mostrarToast('Rubro eliminado ✓', 'ok');
+};
+
+window.restaurarPreoperacionalesOficiales = function() {
+  if (!confirm('¿Restaurar la tabla oficial de Gastos Pre-Operacionales ($20.156.100 COP · Retorno 30% Socio: $6.046.830 COP) del 27/04/2026?')) return;
+  saveGastosPreoperacionalesList(JSON.parse(JSON.stringify(PREOP_OFFICIAL_DEFAULT)));
+  localStorage.setItem('yossico_preop_abono_socio', '0');
+  const inp = document.getElementById('preop-abono-socio-input');
+  if (inp) inp.value = 0;
+  renderFinanzas(window.todosPedidos || []);
+  if (typeof actualizarSimulador === 'function') actualizarSimulador(document.getElementById('sim-slider')?.value || 100);
+  mostrarToast('Tabla oficial pre-operacional ($20.156.100) restaurada ✓', 'ok');
+};
+
+function renderGastosPreoperacionales() {
+  const res = getResumenPreoperacional();
+  const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+  // Sincronizar checkbox de inclusión en costos
+  const chkInc = document.getElementById('chk-incluir-preop-finanzas');
+  if (chkInc) chkInc.checked = res.incluirEnCostos;
+
+  // 1. Actualizar tarjetas ejecutivas en Resumen & KPIs (#sub-resumen)
+  setTxt('res-preop-fondo40', fCOP(res.fondoBase40));
+  setTxt('res-preop-total', fCOP(res.totalPreop));
+  setTxt('res-preop-cuota-nico', fCOP(res.cuotaNico70));
+  setTxt('res-preop-retorno-socio', fCOP(res.retornoSocio30));
+  setTxt('res-preop-saldo-socio', fCOP(res.saldoSocio));
+  setTxt('res-preop-consolidado', fCOP(res.consolidadoTotal));
+
+  // 2. Actualizar KPIs de la sub-pestaña Pre-Operacionales (#sub-preop)
+  setTxt('preop-kpi-total', fCOP(res.totalPreop));
+  setTxt('preop-kpi-nico70', fCOP(res.cuotaNico70));
+  setTxt('preop-kpi-socio30', fCOP(res.retornoSocio30));
+  setTxt('preop-kpi-saldo', fCOP(res.saldoSocio));
+  setTxt('preop-box2-total', fCOP(res.totalPreop));
+  setTxt('preop-consolidado-total', fCOP(res.consolidadoTotal) + ' COP');
+  setTxt('preop-txt-deuda-socio', fCOP(res.retornoSocio30));
+  setTxt('preop-meta-abono-txt', fCOP(res.retornoSocio30));
+
+  const pctAbonado = res.retornoSocio30 > 0 ? Math.min(100, (res.abonoSocio / res.retornoSocio30) * 100) : 0;
+  setTxt('preop-kpi-abonado-sub', `Abonado a hoy: ${fCOP(res.abonoSocio)} (${pctAbonado.toFixed(1)}%)`);
+  setTxt('preop-progreso-abono-txt', `${pctAbonado.toFixed(1)}% retornado a Nicolás (${fCOP(res.abonoSocio)})`);
+
+  const abonoInp = document.getElementById('preop-abono-socio-input');
+  if (abonoInp && document.activeElement !== abonoInp) {
+    abonoInp.value = res.abonoSocio;
+  }
+  const barraAbono = document.getElementById('preop-barra-abono-socio');
+  if (barraAbono) barraAbono.style.width = pctAbonado + '%';
+
+  const saldoEl = document.getElementById('preop-kpi-saldo');
+  const badgeSocio = document.getElementById('preop-badge-estado-socio');
+  if (res.saldoSocio <= 0) {
+    if (saldoEl) saldoEl.style.color = 'var(--verde)';
+    if (badgeSocio) {
+      badgeSocio.textContent = '✓ 100% RETORNADO A NICOLÁS';
+      badgeSocio.style.background = '#dcfce7';
+      badgeSocio.style.color = '#166534';
+      badgeSocio.style.borderColor = '#22c55e';
+    }
+  } else if (res.abonoSocio > 0) {
+    if (saldoEl) saldoEl.style.color = '#d97706';
+    if (badgeSocio) {
+      badgeSocio.textContent = 'ABONO PARCIAL · PENDIENTE ' + fCOP(res.saldoSocio);
+      badgeSocio.style.background = '#fef3c7';
+      badgeSocio.style.color = '#b45309';
+      badgeSocio.style.borderColor = '#f59e0b';
+    }
+  } else {
+    if (saldoEl) saldoEl.style.color = 'var(--rojo)';
+    if (badgeSocio) {
+      badgeSocio.textContent = 'PENDIENTE DE RETORNO (' + fCOP(res.retornoSocio30) + ')';
+      badgeSocio.style.background = '#fef3c7';
+      badgeSocio.style.color = '#b45309';
+      badgeSocio.style.borderColor = '#f59e0b';
+    }
+  }
+
+  // 3. Renderizar Tabla de Gastos Pre-Operacionales (Una sola vez)
+  const tbody = document.getElementById('tabla-gastos-preoperacionales');
+  const tfoot = document.getElementById('tfoot-gastos-preoperacionales');
+  if (tbody) {
+    tbody.innerHTML = res.items.map((it, idx) => {
+      const m = parseFloat(it.monto) || 0;
+      const nico70 = Math.round(m * 0.70);
+      const socio30 = Math.round(m * 0.30);
+      const isPorVer = m === 0 || /por ver/i.test(it.estado);
+      const badgeColor = isPorVer
+        ? 'background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;'
+        : (/cuotas/i.test(it.estado)
+          ? 'background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;'
+          : 'background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;');
+
+      return `<tr>
+        <td><strong>${it.categoria}</strong></td>
+        <td>${it.descripcion}</td>
+        <td><span style="font-size:0.68rem; font-weight:600; color:#0C4E57; background:#f0fdfa; padding:2px 7px; border-radius:4px; border:1px solid #99f6e4;">👤 ${it.aportante || '100% Nicolás'}</span></td>
+        <td style="text-align:right; font-weight:700; color:var(--negro);">${isPorVer && m === 0 ? '<span style="color:var(--grisMed);font-style:italic;">Por ver ($0)</span>' : fCOP(m)}</td>
+        <td style="text-align:right; color:#0C4E57; font-weight:600;">${isPorVer && m === 0 ? '—' : fCOP(nico70)}</td>
+        <td style="text-align:right; font-weight:700; color:#b45309; background:#fffbeb;">${isPorVer && m === 0 ? 'Por ver' : fCOP(socio30)}</td>
+        <td style="text-align:center;"><span style="font-size:0.66rem; font-weight:700; padding:3px 8px; border-radius:99px; ${badgeColor}">${it.estado}</span></td>
+        <td style="text-align:right; white-space:nowrap;">
+          <button type="button" onclick="editarMontoRubroPreop(${idx})" style="background:none; border:1px solid var(--grisCl); border-radius:4px; padding:2px 7px; font-size:0.65rem; cursor:pointer; margin-right:3px;" title="Editar monto">✏️ Editar</button>
+          <button type="button" onclick="eliminarRubroPreop(${idx})" style="background:none; border:1px solid #fecaca; color:#dc2626; border-radius:4px; padding:2px 6px; font-size:0.65rem; cursor:pointer;" title="Eliminar rubro">✕</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  if (tfoot) {
+    tfoot.innerHTML = `<tr style="background:#f8fafc; border-top:2px solid #0f172a; font-weight:700;">
+      <td colspan="3" style="font-size:0.8rem; color:#0f172a;">TOTAL PRE-OPERACIONAL (APORTADO 100% POR NICOLÁS)</td>
+      <td style="text-align:right; font-size:0.95rem; color:#0f172a; background:#fef3c7;">${fCOP(res.totalPreop)}</td>
+      <td style="text-align:right; font-size:0.88rem; color:#0C4E57;">${fCOP(res.cuotaNico70)} (70%)</td>
+      <td style="text-align:right; font-size:0.95rem; color:#b45309; background:#fde68a;">${fCOP(res.retornoSocio30)} (30% Retorno Socio)</td>
+      <td colspan="2" style="text-align:center; font-size:0.7rem; color:#0C4E57;">Adquisición 30% Compañía</td>
+    </tr>`;
+  }
+
+  // 4. Renderizar Tabla 2: Gastos Operacionales Mensuales en USD ($99 USD/mes -> $1.188 USD/año)
+  const trm = Math.max(1000, parseFloat(document.getElementById('preop-trm-input')?.value || '4200') || 4200);
+  const tbodyUsd = document.getElementById('tabla-gastos-mensuales-usd');
+  const tfootUsd = document.getElementById('tfoot-gastos-mensuales-usd');
+  const totalUsdMes = OPEX_MENSUAL_USD_DEFAULT.reduce((s, r) => s + r.usdMes, 0);
+  const totalUsdAnual = totalUsdMes * 12;
+
+  if (tbodyUsd) {
+    tbodyUsd.innerHTML = OPEX_MENSUAL_USD_DEFAULT.map(r => {
+      const copMes = Math.round(r.usdMes * trm);
+      const usdAnual = r.usdMes * 12;
+      const copAnual = Math.round(usdAnual * trm);
+      return `<tr>
+        <td><strong>${r.concepto}</strong></td>
+        <td style="color:var(--grisMed); font-size:0.75rem;">${r.obs}</td>
+        <td style="text-align:right; font-weight:700;">$${r.usdMes} USD</td>
+        <td style="text-align:right; color:var(--grisMed);">${fCOP(copMes)}</td>
+        <td style="text-align:right; font-weight:600;">$${usdAnual.toLocaleString('es-CO')} USD</td>
+        <td style="text-align:right; color:var(--grisMed);">${fCOP(copAnual)}</td>
+      </tr>`;
+    }).join('');
+  }
+  if (tfootUsd) {
+    tfootUsd.innerHTML = `
+      <tr style="background:#fefce8; border-top:2px solid #ca8a04; font-weight:700;">
+        <td colspan="2" style="color:#854d0e;">TOTAL MENSUAL & PROYECCIÓN ANUAL (GASTOS OPERACIONALES FIJOS)</td>
+        <td style="text-align:right; font-size:0.92rem; color:#854d0e; background:#fef08a;">$${totalUsdMes} USD / mes</td>
+        <td style="text-align:right; color:#854d0e;">${fCOP(Math.round(totalUsdMes * trm))} / mes</td>
+        <td style="text-align:right; font-size:0.92rem; color:#15803d; background:#dcfce7;">$${totalUsdAnual.toLocaleString('es-CO')} USD / año</td>
+        <td style="text-align:right; color:#15803d;">${fCOP(Math.round(totalUsdAnual * trm))} / año</td>
+      </tr>
+    `;
+  }
+}
+
+window.exportarPreoperacionalesCSV = function() {
+  const res = getResumenPreoperacional();
+  const cols = ['Categoria', 'Descripcion', 'Aportado_Por', 'Monto_Total_COP', 'Cuota_70_Nicolas_COP', 'Retorno_30_Socio_COP', 'Estado'];
+  const rows = res.items.map(it => {
+    const m = parseFloat(it.monto) || 0;
+    return [
+      it.categoria,
+      it.descripcion,
+      it.aportante || '100% Nicolás',
+      m,
+      Math.round(m * 0.70),
+      Math.round(m * 0.30),
+      it.estado
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`);
+  });
+  rows.push(['"TOTAL PRE-OPERACIONAL"', '""', '"100% Nicolás"', res.totalPreop, res.cuotaNico70, res.retornoSocio30, '"Liquidación 70/30"']);
+  const csv = '\uFEFF' + [cols.join(';'), ...rows.map(r => r.join(';'))].join('\n');
+  descargarCSV(csv, `YOSSICO_Gastos_Preoperacionales_Retorno_Socio_30pct_${dHoy()}.csv`);
+  mostrarToast('Liquidación de gastos pre-operacionales exportada ✓', 'ok');
+};
+
+window.imprimirEstadoCuentaPreopSocio = function() {
+  const res = getResumenPreoperacional();
+  const trm = Math.max(1000, parseFloat(document.getElementById('preop-trm-input')?.value || '4200') || 4200);
+  const filasHtml = res.items.map(it => {
+    const m = parseFloat(it.monto) || 0;
+    const n70 = Math.round(m * 0.70);
+    const s30 = Math.round(m * 0.30);
+    return `<tr>
+      <td style="padding:7px 10px; border-bottom:1px solid #e2e8f0; font-weight:600;">${it.categoria}</td>
+      <td style="padding:7px 10px; border-bottom:1px solid #e2e8f0;">${it.descripcion}</td>
+      <td style="padding:7px 10px; border-bottom:1px solid #e2e8f0; text-align:right; font-weight:700;">${m > 0 ? fCOP(m) : 'Por ver'}</td>
+      <td style="padding:7px 10px; border-bottom:1px solid #e2e8f0; text-align:right; color:#0C4E57;">${m > 0 ? fCOP(n70) : '—'}</td>
+      <td style="padding:7px 10px; border-bottom:1px solid #e2e8f0; text-align:right; font-weight:700; color:#b45309; background:#fffbeb;">${m > 0 ? fCOP(s30) : 'Por ver'}</td>
+      <td style="padding:7px 10px; border-bottom:1px solid #e2e8f0; text-align:center; font-size:11px;">${it.estado}</td>
+    </tr>`;
+  }).join('');
+
+  const filasUsdHtml = OPEX_MENSUAL_USD_DEFAULT.map(r => `<tr>
+    <td style="padding:6px 10px; border-bottom:1px solid #e2e8f0; font-weight:600;">${r.concepto}</td>
+    <td style="padding:6px 10px; border-bottom:1px solid #e2e8f0; text-align:right; font-weight:700;">$${r.usdMes} USD</td>
+    <td style="padding:6px 10px; border-bottom:1px solid #e2e8f0; text-align:right;">${fCOP(Math.round(r.usdMes * trm))}</td>
+    <td style="padding:6px 10px; border-bottom:1px solid #e2e8f0; color:#475569;">${r.obs}</td>
+  </tr>`).join('');
+
+  const docHtml = `
+    <div style="border:1.5px solid #cbd5e1; border-radius:8px; padding:24px; background:#fff;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #0C4E57; padding-bottom:14px; margin-bottom:18px;">
+        <div>
+          <div style="font-size:10px; font-weight:700; letter-spacing:1.5px; color:#0C4E57; text-transform:uppercase;">ACTA DE LIQUIDACIÓN FINANCIERA & PARTICIPACIÓN SOCIETARIA (70% / 30%)</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; letter-spacing:3px; color:#111; margin-top:2px;">YOSSICO</div>
+          <div style="font-size:12px; color:#475569;">Relación Oficial de Gastos Pre-Operacionales Aportados 100% por Nicolás & Retorno del Socio (30%)</div>
+        </div>
+        <div style="text-align:right; font-size:11px; color:#475569;">
+          <div><strong>Fecha de Corte:</strong> 27/04/2026</div>
+          <div><strong>Bolsa Pre-Operacional:</strong> Independiente de los $40.000.000</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:18px;">
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:12px;">
+          <div style="font-size:10px; font-weight:700; color:#475569; text-transform:uppercase;">Total Pre-Operacional (100% Nicolás)</div>
+          <div style="font-size:20px; font-weight:700; color:#0f172a; margin-top:4px;">${fCOP(res.totalPreop)}</div>
+          <div style="font-size:10px; color:#64748b; margin-top:2px;">Adicional a los $40.000.000 asociados</div>
+        </div>
+        <div style="background:#f0fdfa; border:1px solid #99f6e4; border-radius:6px; padding:12px;">
+          <div style="font-size:10px; font-weight:700; color:#0C4E57; text-transform:uppercase;">Cuota Patrimonial Nicolás (70%)</div>
+          <div style="font-size:20px; font-weight:700; color:#0C4E57; margin-top:4px;">${fCOP(res.cuotaNico70)}</div>
+          <div style="font-size:10px; color:#0f766e; margin-top:2px;">70% de participación en YOSSICO</div>
+        </div>
+        <div style="background:#fffbeb; border:1.5px solid #f59e0b; border-radius:6px; padding:12px;">
+          <div style="font-size:10px; font-weight:700; color:#b45309; text-transform:uppercase;">Retorno Obligatorio Socio (30% → Nico)</div>
+          <div style="font-size:20px; font-weight:700; color:#b45309; margin-top:4px;">${fCOP(res.retornoSocio30)}</div>
+          <div style="font-size:10px; color:#92400e; margin-top:2px;">Por adquisición del 30% de la compañía</div>
+        </div>
+      </div>
+
+      <div style="font-size:12px; font-weight:700; color:#0C4E57; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">1. Gastos Pre-Operacionales (Una sola vez)</div>
+      <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:20px;">
+        <thead>
+          <tr style="background:#0C4E57; color:#fff;">
+            <th style="padding:8px 10px; text-align:left;">Categoría</th>
+            <th style="padding:8px 10px; text-align:left;">Descripción</th>
+            <th style="padding:8px 10px; text-align:right;">Monto (100% Nico)</th>
+            <th style="padding:8px 10px; text-align:right;">70% Nicolás</th>
+            <th style="padding:8px 10px; text-align:right;">30% Retorno Socio</th>
+            <th style="padding:8px 10px; text-align:center;">Estado</th>
+          </tr>
+        </thead>
+        <tbody>${filasHtml}</tbody>
+        <tfoot>
+          <tr style="background:#fef3c7; font-weight:700; border-top:2px solid #0f172a;">
+            <td colspan="2" style="padding:9px 10px;">TOTAL PRE-OPERACIONAL</td>
+            <td style="padding:9px 10px; text-align:right;">${fCOP(res.totalPreop)}</td>
+            <td style="padding:9px 10px; text-align:right; color:#0C4E57;">${fCOP(res.cuotaNico70)}</td>
+            <td style="padding:9px 10px; text-align:right; color:#b45309;">${fCOP(res.retornoSocio30)}</td>
+            <td style="padding:9px 10px; text-align:center;">30% Socio</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div style="font-size:12px; font-weight:700; color:#15803d; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">2. Gastos Operacionales Mensuales ($99 USD/mes · Proyección Anual: $1.188 USD)</div>
+      <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:16px;">
+        <thead>
+          <tr style="background:#15803d; color:#fff;">
+            <th style="padding:7px 10px; text-align:left;">Concepto</th>
+            <th style="padding:7px 10px; text-align:right;">Monto Mensual (USD)</th>
+            <th style="padding:7px 10px; text-align:right;">Equivalente COP (TRM $${trm})</th>
+            <th style="padding:7px 10px; text-align:left;">Observaciones</th>
+          </tr>
+        </thead>
+        <tbody>${filasUsdHtml}</tbody>
+        <tfoot>
+          <tr style="background:#f0fdf4; font-weight:700;">
+            <td style="padding:8px 10px;">TOTAL MENSUAL ($99 USD) / ANUAL ($1.188 USD)</td>
+            <td style="padding:8px 10px; text-align:right;">$99 USD / mes</td>
+            <td style="padding:8px 10px; text-align:right;">${fCOP(Math.round(99 * trm))} / mes</td>
+            <td style="padding:8px 10px;">Proyección Anual: $1.188 USD (${fCOP(Math.round(1188 * trm))})</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:12px; font-size:11px; color:#334155; line-height:1.5;">
+        <strong>Nota de Liquidación Societaria:</strong> Los gastos pre-operacionales por valor de <strong>${fCOP(res.totalPreop)}</strong> son independientes del fondo operativo de <strong>$40.000.000 COP</strong> y fueron sufragados al 100% por Nicolás. En virtud de la adquisición del <strong>30% de la compañía</strong> por parte del socio, este reconoce un retorno a favor de Nicolás por valor de <strong>${fCOP(res.retornoSocio30)}</strong> (Saldo pendiente actual: <strong>${fCOP(res.saldoSocio)}</strong>).
+      </div>
+    </div>
+  `;
+  yossicoPrintHtmlDocument('Liquidacion_Preoperacional_Socio_30pct_YOSSICO', docHtml);
+};
 
 // ── FINANCIAL PARAMETERS (localStorage)
 function getParamsFinancieros() {
