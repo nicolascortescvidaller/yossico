@@ -30,7 +30,7 @@ const WOMPI_EVENTS_KEY = Deno.env.get("WOMPI_EVENTS_KEY") ?? "";
 const SUPABASE_URL     = Deno.env.get("SUPABASE_URL")     ?? "";
 const DB_SERVICE_KEY   = Deno.env.get("DB_SERVICE_KEY")   ?? "";
 const RESEND_API_KEY   = Deno.env.get("RESEND_API_KEY")   ?? "";
-const META_PIXEL_ID    = Deno.env.get("META_PIXEL_ID")    ?? "1146486127770032";
+const META_PIXEL_ID    = Deno.env.get("META_PIXEL_ID")    ?? "1786758519049499";
 const META_CAPI_TOKEN  = Deno.env.get("META_CAPI_TOKEN")  ?? "";
 
 const CORS = {

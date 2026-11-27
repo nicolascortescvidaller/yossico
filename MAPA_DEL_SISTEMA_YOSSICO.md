@@ -21,7 +21,8 @@
 | **Email Administrador** | Recepción de alertas de ventas y leads | `customerserviceyossico@gmail.com` |
 | **Meta Business Portfolio** | Portafolio Comercial aislado (`Yossico`) | Business ID: `29272529245699449` |
 | **Página de Facebook Oficial** | Fanpage oficial (`Yossico`) | Page ID: `61597146534812` |
-| **Meta Pixel / Dataset** | `YOSSICO Pixel` (e-commerce + CAPI) | Pixel ID: `1146486127770032` |
+| **Cuenta Publicitaria Meta** | `Yossico Ads` (COP · America/Bogota) | Ad Account ID: `1493175199337486` |
+| **Meta Pixel / Dataset** | `YOSSICO Pixel` (e-commerce + CAPI) | Pixel ID: `1786758519049499` |
 | **Feed Catálogo Meta** | Feed XML RSS 2.0 automático para Commerce Manager | [`web/catalogo-meta.xml`](file:///Users/nicolascortesvidaller/yossico/web/catalogo-meta.xml) (`https://yossico.com/catalogo-meta.xml`) |
 
 ---

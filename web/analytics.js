@@ -90,8 +90,8 @@
 
     window.yossicoTrack = send;
 
-    /* ── 0. META PIXEL (FACEBOOK / INSTAGRAM ADS) — ID: 1146486127770032 ── */
-    var META_PIXEL_ID = '1146486127770032';
+    /* ── 0. META PIXEL (FACEBOOK / INSTAGRAM ADS) — ID: 1786758519049499 ── */
+    var META_PIXEL_ID = '1786758519049499';
 
     var META_CATALOG_MAP = {
       oslo:   { id: 'oslo',   name: 'Set OSLO',   line: 'Essentials', price: 275900 },
