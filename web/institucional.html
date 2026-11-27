@@ -500,6 +500,14 @@
                     btn.textContent = 'Enviado';
                     msg.textContent = '¡Gracias por escribirnos! Te contactaremos pronto.';
                     msg.style.color = 'var(--gray-mid)';
+                    try {
+                        if (typeof window.yossicoMetaTrack === 'function') {
+                            window.yossicoMetaTrack('Lead', {
+                                content_name: 'Cotizacion Institucional B2B',
+                                content_category: 'B2B'
+                            });
+                        }
+                    } catch (_) {}
                 } catch (error) {
                     btn.disabled = false;
                     btn.textContent = 'Enviar Solicitud';

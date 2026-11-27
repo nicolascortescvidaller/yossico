@@ -703,6 +703,14 @@
                     // Mostrar popup de éxito
                     successOverlay.classList.add('open');
                     document.body.style.overflow = 'hidden';
+                    try {
+                        if (typeof window.yossicoMetaTrack === 'function') {
+                            window.yossicoMetaTrack('Lead', {
+                                content_name: 'Postulacion Embajadoras YOSSICO',
+                                content_category: 'Embajadoras'
+                            });
+                        }
+                    } catch (_) {}
 
                 } catch (err) {
                     console.error('[Embajadoras] Error capturado:', err);

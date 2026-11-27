@@ -89,6 +89,136 @@
     }
 
     window.yossicoTrack = send;
+
+    /* ── 0. META PIXEL (FACEBOOK / INSTAGRAM ADS) — ID: 1146486127770032 ── */
+    var META_PIXEL_ID = '1146486127770032';
+
+    var META_CATALOG_MAP = {
+      oslo:   { id: 'oslo',   name: 'Set OSLO',   line: 'Essentials', price: 275900 },
+      milan:  { id: 'milan',  name: 'Set MILAN',  line: 'Signature',  price: 339900 },
+      kyoto:  { id: 'kyoto',  name: 'Set KYOTO',  line: 'Signature',  price: 339900 },
+      lima:   { id: 'lima',   name: 'Set LIMA',   line: 'Essentials', price: 275900 },
+      bogota: { id: 'bogota', name: 'Set BOGOTÁ', line: 'Core',       price: 229900 },
+      manta:  { id: 'manta',  name: 'Set MANTA',  line: 'Core',       price: 229900 }
+    };
+
+    function hasMarketingConsent() {
+      try {
+        var rawConsent = localStorage.getItem('yossico_cookie_consent');
+        if (rawConsent) {
+          var parsedConsent = JSON.parse(rawConsent);
+          if (parsedConsent && parsedConsent.choice === 'essential') return false;
+        }
+      } catch (_) {}
+      return true;
+    }
+
+    function normalizeSku(rawName, color, size) {
+      var base = String(rawName || '').split('(')[0].trim().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '');
+      if (base.indexOf('set') === 0 && base.length > 3) base = base.slice(3);
+      var colMatch = (String(rawName || '').match(/\(([^)]+)\)/) || [])[1] || color || '';
+      var colSlug = String(colMatch).trim().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      var szSlug = String(size || '').trim().toUpperCase();
+      var sku = base || 'yossico';
+      if (colSlug) sku += '-' + colSlug;
+      if (szSlug) sku += '-' + szSlug;
+      return sku;
+    }
+
+    function initMetaPixel() {
+      if (!hasMarketingConsent()) return;
+      if (window.fbq) return;
+      try {
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+
+        // Advanced Matching si la clienta ya dejó sus datos en la sesión
+        var advMatch = {};
+        try {
+          var lastOrder = JSON.parse(sessionStorage.getItem('yossico_ultimo_pedido') || '{}');
+          if (lastOrder.email) advMatch.em = String(lastOrder.email).trim().toLowerCase();
+          if (lastOrder.tel)   advMatch.ph = '57' + String(lastOrder.tel).replace(/\D/g, '').replace(/^57/, '');
+          if (lastOrder.ciudad) advMatch.ct = String(lastOrder.ciudad).trim().toLowerCase();
+        } catch (_) {}
+
+        if (Object.keys(advMatch).length > 0) {
+          window.fbq('init', META_PIXEL_ID, advMatch);
+        } else {
+          window.fbq('init', META_PIXEL_ID);
+        }
+        window.fbq('track', 'PageView');
+      } catch (_) {}
+    }
+
+    function metaTrack(eventName, params, options) {
+      if (!hasMarketingConsent()) return;
+      if (!window.fbq) initMetaPixel();
+      try {
+        if (typeof window.fbq === 'function') {
+          if (options) window.fbq('track', eventName, params || {}, options);
+          else window.fbq('track', eventName, params || {});
+        }
+      } catch (_) {}
+    }
+
+    window.yossicoMetaTrack = metaTrack;
+    window.yossicoNormalizeSku = normalizeSku;
+
+    initMetaPixel();
+
+    // Auto-disparar ViewContent en páginas de producto y InitiateCheckout en checkout.html
+    function autoTrackEcommercePage() {
+      try {
+        var pathSlug = (location.pathname.split('/').pop() || '').replace(/\.html$/i, '').toLowerCase();
+        var prodKey = META_CATALOG_MAP[pathSlug] ? pathSlug : null;
+        if (!prodKey && pathSlug === 'producto') {
+          var qId = (new URLSearchParams(location.search).get('id') || '').toLowerCase();
+          if (META_CATALOG_MAP[qId]) prodKey = qId;
+        }
+        if (prodKey) {
+          var pInfo = META_CATALOG_MAP[prodKey];
+          metaTrack('ViewContent', {
+            content_ids: [pInfo.id],
+            content_name: pInfo.name,
+            content_category: pInfo.line,
+            content_type: 'product_group',
+            value: pInfo.price,
+            currency: 'COP'
+          });
+        } else if (pathSlug === 'checkout') {
+          var cartItems = [];
+          try { cartItems = JSON.parse(localStorage.getItem('yossico_cart') || '[]'); } catch (_) {}
+          if (cartItems && cartItems.length) {
+            var totalVal = cartItems.reduce(function (s, i) { return s + (Number(i.price) || 0) * (Number(i.qty) || 1); }, 0);
+            var cIds = cartItems.map(function (i) { return normalizeSku(i.name, i.color, i.size); });
+            var numItems = cartItems.reduce(function (s, i) { return s + (Number(i.qty) || 1); }, 0);
+            metaTrack('InitiateCheckout', {
+              content_ids: cIds,
+              content_type: 'product',
+              num_items: numItems,
+              value: totalVal,
+              currency: 'COP'
+            });
+          }
+        }
+      } catch (_) {}
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', autoTrackEcommercePage);
+    } else {
+      autoTrackEcommercePage();
+    }
+
     send('pageview');
 
     /* ── 1. MONITOR DE VELOCIDAD Y CUELLOS DE BOTELLA (Web Vitals + Recursos) ── */
@@ -283,7 +413,10 @@
       if (!el) return;
       var href = el.getAttribute('href') || '';
       var txt = (el.textContent || '').toLowerCase();
-      if (href.indexOf('wa.me') > -1) send('click_whatsapp');
+      if (href.indexOf('wa.me') > -1) {
+        send('click_whatsapp');
+        metaTrack('Contact', { content_name: 'WhatsApp Directo', content_category: pagina });
+      }
       else if (el.classList.contains('add-to-cart-btn') || /agregar al carrito/.test(txt)) send('agregar_carrito');
       else if (el.classList.contains('cart-checkout') || /checkout/.test(href)) send('ir_checkout');
       else if (/prive\.html|#linea-prive|abrirmodalprive/i.test(href + ' ' + (el.getAttribute('onclick') || ''))) send('interes_prive');

@@ -525,6 +525,42 @@
     ].join('');
 
     document.getElementById('grc-content').innerHTML = html;
+
+    // ── Meta Pixel Purchase event (con deduplicación en sesión por eventID) ──
+    try {
+      var shouldTrackPurchase = (mode === 'session') || (mode === 'wompi' && wompiStatus === 'APPROVED');
+      if (shouldTrackPurchase && total > 0) {
+        var evtId = 'purchase_' + (pedidoId || (data.tel || 'order') + '_' + Math.round(total));
+        var trackedKey = 'yossico_meta_purchased_' + evtId;
+        if (!sessionStorage.getItem(trackedKey)) {
+          sessionStorage.setItem(trackedKey, '1');
+          var contentIds = (items || []).map(function (it) {
+            var n = it.nombre || it.name || it.producto || 'yossico';
+            var c = it.color || '';
+            var s = it.talla || it.size || '';
+            return (typeof window.yossicoNormalizeSku === 'function')
+              ? window.yossicoNormalizeSku(n, c, s)
+              : String(n).toLowerCase();
+          });
+          var numItems = (items || []).reduce(function (acc, it) {
+            return acc + (Number(it.qty || it.cantidad) || 1);
+          }, 0) || 1;
+          var firePurchase = function () {
+            if (typeof window.yossicoMetaTrack === 'function') {
+              window.yossicoMetaTrack('Purchase', {
+                content_ids: contentIds.length ? contentIds : ['yossico-order'],
+                content_type: 'product',
+                num_items: numItems,
+                value: Number(total) || 0,
+                currency: 'COP'
+              }, { eventID: evtId });
+            }
+          };
+          if (typeof window.yossicoMetaTrack === 'function') firePurchase();
+          else window.addEventListener('load', firePurchase);
+        }
+      }
+    } catch (e) {}
   }
 
   /* ── Render generic (no data at all) ── */

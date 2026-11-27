@@ -30,6 +30,8 @@ const WOMPI_EVENTS_KEY = Deno.env.get("WOMPI_EVENTS_KEY") ?? "";
 const SUPABASE_URL     = Deno.env.get("SUPABASE_URL")     ?? "";
 const DB_SERVICE_KEY   = Deno.env.get("DB_SERVICE_KEY")   ?? "";
 const RESEND_API_KEY   = Deno.env.get("RESEND_API_KEY")   ?? "";
+const META_PIXEL_ID    = Deno.env.get("META_PIXEL_ID")    ?? "1146486127770032";
+const META_CAPI_TOKEN  = Deno.env.get("META_CAPI_TOKEN")  ?? "";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -93,9 +95,12 @@ Deno.serve(async (req: Request) => {
 
     if (updateError) console.error("[wompi-webhook] update error:", updateError.message);
 
-    // ── Email de confirmación si el pago fue aprobado ────────────────
+    // ── Email de confirmación + Meta CAPI si el pago fue aprobado ────
     if (status === "APPROVED") {
-      await enviarEmailConfirmacion(pedido, wompiId);
+      await Promise.allSettled([
+        enviarEmailConfirmacion(pedido, wompiId),
+        enviarEventoMetaCAPI(pedido, reference),
+      ]);
     }
 
     return new Response(JSON.stringify({ received: true, status }), { headers: CORS });
@@ -175,5 +180,72 @@ async function enviarEmailConfirmacion(
     console.log("[wompi-webhook] Email confirmación disparado — status:", res.status);
   } catch (err) {
     console.error("[wompi-webhook] Error disparando email confirmación:", err);
+  }
+}
+
+// ── Meta Conversions API (CAPI) — Server-Side Purchase con Deduplicación ─
+async function sha256Hex(value: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const buf = await crypto.subtle.digest("SHA-256", encoder.encode(value));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function enviarEventoMetaCAPI(
+  pedido: {
+    id: string;
+    cliente_nombre: string;
+    cliente_telefono: string;
+    cliente_email?: string;
+    cliente_ciudad?: string;
+    items: unknown[];
+    total: number;
+  },
+  reference: string
+): Promise<void> {
+  if (!META_CAPI_TOKEN || !META_PIXEL_ID) return;
+
+  try {
+    const userData: Record<string, unknown> = {
+      country: [await sha256Hex("co")],
+    };
+
+    if (pedido.cliente_email) {
+      userData.em = [await sha256Hex(pedido.cliente_email.trim().toLowerCase())];
+    }
+    if (pedido.cliente_telefono) {
+      const cleanPhone = "57" + pedido.cliente_telefono.replace(/\D/g, "").replace(/^57/, "");
+      userData.ph = [await sha256Hex(cleanPhone)];
+    }
+    if (pedido.cliente_ciudad) {
+      userData.ct = [await sha256Hex(pedido.cliente_ciudad.trim().toLowerCase().replace(/[^a-z]/g, ""))];
+    }
+
+    const evtId = `purchase_${reference || pedido.id}`;
+
+    const res = await fetch(`https://graph.facebook.com/v21.0/${META_PIXEL_ID}/events?access_token=${META_CAPI_TOKEN}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        data: [
+          {
+            event_name: "Purchase",
+            event_time: Math.floor(Date.now() / 1000),
+            action_source: "website",
+            event_id: evtId,
+            event_source_url: "https://yossico.com/gracias.html",
+            user_data: userData,
+            custom_data: {
+              currency: "COP",
+              value: Number(pedido.total) || 0,
+              content_type: "product",
+              order_id: String(pedido.id),
+            },
+          },
+        ],
+      }),
+    });
+    console.log("[wompi-webhook] Meta CAPI Purchase enviado — status:", res.status);
+  } catch (err) {
+    console.error("[wompi-webhook] Error enviando Meta CAPI:", err);
   }
 }

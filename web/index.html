@@ -1973,6 +1973,14 @@
         subFormWrap.style.display = 'none';
         subSuccess.classList.add('show');
         try { localStorage.setItem('yos_subscribed', 'true'); } catch (e) {}
+        try {
+          if (typeof window.yossicoMetaTrack === 'function') {
+            window.yossicoMetaTrack('Lead', {
+              content_name: 'Suscripcion Drop VIP 10% OFF',
+              content_category: 'Drop Waitlist'
+            });
+          }
+        } catch (e) {}
 
       } catch (err) {
         console.error('Popup fetch error:', err);

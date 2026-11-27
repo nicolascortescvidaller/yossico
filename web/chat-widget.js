@@ -201,6 +201,12 @@
     // Save lead to database with safe fallback for any schema
     function persistLead(nombre, contacto) {
       try {
+        if (typeof window.yossicoMetaTrack === 'function') {
+          window.yossicoMetaTrack('Lead', {
+            content_name: 'Concierge Valentina',
+            content_category: 'Chat Lead'
+          });
+        }
         var metaOrigen = (window.location.pathname || '/') + ' [Habeas Data Ley 1581 Aceptado]';
         var payload5 = {
           p_nombre: nombre,

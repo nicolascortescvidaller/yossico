@@ -19,6 +19,10 @@
 | **Clave Finanzas**| Validada en Supabase (`admin_verificar_finanzas`) | *No se documenta aquí* |
 | **Teléfono WhatsApp Oficial** | Línea comercial y soporte | `+57 312 730 0661` |
 | **Email Administrador** | Recepción de alertas de ventas y leads | `customerserviceyossico@gmail.com` |
+| **Meta Business Portfolio** | Portafolio Comercial aislado (`Yossico`) | Business ID: `29272529245699449` |
+| **Página de Facebook Oficial** | Fanpage oficial (`Yossico`) | Page ID: `61597146534812` |
+| **Meta Pixel / Dataset** | `YOSSICO Pixel` (e-commerce + CAPI) | Pixel ID: `1146486127770032` |
+| **Feed Catálogo Meta** | Feed XML RSS 2.0 automático para Commerce Manager | [`web/catalogo-meta.xml`](file:///Users/nicolascortesvidaller/yossico/web/catalogo-meta.xml) (`https://yossico.com/catalogo-meta.xml`) |
 
 ---
 

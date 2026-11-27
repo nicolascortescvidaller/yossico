@@ -245,6 +245,21 @@ function addToCart({ name, size, price, img, line }) {
     Cart.add({ name, size, price, img, line });
     updateBadge();
     openDrawer();
+    try {
+        if (typeof window.yossicoMetaTrack === 'function') {
+            const sku = (typeof window.yossicoNormalizeSku === 'function')
+                ? window.yossicoNormalizeSku(name, '', size)
+                : String(name || 'yossico').toLowerCase();
+            window.yossicoMetaTrack('AddToCart', {
+                content_ids: [sku],
+                content_name: String(name || ''),
+                content_category: String(line || 'Uniformes'),
+                content_type: 'product',
+                value: Number(price) || 0,
+                currency: 'COP'
+            });
+        }
+    } catch (_) {}
     return true;
 }
 
